@@ -12,5 +12,8 @@
 */
 
 Route::get('/', function () {
-    return view('layouts.principal');
+    // return view('auth.login');
+    return redirect(route('login'));
 });
+
+Auth::routes();
