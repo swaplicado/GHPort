@@ -27,7 +27,7 @@ class AddFieldsToUsers extends Migration
             $table->unsignedBigInteger('updated_by')->after('created_by');
 
             $table->foreign('department_id')->references('id_department')->on('adm_departments');
-            $table->foreign('job_id')->references('id_job')->on('jobs');
+            $table->foreign('job_id')->references('id_job')->on('adm_jobs');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
         });
