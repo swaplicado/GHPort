@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return view('startbootstrap/index.blade.php');
+    return view('layouts.principal');
 });
