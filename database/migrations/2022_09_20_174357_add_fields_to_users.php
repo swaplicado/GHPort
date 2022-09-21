@@ -36,9 +36,8 @@ class AddFieldsToUsers extends Migration
         ->where('id', 1)
         ->update(
             array(
-                'name' => 'admin',
+                'username' => 'admin',
                 'email' => 'adrian.aviles@swaplicado.com.mx',
-                'email_verified_at' => date('y-m-j, h-i-s'),
                 'password' => bcrypt('123456'),
                 'num_employee' => 0,
                 'is_active' => 1,
