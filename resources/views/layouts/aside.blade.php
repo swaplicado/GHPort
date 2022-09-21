@@ -4,7 +4,7 @@
     <div class="sidebar-brand d-flex align-items-center justify-content-center">
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-            <div class="sidebar-brand-text">portal GH</div>
+            <div class="sidebar-brand-text">GH portal</div>
         </a>
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">

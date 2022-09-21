@@ -25,10 +25,25 @@ class CreateAdmJobsTable extends Migration
             $table->unsignedBigInteger('updated_by');
             $table->timestamps();
 
-            $table->foreign('department_id')->references('id_department')->on('adm_departments');
-            $table->foreign('created_by')->references('id')->on('users');
-            $table->foreign('updated_by')->references('id')->on('users');
+            $table->foreign('department_id')->references('id_department')->on('adm_departments')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
+
+        DB::table('adm_jobs')->insert(
+            array(
+                'name' => 'DEF',
+                'abbreviation' => 'DEF',
+                'hierarchical_level' => 0,
+                'department_id' => 1,
+                'is_delete' => 0,
+                'external_id' => 0,
+                'created_by' => 1,
+                'updated_by' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            )
+        );
     }
 
     /**
