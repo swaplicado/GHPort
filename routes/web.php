@@ -20,5 +20,6 @@ Auth::routes();
 
 Route::middleware(['auth'])->group( function () {
     Route::get('/logout', 'Auth\LoginController@logout');
-    Route::get('home', 'Pages\HomeController@index');
+    Route::get('home', 'Pages\HomeController@index')->name('home');
+    Route::get('orgChart', 'Pages\OrgChartController@index')->name('orgChart');
 });
