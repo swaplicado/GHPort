@@ -47,4 +47,12 @@ class LoginController extends Controller
         Auth::logout();
         return redirect('/login');
     }
+
+    public function username(){
+        return 'username';
+    }
+
+    protected function credentials(Request $request){
+        return $request->only($this->username(), 'password');
+    }
 }
