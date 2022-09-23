@@ -51,10 +51,9 @@
 </div>
 
     <div class="card-body">
-        <button id="btn_edit" type="button" class="btn btn-warning" style="border-radius: 50%; padding: 5px 10px;" title="Editar registro">
+        <button id="btn_edit" type="button" class="btn3d btn-warning" style="border-radius: 50%; padding: 5px 10px;" title="Editar registro">
             <span class="icon bx bx-edit-alt"></span>
         </button>
-        <br>
         <br>
         <div class="table-responsive">
             <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">

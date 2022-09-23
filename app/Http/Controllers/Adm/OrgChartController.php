@@ -23,7 +23,7 @@ class OrgChartController extends Controller
 
         $lAreas = [];
         foreach($areas as $ar){
-            $lAreas[] = ['id' => $ar->id_area, 'pid' => $ar->father_area_id, 'name' => $ar->head_user, 'title' => $ar->area, 'img' => "https://cdn.balkan.app/shared/16.jpg" ];
+            $lAreas[] = ['id' => $ar->id_area, 'pid' => $ar->father_area_id, 'name' => $ar->head_user, 'title' => $ar->area, 'img' => "https://cdn.balkan.app/shared/empty-img-none.svg" ];
         }
 
         return view('Adm.OrgChart')->with('lAreas', $lAreas);
