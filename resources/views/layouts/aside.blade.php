@@ -30,7 +30,7 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    {{-- <li class="nav-item">
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
             aria-expanded="true" aria-controls="collapsePages">
             <i class="fas fa-fw fa-folder"></i>
@@ -45,13 +45,18 @@
                 <a class="collapse-item" href="#">Blank Page</a>
             </div>
         </div>
-    </li> --}}
+    </li>
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('orgChart') }}">
             <i class="fas fa-fw fa-table"></i>
             <span>Organigrama</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('assignArea') }}">
+            <i class="fas fa-fw fa-table"></i>
+            <span>Areas funcionales</span></a>
     </li>
 
 </ul>

@@ -11803,7 +11803,8 @@ a:focus {
 
     .sidebar.toggled .nav-item .collapse .collapse-inner {
         box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-        border-radius: .35rem
+        border-radius: .35rem;
+        background-color: #4e73df;
     }
 
     .sidebar.toggled .nav-item .collapsing {

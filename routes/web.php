@@ -21,5 +21,7 @@ Auth::routes();
 Route::middleware(['auth'])->group( function () {
     Route::get('/logout', 'Auth\LoginController@logout');
     Route::get('home', 'Pages\HomeController@index')->name('home');
-    Route::get('orgChart', 'Pages\OrgChartController@index')->name('orgChart');
+    Route::get('orgChart', 'Adm\OrgChartController@index')->name('orgChart');
+    Route::get('assignArea', 'Adm\OrgChartController@assignArea')->name('assignArea');
+    Route::post('updateArea', 'Adm\OrgChartController@updateAssignArea')->name('update_assignArea');
 });

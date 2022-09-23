@@ -43,6 +43,17 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        /**
+         * Si la migración falla poner:
+         * 'charset' => 'utf8',
+         * 'collation' => 'utf8_unicode_ci',
+         * 'engine' => 'InnoDB',
+         * 
+         * En lugar de:
+         * 'charset' => 'utf8mb4',
+         * 'collation' => 'utf8mb4_unicode_ci',
+         * 'engine' => null,
+         */
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
