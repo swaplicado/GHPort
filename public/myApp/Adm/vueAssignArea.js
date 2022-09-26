@@ -59,7 +59,20 @@ var app = new Vue({
                 if(res.success){
                     $('#editModal').modal('hide');
                     SGui.showOk();
-                    location.reload();
+                    this.lAreas = res.lAreas;
+                    var dataAreas = [];
+                    for(let area of this.lAreas){
+                        dataAreas.push([area.id_area, area.father_area_id, area.user_id, area.area, area.head_user, area.father_area])
+                    }
+                    table.clear().draw();
+                    table.rows.add(dataAreas).draw(); 
+                    // table.rows.add(
+                    //     [
+                    //         [ 1, '', 1, 'area', 'res', 'sup' ],
+                    //         [ 2, '', 2, 'area2', 'res2', 'sup2' ]
+                    //     ]
+                    //  ).draw(); 
+                    // location.reload();s
                 }else{
                     SGui.showError(res.message);
                 }

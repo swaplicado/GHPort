@@ -85,6 +85,27 @@ class OrgChartController extends Controller
             \DB::rollback();
             return json_encode(['success' => false, 'message' => 'Error al actualizar el registro']);
         }
-        return json_encode(['success' => true, 'message' => 'Registro actualizadó con exitó']);
+
+        $areas = \DB::table('adm_areas as a')
+                    ->leftJoin('adm_areas_users as au', 'a.id_area', '=',  'au.area_id')
+                    ->leftJoin('users as u', 'u.id', '=', 'au.head_user_id')
+                    ->where(function ($query){
+                        $query->where('au.is_deleted', 0)
+                            ->orWhere('au.is_deleted', null);
+                    })
+                    ->where('a.is_deleted', 0)
+                    ->select('a.id_area', 'a.area', 'a.father_area_id', 'u.full_name as head_user',  'u.id as user_id')
+                    ->get();
+
+        foreach($areas as $area){
+            $ar = $areas->where('id_area', $area->father_area_id)->first();
+            if(!is_null($ar)){
+                $area->father_area = $ar->area;
+            }else{
+                $area->father_area = null;
+            }
+        }
+
+        return json_encode(['success' => true, 'message' => 'Registro actualizadó con exitó', 'lAreas' => $areas]);
     }
 }

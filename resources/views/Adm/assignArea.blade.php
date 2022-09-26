@@ -85,8 +85,9 @@
 
 @section('scripts')
     <script type="text/javascript">
+        var table;
         $(document).ready(function() {
-            var table = $('#dataTable').DataTable({
+            table = $('#dataTable').DataTable({
                 "language": {
                     "sProcessing":     "Procesando...",
                     "sLengthMenu":     "Mostrar _MENU_ registros",
