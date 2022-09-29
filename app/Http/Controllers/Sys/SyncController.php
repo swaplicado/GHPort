@@ -46,14 +46,16 @@ class SyncController extends Controller
             
             $jobCont = new JobsController();
             $jobCont->saveJobsFromJSON($data->positions);
+            $jobCont->insertJobVsOrgJob();
             
             $usrCont = new UsersController();
             $usrCont->saveUsersFromJSON($data->employees);
             
-            $deptCont->setSupDeptAndHeadUser($data->departments);
+            // $deptCont->setSupDeptAndHeadUser($data->departments);
         }
         catch (\Throwable $th) {
             //throw $th;
+            dd($th);
             return false;
         }
         
