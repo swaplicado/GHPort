@@ -19,16 +19,23 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'num_employee',
+        'employee_num',
         'first_name',
         'last_name',
         'full_name',
+        'full_name_ui',
+        'short_name',
+        'benefits_date',
+        'vacation_date',
+        'last_admission_date',
+        'last_dismiss_date_n',
+        'current_hire_log_id',
+        'is_unionized',
         'is_active',
+        'external_id_n',
         'is_delete',
-        'external_id',
-        'job_id',
         'created_by',
-        'updated_by',
+        'updated_by'
     ];
 
     /**

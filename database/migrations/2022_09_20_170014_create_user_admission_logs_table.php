@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdmCompaniesTable extends Migration
+class CreateUserAdmissionLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateAdmCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::create('adm_companies', function (Blueprint $table) {
-            $table->bigIncrements('id_company');
-            $table->string('company',100);
-            $table->string('acronym',50);
-            $table->boolean('is_delete');
-            $table->integer('external_id');
+        Schema::create('user_admission_logs', function (Blueprint $table) {
+            $table->bigIncrements('id_user_admission_log');
+            $table->date('user_admission_date');
+            $table->date('user_leave_date');
+            $table->integer('admission_count');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
@@ -30,6 +30,6 @@ class CreateAdmCompaniesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('adm_companies');
+        Schema::dropIfExists('user_admission_logs');
     }
 }
