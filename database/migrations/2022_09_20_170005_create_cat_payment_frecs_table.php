@@ -24,6 +24,11 @@ class CreateCatPaymentFrecsTable extends Migration
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
         });
+
+        DB::table('cat_payment_frecs')->insert([
+        	['id_payment_frec' => '1','payment_frec_code' => 'SEM', 'payment_frec_name' => 'semana', 'created_by' => '1', 'updated_by' => '1' ],
+        	['id_payment_frec' => '2','payment_frec_code' => 'QNA', 'payment_frec_name' => 'quincena', 'created_by' => '1', 'updated_by' => '1'],
+        ]);
     }
 
 

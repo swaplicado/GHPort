@@ -14,8 +14,9 @@ class CreateCatVacationPlansDaysTable extends Migration
     public function up()
     {
         Schema::create('cat_vacation_plans_days', function (Blueprint $table) {
-            $table->bigIncrements('id_anniversary');
+            $table->bigIncrements('id_vacation_plan_day');
             $table->unsignedBigInteger('vacations_plan_id');
+            $table->integer('until_year');
             $table->integer('vacation_days');
             $table->timestamps();
 
