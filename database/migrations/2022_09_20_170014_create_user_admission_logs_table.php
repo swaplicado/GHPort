@@ -17,7 +17,7 @@ class CreateUserAdmissionLogsTable extends Migration
             $table->bigIncrements('id_user_admission_log');
             $table->unsignedBigInteger('user_id');
             $table->date('user_admission_date');
-            $table->date('user_leave_date');
+            $table->date('user_leave_date')->nullable();
             $table->integer('admission_count');
             $table->timestamps();
 

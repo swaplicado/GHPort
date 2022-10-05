@@ -7,14 +7,14 @@ var app = new Vue({
         area: null,
         area_id: null,
         superviser_id: null,
-        father_area_id: null,
+        top_org_chart_job_id: null,
     },
     mounted(){
         let self = this;
         var datalAreas = [];
         datalAreas.push({id: '', text: ''});
         for(var i = 0; i<self.lAreas.length; i++){
-            datalAreas.push({id: self.lAreas[i].id_area, text: self.lAreas[i].area});
+            datalAreas.push({id: self.lAreas[i].id_org_chart_job, text: self.lAreas[i].job_name});
         }
         $('#selUser')
             .select2({
@@ -31,18 +31,18 @@ var app = new Vue({
                 data: datalAreas,
             })
             .on('select2:select', function (e){
-                self.father_area_id = e.params.data.id;
+                self.top_org_chart_job_id = e.params.data.id;
             });
     },
     methods: {
         showModal(data){
             this.area_id = data[0];
-            this.father_area_id = data[1];
+            this.top_org_chart_job_id = data[1];
             this.superviser_id = data[2];
             this.area = data[3];
 
             $('#selUser').val(this.superviser_id).trigger('change');
-            $('#selArea').val(this.father_area_id).trigger('change');
+            $('#selArea').val(this.top_org_chart_job_id).trigger('change');
 
             $('#editModal').modal('show');
         },
@@ -50,8 +50,8 @@ var app = new Vue({
         save(){
             SGui.showWaiting(5000);
             axios.post(this.oData.updateRoute, {
-                'area_id': this.area_id,
-                'father_area_id': this.father_area_id,
+                'org_chart_job': this.area_id,
+                'top_org_chart_job_id': this.top_org_chart_job_id,
                 'superviser_id': this.superviser_id,
             })
             .then(response => {
@@ -62,7 +62,16 @@ var app = new Vue({
                     this.lAreas = res.lAreas;
                     var dataAreas = [];
                     for(let area of this.lAreas){
-                        dataAreas.push([area.id_area, area.father_area_id, area.user_id, area.area, area.head_user, area.father_area])
+                        dataAreas.push(
+                            [
+                                area.id_org_chart_job,
+                                area.top_org_chart_job_id_n,
+                                area.head_user_id,
+                                area.job_name,
+                                area.head_user,
+                                area.top_org_chart_job
+                            ]
+                        );
                     }
                     table.clear().draw();
                     table.rows.add(dataAreas).draw(); 

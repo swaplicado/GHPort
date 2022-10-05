@@ -50,11 +50,15 @@ class UsersController extends Controller
                                 'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
                                 'full_name_ui' => $jUser->firstname.' - '.$jUser->num_employee,
                                 'short_name' => $jUser->firstname,
+                                'benefits_date' => $jUser->admission_date,
+                                'vacation_date' => $jUser->admission_date,
+                                'last_admission_date' => $jUser->admission_date,
+                                'last_dismiss_date_n' => $jUser->leave_date,
                                 'job_id' => $this->lJobs[$jUser->siie_job_id],
                                 'org_chart_job_id' => !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1,
                                 'vacation_plan_id' =>1,
                                 'is_active' => $jUser->is_active,
-                                'is_deleted' => $jUser->is_deleted,
+                                'is_delete' => $jUser->is_deleted,
 
                             ]
                         );
@@ -108,7 +112,7 @@ class UsersController extends Controller
             }
         }
 
-        $currectDate = Carbon::now()->toDateString();
+        // $currectDate = Carbon::now()->toDateString();
         $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
         $oUser = new User();
 
@@ -121,10 +125,10 @@ class UsersController extends Controller
         $oUser->full_name = $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname;
         $oUser->full_name_ui = $jUser->firstname.' - '.$jUser->num_employee;
         $oUser->short_name = $jUser->firstname;
-        $oUser->benefits_date = $currectDate;
-        $oUser->vacation_date = $currectDate;
-        $oUser->last_admission_date = $currectDate;
-        $oUser->last_dismiss_date_n = null;
+        $oUser->benefits_date = $jUser->admission_date;
+        $oUser->vacation_date = $jUser->admission_date;
+        $oUser->last_admission_date = $jUser->admission_date;
+        $oUser->last_dismiss_date_n = $jUser->leave_date;
         $oUser->current_hire_log_id = 1;
         $oUser->is_unionized = 0;
         $oUser->company_id = 1;

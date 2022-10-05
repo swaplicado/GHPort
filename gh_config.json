@@ -1,3 +1,13 @@
 {
-    "lastSyncDateTime": "2022-09-23 13:32:57"
+    "lastSyncDateTime": "2022-10-05 17:38:07",
+    "expiration_vacations": {
+        "years": 1,
+        "months": 6,
+        "days": 0
+    },
+    "showVacation": {
+        "years": 1,
+        "months": 0,
+        "days": 0
+    }
 }

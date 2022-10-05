@@ -51,12 +51,10 @@
 </div>
 
     <div class="card-body">
-        <button id="btn_edit" type="button" class="btn3d btn-warning" style="border-radius: 50%; padding: 5px 10px;" title="Editar registro">
-            <span class="icon bx bx-edit-alt"></span>
-        </button>
+        @include('layouts.table_buttons', ['editar' => true])
         <br>
         <div class="table-responsive">
-            <table class="table table-bordered display" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bordered display" id="table_areas" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Area_id</th>
@@ -69,12 +67,12 @@
                 </thead>
                 <tbody>
                     <tr v-for="area in lAreas">
-                        <td>@{{area.id_area}}</td>
-                        <td>@{{area.father_area_id}}</td>
-                        <td>@{{area.user_id}}</td>
-                        <td>@{{area.area}}</td>
+                        <td>@{{area.id_org_chart_job}}</td>
+                        <td>@{{area.top_org_chart_job_id_n}}</td>
+                        <td>@{{area.head_user_id}}</td>
+                        <td>@{{area.job_name}}</td>
                         <td>@{{area.head_user}}</td>
-                        <td>@{{area.father_area}}</td>
+                        <td>@{{area.top_org_chart_job}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -84,85 +82,6 @@
 @endsection
 
 @section('scripts')
-    <script type="text/javascript">
-        var table;
-        $(document).ready(function() {
-            table = $('#dataTable').DataTable({
-                "language": {
-                    "sProcessing":     "Procesando...",
-                    "sLengthMenu":     "Mostrar _MENU_ registros",
-                    "sZeroRecords":    "No se encontraron resultados",
-                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":    "",
-                    "sSearch":         "Buscar:",
-                    "sUrl":            "",
-                    "sInfoThousands":  ",",
-                    "sLoadingRecords": "Cargando...",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":     "Último",
-                        "sNext":     "Siguiente",
-                        "sPrevious": "Anterior"
-                    },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                },
-                "colReorder": true,
-                "responsive": true,
-                "dom": 'Bfrtip',
-                "lengthMenu": [
-                    [ 10, 25, 50, 100, -1 ],
-                    [ 'Mostrar 10', 'Mostrar 25', 'Mostrar 50', 'Mostrar 100', 'Mostrar todo' ]
-                ],
-                "columnDefs": [
-                    {
-                        "targets": [0,1,2],
-                        "visible": false,
-                        "searchable": false,
-                    }
-                ],
-                "buttons": [
-                        'pageLength',
-                        {
-                            extend: 'copy',
-                            text: 'Copiar'
-                        }, 
-                        'csv', 
-                        'excel', 
-                        {
-                            extend: 'print',
-                            text: 'Imprimir'
-                        }
-                    ],
-                    "initComplete": function(){ 
-                        $("#dataTable").show(); 
-                    }
-            });
-
-            $('#dataTable tbody').on('click', 'tr', function () {
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                }
-                else {
-                    table.$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
-                }
-            });
-
-            $('#btn_edit').click(function () {
-                if (table.row('.selected').data() == undefined) {
-                    SGui.showError("Debe seleccionar un renglón");
-                    return;
-                }
-
-                app.showModal(table.row('.selected').data());
-            });
-        } );
-    </script>
+    @include('layouts.table_jsControll', ['table_id' => 'table_areas', 'edit_modal' => true] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vueAssignArea.js') }}"></script>
 @endsection

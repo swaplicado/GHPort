@@ -48,7 +48,7 @@
     </li>
 
     <!-- Nav Item - Tables -->
-    <li class="nav-item">
+    {{-- <li class="nav-item">
         <a class="nav-link" href="{{ route('orgChart') }}">
             <i class="fas fa-fw fa-table"></i>
             <span>Organigrama</span></a>
@@ -57,7 +57,8 @@
         <a class="nav-link" href="{{ route('assignArea') }}">
             <i class="fas fa-fw fa-table"></i>
             <span>Areas funcionales</span></a>
-    </li>
+    </li> --}}
+    {!! session()->has('menu') ? session('menu') : "" !!}
 
 </ul>
 <!-- End of Sidebar -->

@@ -34,9 +34,11 @@ class AddFieldsToUsers extends Migration
             $table->boolean('is_active')->after('vacation_plan_id');
             $table->bigInteger('external_id_n')->nullable()->after('is_active');
             $table->boolean('is_delete')->after('external_id_n');
-            $table->unsignedBigInteger('created_by')->default(1)->after('is_delete');
+            $table->unsignedBigInteger('rol_id')->default(1)->after('is_delete');
+            $table->unsignedBigInteger('created_by')->default(1)->after('rol_id');
             $table->unsignedBigInteger('updated_by')->default(1)->after('created_by');
 
+            $table->foreign('rol_id')->references('id_rol')->on('adm_rol')->onDelete('cascade');
             $table->foreign('company_id')->references('id_company')->on('ext_company')->onDelete('cascade');
             // $table->foreign('department_id')->references('id_department')->on('ext_departments')->onDelete('cascade');
             $table->foreign('job_id')->references('id_job')->on('ext_jobs')->onDelete('cascade');
