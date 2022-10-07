@@ -34,7 +34,8 @@ class Menu {
                 $lMenus = [
                     (object) ['route' => route('orgChart'), 'icon' => 'bx bx-grid-alt', 'name' => 'Organigrama'],
                     (object) ['route' => route('assignArea'), 'icon' => 'bx bx-grid-alt', 'name' => 'Areas funcionales'],
-                    (object) ['route' => route('emplVacations'), 'icon' => 'bx bx-grid-alt', 'name' => 'Vac. colaboradores'],
+                    (object) ['route' => route('myEmplVacations'), 'icon' => 'bx bx-grid-alt', 'name' => 'Vac. mis colaboradores'],
+                    (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bx-grid-alt', 'name' => 'Vac. colaboradores'],
                 ];
                 break;
             

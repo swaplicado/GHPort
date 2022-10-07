@@ -1,14 +1,5 @@
 @extends('layouts.principal')
 
-@section('headJs')
-    <script>
-        function GlobalData(){
-            this.lEmployees = <?php echo json_encode($lEmployees); ?>;
-        }
-        var oServerData = new GlobalData();
-    </script>
-@endsection
-
 @section('content') 
 <div class="card shadow mb-4">
     <div class="card-body">
@@ -81,7 +72,7 @@
                                         <td>{{$vac->vacation_days}}</td>
                                         <td>{{$vac->num_vac_taken}}</td>
                                         <td>{{$vac->expired}}</td>
-                                        <td>0</td>
+                                        <td>{{$vac->request}}</td>
                                         @if($vac->remaining < 0)
                                             <td style="color: red">{{$vac->remaining}}</td>
                                         @else
@@ -95,8 +86,12 @@
                                     <td>{{$emp->tot_vacation_days}}</td>
                                     <td>{{$emp->tot_vacation_taken}}</td>
                                     <td>{{$emp->tot_vacation_expired}}</td>
-                                    <td>0</td>
-                                    <td>{{$emp->tot_vacation_remaining}}</td>
+                                    <td>{{$emp->tot_vacation_request}}</td>
+                                    @if($emp->tot_vacation_remaining < 0)
+                                        <td style="color: red">{{$emp->tot_vacation_remaining}}</td>
+                                    @else
+                                        <td>{{$emp->tot_vacation_remaining}}</td>
+                                    @endif
                                 </tr>
                             </tbody>
                         </table>

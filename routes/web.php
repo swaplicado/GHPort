@@ -25,5 +25,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('assignArea', 'Adm\OrgChartController@assignArea')->name('assignArea');
     Route::post('updateArea', 'Adm\OrgChartController@updateAssignArea')->name('update_assignArea');
 
-    Route::get('emplVacations', 'Pages\EmployeesVacationsController@index')->name('emplVacations');
+    Route::get('myEmplVacations', 'Pages\EmployeesVacationsController@employeesDirectIndex')->name('myEmplVacations');
+    Route::get('allEmplVacations', 'Pages\EmployeesVacationsController@allEmployeesIndex')->name('allEmplVacations');
+    Route::get('getlEmployees/{OrgjobId}', 'Pages\EmployeesVacationsController@getDirectEmployees')->name('getlEmployees');
 });
