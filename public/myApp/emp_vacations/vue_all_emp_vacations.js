@@ -22,6 +22,7 @@ var app = new Vue({
                 })
                 .then(response => {
                     var data = response.data;
+                    var lEmployees_size = this.copylEmployees.length - 1;
                     this.copylEmployees = this.copylEmployees.concat(data);
                     for(var i = 0; i<data.length; i++){
                         var emp = data[i];
@@ -29,7 +30,7 @@ var app = new Vue({
                             '<a '+
                                 'href="#id_'+emp.employee_num+'" class="d-block card-header py-3" data-toggle="collapse" '+
                                 'role="button" aria-expanded="false" aria-controls="'+emp.employee_num+'" '+
-                                'onclick="getEmployees('+i+',' +emp.id+','+ emp.org_chart_job_id+','+ emp.is_head_user+');"'+
+                                'onclick="getEmployees('+(i + lEmployees_size)+',' +emp.id+','+ emp.org_chart_job_id+','+ emp.is_head_user+');"'+
                             '> '+
                             '<h6 class="m-0 font-weight-bold text-primary">'+emp.employee+' '+ 
                                 '<span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span> '+
