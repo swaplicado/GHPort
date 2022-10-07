@@ -109,4 +109,9 @@
 
 @section('scripts')
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_all_emp_vacations.js') }}"></script>
+    <script type="text/javascript">
+        function getEmployees(i, id, org_chart_job_id, is_head_user) {
+            app.getEmployees(i, id, org_chart_job_id, is_head_user);
+        }
+    </script>
 @endsection

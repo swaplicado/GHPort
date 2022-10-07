@@ -3,17 +3,18 @@ var app = new Vue({
     data: {
         oData: oServerData,
         lEmployees: oServerData.lEmployees,
+        copylEmployees: [],
         emp: null,
         items: [],
         item: [],
     },
     mounted(){
-        
+        this.copylEmployees = this.lEmployees;
     },
     methods: {
         getEmployees(index, emp_id, org_job_id, is_head_user){
-            if(is_head_user && typeof this.lEmployees[index].has_geted == 'undefined'){
-                this.lEmployees[index].has_geted = true;
+            if(is_head_user && typeof this.copylEmployees[index].has_geted == 'undefined'){
+                this.copylEmployees[index].has_geted = true;
                 var route = this.oData.getlEmployees_route;
                 route = route.replace(':OrgjobId', org_job_id);
                 
@@ -21,13 +22,14 @@ var app = new Vue({
                 })
                 .then(response => {
                     var data = response.data;
+                    this.copylEmployees = this.copylEmployees.concat(data);
                     for(var i = 0; i<data.length; i++){
                         var emp = data[i];
                         var head_accord ='<div class="card shadow mb-4">'+
                             '<a '+
                                 'href="#id_'+emp.employee_num+'" class="d-block card-header py-3" data-toggle="collapse" '+
                                 'role="button" aria-expanded="false" aria-controls="'+emp.employee_num+'" '+
-                                'onclick="'+this.getEmployees(i, emp.id, emp.org_chart_job_id, emp.is_head_user)+';"'+
+                                'onclick="getEmployees('+i+',' +emp.id+','+ emp.org_chart_job_id+','+ emp.is_head_user+');"'+
                             '> '+
                             '<h6 class="m-0 font-weight-bold text-primary">'+emp.employee+' '+ 
                                 '<span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span> '+
