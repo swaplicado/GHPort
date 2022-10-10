@@ -15,7 +15,7 @@ class AddApproveRejectedColumnsToApplications extends Migration
     {
         Schema::table('applications', function (Blueprint $table) {
             $table->date('approved_date_n')->nullable()->default(null)->after('type_incident_id');
-            $table->date('rejected_date_n')->nullable()->default(null)->after('approvede_date_n');
+            $table->date('rejected_date_n')->nullable()->default(null)->after('approved_date_n');
         });
     }
 
