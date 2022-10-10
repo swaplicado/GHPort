@@ -20,7 +20,7 @@ class OrgChartController extends Controller
 
         foreach($areas as $area){
             if($area->positions == 1){
-                $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->value('full_name');
+                $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->select('full_name')->get()->toArray();
                 $area->is_head = true;
             }else{
                 $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->select('full_name')->get()->toArray();
@@ -34,11 +34,11 @@ class OrgChartController extends Controller
                 $lAreas[] = [
                     'id' => $ar->id_org_chart_job,
                     'pid' => $ar->top_org_chart_job_id_n,
-                    'name' => $ar->users,
+                    'name' => count($ar->users) > 0 ? $ar->users[0]['full_name'] : '',
                     'title' => $ar->job_name,
-                    'img' => "https://cdn.balkan.app/shared/2.jpg",
-                    'jobs' => '1/'.$ar->positions,
-                    'tags' => ['']
+                    'img' => count($ar->users) > 0 ? "https://cdn.balkan.app/shared/2.jpg" : "https://cdn.balkan.app/shared/empty-img-none.svg",
+                    'jobs' => count($ar->users).'/'.$ar->positions,
+                    'tags' => [ count($ar->users) < 1 ? "yellow" : '']
                 ];
             }else{
                 $lAreas[] = [
@@ -46,7 +46,7 @@ class OrgChartController extends Controller
                     'pid' => $ar->top_org_chart_job_id_n,
                     'name' => '',
                     'title' => $ar->job_name,
-                    'img' => count($ar->users) > 0 ? "https://cdn.balkan.app/shared/14.jpg" : "https://cdn.balkan.app/shared/empty-img-none.svg",
+                    'img' => count($ar->users) > 0 ? asset('img/group3-com.png') : "https://cdn.balkan.app/shared/empty-img-none.svg",
                     'jobs' => count($ar->users).'/'.$ar->positions,
                     'tags' => [ count($ar->users) < 1 ? "yellow" : '']
                 ];
