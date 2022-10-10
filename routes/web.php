@@ -28,4 +28,6 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('myEmplVacations', 'Pages\EmployeesVacationsController@employeesDirectIndex')->name('myEmplVacations');
     Route::get('allEmplVacations', 'Pages\EmployeesVacationsController@allEmployeesIndex')->name('allEmplVacations');
     Route::get('getlEmployees/{OrgjobId}', 'Pages\EmployeesVacationsController@getDirectEmployees')->name('getlEmployees');
+    
+    Route::get('requestVacations', 'Pages\RequestVacationsController@index')->name('RequestVacations');
 });

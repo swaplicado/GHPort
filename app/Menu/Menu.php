@@ -32,10 +32,11 @@ class Menu {
             //Administrador Sistema
             case '4':
                 $lMenus = [
-                    (object) ['route' => route('orgChart'), 'icon' => 'bx bx-grid-alt', 'name' => 'Organigrama'],
-                    (object) ['route' => route('assignArea'), 'icon' => 'bx bx-grid-alt', 'name' => 'Areas funcionales'],
-                    (object) ['route' => route('myEmplVacations'), 'icon' => 'bx bx-grid-alt', 'name' => 'Vac. mis colaboradores'],
-                    (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bx-grid-alt', 'name' => 'Vac. colaboradores'],
+                    (object) ['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
+                    (object) ['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
+                    (object) ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. mis colaboradores'],
+                    (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
+                    (object) ['route' => route('RequestVacations'), 'icon' => 'bx bx-grid-alt bx-sm', 'name' => 'Vac. solicitudes'],
                 ];
                 break;
             
@@ -59,7 +60,7 @@ class Menu {
     {
         return '<li class="nav-item">
                     <a class="nav-link" href="'.$route.'">
-                        <i class="fas fa-fw fa-table"></i>
+                        <i class="'.$icon.'"></i>
                         <span>'.$name.'</span>
                     </a>
                 </li>';

@@ -85,7 +85,6 @@ class EmployeeVacationUtils {
         $oRequested = \DB::table('applications as a')
                         ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
-                        ->leftJoin('applications_logs as al', 'al.id_application_log', '=', 'a.id_application')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', [1,2,3])
                         ->where('a.is_deleted', 0)
@@ -100,16 +99,10 @@ class EmployeeVacationUtils {
                             'ab.application_year',
                             'ab.admition_count',
                             'as.applications_st_name',
-                            'as.applications_st_code',
-                            'al.application_id',
-                            'al.application_status_id',
-                            'al.created_by',
-                            'al.updated_by',
-                            'al.created_at as request_date',
-                            'al.updated_at as request_updated_date',
+                            'as.applications_st_code'
                         )
                         ->get();
-                        
+
         return $oRequested;
     }
 }
