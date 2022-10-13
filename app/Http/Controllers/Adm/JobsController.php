@@ -28,7 +28,6 @@ class JobsController extends Controller
                 }
             }
             catch (\Throwable $th) {
-                dd($th);
             }
         }
     }
@@ -344,7 +343,6 @@ class JobsController extends Controller
                 $coll->unique('ext_job_id')->toArray()
             );
         } catch (\Throwable $th) {
-            dd($th);
         }
 
     }

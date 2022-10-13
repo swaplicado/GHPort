@@ -12,6 +12,7 @@ use GuzzleHttp\Exception\RequestException;
 use App\Http\Controllers\Adm\DepartmentsController;
 use App\Http\Controllers\Adm\JobsController;
 use App\Http\Controllers\Adm\UsersController;
+use App\Http\Controllers\Adm\holidaysController;
 
 class SyncController extends Controller
 {
@@ -19,6 +20,7 @@ class SyncController extends Controller
     {
         $config = \App\Utils\Configuration::getConfigurations();
         $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        // $synchronized = true;
 
         $newDate = Carbon::now();
         $newDate->subMinutes(10);
@@ -46,16 +48,15 @@ class SyncController extends Controller
             
             $jobCont = new JobsController();
             $jobCont->saveJobsFromJSON($data->positions);
-            $jobCont->insertJobVsOrgJob();
+            // $jobCont->insertJobVsOrgJob();
             
             $usrCont = new UsersController();
             $usrCont->saveUsersFromJSON($data->employees);
-            
-            // $deptCont->setSupDeptAndHeadUser($data->departments);
+
+            $holidaysCont = new holidaysController();
+            $holidaysCont->saveHolidaysFromJSON($data->holidays);
         }
         catch (\Throwable $th) {
-            //throw $th;
-            dd($th);
             return false;
         }
         

@@ -86,7 +86,7 @@ class EmployeeVacationUtils {
                         ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->where('a.user_id', $id)
-                        ->whereIn('a.request_status_id', [1,2,3])
+                        ->whereIn('a.request_status_id', [1,2,3,4])
                         ->where('a.is_deleted', 0)
                         ->where('ab.application_year', $year)
                         ->where(function($query){

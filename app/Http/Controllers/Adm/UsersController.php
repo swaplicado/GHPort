@@ -32,7 +32,6 @@ class UsersController extends Controller
                 }
             }
             catch (\Throwable $th) {
-                dd($th);
             }
         }
     }
@@ -52,11 +51,12 @@ class UsersController extends Controller
                                 'short_name' => $jUser->firstname,
                                 'benefits_date' => $jUser->admission_date,
                                 'vacation_date' => $jUser->admission_date,
+                                'payment_frec_id' => $jUser->way_pay,
                                 'last_admission_date' => $jUser->admission_date,
                                 'last_dismiss_date_n' => $jUser->leave_date,
                                 'job_id' => $this->lJobs[$jUser->siie_job_id],
-                                'org_chart_job_id' => !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1,
-                                'vacation_plan_id' =>1,
+                                // 'org_chart_job_id' => !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1,
+                                'vacation_plan_id' => 1,
                                 'is_active' => $jUser->is_active,
                                 'is_delete' => $jUser->is_deleted,
 
@@ -136,6 +136,7 @@ class UsersController extends Controller
         $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
         $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
         $oUser->vacation_plan_id = 1;
+        $oUser->payment_frec_id = $jUser->way_pay;
         $oUser->is_active = $jUser->is_active;
         $oUser->external_id_n = $jUser->id_employee;
         $oUser->is_delete = $jUser->is_deleted;

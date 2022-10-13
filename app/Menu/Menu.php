@@ -14,18 +14,29 @@ class Menu {
             //Estándar
             case '1':
                 $lMenus = [
+                    (object) ['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
+                    (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                 ];
                 break;
 
             //Administrador
             case '2':
                 $lMenus = [
+                    (object) ['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
+                    (object) ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. mis colaboradores'],
+                    (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
+                    (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                 ];
                 break;
 
             //GH
             case '3':
                 $lMenus = [
+                    (object) ['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
+                    (object) ['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
+                    (object) ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. mis colaboradores'],
+                    (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
+                    (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                 ];
                 break;
 
@@ -36,7 +47,7 @@ class Menu {
                     (object) ['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
                     (object) ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. mis colaboradores'],
                     (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
-                    (object) ['route' => route('RequestVacations'), 'icon' => 'bx bx-grid-alt bx-sm', 'name' => 'Vac. solicitudes'],
+                    (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                 ];
                 break;
             

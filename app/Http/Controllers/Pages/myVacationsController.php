@@ -8,14 +8,13 @@ use Carbon\Carbon;
 use App\User;
 use App\Utils\EmployeeVacationUtils;
 
-class RequestVacationsController extends Controller
+class myVacationsController extends Controller
 {
     public $months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
     public function index(){
         $config = \App\Utils\Configuration::getConfigurations();
 
-        // $user = \DB::table('users')->where('id', \Auth::user()->id)->first();
         $user = \DB::table('users as u')
                     ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
                     ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id')
@@ -31,7 +30,7 @@ class RequestVacationsController extends Controller
                     })
                     ->where('u.is_active', 1)
                     ->where('u.is_delete', 0)
-                    ->where('u.id', 2)
+                    ->where('u.id', \Auth::user()->id)
                     ->select(
                         'u.id',
                         'u.employee_num',
@@ -39,6 +38,7 @@ class RequestVacationsController extends Controller
                         'u.full_name',
                         'u.last_admission_date',
                         'u.org_chart_job_id',
+                        'u.payment_frec_id',
                         'j.id_job',
                         'j.job_name_ui',
                         'd.id_department',
@@ -55,7 +55,10 @@ class RequestVacationsController extends Controller
 
         $user->antiquity = $human;
 
-        $user->vacation = EmployeeVacationUtils::getEmployeeVacations(2, $config->showVacation->years);
+        $user->vacation = EmployeeVacationUtils::getEmployeeVacations(\Auth::user()->id, $config->showVacation->years);
+        $user->actual_vac_days = 0;
+        $user->prox_vac_days = 0;
+        $user->prop_vac_days = 0;
 
         foreach($user->vacation as $vac){
             $date_start = Carbon::parse($vac->date_start);
@@ -64,25 +67,36 @@ class RequestVacationsController extends Controller
             $vac->date_start = $this->months_code[$date_start->month].'-'.$date_start->format('Y');
             $vac->date_end = $this->months_code[$date_end->month].'-'.$date_end->format('Y');
 
-            $oVacConsumed = EmployeeVacationUtils::getVacationConsumed(2, $vac->year);
-            $vac_request = EmployeeVacationUtils::getVacationRequested(2, $vac->year);
+            $oVacConsumed = EmployeeVacationUtils::getVacationConsumed(\Auth::user()->id, $vac->year);
+            $vac_request = EmployeeVacationUtils::getVacationRequested(\Auth::user()->id, $vac->year);
 
+            $vac->request = 0;
+            $vac->oRequest = null;
             if(!is_null($vac_request)){
-                $vac->request = collect($vac_request)->sum('days_effective');
-                $vac->oRequest = $vac_request;
-            }else{
-                $vac->request = 0;
-                $vac->oRequest = null;
+                if(sizeof($vac_request) > 0){
+                    $vac->request = collect($vac_request)->sum('days_effective');
+                    $vac->oRequest = $vac_request;
+                }
             }
 
+            $vac->oVacConsumed = null;
+            $vac->num_vac_taken = 0;
+            $vac->remaining = $vac->vacation_days - $vac->request;
             if(!is_null($oVacConsumed)){
-                $vac->oVacConsumed = $oVacConsumed;
-                $vac->num_vac_taken = collect($oVacConsumed)->sum('day_consumption');
-                $vac->remaining = $vac->vacation_days - collect($oVacConsumed)->sum('day_consumption') - $vac->request;
-            }else{
-                $vac->oVacConsumed = null;
-                $vac->num_vac_taken = 0;
-                $vac->remaining = $vac->vacation_days - $vac->request;
+                if(sizeof($oVacConsumed) > 0){
+                    $vac->oVacConsumed = $oVacConsumed;
+                    $vac->num_vac_taken = collect($oVacConsumed)->sum('day_consumption');
+                    $vac->remaining = $vac->vacation_days - collect($oVacConsumed)->sum('day_consumption') - $vac->request;
+                }
+            }
+
+            if(Carbon::today()->gt($date_start) && Carbon::today()->lt($date_end)){
+                $user->prox_vac_days = $vac->remaining;
+                $user->prop_vac_days = number_format(((Carbon::today()->diffInDays($date_start) * $user->prox_vac_days) / $date_start->diffInDays($date_end)), 2);
+            }
+
+            if($date_start->lt(Carbon::today()) && $date_end->lt(Carbon::today()) && Carbon::today()->diffInYears($date_end) < 1){
+                $user->actual_vac_days = $vac->remaining;
             }
 
             $date_expiration = Carbon::parse($date_end->addDays(1))->addYears($config->expiration_vacations->years)->addMonths($config->expiration_vacations->months);
@@ -113,7 +127,17 @@ class RequestVacationsController extends Controller
             $user->tot_vacation_expired = 0;
             $user->tot_vacation_request = 0;
         }
-// dd($user);
-        return view('emp_vacations.my_vacations')->with('user', $user);
+
+        $now = Carbon::now();
+        $initialCalendarDate = $now->subDays(30)->toDateString();
+
+        $holidays = \DB::table('holidays')
+                        ->where('fecha', '>', Carbon::now()->toDateString())
+                        ->where('is_deleted', 0)
+                        ->pluck('fecha');
+
+        return view('emp_vacations.my_vacations')->with('user', $user)
+                                                ->with('initialCalendarDate', $initialCalendarDate)
+                                                ->with('lHolidays', $holidays);
     }
 }

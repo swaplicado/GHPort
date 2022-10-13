@@ -26,16 +26,34 @@
                             "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                         }
                     },
-                    "colReorder": true,
+                    @if(isset($noInfo))
+                        "info": false,
+                    @endif
+                    @if(isset($noSearch))
+                        "searching": false,
+                    @endif
+                    @if(isset($noPaging))
+                        "paging": false,
+                    @endif
+                    @if(isset($noColReorder))
+                        "colReorder": false,
+                    @else
+                        "colReorder": true,
+                    @endif
+                    @if(isset($noSort))
+                        "bSort": false,
+                    @endif
+                    @if(!isset($noDom))
+                        "dom": 'Bfrtip',
+                    @endif
                     "responsive": true,
-                    "dom": 'Bfrtip',
                     "lengthMenu": [
                         [ 10, 25, 50, 100, -1 ],
                         [ 'Mostrar 10', 'Mostrar 25', 'Mostrar 50', 'Mostrar 100', 'Mostrar todo' ]
                     ],
                     "columnDefs": [
                         {
-                            "targets": [0,1,2],
+                            "targets": <?php echo json_encode($colTargets) ?>,
                             "visible": false,
                             "searchable": false,
                         }
@@ -53,21 +71,22 @@
                                 text: 'Imprimir'
                             }
                         ],
-                    "colReorder": true,
                     "initComplete": function(){ 
-                        $("#{{$table_id}}").show(); 
+                        $("#{{$table_id}}").show();
                     }
                 });
-    
-        $('#{{$table_id}} tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            }
-            else {
-                table.$('tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-            }
-        });
+            
+        @if(isset($select))
+            $('#{{$table_id}} tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    table.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+        @endif
     
         /**
          * Editar un registro con formulario
@@ -97,6 +116,15 @@
                 }
         
                 app.showModal(table.row('.selected').data());
+            });
+        @endif
+
+        /**
+         * Crear un registro con vue modal
+         */
+        @if(isset($crear_modal))
+            $('#btn_crear').click(function () {        
+                app.showModal();
             });
         @endif
     });

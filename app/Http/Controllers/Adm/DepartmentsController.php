@@ -24,7 +24,6 @@ class DepartmentsController extends Controller
                 }
             }
             catch (\Throwable $th) {
-                dd($th);
             }
         }
     }
@@ -57,35 +56,6 @@ class DepartmentsController extends Controller
 
         $oDept->save();
     }
-
-    // public function setSupDeptAndHeadUser($lSiieDepts)
-    // {
-    //     $lUnivDepts = Department::pluck('id_department', 'external_id');
-    //     $lUsers = User::pluck('id', 'external_id');
-
-    //     foreach ($lSiieDepts as $siieDepto) {
-    //         $upds = [];
-    //         if ($siieDepto->superior_department_id > 0) {
-    //             $idSupDepto = $lUnivDepts[$siieDepto->superior_department_id];
-    //             $upds['department_n_id'] = $idSupDepto;
-    //         }
-            
-    //         if ($siieDepto->head_employee_id > 0) {
-    //             $idHeadUser = $lUsers[$siieDepto->head_employee_id];
-    //             $upds['head_user_n_id'] = $idHeadUser;
-    //         }
-
-    //         if (count($upds) == 0) {
-    //             continue;
-    //         }
-
-    //         $idDepto = $lUnivDepts[$siieDepto->id_department];
-    
-    //         Department::where('id_department', $idDepto)
-    //                     ->update($upds);
-    //     }
-
-    // }
 
     public function index(){
         
