@@ -9,6 +9,7 @@ var app = new Vue({
         returnDate: null,
         comments: null,
         idRequest: null,
+        status: null,
         takedDays: 0,
         lDays: [],
         lRec: [],
@@ -25,6 +26,7 @@ var app = new Vue({
             if(data != null){
                 this.comments = data[8];
                 this.idRequest = data[0];
+                this.status = data[7];
                 $('#date-range200').val(data[1]).trigger('change');
 			    $('#date-range201').val(data[2]).trigger('change');
             }else{
@@ -35,6 +37,7 @@ var app = new Vue({
                 this.idRequest = null;
                 this.takedDays = 0;
                 this.lDays = [];
+                this.status = null;
                 $('#clear').trigger('click');
             }
             $('#modal_solicitud').modal('show');
@@ -186,12 +189,22 @@ var app = new Vue({
         },
 
         requestVac(){
-            SGui.showWaiting(5000);
+            if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
+                SGui.showMessage('', 'Debe ingresar las fecha de inicio y fin de vacaciones', 'warning');
+                return;
+            }
+
             if(this.idRequest == null){
                 var route = this.oData.requestVacRoute;
             }else{
+                if(this.status != 'CREADO'){
+                    SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
+                    return;
+                }
                 var route = this.oData.updateRequestVacRoute;
             }
+            
+            SGui.showWaiting(5000);
             axios.post(route, {
                 'id_application': this.idRequest,
                 'startDate': this.startDate,
@@ -218,7 +231,7 @@ var app = new Vue({
             })
             .catch(function(error) {
                 console.log(error);
-                SGui.showMessage('', data.message, data.icon);
+                SGui.showError(error);
             });
         },
 
@@ -238,7 +251,7 @@ var app = new Vue({
             })
             .catch(function(error) {
                 console.log(error);
-                SGui.showMessage('', data.message, data.icon);
+                SGui.showError(error);
             });
         },
 
@@ -263,7 +276,7 @@ var app = new Vue({
             })
             .catch(function(error) {
                 console.log(error);
-                SGui.showMessage('', data.message, data.icon);
+                SGui.showError(error);
             });
         },
 
@@ -323,6 +336,11 @@ var app = new Vue({
         },
 
         deleteRegistry(data){
+            if(data[7] != 'CREADO'){
+                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
+                return;
+            }
+
             Swal.fire({
                 title: '¿Desea eliminar la solicitud para las fechas?',
                 text: data[5],

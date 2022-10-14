@@ -209,8 +209,13 @@ class myVacationsController extends Controller
         $lDays = $request->lDays;
         
         try {
-            \DB::beginTransaction();
             $application = Application::findOrFail($request->id_application);
+
+            if($application->request_status_id != 1){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden eliminar solicitudes con el estatus CREADO', 'icon' => 'warning']);
+            }
+
+            \DB::beginTransaction();
             $application->is_deleted = 1;
             $application->update();
             \DB::commit();
@@ -382,10 +387,14 @@ class myVacationsController extends Controller
 
     public function deleteRequestVac(Request $request){
         try {
-            \DB::beginTransaction();
-
             $application = Application::findOrFail($request->id_application);
 
+            if($application->request_status_id != 1){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden eliminar solicitudes con el estatus CREADO', 'icon' => 'warning']);
+            }
+
+            \DB::beginTransaction();
+            
             $application->is_deleted = 1;
             $application->update();
 
