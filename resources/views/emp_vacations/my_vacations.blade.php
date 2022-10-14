@@ -27,6 +27,11 @@
             this.oUser = <?php echo json_encode($user); ?>;
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
+            this.year = <?php echo json_encode($year); ?>;
+            this.requestVacRoute = <?php echo json_encode(route('myVacations_setRequestVac')); ?>;
+            this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
+            this.filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
+            this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -114,6 +119,19 @@
             <div>
                 <div class="card-body">
                     @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true])
+                    <div class="col-md-3" style="float: right;">
+                        <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
+                            <span class="bx bx-minus" ></span>
+                        </button>
+                        <input type="number" class="form-control" v-model="year" readonly style="width: 10ch; display: inline;">
+                        <button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style = "display: inline;">
+                            <span class="bx bx-plus"></span>
+                        </button>
+
+                        <button type="button" class="btn btn-primary" style="float: right;"  v-on:click="filterYear();">
+                            <span class="bx bx-search"></span>
+                        </button>
+                    </div>
                     <br>
                     <br>
                     <table class="table table-bordered" id="table_myRequest" style="width: 100%;">
@@ -122,34 +140,32 @@
                             <th>start date</th>
                             <th>end date</th>
                             <th>Fecha solicitud</th>
-                            <th>Fecha aprobado/rechazado</th>
+                            <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
                             <th>Fecha vac.</th>
                             <th>Dias efic.</th>
                             <th>Estatus</th>
                             <th>coment.</th>
                         </thead>
                         <tbody>
-                            <template v-for="vac in oUser.vacation">
-                                <tr v-for="rec in vac.oRequest">
-                                    <td>@{{rec.id_application}}</td>
-                                    <td>@{{rec.start_date}}</td>
-                                    <td>@{{rec.end_date}}</td>
-                                    <td>@{{formatDate(rec.created_at)}}</td>
-                                    <td>
-                                        @{{
-                                            (rec.request_status_id == 3) ?
+                            <tr v-for="rec in oUser.applications">
+                                <td>@{{rec.id_application}}</td>
+                                <td>@{{rec.start_date}}</td>
+                                <td>@{{rec.end_date}}</td>
+                                <td>@{{formatDate(rec.created_at)}}</td>
+                                <td>
+                                    @{{
+                                        (rec.request_status_id == 3) ?
+                                            rec.approved_date_n :
+                                            ((rec.request_status_id == 4) ?
                                                 rec.approved_date_n :
-                                                ((rec.request_status_id == 4) ?
-                                                    rec.approved_date_n :
-                                                    '')
-                                        }}
-                                    </td>
-                                    <td>@{{rec.start_date}} a @{{rec.end_date}}</td>
-                                    <td>@{{rec.days_effective}}</td>
-                                    <td>@{{rec.applications_st_name}}</td>
-                                    <td>@{{rec.sup_comments_n}}</td>
-                                </tr>
-                            </template>
+                                                '')
+                                    }}
+                                </td>
+                                <td>@{{rec.start_date}} a @{{rec.end_date}}</td>
+                                <td>@{{rec.total_days}}</td>
+                                <td>@{{rec.applications_st_name}}</td>
+                                <td>@{{rec.sup_comments_n}}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -181,6 +197,7 @@
                                         'noInfo' => true,
                                         'edit_modal' => true,
                                         'crear_modal' => true,
+                                        'delete' => true,
                                         'noSort' => true
                                     ] )
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>

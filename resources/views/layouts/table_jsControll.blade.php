@@ -1,7 +1,8 @@
 <script>
-    var table;
+    var table = new Object();
+    table["{{$table_id}}"] = '';
     $(document).ready(function() {
-        table = $('#{{$table_id}}').DataTable({
+        table['{{$table_id}}'] = $('#{{$table_id}}').DataTable({
                     "language": {
                         "sProcessing":     "Procesando...",
                         "sLengthMenu":     "Mostrar _MENU_ registros",
@@ -82,7 +83,7 @@
                     $(this).removeClass('selected');
                 }
                 else {
-                    table.$('tr.selected').removeClass('selected');
+                    table['{{$table_id}}'].$('tr.selected').removeClass('selected');
                     $(this).addClass('selected');
                 }
             });
@@ -93,12 +94,12 @@
          */
         @if(isset($edit_form))
             $('#btn_edit').click(function () {
-                if (table.row('.selected').data() == undefined) {
+                if (table['{{$table_id}}'].row('.selected').data() == undefined) {
                     SGui.showError("Debe seleccionar un renglón");
                     return;
                 }
         
-                var id = table.row('.selected').data()[0];
+                var id = table['{{$table_id}}'].row('.selected').data()[0];
                 var url = '{{route($editar, ":id")}}';
                 url = url.replace(':id',id);
                 window.location.href = url;
@@ -110,12 +111,12 @@
          */
         @if(isset($edit_modal))
             $('#btn_edit').click(function () {
-                if (table.row('.selected').data() == undefined) {
+                if (table['{{$table_id}}'].row('.selected').data() == undefined) {
                     SGui.showError("Debe seleccionar un renglón");
                     return;
                 }
         
-                app.showModal(table.row('.selected').data());
+                app.showModal(table['{{$table_id}}'].row('.selected').data());
             });
         @endif
 
@@ -125,6 +126,19 @@
         @if(isset($crear_modal))
             $('#btn_crear').click(function () {        
                 app.showModal();
+            });
+        @endif
+
+        /**
+         * Borrar un registro con vue
+         */
+        @if(isset($delete))
+            $('#btn_delete').click(function  () {
+                if (table['{{$table_id}}'].row('.selected').data() == undefined) {
+                    SGui.showError("Debe seleccionar un renglón");
+                    return;
+                }
+                app.deleteRegistry(table['{{$table_id}}'].row('.selected').data());
             });
         @endif
     });

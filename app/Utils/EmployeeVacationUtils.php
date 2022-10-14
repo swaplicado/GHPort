@@ -105,4 +105,25 @@ class EmployeeVacationUtils {
 
         return $oRequested;
     }
+
+    public static function getApplications($id, $year){
+        $oRequested = \DB::table('applications as a')
+                        ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
+                        ->where('a.user_id', $id)
+                        ->whereIn('a.request_status_id', [1,2,3,4])
+                        ->where('a.is_deleted', 0)
+                        ->whereYear('a.updated_at', $year)
+                        ->where(function($query){
+                            $query->where('as.is_deleted', 0)
+                                ->orWhere('as.is_deleted', null);
+                        })
+                        ->select(
+                            'a.*',
+                            'as.applications_st_name',
+                            'as.applications_st_code'
+                        )
+                        ->get();
+
+        return $oRequested;
+    }
 }

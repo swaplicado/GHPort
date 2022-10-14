@@ -9,7 +9,7 @@
     </button>
 @endif
 @if(isset($delete))
-    <button id="btn_del" type="button" class="btn3d btn-danger" style="border-radius: 50%; padding: 5px 10px; display: inline-block; margin-right: 5px" title="Editar registro">
+    <button id="btn_delete" type="button" class="btn3d btn-danger" style="border-radius: 50%; padding: 5px 10px; display: inline-block; margin-right: 5px" title="Editar registro">
         <span class="icon bx bxs-trash"></span>
     </button>
 @endif

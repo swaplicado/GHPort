@@ -73,8 +73,8 @@ var app = new Vue({
                             ]
                         );
                     }
-                    table.clear().draw();
-                    table.rows.add(dataAreas).draw(); 
+                    table['table_areas'].clear().draw();
+                    table['table_areas'].rows.add(dataAreas).draw(); 
                     // table.rows.add(
                     //     [
                     //         [ 1, '', 1, 'area', 'res', 'sup' ],

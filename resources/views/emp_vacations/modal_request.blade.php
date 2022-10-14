@@ -19,9 +19,9 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>@{{oUser.actual_vac_days}}</td>
-                            <td>@{{oUser.prop_vac_days}}</td>
-                            <td>@{{oUser.prox_vac_days}}</td>
+                            <td>@{{actual_vac_days}}</td>
+                            <td>@{{prop_vac_days}}</td>
+                            <td>@{{prox_vac_days}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -73,7 +73,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Solicitar</a>
+                <button type="button" class="btn btn-primary" v-on:click="requestVac()">Solicitar</a>
             </div>
         </div>
     </div>
