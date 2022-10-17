@@ -57,6 +57,11 @@
                             "targets": <?php echo json_encode($colTargets) ?>,
                             "visible": false,
                             "searchable": false,
+                        },
+                        {
+                            "targets": <?php echo json_encode($colTargetsSercheable) ?>,
+                            "visible": false,
+                            "searchable": true,
                         }
                     ],
                     "buttons": [
@@ -139,6 +144,45 @@
                     return;
                 }
                 app.deleteRegistry(table['{{$table_id}}'].row('.selected').data());
+            });
+        @endif
+
+        /**
+         * Enviar un registro con vue
+         */
+        @if(isset($send))
+            $('#btn_send').click(function  () {
+                if (table['{{$table_id}}'].row('.selected').data() == undefined) {
+                    SGui.showError("Debe seleccionar un renglón");
+                    return;
+                }
+                app.sendRegistry(table['{{$table_id}}'].row('.selected').data());
+            });
+        @endif
+
+        /**
+         * Aprobar un registro con vue
+         */
+        @if(isset($accept))
+            $('#btn_accept').click(function  () {
+                if (table['{{$table_id}}'].row('.selected').data() == undefined) {
+                    SGui.showError("Debe seleccionar un renglón");
+                    return;
+                }
+                app.showAcceptRegistry(table['{{$table_id}}'].row('.selected').data());
+            });
+        @endif
+
+        /**
+         * Rechazar un registro con vue
+         */
+        @if(isset($reject))
+            $('#btn_reject').click(function  () {
+                if (table['{{$table_id}}'].row('.selected').data() == undefined) {
+                    SGui.showError("Debe seleccionar un renglón");
+                    return;
+                }
+                app.showRejectRegistry(table['{{$table_id}}'].row('.selected').data());
             });
         @endif
     });

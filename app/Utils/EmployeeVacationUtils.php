@@ -28,6 +28,7 @@ class EmployeeVacationUtils {
                             'u.full_name',
                             'u.last_admission_date',
                             'u.org_chart_job_id',
+                            'u.payment_frec_id',
                             'j.id_job',
                             'j.job_name_ui',
                             'd.id_department',
@@ -106,11 +107,11 @@ class EmployeeVacationUtils {
         return $oRequested;
     }
 
-    public static function getApplications($id, $year){
+    public static function getApplications($id, $year, $status = [1,2,3,4]){
         $oRequested = \DB::table('applications as a')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->where('a.user_id', $id)
-                        ->whereIn('a.request_status_id', [1,2,3,4])
+                        ->whereIn('a.request_status_id', $status)
                         ->where('a.is_deleted', 0)
                         ->whereYear('a.updated_at', $year)
                         ->where(function($query){

@@ -198,7 +198,7 @@ var app = new Vue({
                 var route = this.oData.requestVacRoute;
             }else{
                 if(this.status != 'CREADO'){
-                    SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
+                    SGui.showMessage('','Solo se pueden editar solicitudes con el estatus CREADO', 'warning');
                     return;
                 }
                 var route = this.oData.updateRequestVacRoute;
@@ -225,6 +225,7 @@ var app = new Vue({
                     
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
+                    table['table_myRequest'].$('tr.selected').removeClass('selected');
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -354,6 +355,51 @@ var app = new Vue({
                     this.deleteRequest(data[0]);
                 }
             })
+        },
+
+        sendRegistry(data){
+            if(data[7] != 'CREADO'){
+                SGui.showMessage('','Solo se pueden enviar solicitudes con el estatus CREADO', 'warning');
+                return
+            }
+            Swal.fire({
+                title: '¿Desea enviar la solicitud para las fechas?',
+                text: data[5],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.sendRequest(data[0]);
+                }
+            })
+        },
+
+        sendRequest(request_id){
+            SGui.showWaiting(5000);
+            axios.post(this.oData.sendRequestRoute, {
+                'id_application': request_id,
+                'year': this.year,
+            })
+            .then(response => {
+                var data = response.data;
+                if(data.success){
+                    this.actual_vac_days = data.oUser.actual_vac_days,
+                    this.prop_vac_days = data.oUser.prop_vac_days,
+                    this.prox_vac_days = data.oUser.prox_vac_days
+                    SGui.showOk();
+                    this.reDrawVacationsTable(data);
+                    this.reDrawRequestTable(data.oUser);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                SGui.showError(error);
+            });
         }
     },
 })

@@ -1,0 +1,118 @@
+<?php
+
+namespace App\Http\Controllers\Pages;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\Vacations\Application;
+use App\Utils\orgChartUtils;
+use App\Utils\EmployeeVacationUtils;
+use App\Constants\SysConst;
+
+class requestVacationsController extends Controller
+{
+    public function getData($year){
+        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob(\Auth::user()->org_chart_job_id);
+
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+
+        foreach($lEmployees as $emp){
+            $emp->applications = EmployeeVacationUtils::getApplications(
+                                                            $emp->id,
+                                                            $year,
+                                                            [   SysConst::APPLICATION_ENVIADO,
+                                                                SysConst::APPLICATION_APROBADO,
+                                                                SysConst::APPLICATION_RECHAZADO
+                                                            ]
+                                                        );
+        }
+
+        $holidays = \DB::table('holidays')
+                        ->where('is_deleted', 0)
+                        ->pluck('fecha');
+
+        return [$year, $lEmployees, $holidays, $arrOrgJobs];
+    }
+
+    public function index(){
+        \Auth::user()->authorizedRole(SysConst::JEFE);
+        $year = Carbon::now()->year;
+        $data = $this->getData($year);
+        $constants = [
+            'SEMANA' => SysConst::SEMANA,
+            'QUINCENA' => SysConst::QUINCENA,
+            'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
+            'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
+            'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
+        ];
+
+        return view('emp_vacations.requestVacations')->with('lEmployees', $data[1])
+                                                    ->with('year', $data[0])
+                                                    ->with('lHolidays', $data[2])
+                                                    ->with('constants', $constants);
+    }
+
+    public function acceptRequest(Request $request){
+        \Auth::user()->authorizedRole(SysConst::JEFE);
+        \Auth::user()->IsMyEmployee($request->id_user);
+        try {
+            $application = Application::findOrFail($request->id_application);
+
+            if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
+            \DB::beginTransaction();
+            
+            $application->request_status_id = SysConst::APPLICATION_APROBADO;
+            $application->update();
+            
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al aprobrar la solicitud', 'icon' => 'error']);
+        }
+
+        $data = $this->getData($request->year);
+
+        return json_encode(['success' => true, 'message' => 'Solicitud aprobada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
+    }
+
+    public function rejectRequest(Request $request){
+        \Auth::user()->authorizedRole(SysConst::JEFE);
+        \Auth::user()->IsMyEmployee($request->id_user);
+        try {
+            $application = Application::findOrFail($request->id_application);
+
+            if($application->request_status_id != SysConst::APPLICATION_ENVIADO && $application->request_status_id != SysConst::APPLICATION_APROBADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas o aprobadas', 'icon' => 'warning']);
+            }
+
+            \DB::beginTransaction();
+            
+            $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
+            $application->update();
+            
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al rechazar la solicitud', 'icon' => 'error']);
+        }
+
+        $data = $this->getData($request->year);
+
+        return json_encode(['success' => true, 'message' => 'Solicitud rechazada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
+    }
+
+    public function filterYear(Request $request){
+        try {
+            $data = $this->getData($request->year);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
+        }
+
+        return json_encode(['success' => true, 'lEmployees' => $data[1], 'holidays' => $data[2]]);
+    }
+}

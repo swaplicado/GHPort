@@ -133,7 +133,7 @@ class myVacationsController extends Controller
         $initialCalendarDate = $now->subDays(30)->toDateString();
 
         $holidays = \DB::table('holidays')
-                        ->where('fecha', '>', Carbon::now()->toDateString())
+                        ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
@@ -408,5 +408,30 @@ class myVacationsController extends Controller
         }
 
         return json_encode(['success' => true, 'message' => 'Registro eliminado con éxito', 'icon' => 'success', 'oUser' => $user]);
+    }
+
+    public function sendRequestVac(Request $request){
+        try {
+            $application = Application::findOrFail($request->id_application);
+
+            if($application->request_status_id != 1){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
+            }
+
+            \DB::beginTransaction();
+            
+            $application->request_status_id = 2;
+            $application->update();
+
+            $user = $this->getUserVacationsData();
+            $user->applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, $request->year);
+            
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'message' => 'Registro enviado con éxito', 'icon' => 'success', 'oUser' => $user]);
     }
 }

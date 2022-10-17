@@ -53,6 +53,7 @@
     <div class="card-body">
         @include('layouts.table_buttons', ['editar' => true])
         <br>
+        <br>
         <div class="table-responsive">
             <table class="table table-bordered display" id="table_areas" width="100%" cellspacing="0">
                 <thead>
@@ -82,6 +83,12 @@
 @endsection
 
 @section('scripts')
-    @include('layouts.table_jsControll', ['table_id' => 'table_areas', 'colTargets' => [0,1,2], 'select' => true, 'edit_modal' => true] )
+    @include('layouts.table_jsControll', [
+                                            'table_id' => 'table_areas',
+                                            'colTargets' => [0,1,2],
+                                            'colTargetsSercheable' => [],
+                                            'select' => true,
+                                            'edit_modal' => true
+                                        ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vueAssignArea.js') }}"></script>
 @endsection

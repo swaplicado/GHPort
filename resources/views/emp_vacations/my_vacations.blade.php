@@ -32,6 +32,7 @@
             this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
             this.filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
+            this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -39,7 +40,7 @@
 
 @section('content') 
 <div class="card shadow mb-4" id="myVacations">
-    @include('emp_vacations.modal_request')
+    @include('emp_vacations.modal_myRequest')
     <div class="card-body">
         <div class="card shadow mb-4">
             <div>
@@ -118,7 +119,7 @@
         <div class="card shadow mb-4">
             <div>
                 <div class="card-body">
-                    @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true])
+                    @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true])
                     <div class="col-md-3" style="float: right;">
                         <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                             <span class="bx bx-minus" ></span>
@@ -127,7 +128,6 @@
                         <button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                             <span class="bx bx-plus"></span>
                         </button>
-
                         <button type="button" class="btn btn-primary" style="float: right;"  v-on:click="filterYear();">
                             <span class="bx bx-search"></span>
                         </button>
@@ -179,6 +179,7 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'vacationsTable',
                                         'colTargets' => [],
+                                        'colTargetsSercheable' => [],
                                         'noSearch' => true,
                                         'noDom' => true,
                                         'noPaging' => true,
@@ -190,15 +191,17 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_myRequest',
                                         'colTargets' => [0,1,2],
+                                        'colTargetsSercheable' => [],
                                         'select' => true,
                                         'noSearch' => true,
                                         'noDom' => true,
                                         'noPaging' => true,
                                         'noInfo' => true,
+                                        'noSort' => true,
                                         'edit_modal' => true,
                                         'crear_modal' => true,
                                         'delete' => true,
-                                        'noSort' => true
+                                        'send' => true
                                     ] )
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
 <script>
