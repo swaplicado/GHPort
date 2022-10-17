@@ -3,6 +3,16 @@ namespace App\Constants;
 
 class SysConst {
     /**
+     * Constantes de la tabla cat_incidence_cls
+     */
+    public const CLASS_VACACIONES = 1;
+
+    /**
+     * Constantes de la tabla cat_incidence_tps
+     */
+    public const TYPE_VACACIONES = 1;
+
+    /**
      * Constantes de la tabla adm_rol
      */
     public const ESTANDAR = 1;

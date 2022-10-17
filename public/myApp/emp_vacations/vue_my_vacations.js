@@ -52,7 +52,7 @@ var app = new Vue({
             this.lDays = [];
             var diffDays = moment(this.endDate).diff(moment(this.startDate), 'days');
             var oDate = moment(this.startDate);
-            if(this.oUser.payment_frec_id == 1){
+            if(this.oUser.payment_frec_id == this.oData.const.SEMANA){
                 if(this.startDate != null && this.startDate != ''){
                     for(var i = 0; i < 31;  i++){
                         switch (moment(this.startDate).weekday()) {
@@ -221,8 +221,6 @@ var app = new Vue({
                     this.prox_vac_days = data.oUser.prox_vac_days
                     $('#modal_solicitud').modal('hide');
                     SGui.showOk();
-                    // this.oUser = data.oUser;
-                    
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
                     table['table_myRequest'].$('tr.selected').removeClass('selected');
@@ -290,15 +288,15 @@ var app = new Vue({
                         rec.start_date,
                         rec.end_date,
                         this.formatDate(rec.created_at),
-                        ((rec.request_status_id == 3) ?
+                        ((rec.request_status_id == this.oData.APPLICATION_APROBADO) ?
                             rec.approved_date_n :
-                                ((rec.request_status_id == 4) ?
+                                ((rec.request_status_id == this.oData.APPLICATION_RECHAZADO) ?
                                     rec.approved_date_n :
                                         '')),
                         rec.start_date + ' a ' + rec.end_date,
                         rec.total_days,
                         rec.applications_st_name,
-                        rec.sup_comments_n
+                        rec.emp_comments_n
                     ]
                 );
             }

@@ -1,6 +1,7 @@
 <?php namespace App\Utils;
 
 use Carbon\Carbon;
+use App\Constants\SysConst;
 
 class EmployeeVacationUtils {
 
@@ -87,7 +88,12 @@ class EmployeeVacationUtils {
                         ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->where('a.user_id', $id)
-                        ->whereIn('a.request_status_id', [1,2,3,4])
+                        ->whereIn('a.request_status_id', [
+                                                            SysConst::APPLICATION_CREADO,
+                                                            SysConst::APPLICATION_ENVIADO,
+                                                            SysConst::APPLICATION_APROBADO,
+                                                        ]
+                        )
                         ->where('a.is_deleted', 0)
                         ->where('ab.application_year', $year)
                         ->where(function($query){

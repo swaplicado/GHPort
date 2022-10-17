@@ -33,6 +33,7 @@
             this.filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
+            this.const = <?php echo json_encode($constants); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -154,9 +155,9 @@
                                 <td>@{{formatDate(rec.created_at)}}</td>
                                 <td>
                                     @{{
-                                        (rec.request_status_id == 3) ?
+                                        (rec.request_status_id == oData.APPLICATION_APROBADO) ?
                                             rec.approved_date_n :
-                                            ((rec.request_status_id == 4) ?
+                                            ((rec.request_status_id == oData.APPLICATION_RECHAZADO) ?
                                                 rec.approved_date_n :
                                                 '')
                                     }}
@@ -164,7 +165,7 @@
                                 <td>@{{rec.start_date}} a @{{rec.end_date}}</td>
                                 <td>@{{rec.total_days}}</td>
                                 <td>@{{rec.applications_st_name}}</td>
-                                <td>@{{rec.sup_comments_n}}</td>
+                                <td>@{{rec.emp_comments_n}}</td>
                             </tr>
                         </tbody>
                     </table>

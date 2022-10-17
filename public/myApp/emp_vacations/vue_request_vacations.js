@@ -54,21 +54,21 @@ var app = new Vue({
                 }
             }else{
                 for(var i = 0; i < 31; i++){
-                    switch (moment(this.startDate).weekday()) {
+                    switch (moment(this.returnDate).weekday()) {
                         case 6:
-                            this.startDate = moment(this.startDate).add('2', 'days').format('YYYY-MM-DD');
+                            this.returnDate = moment(this.returnDate).add('2', 'days').format('YYYY-MM-DD');
                             break;
                         case 0:
-                            this.startDate = moment(this.startDate).add('1', 'days').format('YYYY-MM-DD');
+                            this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
                             break;
                         default:
                             break;
                     }
 
-                    if(!this.lHolidays.includes(this.startDate)){
+                    if(!this.lHolidays.includes(this.returnDate)){
                         break;
                     }else{
-                        this.startDate = moment(this.startDate).add('1', 'days').format('YYYY-MM-DD');
+                        this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
                     }
                 }
 

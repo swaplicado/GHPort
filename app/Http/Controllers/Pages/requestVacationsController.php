@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Vacations\Application;
+use App\Models\Vacations\ApplicationLog;
 use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Constants\SysConst;
@@ -67,7 +68,15 @@ class requestVacationsController extends Controller
             \DB::beginTransaction();
             
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
+            $application->sup_comments_n = $request->comments;
             $application->update();
+
+            $application_log = new ApplicationLog();
+            $application_log->application_id = $application->id_application;
+            $application_log->application_status_id = $application->request_status_id;
+            $application_log->created_by = \Auth::user()->id;
+            $application_log->updated_by = \Auth::user()->id;
+            $application_log->save();
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -93,7 +102,15 @@ class requestVacationsController extends Controller
             \DB::beginTransaction();
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
+            $application->sup_comments_n = $request->comments;
             $application->update();
+
+            $application_log = new ApplicationLog();
+            $application_log->application_id = $application->id_application;
+            $application_log->application_status_id = $application->request_status_id;
+            $application_log->created_by = \Auth::user()->id;
+            $application_log->updated_by = \Auth::user()->id;
+            $application_log->save();
             
             \DB::commit();
         } catch (\Throwable $th) {

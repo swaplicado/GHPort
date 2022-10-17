@@ -9,6 +9,8 @@ use App\User;
 use App\Utils\EmployeeVacationUtils;
 use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationsBreakdown;
+use App\Models\Vacations\ApplicationLog;
+use App\Constants\SysConst;
 class myVacationsController extends Controller
 {
     public $months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -138,11 +140,21 @@ class myVacationsController extends Controller
                         ->pluck('fecha');
 
         $user->applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, Carbon::now()->year);
-// dd($user);
+
+        $constants = [
+            'SEMANA' => SysConst::SEMANA,
+            'QUINCENA' => SysConst::QUINCENA,
+            'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
+            'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
+            'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
+        ];
+
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
-                                                ->with('year', Carbon::now()->year);
+                                                ->with('year', Carbon::now()->year)
+                                                ->with('constants', $constants);
     }
 
     public function setRequestVac(Request $request){
@@ -168,8 +180,8 @@ class myVacationsController extends Controller
             $application->end_date = $endDate;
             $application->total_days = $takedDays;
             $application->user_id = \Auth::user()->id;
-            $application->request_status_id = 1;
-            $application->type_incident_id = 1;
+            $application->request_status_id = SysConst::APPLICATION_CREADO;
+            $application->type_incident_id = SysConst::TYPE_VACACIONES;
             $application->emp_comments_n = $comments;
             $application->is_deleted = false;
             $application->save();
@@ -190,6 +202,14 @@ class myVacationsController extends Controller
                     break;
                 }
             }
+
+            $application_log = new ApplicationLog();
+            $application_log->application_id = $application->id_application;
+            $application_log->application_status_id = $application->request_status_id;
+            $application_log->created_by = \Auth::user()->id;
+            $application_log->updated_by = \Auth::user()->id;
+            $application_log->save();
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -211,7 +231,7 @@ class myVacationsController extends Controller
         try {
             $application = Application::findOrFail($request->id_application);
 
-            if($application->request_status_id != 1){
+            if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden eliminar solicitudes con el estatus CREADO', 'icon' => 'warning']);
             }
 
@@ -389,7 +409,7 @@ class myVacationsController extends Controller
         try {
             $application = Application::findOrFail($request->id_application);
 
-            if($application->request_status_id != 1){
+            if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden eliminar solicitudes con el estatus CREADO', 'icon' => 'warning']);
             }
 
@@ -414,14 +434,21 @@ class myVacationsController extends Controller
         try {
             $application = Application::findOrFail($request->id_application);
 
-            if($application->request_status_id != 1){
+            if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
             }
 
             \DB::beginTransaction();
             
-            $application->request_status_id = 2;
+            $application->request_status_id = SysConst::APPLICATION_ENVIADO;
             $application->update();
+
+            $application_log = new ApplicationLog();
+            $application_log->application_id = $application->id_application;
+            $application_log->application_status_id = $application->request_status_id;
+            $application_log->created_by = \Auth::user()->id;
+            $application_log->updated_by = \Auth::user()->id;
+            $application_log->save();
 
             $user = $this->getUserVacationsData();
             $user->applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, $request->year);
