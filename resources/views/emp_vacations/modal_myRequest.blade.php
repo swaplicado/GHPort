@@ -73,7 +73,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" v-on:click="requestVac()">Solicitar</a>
+                <button type="button" class="btn btn-primary" v-on:click="requestVac()">Guardar</a>
             </div>
         </div>
     </div>

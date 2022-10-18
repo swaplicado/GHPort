@@ -8,6 +8,7 @@ use App\Utils\orgChartUtils;
 use App\Models\Adm\OrgChartJob;
 use Carbon\Carbon;
 use Carbon\Translator;
+use App\Constants\SysConst;
 
 class EmployeesVacationsController extends Controller
 {
@@ -268,7 +269,7 @@ class EmployeesVacationsController extends Controller
         $oRequested = \DB::table('applications as a')
                         ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
                         ->where('a.user_id', $id)
-                        ->whereIn('a.request_status_id', [1,2,3])
+                        ->whereIn('a.request_status_id', [SysConst::APPLICATION_ENVIADO,SysConst::APPLICATION_APROBADO])
                         ->where('a.is_deleted', 0)
                         ->where('ab.application_year', $year)
                         ->select('ab.days_effective')

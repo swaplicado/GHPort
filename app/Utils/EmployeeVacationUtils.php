@@ -89,6 +89,7 @@ class EmployeeVacationUtils {
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', [
+                                                            SysConst::APPLICATION_CREADO,
                                                             SysConst::APPLICATION_ENVIADO,
                                                             SysConst::APPLICATION_APROBADO,
                                                         ]

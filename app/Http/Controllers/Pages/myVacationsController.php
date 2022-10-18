@@ -192,12 +192,19 @@ class myVacationsController extends Controller
 
             foreach($vacations as $vac){
                 if($takedDays > 0){
+                    $count = 0;
                     if($vac->remaining > 0){
-                        $antTakedDays = $takedDays;
-                        $takedDays = $takedDays - $vac->remaining;
+                        for($i=0; $i<$vac->remaining; $i++){
+                            $takedDays--;
+                            $count++;
+                            if($takedDays == 0 || $takedDays < 0){
+                                break;
+                            }
+                        }
+                        $vac->remaining = $vac->remaining - $count;
                         $appBreakdown = new ApplicationsBreakdown();
                         $appBreakdown->application_id = $application->id_application;
-                        $appBreakdown->days_effective = $takedDays > 0 ? ($antTakedDays - $takedDays) : $antTakedDays;
+                        $appBreakdown->days_effective = $count;
                         $appBreakdown->application_year = $vac->year;
                         $appBreakdown->admition_count = 1;
                         $appBreakdown->save();
@@ -268,12 +275,19 @@ class myVacationsController extends Controller
 
             foreach($vacations as $vac){
                 if($takedDays > 0){
+                    $count = 0;
                     if($vac->remaining > 0){
-                        $antTakedDays = $takedDays;
-                        $takedDays = $takedDays - $vac->remaining;
+                        for($i=0; $i<$vac->remaining; $i++){
+                            $takedDays--;
+                            $count++;
+                            if($takedDays == 0 || $takedDays < 0){
+                                break;
+                            }
+                        }
+                        $vac->remaining = $vac->remaining - $count;
                         $appBreakdown = new ApplicationsBreakdown();
                         $appBreakdown->application_id = $application->id_application;
-                        $appBreakdown->days_effective = $takedDays > 0 ? ($antTakedDays - $takedDays) : $antTakedDays;
+                        $appBreakdown->days_effective = $count;
                         $appBreakdown->application_year = $vac->year;
                         $appBreakdown->admition_count = 1;
                         $appBreakdown->save();
