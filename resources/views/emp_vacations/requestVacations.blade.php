@@ -20,6 +20,7 @@
             this.rejectRequestRoute = <?php echo json_encode(route('requestVacations_rejectRequest')); ?>;
             this.filterYearRoute = <?php echo json_encode(route('requestVacations_filterYear')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
+            this.idApplication = <?php echo json_encode($idApplication); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -135,8 +136,8 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_requestVac',
-                                        'colTargets' => [0,1,2,3,4],
-                                        'colTargetsSercheable' => [5],
+                                        'colTargets' => [1,2,3,4],
+                                        'colTargetsSercheable' => [0,5],
                                         'select' => true,
                                         'noSort' => true,
                                         'accept' => true,
@@ -147,6 +148,14 @@
         $('#rqStatus').change( function() {
             table['table_requestVac'].draw();
         });
+        
+        var search = document.querySelectorAll('input[type=search]');
+        if(app.idApplication != null){
+            table['table_requestVac'].columns(0).search( "(^"+app.idApplication+"$)",true,false ).draw();
+            table['table_requestVac'].columns(0).search( "", true, true );
+            search[0].value = app.idApplication;
+        }
+
     });
 </script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_request_vacations.js') }}"></script>

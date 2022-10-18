@@ -35,7 +35,10 @@ class OrgChartUtils {
      * Obtiene el org chart jobs directamente superior al org chart job
      */
     public static function getDirectFatherOrgChartJob($id){
-        
+        $oOrgChart = $group = OrgChartJob::find($id);
+        $oOrgChart->parent = $oOrgChart->getParent()->get();
+        $arrayAreas = $group->getArrayParents();
+        return $arrayAreas;
     }
 
     /**

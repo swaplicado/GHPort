@@ -370,6 +370,12 @@ var app = new Vue({
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    this.startDate = data[1];
+                    this.endDate = data[2];
+                    this.comments = data[8];
+                    this.idRequest = data[0];
+                    this.status = data[7];
+                    this.getTakedDays();
                     this.sendRequest(data[0]);
                 }
             })
@@ -380,6 +386,8 @@ var app = new Vue({
             axios.post(this.oData.sendRequestRoute, {
                 'id_application': request_id,
                 'year': this.year,
+                'lDays': this.lDays,
+                'returnDate': this.returnDate
             })
             .then(response => {
                 var data = response.data;
@@ -387,7 +395,7 @@ var app = new Vue({
                     this.actual_vac_days = data.oUser.actual_vac_days,
                     this.prop_vac_days = data.oUser.prop_vac_days,
                     this.prox_vac_days = data.oUser.prox_vac_days
-                    SGui.showOk();
+                    SGui.showMessage('', data.message, data.icon);
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
                 }else{

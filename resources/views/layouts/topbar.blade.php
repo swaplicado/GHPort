@@ -7,7 +7,7 @@
     </button>
 
     <!-- Topbar Navbar -->
-    <img src="img/logo HD.png"  width="200" height="100"/>
+    <img src="{{asset('img/logo HD.png')}}"  width="200" height="100"/>
     <ul class="navbar-nav ml-auto">
             
         <!-- Nav Item - Alerts -->

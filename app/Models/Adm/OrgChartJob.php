@@ -28,13 +28,11 @@ class OrgChartJob extends Model
         'updated_at'
     ];
 
-    public function parent()
-    {
+    public function getParent(){
         return $this->belongsTo('App\Models\Adm\OrgChartJob', 'top_org_chart_job_id_n')->where('is_deleted', 0);
     }
 
-    public function children()
-    {
+    public function children(){
         return $this->hasMany('App\Models\Adm\OrgChartJob', 'top_org_chart_job_id_n')->where('is_deleted', 0);
     }
 
@@ -55,6 +53,20 @@ class OrgChartJob extends Model
             }
             $arrayChilds = Arr::collapse($arrayChilds);
             return $arrayChilds;
+        }else{
+            return null;
+        }
+    }
+
+    public function getArrayParents(){
+        $arrayParents = [];
+        if(isset($this->parent)){
+            foreach($this->parent as $p){
+                array_push($arrayParents, [$p->id_org_chart_job]);
+                array_push($arrayParents, $p->getArrayParents());
+            }
+            $arrayParents = Arr::collapse($arrayParents);
+            return $arrayParents;
         }else{
             return null;
         }

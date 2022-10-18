@@ -4,13 +4,17 @@ namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\User;
+use App\Mail\requestVacationMail;
 use App\Utils\EmployeeVacationUtils;
 use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
 use App\Constants\SysConst;
+use App\Models\Adm\OrgChartJob;
+use App\Utils\orgChartUtils;
 class myVacationsController extends Controller
 {
     public $months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -457,6 +461,33 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+        }
+
+        try {
+            $arrOrgJobs = orgChartUtils::getDirectFatherOrgChartJob(\Auth::user()->org_chart_job_id);
+
+            $superviser = \DB::table('users')
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->whereIn('org_chart_job_id', $arrOrgJobs)
+                            ->first();
+
+            Mail::to($superviser->email)->send(new requestVacationMail(
+                                                    $application->id_application,
+                                                    \Auth::user()->id,
+                                                    $request->lDays,
+                                                    $request->returnDate
+                                                )
+                                            );
+        } catch (\Throwable $th) {
+            return json_encode(
+                [
+                    'success' => true,
+                    'message' => 'Registro enviadó con éxito, pero ocurrio un error al enviar el e-mail, notifique a su supervisor',
+                    'icon' => 'info',
+                    'oUser' => $user
+                ]
+            );
         }
 
         return json_encode(['success' => true, 'message' => 'Registro enviado con éxito', 'icon' => 'success', 'oUser' => $user]);

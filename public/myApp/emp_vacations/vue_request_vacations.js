@@ -15,6 +15,7 @@ var app = new Vue({
         endDate: null,
         returnDate: null,
         isApprove: false,
+        idApplication: oServerData.idApplication,
     },
     mounted(){
         
@@ -126,13 +127,15 @@ var app = new Vue({
                 'id_application': this.idRequest,
                 'id_user': this.idUser,
                 'comments': this.comments,
-                'year': this.year
+                'year': this.year,
+                'lDays': this.lDays,
+                'returnDate': this.returnDate
             })
             .then(response => {
                 var data = response.data;
                 if(data.success){
                     $('#modal_solicitud').modal('hide');
-                    SGui.showOk();
+                    SGui.showMessage('', data.message, data.icon);
                     this.reDrawRequestTable(data.lEmployees);
                     table['table_requestVac'].$('tr.selected').removeClass('selected');
                 }else{
@@ -152,13 +155,15 @@ var app = new Vue({
                 'id_application': this.idRequest,
                 'id_user': this.idUser,
                 'comments': this.comments,
-                'year': this.year
+                'year': this.year,
+                'lDays': this.lDays,
+                'returnDate': this.returnDate
             })
             .then(response => {
                 var data = response.data;
                 if(data.success){
                     $('#modal_solicitud').modal('hide');
-                    SGui.showOk();
+                    SGui.showMessage('', data.message, data.icon);
                     this.reDrawRequestTable(data.lEmployees);
                     table['table_requestVac'].$('tr.selected').removeClass('selected');
                 }else{

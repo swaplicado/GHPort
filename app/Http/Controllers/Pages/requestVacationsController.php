@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
+use App\Mail\authorizeVacationMail;
 use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationLog;
 use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Constants\SysConst;
+
 
 class requestVacationsController extends Controller
 {
@@ -36,7 +39,7 @@ class requestVacationsController extends Controller
         return [$year, $lEmployees, $holidays, $arrOrgJobs];
     }
 
-    public function index(){
+    public function index($idApplication = null){
         \Auth::user()->authorizedRole(SysConst::JEFE);
         $year = Carbon::now()->year;
         $data = $this->getData($year);
@@ -52,7 +55,8 @@ class requestVacationsController extends Controller
         return view('emp_vacations.requestVacations')->with('lEmployees', $data[1])
                                                     ->with('year', $data[0])
                                                     ->with('lHolidays', $data[2])
-                                                    ->with('constants', $constants);
+                                                    ->with('constants', $constants)
+                                                    ->with('idApplication', $idApplication);
     }
 
     public function acceptRequest(Request $request){
@@ -85,6 +89,30 @@ class requestVacationsController extends Controller
         }
 
         $data = $this->getData($request->year);
+
+        try {
+            $employee = \DB::table('users')
+                                ->where('id', $request->id_user)
+                                ->first();
+
+            Mail::to($employee->email)->send(new authorizeVacationMail(
+                                                    $application->id_application,
+                                                    $employee->id,
+                                                    $request->lDays,
+                                                    $request->returnDate
+                                                )
+                                            );
+        } catch (\Throwable $th) {
+            return json_encode(
+                [
+                    'success' => true,
+                    'message' => 'La solicitud fue aprobada con éxito, pero ocurrio un error al enviar el e-mail, notifique al colaborador',
+                    'icon' => 'info',
+                    'lEmployees' => $data[1],
+                    'holidays' => $data[2]
+                ]
+            );
+        }
 
         return json_encode(['success' => true, 'message' => 'Solicitud aprobada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
@@ -119,6 +147,30 @@ class requestVacationsController extends Controller
         }
 
         $data = $this->getData($request->year);
+
+        try {
+            $employee = \DB::table('users')
+                                ->where('id', $request->id_user)
+                                ->first();
+
+            Mail::to($employee->email)->send(new authorizeVacationMail(
+                                                    $application->id_application,
+                                                    $employee->id,
+                                                    $request->lDays,
+                                                    $request->returnDate
+                                                )
+                                            );
+        } catch (\Throwable $th) {
+            return json_encode(
+                [
+                    'success' => true,
+                    'message' => 'La solicitud fue rechazada con éxito, pero ocurrio un error al enviar el e-mail, notifique al colaborador',
+                    'icon' => 'info',
+                    'lEmployees' => $data[1],
+                    'holidays' => $data[2]
+                ]
+            );
+        }
 
         return json_encode(['success' => true, 'message' => 'Solicitud rechazada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
