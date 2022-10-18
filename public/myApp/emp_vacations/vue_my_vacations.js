@@ -24,9 +24,9 @@ var app = new Vue({
     methods: {
         showModal(data = null){
             if(data != null){
-                this.comments = data[8];
+                this.comments = data[9];
                 this.idRequest = data[0];
-                this.status = data[7];
+                this.status = data[8];
                 $('#date-range200').val(data[1]).trigger('change');
 			    $('#date-range201').val(data[2]).trigger('change');
             }else{
@@ -287,6 +287,7 @@ var app = new Vue({
                         rec.id_application,
                         rec.start_date,
                         rec.end_date,
+                        rec.request_status_id,
                         this.formatDate(rec.created_at),
                         ((rec.request_status_id == this.oData.APPLICATION_APROBADO) ?
                             rec.approved_date_n :
@@ -335,14 +336,14 @@ var app = new Vue({
         },
 
         deleteRegistry(data){
-            if(data[7] != 'CREADO'){
+            if(data[8] != 'CREADO'){
                 SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
                 return;
             }
 
             Swal.fire({
                 title: '¿Desea eliminar la solicitud para las fechas?',
-                text: data[5],
+                text: data[6],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -356,13 +357,13 @@ var app = new Vue({
         },
 
         sendRegistry(data){
-            if(data[7] != 'CREADO'){
+            if(data[8] != 'CREADO'){
                 SGui.showMessage('','Solo se pueden enviar solicitudes con el estatus CREADO', 'warning');
                 return
             }
             Swal.fire({
                 title: '¿Desea enviar la solicitud para las fechas?',
-                text: data[5],
+                text: data[6],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -372,9 +373,9 @@ var app = new Vue({
                 if (result.isConfirmed) {
                     this.startDate = data[1];
                     this.endDate = data[2];
-                    this.comments = data[8];
+                    this.comments = data[9];
                     this.idRequest = data[0];
-                    this.status = data[7];
+                    this.status = data[8];
                     this.getTakedDays();
                     this.sendRequest(data[0]);
                 }

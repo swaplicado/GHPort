@@ -121,7 +121,14 @@
             <div>
                 <div class="card-body">
                     @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true])
-                    <div class="col-md-3" style="float: right;">
+                    <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
+                        <select class="form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
+                            <option value="0" selected>Creados</option>
+                            <option value="1">Enviados</option>
+                            <option value="2">Aprobados</option>
+                            <option value="3">Rechazados</option>
+                            <option value="4">Consumidos</option>
+                        </select>&nbsp;&nbsp;
                         <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                             <span class="bx bx-minus" ></span>
                         </button>
@@ -129,7 +136,7 @@
                         <button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                             <span class="bx bx-plus"></span>
                         </button>
-                        <button type="button" class="btn btn-primary" style="float: right;"  v-on:click="filterYear();">
+                        <button type="button" class="btn btn-primary"  v-on:click="filterYear();">
                             <span class="bx bx-search"></span>
                         </button>
                     </div>
@@ -140,6 +147,7 @@
                             <th>id</th>
                             <th>start date</th>
                             <th>end date</th>
+                            <th>request_status_id</th>
                             <th>Fecha solicitud</th>
                             <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
                             <th>Fecha vac.</th>
@@ -152,6 +160,7 @@
                                 <td>@{{rec.id_application}}</td>
                                 <td>@{{rec.start_date}}</td>
                                 <td>@{{rec.end_date}}</td>
+                                <td>@{{rec.request_status_id}}</td>
                                 <td>@{{formatDate(rec.created_at)}}</td>
                                 <td>
                                     @{{
@@ -177,6 +186,43 @@
 @endsection
 
 @section('scripts')
+<script>
+    $(document).ready(function () {
+        $.fn.dataTable.ext.search.push(
+            function( settings, data, dataIndex ) {
+                let registerVal = parseInt( $('#rqStatus').val(), 10 );
+                let filter = 0;
+
+                switch (registerVal) {
+                    case 0:
+                        filter = parseInt( data[3] );
+                        return filter === 1;
+                        
+                    case 1:
+                        filter = parseInt( data[3] );
+                        return filter === 2;
+
+                    case 2:
+                        filter = parseInt( data[3] );
+                        return filter === 3;
+
+                    case 3:
+                        filter = parseInt( data[3] );
+                        return filter === 4;
+
+                    case 4:
+                        filter = parseInt( data[3] );
+                        return filter === 5;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        );
+    });
+</script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'vacationsTable',
                                         'colTargets' => [],
@@ -192,18 +238,25 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_myRequest',
                                         'colTargets' => [0,1,2],
-                                        'colTargetsSercheable' => [],
+                                        'colTargetsSercheable' => [3],
                                         'select' => true,
-                                        'noSearch' => true,
+                                        // 'noSearch' => true,
                                         'noDom' => true,
-                                        'noPaging' => true,
-                                        'noInfo' => true,
+                                        // 'noPaging' => true,
+                                        // 'noInfo' => true,
                                         'noSort' => true,
                                         'edit_modal' => true,
                                         'crear_modal' => true,
                                         'delete' => true,
                                         'send' => true
                                     ] )
+<script>
+    $(document).ready(function (){
+        $('#rqStatus').change( function() {
+            table['table_myRequest'].draw();
+        });
+    });
+</script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
 <script>
     $.dateRangePickerLanguages['es'] =
