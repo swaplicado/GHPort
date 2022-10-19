@@ -2,7 +2,8 @@ var app = new Vue({
     el: '#myVacations',
     data: {
         oData: oServerData,
-        oUser: oServerData.oUser,
+        oUser: oServerData.oUser,  //No modificar, mejor modificar oCopyUser
+        oCopyUser: oServerData.oUser,
         lHolidays: oServerData.lHolidays,
         startDate: null,
         endDate: null,
@@ -30,6 +31,10 @@ var app = new Vue({
                 $('#date-range200').val(data[1]).trigger('change');
 			    $('#date-range201').val(data[2]).trigger('change');
             }else{
+                if(this.HasRequestCreated()){
+                    SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
+                    return;
+                }
                 this.startDate = null;
                 this.endDate = null;
                 this.returnDate = null;
@@ -204,7 +209,7 @@ var app = new Vue({
                 var route = this.oData.updateRequestVacRoute;
             }
             
-            SGui.showWaiting(5000);
+            SGui.showWaiting(15000);
             axios.post(route, {
                 'id_application': this.idRequest,
                 'startDate': this.startDate,
@@ -221,6 +226,7 @@ var app = new Vue({
                     this.prox_vac_days = data.oUser.prox_vac_days
                     $('#modal_solicitud').modal('hide');
                     SGui.showOk();
+                    this.oCopyUser = data.oUser;
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
                     table['table_myRequest'].$('tr.selected').removeClass('selected');
@@ -243,6 +249,7 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     SGui.showOk();
+                    this.oCopyUser = data.oUser;
                     this.reDrawRequestTable(data);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -255,7 +262,7 @@ var app = new Vue({
         },
 
         deleteRequest(request_id){
-            SGui.showWaiting(5000);
+            SGui.showWaiting(15000);
             axios.post(this.oData.deleteRequestRoute, {
                 'id_application': request_id,
                 'year': this.year,
@@ -267,6 +274,7 @@ var app = new Vue({
                     this.prop_vac_days = data.oUser.prop_vac_days,
                     this.prox_vac_days = data.oUser.prox_vac_days
                     SGui.showOk();
+                    this.oCopyUser = data.oUser;
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
                 }else{
@@ -383,7 +391,7 @@ var app = new Vue({
         },
 
         sendRequest(request_id){
-            SGui.showWaiting(5000);
+            SGui.showWaiting(15000);
             axios.post(this.oData.sendRequestRoute, {
                 'id_application': request_id,
                 'year': this.year,
@@ -397,6 +405,7 @@ var app = new Vue({
                     this.prop_vac_days = data.oUser.prop_vac_days,
                     this.prox_vac_days = data.oUser.prox_vac_days
                     SGui.showMessage('', data.message, data.icon);
+                    this.oCopyUser = data.oUser;
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
                 }else{
@@ -407,6 +416,17 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
+        },
+
+        HasRequestCreated(){
+            console.log(this.oCopyUser);
+            for(let rec of this.oCopyUser.applications){
+                if(rec.request_status_id == 1){
+                    return true;
+                }
+            }
+
+            return false;
         }
     },
 })

@@ -171,6 +171,12 @@ class myVacationsController extends Controller
         try {
             $user = $this->getUserVacationsData();
 
+            foreach($user->applications as $ap){
+                if($ap->request_status_id == 1){
+                    return json_encode(['success' => false, 'message' => 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'icon' => 'warning']);
+                }
+            }
+
             if($user->tot_vacation_remaining < $takedDays){
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
             }
@@ -247,9 +253,9 @@ class myVacationsController extends Controller
             }
 
             \DB::beginTransaction();
+            
             $application->is_deleted = 1;
             $application->update();
-            \DB::commit();
 
             $user = $this->getUserVacationsData();
     
@@ -258,8 +264,6 @@ class myVacationsController extends Controller
             }
     
             $vacations = collect($user->vacation)->sortBy('year');
-
-            \DB::beginTransaction();
 
             $appBreakDowns = ApplicationsBreakdown::where('application_id', $request->id_application)->get();
             foreach($appBreakDowns as $ab){

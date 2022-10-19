@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Mail\authorizeVacationMail;
 use App\Models\Vacations\Application;
+use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
 use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
@@ -70,6 +71,12 @@ class requestVacationsController extends Controller
             }
 
             \DB::beginTransaction();
+
+            $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, [
+                                                                                                SysConst::APPLICATION_CREADO,
+                                                                                                SysConst::APPLICATION_ENVIADO
+                                                                                            ],
+                                                                                        true);
             
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             $application->sup_comments_n = $request->comments;
@@ -123,11 +130,18 @@ class requestVacationsController extends Controller
         try {
             $application = Application::findOrFail($request->id_application);
 
+            $arrRequestStatus = [
+                SysConst::APPLICATION_CREADO,
+                SysConst::APPLICATION_ENVIADO, 
+                SysConst::APPLICATION_APROBADO
+            ];
+            
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO && $application->request_status_id != SysConst::APPLICATION_APROBADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas o aprobadas', 'icon' => 'warning']);
             }
-
+            
             \DB::beginTransaction();
+            $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
             $application->sup_comments_n = $request->comments;
@@ -183,5 +197,79 @@ class requestVacationsController extends Controller
         }
 
         return json_encode(['success' => true, 'lEmployees' => $data[1], 'holidays' => $data[2]]);
+    }
+
+    public function recalcApplicationsBreakdowns($employee_id, $application_id, $arrRequestStatus, $isAccept){
+        $lApplications = Application::where('user_id', $employee_id)
+                                    ->whereIn('request_status_id', $arrRequestStatus)
+                                    ->where('is_deleted', 0)
+                                    ->get();
+
+        $applicationsId = [];
+
+        foreach($lApplications as $app){
+            array_push($applicationsId, $app->id_application);
+            $app->is_deleted = 1;
+            $app->update();
+        }
+
+        $appBreakDowns = ApplicationsBreakdown::whereIn('application_id', $applicationsId)->get();
+        foreach($appBreakDowns as $ab){
+            $ab->delete();
+        }
+
+        $oApplication = Application::find($application_id); 
+
+        $lApplications = Application::where('user_id', $employee_id)
+                                    ->whereIn('id_application', $applicationsId)
+                                    ->where('id_application', '!=', $application_id)
+                                    ->get();
+
+        if($isAccept){
+            $lApplications->prepend($oApplication);
+        }
+
+        foreach($lApplications as $app){
+            $takedDays = $app->total_days;
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
+
+            if($user->tot_vacation_remaining < $takedDays){
+                return json_encode(['success' => false, 'message' => 'El colaborador no cuenta con dias disponibles', 'icon' => 'warning']);
+            }
+
+            $vacations = collect($user->vacation)->sortBy('year');
+
+            foreach($vacations as $vac){
+                if($takedDays > 0){
+                    $count = 0;
+                    if($vac->remaining > 0){
+                        for($i=0; $i<$vac->remaining; $i++){
+                            $takedDays--;
+                            $count++;
+                            if($takedDays == 0 || $takedDays < 0){
+                                break;
+                            }
+                        }
+                        $vac->remaining = $vac->remaining - $count;
+                        $appBreakdown = new ApplicationsBreakdown();
+                        $appBreakdown->application_id = $app->id_application;
+                        $appBreakdown->days_effective = $count;
+                        $appBreakdown->application_year = $vac->year;
+                        $appBreakdown->admition_count = 1;
+                        $appBreakdown->save();
+                    }
+                }else{
+                    break;
+                }
+            }
+
+            $app->is_deleted = 0;
+            $app->update();
+        }
+
+        if(!$isAccept){
+            $oApplication->is_deleted = 0;
+            $oApplication->update();
+        }
     }
 }
