@@ -4,7 +4,7 @@ use Carbon\Carbon;
 use App\Constants\SysConst;
 
 class EmployeeVacationUtils {
-
+    public const months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     public static function getlEmployees($arrOrgJobs){
         $lEmployees = \DB::table('users as u')
                         ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
@@ -42,12 +42,17 @@ class EmployeeVacationUtils {
         return $lEmployees;
     }
     
-    public static function getEmployeeVacations($id, $years){
+    public static function getEmployeeVacations($id, $years, $startYear = null){
         $oVacation = \DB::table('vacation_users as vu')
                         ->where('vu.is_deleted', 0)
                         ->where('vu.user_id', $id)
-                        ->where('vu.date_end', '<', Carbon::now()->addYears($years))
-                        ->select(
+                        ->where('vu.date_end', '<', Carbon::now()->addYears($years));
+
+        if(!is_null($startYear)){
+            $oVacation = $oVacation->where('year', '>=', $startYear);
+        }
+
+         $oVacation = $oVacation->select(
                             'vu.user_admission_log_id',
                             'vu.id_anniversary',
                             'vu.year',
@@ -239,5 +244,69 @@ class EmployeeVacationUtils {
         }
         $user->applications = EmployeeVacationUtils::getApplications($id, Carbon::now()->year);
         return $user;
+    }
+
+    public static function getVacations($lEmployees, $startYear = null){
+        $config = \App\Utils\Configuration::getConfigurations();
+        foreach($lEmployees as $emp){
+            $emp->vacation = EmployeeVacationUtils::getEmployeeVacations($emp->id, $config->showVacation->years, $startYear);
+
+            foreach($emp->vacation as $vac){
+                $date_start = Carbon::parse($vac->date_start);
+                $date_end = Carbon::parse($vac->date_end);
+                
+                $vac->date_start = EmployeeVacationUtils::months_code[$date_start->month].'-'.$date_start->format('Y');
+                $vac->date_end = EmployeeVacationUtils::months_code[$date_end->month].'-'.$date_end->format('Y');
+
+                $oVacConsumed = EmployeeVacationUtils::getVacationConsumed($emp->id, $vac->year);
+                $vac_request = EmployeeVacationUtils::getVacationRequested($emp->id, $vac->year);
+                
+                if(!is_null($vac_request)){
+                    $vac->request = collect($vac_request)->sum('days_effective');
+                }else{
+                    $vac->request = 0;
+                }
+
+                if(!is_null($oVacConsumed)){
+                    $vac->oVacConsumed = $oVacConsumed;
+                    $vac->num_vac_taken = collect($oVacConsumed)->sum('day_consumption');
+                    $vac->remaining = $vac->vacation_days - collect($oVacConsumed)->sum('day_consumption') - $vac->request;
+                }else{
+                    $vac->oVacConsumed = null;
+                    $vac->num_vac_taken = 0;
+                    $vac->remaining = $vac->vacation_days - $vac->request;
+                }
+
+                $date_expiration = Carbon::parse($date_end->addDays(1))->addYears($config->expiration_vacations->years)->addMonths($config->expiration_vacations->months);
+                
+                if(Carbon::now()->greaterThan($date_expiration)){
+                    if($vac->remaining > 0){
+                        $vac->expired = $vac->remaining;
+                        $vac->remaining = 0;
+                    }else{
+                        $vac->expired = 0;
+                    }
+                }else{
+                    $vac->expired = 0;
+                }
+            }
+            
+            if(count($emp->vacation) > 0){
+                $coll = collect($emp->vacation);
+                $emp->tot_vacation_days = $coll->sum('vacation_days');
+                $emp->tot_vacation_taken = $coll->sum('num_vac_taken');
+                $emp->tot_vacation_remaining = $coll->sum('remaining');
+                $emp->tot_vacation_expired = $coll->sum('expired');
+                $emp->tot_vacation_request = $coll->sum('request');
+            }else{
+                $emp->tot_vacation_days = 0;
+                $emp->tot_vacation_taken = 0;
+                $emp->tot_vacation_remaining = 0;
+                $emp->tot_vacation_expired = 0;
+                $emp->tot_vacation_request = 0;
+            }
+        }
+
+        return $lEmployees;
     }
 }

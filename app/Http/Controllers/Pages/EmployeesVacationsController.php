@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Utils\orgChartUtils;
+use App\Utils\EmployeeVacationUtils;
 use App\Models\Adm\OrgChartJob;
 use Carbon\Carbon;
 use Carbon\Translator;
@@ -276,5 +277,38 @@ class EmployeesVacationsController extends Controller
                         ->get();
 
         return $oRequested;
+    }
+
+    public function allVacationsIndex(){
+        $lEmployees = \DB::table('users')
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->where('id', '!=', 1)
+                        ->select('id', 'employee_num', 'full_name', 'full_name_ui')
+                        ->get();
+
+        $lEmployees = EmployeeVacationUtils::getVacations($lEmployees);
+
+        $year = Carbon::now()->year;
+
+        return view('emp_vacations.all_vacations')->with('lEmployees', $lEmployees)
+                                                ->with('year', $year);
+    }
+
+    public function allVacations(Request $request){
+        try {
+            $lEmployees = \DB::table('users')
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->where('id', '!=', 1)
+                            ->select('id', 'employee_num', 'full_name', 'full_name_ui')
+                            ->get();
+    
+            $lEmployees = EmployeeVacationUtils::getVacations($lEmployees, $request->startYear);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 }
