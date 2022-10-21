@@ -13,14 +13,15 @@ use App\Http\Controllers\Adm\DepartmentsController;
 use App\Http\Controllers\Adm\JobsController;
 use App\Http\Controllers\Adm\UsersController;
 use App\Http\Controllers\Adm\holidaysController;
+use App\Http\Controllers\Adm\VacationsController;
 
 class SyncController extends Controller
 {
     public static function toSynchronize($withRedirect = true)
     {
         $config = \App\Utils\Configuration::getConfigurations();
-        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        // $synchronized = true;
+        // $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        $synchronized = true;
 
         $newDate = Carbon::now();
         $newDate->subMinutes(10);
@@ -53,8 +54,14 @@ class SyncController extends Controller
             $usrCont = new UsersController();
             $usrCont->saveUsersFromJSON($data->employees);
 
+            // $usrCont->dumySetUserAdmissionLog();
+
             $holidaysCont = new holidaysController();
             $holidaysCont->saveHolidaysFromJSON($data->holidays);
+
+            $vacCont = new VacationsController();
+            $vacCont->saveVacFromJSON($data->vacations);
+            // $vacCont->dumySetVacationsUser();
         }
         catch (\Throwable $th) {
             return false;

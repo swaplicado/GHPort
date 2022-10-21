@@ -99,7 +99,7 @@
                         <td>@{{rec.start_date}} a @{{rec.end_date}}</td>
                         <td>@{{rec.total_days}}</td>
                         <td>@{{rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name}}</td>
-                        <td>@{{rec.sup_comments_n}}</td>
+                        <td>@{{rec.emp_comments_n}}</td>
                     </tr>
                 </template>
             </tbody>

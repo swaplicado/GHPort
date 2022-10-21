@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\User;
 use App\Models\Adm\Job;
+use App\Models\Adm\UserAdmissionLog;
 use Illuminate\Support\Str;
 class UsersController extends Controller
 {
@@ -55,13 +56,17 @@ class UsersController extends Controller
                                 'last_admission_date' => $jUser->admission_date,
                                 'last_dismiss_date_n' => $jUser->leave_date,
                                 'job_id' => $this->lJobs[$jUser->siie_job_id],
-                                // 'org_chart_job_id' => !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1,
                                 'vacation_plan_id' => 1,
                                 'is_active' => $jUser->is_active,
                                 'is_delete' => $jUser->is_deleted,
 
                             ]
                         );
+
+        $oUser = User::find($id);
+        if(!is_null($oUser)){
+            $this->updateUserAdmissionLog($oUser);
+        }
     }
 
     private function insertUser($jUser)
@@ -73,7 +78,6 @@ class UsersController extends Controller
         $name = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->firstname);
         $lastname1 = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->lastname1);
         $lastname2 = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->lastname2);
-        // $usernameTmp = strtolower($jUser->num_employee.'.'.$jUser->lastname1.'.'.$jUser->lastname2);
         
         $names = explode(' ', $name);
         $lastname1s = explode(' ', $lastname1);
@@ -112,7 +116,6 @@ class UsersController extends Controller
             }
         }
 
-        // $currectDate = Carbon::now()->toDateString();
         $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
         $oUser = new User();
 
@@ -132,7 +135,6 @@ class UsersController extends Controller
         $oUser->current_hire_log_id = 1;
         $oUser->is_unionized = 0;
         $oUser->company_id = 1;
-        // $oUser->department_id = 1;
         $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
         $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
         $oUser->vacation_plan_id = 1;
@@ -144,6 +146,8 @@ class UsersController extends Controller
         $oUser->updated_by = 1;
 
         $oUser->save();
+
+        $this->setUserAdmissionLog($oUser);
     }
 
     private function getUserName($usernameTmp)
@@ -154,4 +158,41 @@ class UsersController extends Controller
 
         return $username;
     }
+
+    public function setUserAdmissionLog($oUser){
+        $oLog = new UserAdmissionLog();
+
+        $oLog->user_id = $oUser->id;
+        $oLog->user_admission_date = $oUser->last_admission_date;
+        $oLog->user_leave_date = $oUser->last_dismiss_date_n;
+        $oLog->admission_count = 1;
+        $oLog->save();
+    }
+
+    public function updateUserAdmissionLog($oUser){
+        $oLog = UserAdmissionLog::where('user_id', $oUser->id)->first();
+
+        $oLog->user_admission_date = $oUser->last_admission_date;
+        $oLog->user_leave_date = $oUser->last_dismiss_date_n;
+        $oLog->admission_count = 1;
+        $oLog->update();
+    }
+
+    // public function dumySetUserAdmissionLog(){
+    //     try {
+    //         $lUsers = User::where([['is_active', 1],['is_delete', 0]])->get();
+    
+    //         foreach($lUsers as $oUser){
+    //             $oLog = new UserAdmissionLog();
+        
+    //             $oLog->user_id = $oUser->id;
+    //             $oLog->user_admission_date = $oUser->last_admission_date;
+    //             $oLog->user_leave_date = $oUser->last_dismiss_date_n;
+    //             $oLog->admission_count = 1;
+    //             $oLog->save();
+    //         }
+    //     } catch (\Throwable $th) {
+    //         echo $th;
+    //     }
+    // }
 }
