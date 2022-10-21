@@ -37,8 +37,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="selUser">Usuario encargado:</label>
-                <select class="select2-class" id="selUser" name="selUser" style="width: 90%;"></select>
+                {{--<label for="selUser" hidden>Usuario encargado:</label>
+                <select class="select2-class" id="selUser" name="selUser" style="width: 90%;"></select>--}}
                 <label for="selArea">Area superior:</label>
                 <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
             </div>
@@ -49,7 +49,14 @@
         </div>
     </div>
 </div>
-
+    <div class="card-header">
+        <h3>
+            <b>AREAS FUNCIONALES</b>
+            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
+                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+            </a>
+        </h3>
+    </div>
     <div class="card-body">
         @include('layouts.table_buttons', ['editar' => true])
         <br>

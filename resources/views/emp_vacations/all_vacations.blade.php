@@ -13,9 +13,18 @@
 
 @section('content') 
 <div class="card shadow mb-4" id="allVacations">
+    <div class="card-header">
+        <h3>
+            <b>REPORTE VACACIONES</b>
+            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:todasvacaciones" target="_blank">
+                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+            </a>
+        </h3>
+    </div>
     <div class="card-body">
         <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
-            <button class="btn btn-info" v-on:click="showCompletePeriod()">Ver completo</button>&nbsp;&nbsp;
+            <button class="btn btn-info" v-on:click="showCompletePeriod()">Todos los periodos</button>&nbsp;&nbsp;
+            <label>Ver a partir del año:</label>
             <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                 <span class="bx bx-minus" ></span>
             </button>

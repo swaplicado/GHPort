@@ -16,14 +16,14 @@ var app = new Vue({
         for(var i = 0; i<self.lAreas.length; i++){
             datalAreas.push({id: self.lAreas[i].id_org_chart_job, text: self.lAreas[i].job_name});
         }
-        $('#selUser')
-            .select2({
-                placeholder: 'selecciona usuario',
-                data: self.lUsers,
-            })
-            .on('select2:select', function (e){
-                self.superviser_id = e.params.data.id;
-            });
+        // $('#selUser')
+        //     .select2({
+        //         placeholder: 'selecciona usuario',
+        //         data: self.lUsers,
+        //     })
+        //     .on('select2:select', function (e){
+        //         self.superviser_id = e.params.data.id;
+        //     });
             
         $('#selArea')
             .select2({
@@ -41,7 +41,7 @@ var app = new Vue({
             this.superviser_id = data[2];
             this.area = data[3];
 
-            $('#selUser').val(this.superviser_id).trigger('change');
+            // $('#selUser').val(this.superviser_id).trigger('change');
             $('#selArea').val(this.top_org_chart_job_id).trigger('change');
 
             $('#editModal').modal('show');

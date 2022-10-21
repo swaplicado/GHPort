@@ -44,6 +44,14 @@
     @include('emp_vacations.modal_myRequest')
     <div class="card-body">
         <div class="card shadow mb-4">
+            <div class="card-header">
+                <h3>
+                    <b>MIS VACACIONES</b>
+                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones" target="_blank">
+                        <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+                    </a>
+                </h3>
+            </div>
             <div>
                 <div class="card-body">
                     <div class="col-md-6 card border-left-primary">
@@ -118,10 +126,19 @@
             </div>
         </div>
         <div class="card shadow mb-4">
+            <div class="card-header">
+                <h3>
+                    <b>SOLICITUDES VACACIONES</b>
+                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones" target="_blank">
+                        <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+                    </a>
+                </h3>
+            </div>
             <div>
                 <div class="card-body">
                     @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true])
                     <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
+                        <label for="rqStatus">Filtrar por estatus: </label>
                         <select class="form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
                             <option value="0" selected>Creados</option>
                             <option value="1">Enviados</option>
@@ -129,6 +146,7 @@
                             <option value="3">Rechazados</option>
                             <option value="4">Consumidos</option>
                         </select>&nbsp;&nbsp;
+                        <label>Filtrar por año:</label>
                         <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                             <span class="bx bx-minus" ></span>
                         </button>

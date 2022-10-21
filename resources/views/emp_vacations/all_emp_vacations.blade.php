@@ -12,6 +12,14 @@
 
 @section('content') 
 <div class="card shadow mb-4" id="allEmpVacationApp">
+    <div class="card-header">
+        <h3>
+            <b>VACACIONES COLABORADORES</b>
+            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vaccolaboradores" target="_blank">
+                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+            </a>
+        </h3>
+    </div>
     <div class="card-body">
         <div class="card shadow mb-4" v-for="(emp, index) in lEmployees">
             <a :href='"#id_"+emp.employee_num' class="d-block card-header py-3" data-toggle="collapse"
