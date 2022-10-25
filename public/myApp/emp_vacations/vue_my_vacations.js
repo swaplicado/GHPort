@@ -34,8 +34,8 @@ var app = new Vue({
                 this.status = data[this.indexes.status];
                 this.take_holidays = parseInt(data[this.indexes.take_holidays]);
                 this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
-                $('#date-range200').val(data[this.indexes.start_date]).trigger('change');
-			    $('#date-range201').val(data[this.indexes.end_date]).trigger('change');
+                $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
+			    $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
             }else{
                 if(this.HasRequestCreated()){
                     SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
@@ -60,20 +60,20 @@ var app = new Vue({
             var result = this.vacationUtils.getTakedDays(
                             this.lHolidays,
                             this.oUser.payment_frec_id,
-                            this.startDate,
-                            this.endDate,
+                            moment(this.startDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
+                            moment(this.endDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
                             this.oData.const,
                             this.take_rest_days,
                             this.take_holidays
                         );
 
-            this.returnDate = result[0];
+            this.returnDate = moment(result[0]).format("ddd DD-MM-YYYY");
             this.takedDays = result[1];
             this.lDays = result[2];
         },
 
         formatDate(sDate){
-            return moment(sDate).format('YYYY-MM-DD');
+            return moment(sDate).format('ddd DD-MM-YYYY');
         },
 
         requestVac(){
@@ -95,8 +95,8 @@ var app = new Vue({
             SGui.showWaiting(15000);
             axios.post(route, {
                 'id_application': this.idRequest,
-                'startDate': this.startDate,
-                'endDate': this.endDate,
+                'startDate': moment(this.startDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
+                'endDate': moment(this.endDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
                 'comments': this.comments,
                 'takedDays': this.takedDays,
                 // 'lDays': this.lDays,
@@ -187,9 +187,9 @@ var app = new Vue({
                                 ((rec.request_status_id == this.oData.APPLICATION_RECHAZADO) ?
                                     rec.approved_date_n :
                                         '')),
-                        rec.start_date,
-                        rec.end_date,
-                        rec.returnDate,
+                        this.formatDate(rec.start_date),
+                        this.formatDate(rec.end_date),
+                        this.formatDate(rec.returnDate),
                         rec.takedDays,
                         rec.applications_st_name,
                         rec.emp_comments_n
@@ -238,7 +238,7 @@ var app = new Vue({
 
             Swal.fire({
                 title: '¿Desea eliminar la solicitud para las fechas?',
-                text: 'Inicio: ' + data[this.indexes.start_date] + '\n' + 'Fin: ' +  data[this.indexes.end_date],
+                html: '<b>Inicio:</b> ' + data[this.indexes.start_date] + '<br>' + '<b>Fin:</b> ' +  data[this.indexes.end_date],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -258,7 +258,7 @@ var app = new Vue({
             }
             Swal.fire({
                 title: '¿Desea enviar la solicitud para las fechas?',
-                text: 'Inicio: ' + data[this.indexes.start_date] + ' ' + 'Fin: ' +  data[this.indexes.end_date],
+                html: '<b>Inicio:</b> ' + data[this.indexes.start_date] + '<br>' + '<b>Fin:</b> ' +  data[this.indexes.end_date],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -306,7 +306,6 @@ var app = new Vue({
         },
 
         HasRequestCreated(){
-            // console.log(this.oCopyUser);
             for(let rec of this.oCopyUser.applications){
                 if(rec.request_status_id == 1){
                     return true;

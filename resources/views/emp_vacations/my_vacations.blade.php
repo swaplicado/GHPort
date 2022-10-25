@@ -205,9 +205,9 @@
                                                 '')
                                     }}
                                 </td>
-                                <td>@{{rec.start_date}}</td>
-                                <td>@{{rec.end_date}}</td>
-                                <td>@{{rec.returnDate}}</td>
+                                <td>@{{formatDate(rec.start_date)}}</td>
+                                <td>@{{formatDate(rec.end_date)}}</td>
+                                <td>@{{formatDate(rec.returnDate)}}</td>
                                 <td>@{{rec.takedDays}}</td>
                                 <td>@{{rec.applications_st_name}}</td>
                                 <td>@{{rec.emp_comments_n}}</td>
@@ -223,6 +223,7 @@
 
 @section('scripts')
 <script>
+    moment.locale('es');
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
@@ -337,8 +338,8 @@
 		separator : ' a ',
 		getValue: function(){
 			if ($('#date-range200').val() && $('#date-range201').val() ){
-                app.startDate = $('#date-range200').val();
-                app.endDate = $('#date-range201').val();
+                app.startDate = moment($('#date-range200').val()).format("ddd DD-MM-YYYY");
+                app.endDate = moment($('#date-range201').val()).format("ddd DD-MM-YYYY");
                 app.getDataDays();
 				return $('#date-range200').val() + ' a ' + $('#date-range201').val();
             }
@@ -349,8 +350,13 @@
 		setValue: function(s,s1,s2){
 			$('#date-range200').val(s1);
 			$('#date-range201').val(s2);
-            app.startDate = $('#date-range200').val();
-            app.endDate = $('#date-range201').val();
+            if($('#date-range200').val() && $('#date-range201').val()){
+                app.startDate = moment($('#date-range200').val()).format("ddd DD-MM-YYYY");
+                app.endDate = moment($('#date-range201').val()).format("ddd DD-MM-YYYY");
+            }else{
+                app.startDate = '';
+                app.endDate = '';
+            }
             app.getDataDays();
 		}
 	});

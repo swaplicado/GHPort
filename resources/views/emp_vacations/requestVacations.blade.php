@@ -89,7 +89,7 @@
                 <th>take_rest_days</th>
                 <th>Empleado</th>
                 <th>Fecha solicitud</th>
-                <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
+                <th style="max-width: 15%;">Fecha aprobado/rechazado</th>
                 <th>Fecha inicio</th>
                 <th>Fecha fin</th>
                 <th>Fecha regreso</th>
@@ -117,9 +117,9 @@
                                         '')
                             }}
                         </td>
-                        <td>@{{rec.start_date}}</td>
-                        <td>@{{rec.end_date}}</td>
-                        <td>@{{rec.returnDate}}</td>
+                        <td>@{{formatDate(rec.start_date)}}</td>
+                        <td>@{{formatDate(rec.end_date)}}</td>
+                        <td>@{{formatDate(rec.returnDate)}}</td>
                         <td>@{{rec.total_days}}</td>
                         <td>@{{rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name}}</td>
                         <td>@{{rec.emp_comments_n}}</td>
@@ -133,6 +133,7 @@
 
 @section('scripts')
 <script>
+    moment.locale('es');
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {

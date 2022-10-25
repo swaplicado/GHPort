@@ -11,12 +11,12 @@ class vacationUtils{
         var lDays = [];
         for(var i = 0; i < 31; i++){
             switch (returnDate.weekday()) {
-                case 6:
+                case 5:
                     if(payment_frec_id == constants.QUINCENA){
                         returnDate.add('2', 'days');
                     }
                     break;
-                case 0:
+                case 6:
                         returnDate.add('1', 'days');
                     break;
                 default:
@@ -33,7 +33,7 @@ class vacationUtils{
 
         for (var i = 0; i <= diffDays; i++) {
             if(
-                (!take_rest_days ? (oDate.weekday() != 0 && oDate.weekday() != 6) : true) &&
+                (!take_rest_days ? (oDate.weekday() != 5 && oDate.weekday() != 6) : true) &&
                 (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
             ){
                 takedDays = takedDays + 1;

@@ -26,21 +26,21 @@ var app = new Vue({
     },
     methods: {
         formatDate(sDate){
-            return moment(sDate).format('YYYY-MM-DD');
+            return moment(sDate).format('ddd DD-MM-YYYY');
         },
 
         getReturnDate(data){
             var result = this.vacationUtils.getTakedDays(
                 this.lHolidays,
                 data[this.indexes.payment_frec_id],
-                this.startDate,
-                this.endDate,
+                moment(this.startDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD'),
+                moment(this.endDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD'),
                 this.oData.const,
                 this.take_rest_days,
                 this.take_holidays
             );
 
-            this.returnDate = result[0];
+            this.returnDate = moment(result[0]).format('ddd DD-MM-YYYY');
             this.takedDays = result[1];
             this.lDays = result[2];
         },
@@ -60,8 +60,8 @@ var app = new Vue({
             this.isApprove = true;
             this.take_holidays = parseInt(data[this.indexes.take_holidays]);
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
-            $('#date-range200').val(data[this.indexes.start_date]).trigger('change');
-            $('#date-range201').val(data[this.indexes.end_date]).trigger('change');
+            $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.getReturnDate(data);
 
             $('#modal_solicitud').modal('show');
@@ -82,8 +82,8 @@ var app = new Vue({
             this.isApprove = false;
             this.take_holidays = parseInt(data[this.indexes.take_holidays]);
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
-            $('#date-range200').val(data[this.indexes.start_date]).trigger('change');
-            $('#date-range201').val(data[this.indexes.end_date]).trigger('change');
+            $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.getReturnDate(data);
 
             $('#modal_solicitud').modal('show');
@@ -98,7 +98,7 @@ var app = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
-                'returnDate': this.returnDate
+                'returnDate': moment(this.returnDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD')
             })
             .then(response => {
                 var data = response.data;
@@ -126,7 +126,7 @@ var app = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
-                'returnDate': this.returnDate
+                'returnDate': moment(this.returnDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD')
             })
             .then(response => {
                 var data = response.data;
@@ -164,9 +164,9 @@ var app = new Vue({
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
                                 this.formatDate(rec.updated_at) :
                                     '')),
-                            rec.start_date,
-                            rec.end_date,
-                            rec.returnDate,
+                            this.formatDate(rec.start_date),
+                            this.formatDate(rec.end_date),
+                            this.formatDate(rec.returnDate),
                             rec.total_days,
                             rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
                             rec.emp_comments_n

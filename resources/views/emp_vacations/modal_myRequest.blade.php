@@ -43,7 +43,10 @@
                         </div>
                         <div style="text-align: center">
                             <span id="two-inputs">
-                                <input id="date-range200" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
+                                <span hidden>
+                                    <input id="date-range200" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
+                                </span>
+                                <input class="form-control" v-model="startDate" style="width: 30%; display: inline" readonly> a <input class="form-control" v-model="endDate" style="width: 30%; display: inline" readonly>
                                 <br>
                                 <br>
                             </span>
@@ -66,12 +69,12 @@
                             <input class="form-control" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
                         </div>
                         <br>
-                        <div>
+                        {{-- <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
                             <ul name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>
-                        </div>
+                        </div> --}}
                         <div>
                             <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>
                             <input class="form-control" v-model="startDate" readonly style="width: 20%; display: inline;">

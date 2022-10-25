@@ -31,6 +31,7 @@
     <script src="{{ asset('principal/jquery-easing/jquery.easing.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vue/vue.js') }}"></script>
     <script src="{{ asset('moment/moment.js')}}"></script>
+    <script src="{{ asset('moment/moment-with-locales.js')}}"></script>
     <script src="{{ asset('datatables/dataTables.js')}}"></script>
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     @yield('headJs')
