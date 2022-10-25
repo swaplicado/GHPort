@@ -24,7 +24,7 @@ class SysConst {
      * Constantes de la tabla cat_payment_frecs
      */
     public const SEMANA =  1;
-    public const QUINCENA =  1;
+    public const QUINCENA =  2;
 
     /**
      * Constantes de la tabla sys_applications_sts

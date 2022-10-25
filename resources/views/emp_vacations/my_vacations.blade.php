@@ -34,6 +34,20 @@
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
+            this.indexes = {
+                'id':0,
+                'request_status_id':1,
+                'take_holidays':2,
+                'take_rest_days':3,
+                'request_date':4,
+                'accept_reject_date':5,
+                'start_date':6,
+                'end_date':7,
+                'return_date':8,
+                'taked_days':9,
+                'status':10,
+                'comments':11
+            };
         }
         var oServerData = new GlobalData();
     </script>
@@ -163,12 +177,14 @@
                     <table class="table table-bordered" id="table_myRequest" style="width: 100%;">
                         <thead class="thead-light">
                             <th>id</th>
-                            <th>start date</th>
-                            <th>end date</th>
                             <th>request_status_id</th>
+                            <th>take_holidays</th>
+                            <th>take_rest_days</th>
                             <th>Fecha solicitud</th>
                             <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
-                            <th>Fecha vac.</th>
+                            <th>Fecha incio</th>
+                            <th>Fecha fin</th>
+                            <th>Fecha regreso</th>
                             <th>Dias efic.</th>
                             <th>Estatus</th>
                             <th>coment.</th>
@@ -176,9 +192,9 @@
                         <tbody>
                             <tr v-for="rec in oUser.applications">
                                 <td>@{{rec.id_application}}</td>
-                                <td>@{{rec.start_date}}</td>
-                                <td>@{{rec.end_date}}</td>
                                 <td>@{{rec.request_status_id}}</td>
+                                <td>@{{rec.take_holidays}}</td>
+                                <td>@{{rec.take_rest_days}}</td>
                                 <td>@{{formatDate(rec.created_at)}}</td>
                                 <td>
                                     @{{
@@ -189,8 +205,10 @@
                                                 '')
                                     }}
                                 </td>
-                                <td>@{{rec.start_date}} a @{{rec.end_date}}</td>
-                                <td>@{{rec.total_days}}</td>
+                                <td>@{{rec.start_date}}</td>
+                                <td>@{{rec.end_date}}</td>
+                                <td>@{{rec.returnDate}}</td>
+                                <td>@{{rec.takedDays}}</td>
                                 <td>@{{rec.applications_st_name}}</td>
                                 <td>@{{rec.emp_comments_n}}</td>
                             </tr>
@@ -213,23 +231,23 @@
 
                 switch (registerVal) {
                     case 0:
-                        filter = parseInt( data[3] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 1;
                         
                     case 1:
-                        filter = parseInt( data[3] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 2;
 
                     case 2:
-                        filter = parseInt( data[3] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 3;
 
                     case 3:
-                        filter = parseInt( data[3] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 4;
 
                     case 4:
-                        filter = parseInt( data[3] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 5;
 
                     default:
@@ -255,8 +273,8 @@
 
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_myRequest',
-                                        'colTargets' => [0,1,2],
-                                        'colTargetsSercheable' => [3],
+                                        'colTargets' => [0,2,3],
+                                        'colTargetsSercheable' => [1],
                                         'select' => true,
                                         // 'noSearch' => true,
                                         'noDom' => true,
@@ -275,6 +293,7 @@
         });
     });
 </script>
+<script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
 <script>
     $.dateRangePickerLanguages['es'] =

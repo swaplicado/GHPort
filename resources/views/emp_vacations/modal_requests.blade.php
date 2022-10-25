@@ -11,6 +11,31 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
+                        <div style="text-align: left;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" disabled v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">
+                                <label class="form-check-label" for="restDays">
+                                    Tomar dias de descanso.
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" disabled v-model="take_holidays" v-on:change="getDataDays();" id="holidays">
+                                <label class="form-check-label" for="holidays">
+                                    Tomar dias no laborables.
+                                </label>
+                            </div>
+                        </div>
+                        <div style="text-align: center">
+                            <span id="two-inputs">
+                                <input id="date-range200" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
+                                <br>
+                                <br>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
                         <div>
                             <label class="form-label" for="comments">Comentarios:</label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
@@ -21,12 +46,12 @@
                             <input class="form-control" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
                         </div>
                         <br>
-                        <div>
+                        {{-- <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
                             <ul name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>
-                        </div>
+                        </div> --}}
                         <div>
                             <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>
                             <input class="form-control" v-model="startDate" readonly style="width: 20%; display: inline;">

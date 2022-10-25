@@ -1,6 +1,7 @@
 @extends('layouts.principal')
 
 @section('headStyles')
+<link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
 <style>
     ul {
         -webkit-column-count: 3;
@@ -11,6 +12,7 @@
 @endsection
 
 @section('headJs')
+    <script src="{{ asset("daterangepicker/jquery.daterangepicker.min.js") }}" type="text/javascript"></script>
     <script>
         function GlobalData(){
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
@@ -21,6 +23,23 @@
             this.filterYearRoute = <?php echo json_encode(route('requestVacations_filterYear')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
+            this.indexes = {
+                'id':0,
+                'user_id':1,
+                'payment_frec_id':2,
+                'request_status_id':3,
+                'take_holidays':4,
+                'take_rest_days':5,
+                'employee':6,
+                'created_at':7,
+                'approved_date':8,
+                'start_date':9,
+                'end_date':10,
+                'return_date':11,
+                'total_days':12,
+                'applications_st_name':13,
+                'comments':14
+            };
         }
         var oServerData = new GlobalData();
     </script>
@@ -65,13 +84,15 @@
                 <th>id</th>
                 <th>user_id</th>
                 <th>emp_frecuency_pay</th>
-                <th>start date</th>
-                <th>end date</th>
                 <th>request_status_id</th>
+                <th>take_holidays</th>
+                <th>take_rest_days</th>
                 <th>Empleado</th>
                 <th>Fecha solicitud</th>
                 <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
-                <th>Fecha vac.</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Fecha regreso</th>
                 <th>Dias efic.</th>
                 <th>Estatus</th>
                 <th>coment.</th>
@@ -82,9 +103,9 @@
                         <td>@{{rec.id_application}}</td>
                         <td>@{{rec.user_id}}</td>
                         <td>@{{emp.payment_frec_id}}</td>
-                        <td>@{{rec.start_date}}</td>
-                        <td>@{{rec.end_date}}</td>
                         <td>@{{rec.request_status_id}}</td>
+                        <td>@{{rec.take_holidays}}</td>
+                        <td>@{{rec.take_rest_days}}</td>
                         <td>@{{emp.employee}}</td>
                         <td>@{{formatDate(rec.created_at)}}</td>
                         <td>
@@ -96,7 +117,9 @@
                                         '')
                             }}
                         </td>
-                        <td>@{{rec.start_date}} a @{{rec.end_date}}</td>
+                        <td>@{{rec.start_date}}</td>
+                        <td>@{{rec.end_date}}</td>
+                        <td>@{{rec.returnDate}}</td>
                         <td>@{{rec.total_days}}</td>
                         <td>@{{rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name}}</td>
                         <td>@{{rec.emp_comments_n}}</td>
@@ -118,15 +141,15 @@
 
                 switch (registerVal) {
                     case 0:
-                        filter = parseInt( data[5] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 2;
                         
                     case 1:
-                        filter = parseInt( data[5] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 3;
 
                     case 2:
-                        filter = parseInt( data[5] );
+                        filter = parseInt( data[oServerData.indexes.request_status_id] );
                         return filter === 4;
 
                     default:
@@ -140,8 +163,8 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_requestVac',
-                                        'colTargets' => [1,2,3,4],
-                                        'colTargetsSercheable' => [0,5],
+                                        'colTargets' => [1,2,4,5],
+                                        'colTargetsSercheable' => [0,3],
                                         'select' => true,
                                         'noSort' => true,
                                         'accept' => true,
@@ -162,5 +185,68 @@
 
     });
 </script>
+<script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_request_vacations.js') }}"></script>
+<script>
+    $.dateRangePickerLanguages['es'] =
+	{
+		'selected': 'De:',
+		'days': 'Dias',
+		'apply': 'Cerrar',
+		'week-1' : 'Lun',
+		'week-2' : 'Mar',
+		'week-3' : 'Mie',
+		'week-4' : 'Jue',
+		'week-5' : 'Vie',
+		'week-6' : 'Sab',
+		'week-7' : 'Dom',
+		'month-name': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','octubre','Noviembre','Diciembre'],
+		'shortcuts' : 'Shortcuts',
+		'past': 'Past',
+		'7days' : '7 días',
+		'14days' : '14 días',
+		'30days' : '30 días',
+		'previous' : 'Anterior',
+		'prev-week' : 'Semana',
+		'prev-month' : 'Mes',
+		'prev-quarter' : 'Quincena',
+		'prev-year' : 'Año',
+		'less-than' : 'El rango de fecha debe ser mayor a %d días',
+		'more-than' : 'El rango de fecha debe ser menor a %d días',
+		'default-more' : 'Selecciona un rango de fecha mayor a %d días',
+		'default-less' : 'Selecciona un rango de fecha menor a %d días',
+		'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
+		'default-default': ''
+	};
+
+    $('#two-inputs').dateRangePicker(
+	{
+        // startDate: oServerData.initialCalendarDate,
+        inline:true,
+		container: '#two-inputs',
+		alwaysOpen:true,
+        language: 'es',
+		separator : ' a ',
+        showShortcuts: false,
+        beforeShowDay: function(t)
+        {
+            var valid = false;  //disable saturday and sunday
+            var _class = '';
+            var _tooltip = '';
+            return [valid,_class,_tooltip];
+        },
+		getValue: function(){
+			if ($('#date-range200').val() && $('#date-range201').val() ){
+				return $('#date-range200').val() + ' a ' + $('#date-range201').val();
+            }
+			else{
+				return '';
+            }
+		},
+		setValue: function(s,s1,s2){
+			$('#date-range200').val(s1);
+			$('#date-range201').val(s2);
+		}
+	});
+</script>
 @endsection

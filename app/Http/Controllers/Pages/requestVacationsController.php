@@ -31,6 +31,7 @@ class requestVacationsController extends Controller
                                                                 SysConst::APPLICATION_RECHAZADO
                                                             ]
                                                         );
+            $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
         }
 
         $holidays = \DB::table('holidays')

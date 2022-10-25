@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Adm\VacationAllocation;
 use App\Models\Adm\VacationUser;
+use App\Models\Vacations\Applications;
 use Carbon\Carbon;
 use App\User;
 use Illuminate\Support\Arr;
@@ -16,10 +17,6 @@ class VacationsController extends Controller
     public function saveVacFromJSON($lSiieVacs)
     {
         try {
-            // \DB::beginTransaction();
-
-            // $lSiieVacs = collect($lSiieVacs)->where('updated_at', '>=', $lastSyncDate);
-            // $lVacAll = VacationAllocation::where('updated_at', '>=', $lastSyncDate)->delete();
             \DB::table('vacation_allocations')->delete();
             foreach($lSiieVacs as $rVac){
                 $user = User::where('external_id_n', $rVac->employee_id)->first();
@@ -36,19 +33,11 @@ class VacationsController extends Controller
                     }
                 }
             }
-
-            // \DB::commit();
         } catch (\Throwable $th) {
-            echo $th;
-            // \DB::rollback();
         }
     }
 
-    public function insertVacationAllocations(){
-
-    }
-
-    public function setVacationsUser(){
+    public function insertProgramed(){
 
     }
 
@@ -144,7 +133,6 @@ class VacationsController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            echo $th;
         }
     }
 }

@@ -54,6 +54,10 @@
                     <span>{{$returnDate}}</span>
                 </div>
                 <div>
+                    <label class="form-label" for="totalDays" style="display: inline;">Días efectivos:</label>
+                    <span name="totalDays">{{$application->total_days}}</span>
+                </div>
+                <div>
                     <label class="form-label" for="listDays">Dias de vacaciones:</label>
                     <ul name="listDays">
                         @foreach($lDays as $day)

@@ -11,6 +11,7 @@ class Application extends Model
     protected $fillable = [
         'start_date',
         'end_date',
+        'take_nb_days',
         'total_days',
         'user_id',
         'request_status_id',

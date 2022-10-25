@@ -2,6 +2,8 @@ var app = new Vue({
     el: '#myVacations',
     data: {
         oData: oServerData,
+        vacationUtils: new vacationUtils(),
+        indexes: oServerData.indexes,
         oUser: oServerData.oUser,  //No modificar, mejor modificar oCopyUser
         oCopyUser: oServerData.oUser,
         lHolidays: oServerData.lHolidays,
@@ -17,7 +19,9 @@ var app = new Vue({
         year: oServerData.year,
         actual_vac_days: oServerData.oUser.actual_vac_days,
         prop_vac_days: oServerData.oUser.prop_vac_days,
-        prox_vac_days: oServerData.oUser.prox_vac_days
+        prox_vac_days: oServerData.oUser.prox_vac_days,
+        take_rest_days: false,
+        take_holidays: false
     },
     mounted(){
         
@@ -25,11 +29,13 @@ var app = new Vue({
     methods: {
         showModal(data = null){
             if(data != null){
-                this.comments = data[9];
-                this.idRequest = data[0];
-                this.status = data[8];
-                $('#date-range200').val(data[1]).trigger('change');
-			    $('#date-range201').val(data[2]).trigger('change');
+                this.comments = data[this.indexes.comments];
+                this.idRequest = data[this.indexes.id];
+                this.status = data[this.indexes.status];
+                this.take_holidays = parseInt(data[this.indexes.take_holidays]);
+                this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
+                $('#date-range200').val(data[this.indexes.start_date]).trigger('change');
+			    $('#date-range201').val(data[this.indexes.end_date]).trigger('change');
             }else{
                 if(this.HasRequestCreated()){
                     SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
@@ -43,150 +49,27 @@ var app = new Vue({
                 this.takedDays = 0;
                 this.lDays = [];
                 this.status = null;
+                this.take_rest_days = false;
+                this.take_holidays = false;
                 $('#clear').trigger('click');
             }
             $('#modal_solicitud').modal('show');
         },
 
         getDataDays(){
-            this.getTakedDays();
-        },
+            var result = this.vacationUtils.getTakedDays(
+                            this.lHolidays,
+                            this.oUser.payment_frec_id,
+                            this.startDate,
+                            this.endDate,
+                            this.oData.const,
+                            this.take_rest_days,
+                            this.take_holidays
+                        );
 
-        getTakedDays(){
-            this.takedDays = 0;
-            this.lDays = [];
-            var diffDays = moment(this.endDate).diff(moment(this.startDate), 'days');
-            var oDate = moment(this.startDate);
-            if(this.oUser.payment_frec_id == this.oData.const.SEMANA){
-                if(this.startDate != null && this.startDate != ''){
-                    for(var i = 0; i < 31;  i++){
-                        switch (moment(this.startDate).weekday()) {
-                            case 0:
-                                this.startDate = moment(this.startDate).add('1', 'days').format('YYYY-MM-DD');
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if(!this.lHolidays.includes(this.startDate)){
-                            break;
-                        }else{
-                            this.startDate = moment(this.startDate).add('1', 'days').format('YYYY-MM-DD');
-                        }
-                    }
-                }
-
-                if(this.endDate != null && this.endDate != ''){
-                    this.returnDate = moment(this.endDate).add('1', 'days').format('YYYY-MM-DD');
-                    for(var i = 0; i < 31; i++){
-                        switch (moment(this.returnDate).weekday()) {
-                            case 0:
-                                this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if(!this.lHolidays.includes(this.returnDate)){
-                            break;
-                        }else{
-                            this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                        }
-                    }
-
-                    for(var i = 0; i < 31; i++){
-                        switch (moment(this.endDate).weekday()) {
-                            case 0:
-                                this.endDate = moment(this.endDate).subtract('1', 'days').format('YYYY-MM-DD');
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if(!this.lHolidays.includes(this.endDate)){
-                            break;
-                        }else{
-                            this.endDate = moment(this.endDate).subtract('1', 'days').format('YYYY-MM-DD');
-                        }
-                    }
-                }
-
-                for (let i = 0; i <= diffDays; i++) {
-                    if(oDate.weekday() != 0 && !this.lHolidays.includes(oDate.format('YYYY-MM-DD'))){
-                        this.takedDays = this.takedDays + 1;
-                        this.lDays.push(oDate.format('YYYY-MM-DD'));
-                    }
-                    oDate.add('1', 'days');
-                }
-            }else{
-                if(this.startDate != null && this.startDate != ''){
-                    for(var i = 0; i < 31; i++){
-                        switch (moment(this.startDate).weekday()) {
-                            case 6:
-                                this.startDate = moment(this.startDate).add('2', 'days').format('YYYY-MM-DD');
-                                break;
-                            case 0:
-                                this.startDate = moment(this.startDate).add('1', 'days').format('YYYY-MM-DD');
-                                break;
-                            default:
-                                break;
-                        }
-
-                        if(!this.lHolidays.includes(this.startDate)){
-                            break;
-                        }else{
-                            this.startDate = moment(this.startDate).add('1', 'days').format('YYYY-MM-DD');
-                        }
-                    }
-                }
-
-                if(this.endDate != null && this.endDate != ''){
-                    this.returnDate = moment(this.endDate).add('1', 'days').format('YYYY-MM-DD');
-                    for(var i = 0; i < 31; i++){
-                        switch (moment(this.returnDate).weekday()) {
-                            case 6:
-                                this.returnDate = moment(this.returnDate).add('2', 'days').format('YYYY-MM-DD');
-                                break;
-                            case 0:
-                                this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                                break;
-                            default:
-                                break;
-                        }
-                        if(!this.lHolidays.includes(this.returnDate)){
-                            break;
-                        }else{
-                            this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                        }
-                    }
-
-                    for(var i = 0; i < 31; i++){
-                        switch (moment(this.endDate).weekday()) {
-                            case 6:
-                                this.endDate = moment(this.endDate).subtract('1', 'days').format('YYYY-MM-DD');
-                                break;
-                            case 0:
-                                this.endDate = moment(this.endDate).subtract('2', 'days').format('YYYY-MM-DD');
-                                break;
-                            default:
-                                break;
-                        }
-                        if(!this.lHolidays.includes(this.endDate)){
-                            break;
-                        }else{
-                            this.endDate = moment(this.endDate).subtract('1', 'days').format('YYYY-MM-DD');
-                        }
-                    }
-                }
-
-                for (let i = 0; i <= diffDays; i++) {
-                    if(oDate.weekday() != 0 && oDate.weekday() != 6 && !this.lHolidays.includes(oDate.format('YYYY-MM-DD'))){
-                        this.takedDays = this.takedDays + 1;
-                        this.lDays.push(oDate.format('YYYY-MM-DD'));
-                    }
-                    oDate.add('1', 'days');
-                }
-            }
+            this.returnDate = result[0];
+            this.takedDays = result[1];
+            this.lDays = result[2];
         },
 
         formatDate(sDate){
@@ -216,7 +99,9 @@ var app = new Vue({
                 'endDate': this.endDate,
                 'comments': this.comments,
                 'takedDays': this.takedDays,
-                'lDays': this.lDays,
+                // 'lDays': this.lDays,
+                'take_holidays': this.take_holidays,
+                'take_rest_days': this.take_rest_days,
             })
             .then(response => {
                 var data = response.data;
@@ -293,17 +178,19 @@ var app = new Vue({
                 dataReq.push(
                     [
                         rec.id_application,
-                        rec.start_date,
-                        rec.end_date,
                         rec.request_status_id,
+                        rec.take_holidays,
+                        rec.take_rest_days,
                         this.formatDate(rec.created_at),
                         ((rec.request_status_id == this.oData.APPLICATION_APROBADO) ?
                             rec.approved_date_n :
                                 ((rec.request_status_id == this.oData.APPLICATION_RECHAZADO) ?
                                     rec.approved_date_n :
                                         '')),
-                        rec.start_date + ' a ' + rec.end_date,
-                        rec.total_days,
+                        rec.start_date,
+                        rec.end_date,
+                        rec.returnDate,
+                        rec.takedDays,
                         rec.applications_st_name,
                         rec.emp_comments_n
                     ]
@@ -344,14 +231,14 @@ var app = new Vue({
         },
 
         deleteRegistry(data){
-            if(data[8] != 'CREADO'){
+            if(data[this.indexes.status] != 'CREADO'){
                 SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
                 return;
             }
 
             Swal.fire({
                 title: '¿Desea eliminar la solicitud para las fechas?',
-                text: data[6],
+                text: 'Inicio: ' + data[this.indexes.start_date] + '\n' + 'Fin: ' +  data[this.indexes.end_date],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -359,19 +246,19 @@ var app = new Vue({
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.deleteRequest(data[0]);
+                    this.deleteRequest(data[this.indexes.id]);
                 }
             })
         },
 
         sendRegistry(data){
-            if(data[8] != 'CREADO'){
+            if(data[this.indexes.status] != 'CREADO'){
                 SGui.showMessage('','Solo se pueden enviar solicitudes con el estatus CREADO', 'warning');
                 return
             }
             Swal.fire({
                 title: '¿Desea enviar la solicitud para las fechas?',
-                text: data[6],
+                text: 'Inicio: ' + data[this.indexes.start_date] + ' ' + 'Fin: ' +  data[this.indexes.end_date],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -379,13 +266,13 @@ var app = new Vue({
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.startDate = data[1];
-                    this.endDate = data[2];
-                    this.comments = data[9];
-                    this.idRequest = data[0];
-                    this.status = data[8];
-                    this.getTakedDays();
-                    this.sendRequest(data[0]);
+                    this.startDate = data[this.indexes.start_date];
+                    this.endDate = data[this.indexes.end_date];
+                    this.comments = data[this.indexes.comments];
+                    this.idRequest = data[this.indexes.id];
+                    this.status = data[this.indexes.status];
+                    this.getDataDays();
+                    this.sendRequest(data[this.indexes.id]);
                 }
             })
         },
@@ -419,7 +306,7 @@ var app = new Vue({
         },
 
         HasRequestCreated(){
-            console.log(this.oCopyUser);
+            // console.log(this.oCopyUser);
             for(let rec of this.oCopyUser.applications){
                 if(rec.request_status_id == 1){
                     return true;

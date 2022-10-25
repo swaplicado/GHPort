@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#requestVacations',
     data: {
         oData: oServerData,
+        indexes: oServerData.indexes,
         lEmployees: oServerData.lEmployees,
         year: oServerData.year,
         lHolidays: oServerData.lHolidays,
@@ -16,6 +17,9 @@ var app = new Vue({
         returnDate: null,
         isApprove: false,
         idApplication: oServerData.idApplication,
+        take_rest_days: false,
+        take_holidays: false,
+        vacationUtils: new vacationUtils(),
     },
     mounted(){
         
@@ -26,102 +30,67 @@ var app = new Vue({
         },
 
         getReturnDate(data){
-            this.lDays = [];
-            var diffDays = moment(this.endDate).diff(moment(this.startDate), 'days');
-            var oDate = moment(this.startDate);
-            this.returnDate = moment(this.endDate).add('1', 'days').format('YYYY-MM-DD');
-            if(data[2] == this.oData.const.SEMANA){
-                for(var i = 0; i < 31; i++){
-                    switch (moment(this.returnDate).weekday()) {
-                        case 0:
-                            this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                            break;
-                        default:
-                            break;
-                    }
-    
-                    if(!this.lHolidays.includes(this.returnDate)){
-                        break;
-                    }else{
-                        this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                    }
-                }
-    
-                for (let i = 0; i <= diffDays; i++) {
-                    if(oDate.weekday() != 0 && !this.lHolidays.includes(oDate.format('YYYY-MM-DD'))){
-                        this.lDays.push(oDate.format('YYYY-MM-DD'));
-                    }
-                    oDate.add('1', 'days');
-                }
-            }else{
-                for(var i = 0; i < 31; i++){
-                    switch (moment(this.returnDate).weekday()) {
-                        case 6:
-                            this.returnDate = moment(this.returnDate).add('2', 'days').format('YYYY-MM-DD');
-                            break;
-                        case 0:
-                            this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                            break;
-                        default:
-                            break;
-                    }
+            var result = this.vacationUtils.getTakedDays(
+                this.lHolidays,
+                data[this.indexes.payment_frec_id],
+                this.startDate,
+                this.endDate,
+                this.oData.const,
+                this.take_rest_days,
+                this.take_holidays
+            );
 
-                    if(!this.lHolidays.includes(this.returnDate)){
-                        break;
-                    }else{
-                        this.returnDate = moment(this.returnDate).add('1', 'days').format('YYYY-MM-DD');
-                    }
-                }
-
-                for (let i = 0; i <= diffDays; i++) {
-                    if(oDate.weekday() != 0 && oDate.weekday() != 6 && !this.lHolidays.includes(oDate.format('YYYY-MM-DD'))){
-                        this.lDays.push(oDate.format('YYYY-MM-DD'));
-                    }
-                    oDate.add('1', 'days');
-                }
-            }
+            this.returnDate = result[0];
+            this.takedDays = result[1];
+            this.lDays = result[2];
         },
 
         showAcceptRegistry(data){
-            if(parseInt(data[5]) != this.oData.const.APPLICATION_ENVIADO){
+            if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
                 return;
             }
-            this.comments = data[12];
-            this.idRequest = data[0];
-            this.idUser = data[1];
-            this.status = data[11];
-            this.startDate = data[3];
-            this.endDate = data[4];
-            this.takedDays = data[10];
+            this.comments = data[this.indexes.comments];
+            this.idRequest = data[this.indexes.id];
+            this.idUser = data[this.indexes.user_id];
+            this.status = data[this.indexes.applications_st_name];
+            this.startDate = data[this.indexes.start_date];
+            this.endDate = data[this.indexes.end_date];
+            this.takedDays = data[this.indexes.total_days];
             this.isApprove = true;
-            
+            this.take_holidays = parseInt(data[this.indexes.take_holidays]);
+            this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
+            $('#date-range200').val(data[this.indexes.start_date]).trigger('change');
+            $('#date-range201').val(data[this.indexes.end_date]).trigger('change');
             this.getReturnDate(data);
 
             $('#modal_solicitud').modal('show');
         },
 
         showRejectRegistry(data){
-            if(parseInt(data[5]) != this.oData.const.APPLICATION_ENVIADO && parseInt(data[5]) != this.oData.const.APPLICATION_APROBADO){
+            if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO && parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_APROBADO){
                 SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas o aprobadas', 'warning');
                 return;
             }
-            this.comments = data[12];
-            this.idRequest = data[0];
-            this.idUser = data[1];
-            this.status = data[11];
-            this.startDate = data[3];
-            this.endDate = data[4];
-            this.takedDays = data[10];
+            this.comments = data[this.indexes.comments];
+            this.idRequest = data[this.indexes.id];
+            this.idUser = data[this.indexes.user_id];
+            this.status = data[this.indexes.applications_st_name];
+            this.startDate = data[this.indexes.start_date];
+            this.endDate = data[this.indexes.end_date];
+            this.takedDays = data[this.indexes.total_days];
             this.isApprove = false;
-
+            this.take_holidays = parseInt(data[this.indexes.take_holidays]);
+            this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
+            $('#date-range200').val(data[this.indexes.start_date]).trigger('change');
+            $('#date-range201').val(data[this.indexes.end_date]).trigger('change');
             this.getReturnDate(data);
 
             $('#modal_solicitud').modal('show');
         },
 
         acceptRequest(){
-            SGui.showWaiting(5000);
+            SGui.showWaiting(10000);
             var route = this.oData.acceptRequestRoute;
             axios.post(route, {
                 'id_application': this.idRequest,
@@ -149,7 +118,7 @@ var app = new Vue({
         },
 
         rejectRequest(){
-            SGui.showWaiting(5000);
+            SGui.showWaiting(10000);
             var route = this.oData.rejectRequestRoute;
             axios.post(route, {
                 'id_application': this.idRequest,
@@ -185,9 +154,9 @@ var app = new Vue({
                             rec.id_application,
                             rec.user_id,
                             emp.payment_frec_id,
-                            rec.start_date,
-                            rec.end_date,
                             rec.request_status_id,
+                            rec.take_holidays,
+                            rec.take_rest_days,
                             emp.employee,
                             this.formatDate(rec.created_at),
                             ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
@@ -195,10 +164,12 @@ var app = new Vue({
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
                                 this.formatDate(rec.updated_at) :
                                     '')),
-                            rec.start_date + ' a ' + rec.end_date,
+                            rec.start_date,
+                            rec.end_date,
+                            rec.returnDate,
                             rec.total_days,
                             rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
-                            rec.sup_comments_n
+                            rec.emp_comments_n
                         ]
                     );
                 }

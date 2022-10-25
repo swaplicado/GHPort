@@ -178,6 +178,7 @@ class EmployeeVacationUtils {
         $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;
+        $user->prop_vac_days = 0;
 
         foreach($user->vacation as $vac){
             $date_start = Carbon::parse($vac->date_start);
@@ -208,6 +209,7 @@ class EmployeeVacationUtils {
 
             if(Carbon::today()->gt($date_start) && Carbon::today()->lt($date_end)){
                 $user->prox_vac_days = $vac->remaining;
+                $user->prop_vac_days = number_format(((Carbon::today()->diffInDays($date_start) * $user->prox_vac_days) / $date_start->diffInDays($date_end)), 2);
             }
 
             if($date_start->lt(Carbon::today()) && $date_end->lt(Carbon::today()) && Carbon::today()->diffInYears($date_end) < 1){
@@ -308,5 +310,52 @@ class EmployeeVacationUtils {
         }
 
         return $lEmployees;
+    }
+
+    public static function getTakedDays($oUser){
+        $holidays = \DB::table('holidays')
+                        ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
+                        ->where('is_deleted', 0)
+                        ->pluck('fecha')->toArray();
+
+        foreach($oUser->applications as $app){
+            $returnDate = Carbon::parse($app->end_date)->addDays(1);
+            for($i = 0; $i < 31; $i++){
+                switch ($returnDate->dayOfWeek) {
+                    case 6:
+                        if($oUser->payment_frec_id == SysConst::QUINCENA){
+                            $returnDate->addDays(2);
+                        }
+                        break;
+                    case 0:
+                        $returnDate->addDays(1);
+                        break;
+                    default:
+                        break;
+                }
+                
+                if(!in_array($returnDate->toDateString(), $holidays)){
+                    $app->returnDate = $returnDate->toDateString();
+                    break;
+                }else{
+                    $returnDate->addDays(1);
+                }
+            }
+
+            $oDate = Carbon::parse($app->start_date);
+            $diffDays =  $oDate->diffInDays(Carbon::parse($app->end_date));
+            $app->takedDays = 0;
+            for ($i = 0; $i <= $diffDays; $i++) {
+                if(
+                    (!$app->take_rest_days ? ($oDate->dayOfWeek != 0 && $oDate->dayOfWeek != 6) : true) &&
+                    (!$app->take_holidays ? (!in_array($oDate->toDateString(), $holidays)) : true)
+                ){
+                    $app->takedDays = $app->takedDays + 1;
+                }
+                $oDate->addDays(1);
+            }
+        }
+
+        return $oUser->applications;
     }
 }
