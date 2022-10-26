@@ -33,6 +33,7 @@
             this.filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
+            this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.indexes = {
                 'id':0,

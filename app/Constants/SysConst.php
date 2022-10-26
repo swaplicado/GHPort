@@ -34,5 +34,19 @@ class SysConst {
     public const APPLICATION_APROBADO = 3;
     public const APPLICATION_RECHAZADO = 4;
     public const APPLICATION_CONSUMIDO = 5;
+
+    /**
+     * Constantes de la tabla sys_mails_sts
+     */
+    public const MAIL_EN_PROCESO = 1;
+    public const MAIL_ENVIADO = 2;
+    public const MAIL_NO_ENVIADO = 3;
+
+    /**
+     * Constantes de la tabla cat_mails_tps
+     */
+
+    public const MAIL_SOLICITUD_VACACIONES = 1;
+    public const MAIL_ACEPT_RECH_SOLICITUD = 2;
 }
 ?>

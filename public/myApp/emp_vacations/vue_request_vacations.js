@@ -107,6 +107,7 @@ var app = new Vue({
                     SGui.showMessage('', data.message, data.icon);
                     this.reDrawRequestTable(data.lEmployees);
                     table['table_requestVac'].$('tr.selected').removeClass('selected');
+                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -135,6 +136,7 @@ var app = new Vue({
                     SGui.showMessage('', data.message, data.icon);
                     this.reDrawRequestTable(data.lEmployees);
                     table['table_requestVac'].$('tr.selected').removeClass('selected');
+                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -196,6 +198,40 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
+        },
+
+        async checkMail(mail_log_id, route){
+            var checked = false;
+            for(var i = 0; i<10; i++){
+                await this.sleep(3000);
+
+                if(!checked){
+                    axios.post(route, {
+                        'mail_log_id': mail_log_id,
+                    })
+                    .then(response => {
+                        var data = response.data;
+                        if(data.status == 2){
+                            checked = true;
+                            SGui.showMessage('', 'Correo enviado con éxito', 'success');
+                        }else if(data.status == 3){
+                            checked = true;
+                            SGui.showMessage('', 'Ocurrio un error al enviar el e-mail, notifique a su colaborador', 'error');
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+                }
+
+                if(checked){
+                    break;
+                }
+            }
+        },
+
+        sleep(milliseconds) {
+            return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
     },
 })

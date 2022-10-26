@@ -21,6 +21,7 @@
             this.acceptRequestRoute = <?php echo json_encode(route('requestVacations_acceptRequest')); ?>;
             this.rejectRequestRoute = <?php echo json_encode(route('requestVacations_rejectRequest')); ?>;
             this.filterYearRoute = <?php echo json_encode(route('requestVacations_filterYear')); ?>;
+            this.checkMailRoute = <?php echo json_encode(route('requestVacations_checkMail')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             this.indexes = {

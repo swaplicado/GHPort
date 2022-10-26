@@ -12,9 +12,11 @@ use App\Utils\EmployeeVacationUtils;
 use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
+use App\Models\Vacations\MailLog;
 use App\Constants\SysConst;
 use App\Models\Adm\OrgChartJob;
 use App\Utils\orgChartUtils;
+use Spatie\Async\Pool;
 class myVacationsController extends Controller
 {
     public $months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -282,14 +284,7 @@ class myVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
             $user->applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, $request->year);
             $user->applications = EmployeeVacationUtils::getTakedDays($user);
-            
-            \DB::commit();
-        } catch (\Throwable $th) {
-            \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
-        }
 
-        try {
             $arrOrgJobs = orgChartUtils::getDirectFatherOrgChartJob(\Auth::user()->org_chart_job_id);
 
             $superviser = \DB::table('users')
@@ -298,24 +293,55 @@ class myVacationsController extends Controller
                             ->whereIn('org_chart_job_id', $arrOrgJobs)
                             ->first();
 
-            Mail::to($superviser->email)->send(new requestVacationMail(
-                                                    $application->id_application,
-                                                    \Auth::user()->id,
-                                                    $request->lDays,
-                                                    $request->returnDate
-                                                )
-                                            );
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $superviser->id;
+            $mailLog->application_id_n = $application->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_VACACIONES;
+            $mailLog->is_deleted = 0;
+            $mailLog->created_by = \Auth::user()->id;
+            $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->save();
+            
+            \DB::commit();
         } catch (\Throwable $th) {
-            return json_encode(
-                [
-                    'success' => true,
-                    'message' => 'Registro enviadó con éxito, pero ocurrio un error al enviar el e-mail, notifique a su supervisor',
-                    'icon' => 'info',
-                    'oUser' => $user
-                ]
-            );
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'message' => 'Registro enviado con éxito', 'icon' => 'success', 'oUser' => $user]);
+            $mypool = Pool::create();
+            $mypool[] = async(function () use ($application, $request, $superviser, $mailLog){
+                try {
+                    Mail::to($superviser->email)->send(new requestVacationMail(
+                                                            $application->id_application,
+                                                            \Auth::user()->id,
+                                                            $request->lDays,
+                                                            $request->returnDate
+                                                        )
+                                                    );
+                } catch (\Throwable $th) {
+                    $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                    $mailLog->update();   
+                    return null; 
+                }
+
+                $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+                $mailLog->update();
+            })->then(function ($mailLog) {
+                
+            })->catch(function ($mailLog) {
+                
+            })->timeout(function ($mailLog) {
+                
+            });
+
+        return json_encode(['success' => true, 'mail_log_id' => $mailLog->id_mail_log, 'message' => 'Registro enviado con éxito', 'icon' => 'success', 'oUser' => $user]);
+    }
+
+    public function checkMail(Request $request){
+        $mailLog = MailLog::find($request->mail_log_id);
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
     }
 }

@@ -13,7 +13,8 @@ use App\Models\Vacations\ApplicationLog;
 use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Constants\SysConst;
-
+use App\Models\Vacations\MailLog;
+use Spatie\Async\Pool;
 
 class requestVacationsController extends Controller
 {
@@ -89,6 +90,21 @@ class requestVacationsController extends Controller
             $application_log->created_by = \Auth::user()->id;
             $application_log->updated_by = \Auth::user()->id;
             $application_log->save();
+
+            $employee = \DB::table('users')
+                                ->where('id', $request->id_user)
+                                ->first();
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $application->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_ACEPT_RECH_SOLICITUD;
+            $mailLog->is_deleted = 0;
+            $mailLog->created_by = \Auth::user()->id;
+            $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->save();
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -98,31 +114,33 @@ class requestVacationsController extends Controller
 
         $data = $this->getData($request->year);
 
-        try {
-            $employee = \DB::table('users')
-                                ->where('id', $request->id_user)
-                                ->first();
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
+            try {
+                Mail::to($employee->email)->send(new authorizeVacationMail(
+                                                        $application->id_application,
+                                                        $employee->id,
+                                                        $request->lDays,
+                                                        $request->returnDate
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                return null; 
+            }
 
-            Mail::to($employee->email)->send(new authorizeVacationMail(
-                                                    $application->id_application,
-                                                    $employee->id,
-                                                    $request->lDays,
-                                                    $request->returnDate
-                                                )
-                                            );
-        } catch (\Throwable $th) {
-            return json_encode(
-                [
-                    'success' => true,
-                    'message' => 'La solicitud fue aprobada con éxito, pero ocurrio un error al enviar el e-mail, notifique al colaborador',
-                    'icon' => 'info',
-                    'lEmployees' => $data[1],
-                    'holidays' => $data[2]
-                ]
-            );
-        }
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
 
-        return json_encode(['success' => true, 'message' => 'Solicitud aprobada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
+        return json_encode(['success' => true, 'mail_log_id' => $mailLog->id_mail_log, 'message' => 'Solicitud aprobada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
 
     public function rejectRequest(Request $request){
@@ -154,6 +172,21 @@ class requestVacationsController extends Controller
             $application_log->created_by = \Auth::user()->id;
             $application_log->updated_by = \Auth::user()->id;
             $application_log->save();
+
+            $employee = \DB::table('users')
+                            ->where('id', $request->id_user)
+                            ->first();
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $application->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_ACEPT_RECH_SOLICITUD;
+            $mailLog->is_deleted = 0;
+            $mailLog->created_by = \Auth::user()->id;
+            $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->save();
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -163,31 +196,33 @@ class requestVacationsController extends Controller
 
         $data = $this->getData($request->year);
 
-        try {
-            $employee = \DB::table('users')
-                                ->where('id', $request->id_user)
-                                ->first();
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
+            try {
+                Mail::to($employee->email)->send(new authorizeVacationMail(
+                                                        $application->id_application,
+                                                        $employee->id,
+                                                        $request->lDays,
+                                                        $request->returnDate
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                return null; 
+            }
 
-            Mail::to($employee->email)->send(new authorizeVacationMail(
-                                                    $application->id_application,
-                                                    $employee->id,
-                                                    $request->lDays,
-                                                    $request->returnDate
-                                                )
-                                            );
-        } catch (\Throwable $th) {
-            return json_encode(
-                [
-                    'success' => true,
-                    'message' => 'La solicitud fue rechazada con éxito, pero ocurrio un error al enviar el e-mail, notifique al colaborador',
-                    'icon' => 'info',
-                    'lEmployees' => $data[1],
-                    'holidays' => $data[2]
-                ]
-            );
-        }
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
 
-        return json_encode(['success' => true, 'message' => 'Solicitud rechazada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
+        return json_encode(['success' => true, 'mail_log_id' => $mailLog->id_mail_log, 'message' => 'Solicitud rechazada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
 
     public function filterYear(Request $request){
@@ -272,5 +307,11 @@ class requestVacationsController extends Controller
             $oApplication->is_deleted = 0;
             $oApplication->update();
         }
+    }
+
+    public function checkMail(Request $request){
+        $mailLog = MailLog::find($request->mail_log_id);
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
     }
 }
