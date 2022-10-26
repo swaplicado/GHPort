@@ -467,3 +467,11 @@
     color: #49e;
     font-weight: 700
 }
+
+.date-picker-wrapper .month-wrapper table .day.restDay {
+    background-color: #e0e0e0b1
+}
+
+.date-picker-wrapper .month-wrapper table .day.holiday {
+    background-color: #9f55d4
+}

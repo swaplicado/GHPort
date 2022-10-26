@@ -32,14 +32,27 @@ class vacationUtils{
         }
 
         for (var i = 0; i <= diffDays; i++) {
-            if(
-                (!take_rest_days ? (oDate.weekday() != 5 && oDate.weekday() != 6) : true) &&
-                (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
-            ){
-                takedDays = takedDays + 1;
-                lDays.push(oDate.format('YYYY-MM-DD'));
+            if(payment_frec_id == constants.QUINCENA){
+                if(
+                    (!take_rest_days ? (oDate.weekday() != 5 && oDate.weekday() != 6) : true) &&
+                    (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
+                ){
+                    takedDays = takedDays + 1;
+                    lDays.push(oDate.format('YYYY-MM-DD'));
+                }
+                oDate.add('1', 'days');
+            }else{
+                if(
+                    (!take_rest_days ? (oDate.weekday() != 6) : true) &&
+                    (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
+                ){
+                    takedDays = takedDays + 1;
+                    lDays.push(oDate.format('YYYY-MM-DD'));
+                }
+                oDate.add('1', 'days');
             }
-            oDate.add('1', 'days');
+
+
         }
 
         return [returnDate, takedDays, lDays];

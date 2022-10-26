@@ -213,7 +213,7 @@ var app = new Vue({
                         var data = response.data;
                         if(data.status == 2){
                             checked = true;
-                            SGui.showMessage('', 'Correo enviado con éxito', 'success');
+                            SGui.showMessage('', 'E-mail enviado con éxito', 'success');
                         }else if(data.status == 3){
                             checked = true;
                             SGui.showMessage('', 'Ocurrio un error al enviar el e-mail, notifique a su colaborador', 'error');

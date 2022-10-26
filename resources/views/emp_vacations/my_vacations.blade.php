@@ -337,6 +337,25 @@
 		alwaysOpen:true,
         language: 'es',
 		separator : ' a ',
+        beforeShowDay: function(t)
+        {
+            var valid = true;
+            var _class = '';
+            var _tooltip = '';
+            if(oServerData.oUser.payment_frec_id == oServerData.const.QUINCENA){
+                _class = (t.getDay() == 0 || t.getDay() == 6) ? 
+                            'restDay' : 
+                                (oServerData.lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD')) ? 
+                                    'holiday' : '');
+            } else {
+                _class = (t.getDay() == 0) ? 
+                            'restDay' : 
+                                (oServerData.lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD')) ? 
+                                    'holiday' : '');
+            }
+ 
+            return [valid,_class,_tooltip];
+        },
 		getValue: function(){
 			if ($('#date-range200').val() && $('#date-range201').val() ){
                 app.startDate = moment($('#date-range200').val()).format("ddd DD-MM-YYYY");

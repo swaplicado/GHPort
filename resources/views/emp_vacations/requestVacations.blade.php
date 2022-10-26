@@ -190,65 +190,82 @@
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_request_vacations.js') }}"></script>
 <script>
-    $.dateRangePickerLanguages['es'] =
-	{
-		'selected': 'De:',
-		'days': 'Dias',
-		'apply': 'Cerrar',
-		'week-1' : 'Lun',
-		'week-2' : 'Mar',
-		'week-3' : 'Mie',
-		'week-4' : 'Jue',
-		'week-5' : 'Vie',
-		'week-6' : 'Sab',
-		'week-7' : 'Dom',
-		'month-name': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','octubre','Noviembre','Diciembre'],
-		'shortcuts' : 'Shortcuts',
-		'past': 'Past',
-		'7days' : '7 días',
-		'14days' : '14 días',
-		'30days' : '30 días',
-		'previous' : 'Anterior',
-		'prev-week' : 'Semana',
-		'prev-month' : 'Mes',
-		'prev-quarter' : 'Quincena',
-		'prev-year' : 'Año',
-		'less-than' : 'El rango de fecha debe ser mayor a %d días',
-		'more-than' : 'El rango de fecha debe ser menor a %d días',
-		'default-more' : 'Selecciona un rango de fecha mayor a %d días',
-		'default-less' : 'Selecciona un rango de fecha menor a %d días',
-		'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
-		'default-default': ''
-	};
+    $(document).ready(function (){
 
-    $('#two-inputs').dateRangePicker(
-	{
-        // startDate: oServerData.initialCalendarDate,
-        inline:true,
-		container: '#two-inputs',
-		alwaysOpen:true,
-        language: 'es',
-		separator : ' a ',
-        showShortcuts: false,
-        beforeShowDay: function(t)
+        $.dateRangePickerLanguages['es'] =
         {
-            var valid = false;  //disable saturday and sunday
-            var _class = '';
-            var _tooltip = '';
-            return [valid,_class,_tooltip];
-        },
-		getValue: function(){
-			if ($('#date-range200').val() && $('#date-range201').val() ){
-				return $('#date-range200').val() + ' a ' + $('#date-range201').val();
+            'selected': 'De:',
+            'days': 'Dias',
+            'apply': 'Cerrar',
+            'week-1' : 'Lun',
+            'week-2' : 'Mar',
+            'week-3' : 'Mie',
+            'week-4' : 'Jue',
+            'week-5' : 'Vie',
+            'week-6' : 'Sab',
+            'week-7' : 'Dom',
+            'month-name': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','octubre','Noviembre','Diciembre'],
+            'shortcuts' : 'Shortcuts',
+            'past': 'Past',
+            '7days' : '7 días',
+            '14days' : '14 días',
+            '30days' : '30 días',
+            'previous' : 'Anterior',
+            'prev-week' : 'Semana',
+            'prev-month' : 'Mes',
+            'prev-quarter' : 'Quincena',
+            'prev-year' : 'Año',
+            'less-than' : 'El rango de fecha debe ser mayor a %d días',
+            'more-than' : 'El rango de fecha debe ser menor a %d días',
+            'default-more' : 'Selecciona un rango de fecha mayor a %d días',
+            'default-less' : 'Selecciona un rango de fecha menor a %d días',
+            'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
+            'default-default': ''
+        };
+    
+        $('#two-inputs').dateRangePicker(
+        {
+            // startDate: oServerData.initialCalendarDate,
+            inline:true,
+            container: '#two-inputs',
+            alwaysOpen:true,
+            language: 'es',
+            separator : ' a ',
+            showShortcuts: false,
+            beforeShowDay: function(t)
+            {
+                var valid = false;
+                var _class = '';
+                var _tooltip = '';
+                if(table['table_requestVac'].row('.selected').data() != undefined){
+                    if(table['table_requestVac'].row('.selected').data()[oServerData.indexes.payment_frec_id] == oServerData.const.QUINCENA){
+                        _class = (t.getDay() == 0 || t.getDay() == 6) ? 
+                                    'restDay' : 
+                                        (oServerData.lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD')) ? 
+                                            'holiday' : '');
+                    } else {
+                        _class = (t.getDay() == 0) ? 
+                                    'restDay' : 
+                                        (oServerData.lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD')) ? 
+                                            'holiday' : '');
+                    }
+                }
+     
+                return [valid,_class,_tooltip];
+            },
+            getValue: function(){
+                if ($('#date-range200').val() && $('#date-range201').val() ){
+                    return $('#date-range200').val() + ' a ' + $('#date-range201').val();
+                }
+                else{
+                    return '';
+                }
+            },
+            setValue: function(s,s1,s2){
+                $('#date-range200').val(s1);
+                $('#date-range201').val(s2);
             }
-			else{
-				return '';
-            }
-		},
-		setValue: function(s,s1,s2){
-			$('#date-range200').val(s1);
-			$('#date-range201').val(s2);
-		}
-	});
+        });
+    });
 </script>
 @endsection
