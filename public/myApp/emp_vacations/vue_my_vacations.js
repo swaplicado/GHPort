@@ -102,6 +102,8 @@ var app = new Vue({
                 // 'lDays': this.lDays,
                 'take_holidays': this.take_holidays,
                 'take_rest_days': this.take_rest_days,
+                'returnDate': moment(this.returnDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
+                'tot_calendar_days': (moment(this.endDate, 'ddd DD-MM-YYYY').diff(moment(this.startDate, 'ddd DD-MM-YYYY'), 'days') + 1)
             })
             .then(response => {
                 var data = response.data;

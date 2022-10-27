@@ -16,6 +16,7 @@ class Menu {
                 $lMenus = [
                     (object) ['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
                     (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                 ];
                 break;
 
@@ -27,6 +28,7 @@ class Menu {
                     (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
                     (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
+                    (object) ['route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                 ];
                 break;
 
@@ -39,6 +41,7 @@ class Menu {
                     (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
                     (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
+                    (object) ['route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                 ];
                 break;
 
@@ -51,6 +54,7 @@ class Menu {
                     (object) ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Vac. colaboradores'],
                     (object) ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
+                    (object) ['route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                 ];
                 break;
             

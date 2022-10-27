@@ -65,6 +65,8 @@ class myVacationsController extends Controller
         $endDate = $request->endDate;
         $comments = $request->comments;
         $takedDays = $request->takedDays;
+        $returnDate = $request->returnDate;
+        $tot_calendar_days = $request->tot_calendar_days;
         // $lDays = $request->lDays;
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
@@ -93,6 +95,8 @@ class myVacationsController extends Controller
             $application->take_holidays = $take_holidays;
             $application->take_rest_days = $take_rest_days;
             $application->total_days = $takedDays;
+            $application->tot_calendar_days = $tot_calendar_days;
+            $application->return_date = $returnDate;
             $application->user_id = \Auth::user()->id;
             $application->request_status_id = SysConst::APPLICATION_CREADO;
             $application->type_incident_id = SysConst::TYPE_VACACIONES;
@@ -149,6 +153,8 @@ class myVacationsController extends Controller
         $endDate = $request->endDate;
         $comments = $request->comments;
         $takedDays = $request->takedDays;
+        $returnDate = $request->returnDate;
+        $tot_calendar_days = $request->tot_calendar_days;
         // $lDays = $request->lDays;
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
@@ -184,6 +190,8 @@ class myVacationsController extends Controller
             $application->take_holidays = $take_holidays;
             $application->take_rest_days = $take_rest_days;
             $application->total_days = $takedDays;
+            $application->tot_calendar_days = $tot_calendar_days;
+            $application->return_date = $returnDate;
             $application->emp_comments_n = $comments;
             $application->is_deleted = 0;
             $application->update();

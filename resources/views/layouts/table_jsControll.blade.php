@@ -47,6 +47,9 @@
                     @if(!isset($noDom))
                         "dom": 'Bfrtip',
                     @endif
+                    @if(isset($order))
+                        "order": <?php echo json_encode($order) ?>,
+                    @endif
                     "responsive": true,
                     "lengthMenu": [
                         [ 10, 25, 50, 100, -1 ],

@@ -57,14 +57,14 @@
                     <label class="form-label" for="totalDays" style="display: inline;">Días efectivos:</label>
                     <span name="totalDays">{{$application->total_days}}</span>
                 </div>
-                <div>
+                {{-- <div>
                     <label class="form-label" for="listDays">Dias de vacaciones:</label>
                     <ul name="listDays">
                         @foreach($lDays as $day)
                             <li>{{$day}}</li>
                         @endforeach
                     </ul>
-                </div>
+                </div> --}}
                 <div style="text-align: center">
                     <label class="form-label">Haga click en el siguiente botón para revisar tus solicitudes:</label>
                     <br>
