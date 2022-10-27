@@ -136,7 +136,7 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     SGui.showOk();
-                    this.oCopyUser = data.oUser;
+                    // this.oCopyUser = data.oUser;
                     this.reDrawRequestTable(data);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -192,7 +192,7 @@ var app = new Vue({
                         this.formatDate(rec.start_date),
                         this.formatDate(rec.end_date),
                         this.formatDate(rec.returnDate),
-                        rec.takedDays,
+                        rec.total_days,
                         rec.applications_st_name,
                         rec.emp_comments_n
                     ]

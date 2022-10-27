@@ -209,7 +209,7 @@
                                 <td>@{{formatDate(rec.start_date)}}</td>
                                 <td>@{{formatDate(rec.end_date)}}</td>
                                 <td>@{{formatDate(rec.returnDate)}}</td>
-                                <td>@{{rec.takedDays}}</td>
+                                <td>@{{rec.total_days}}</td>
                                 <td>@{{rec.applications_st_name}}</td>
                                 <td>@{{rec.emp_comments_n}}</td>
                             </tr>
