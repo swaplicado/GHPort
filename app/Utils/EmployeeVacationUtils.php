@@ -5,6 +5,10 @@ use App\Constants\SysConst;
 
 class EmployeeVacationUtils {
     public const months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    
+    /**
+     * Obtiene la lista de empleados a partir de un arreglo con los id de los org_jobs
+     */
     public static function getlEmployees($arrOrgJobs){
         $lEmployees = \DB::table('users as u')
                         ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
@@ -42,6 +46,9 @@ class EmployeeVacationUtils {
         return $lEmployees;
     }
     
+    /**
+     * Obtiene las vacaciones de un empleado, sin descontar las solicitudes ni las programadas
+     */
     public static function getEmployeeVacations($id, $years, $startYear = null){
         $oVacation = \DB::table('vacation_users as vu')
                         ->where('vu.is_deleted', 0)
@@ -68,6 +75,9 @@ class EmployeeVacationUtils {
         return $oVacation;
     }
 
+    /**
+     * Obtiene las vacaciones consumidas por un empleado
+     */
     public static function getVacationConsumed($id, $year){
         $consumed_byApplication = \DB::table('vacation_allocations as va')
                                             ->Join('applications_breakdowns as ab', 'ab.id_application_breakdown', '=', 'va.application_breakdown_id')
@@ -88,6 +98,9 @@ class EmployeeVacationUtils {
         return $oConsumed;
     }
 
+    /**
+     * Obtiene las solicitudes con sus renglones, de vacaciones de un empleado, solo las creadas, enviadas y aprobadas
+     */
     public static function getVacationRequested($id, $year){
         $oRequested = \DB::table('applications as a')
                         ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
@@ -118,6 +131,22 @@ class EmployeeVacationUtils {
         return $oRequested;
     }
 
+    /**
+     * Obtiene las vacaciones programadas de un empleado
+     */
+    public static function getProgramed($id, $year){
+        $programed = \DB::table('programed_aux')
+                        ->where('employee_id', $id)
+                        ->where('is_deleted',0)
+                        ->where('year', $year)
+                        ->get();
+
+        return $programed;
+    }
+
+    /**
+     * Obtiene las solicitudes de vacaciones con el estatus recibido de un empleado
+     */
     public static function getApplications($id, $year, $status = [1,2,3,4]){
         $oRequested = \DB::table('applications as a')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
@@ -139,6 +168,15 @@ class EmployeeVacationUtils {
         return $oRequested;
     }
 
+    /**
+     * Obtiene las vacaciones de un empleado,
+     * regresa un objecto usuario con la informacion de sus vacaciones:
+     *  ganadas,
+     *  gozadas,
+     *  pendientes,
+     *  vencidas,
+     *  solicitadas
+     */
     public static function getEmployeeVacationsData($id){
         $config = \App\Utils\Configuration::getConfigurations();
 
@@ -186,6 +224,7 @@ class EmployeeVacationUtils {
 
             $oVacConsumed = EmployeeVacationUtils::getVacationConsumed($id, $vac->year);
             $vac_request = EmployeeVacationUtils::getVacationRequested($id, $vac->year);
+            $vac_programed = EmployeeVacationUtils::getProgramed($id, $vac->year);
 
             $vac->request = 0;
             $vac->oRequest = null;
@@ -193,6 +232,16 @@ class EmployeeVacationUtils {
                 if(sizeof($vac_request) > 0){
                     $vac->request = collect($vac_request)->sum('days_effective');
                     $vac->oRequest = $vac_request;
+                }
+            }
+
+            $vac->programed = 0;
+            $vac->oProgramed = null;
+            if(!is_null($vac_programed)){
+                if(sizeof($vac_programed) > 0){
+                    $vac->programed = collect($vac_programed)->sum('days_to_consumed');
+                    $vac->request = $vac->request + $vac->programed;
+                    $vac->oProgramed = $vac_programed;
                 }
             }
 
@@ -248,6 +297,9 @@ class EmployeeVacationUtils {
         return $user;
     }
 
+    /**
+     * Reporte de todas las vacaciones
+     */
     public static function getVacations($lEmployees, $startYear = null){
         $config = \App\Utils\Configuration::getConfigurations();
         foreach($lEmployees as $emp){
@@ -262,11 +314,22 @@ class EmployeeVacationUtils {
 
                 $oVacConsumed = EmployeeVacationUtils::getVacationConsumed($emp->id, $vac->year);
                 $vac_request = EmployeeVacationUtils::getVacationRequested($emp->id, $vac->year);
+                $vac_programed = EmployeeVacationUtils::getProgramed($emp->id, $vac->year);
                 
                 if(!is_null($vac_request)){
                     $vac->request = collect($vac_request)->sum('days_effective');
                 }else{
                     $vac->request = 0;
+                }
+
+                $vac->programed = 0;
+                $vac->oProgramed = null;
+                if(!is_null($vac_programed)){
+                    if(sizeof($vac_programed) > 0){
+                        $vac->programed = collect($vac_programed)->sum('days_to_consumed');
+                        $vac->request = $vac->request + $vac->programed;
+                        $vac->oProgramed = $vac_programed;
+                    }
                 }
 
                 if(!is_null($oVacConsumed)){
@@ -312,6 +375,9 @@ class EmployeeVacationUtils {
         return $lEmployees;
     }
 
+    /**
+     * Calcula los dias eficaces de vacaciones
+     */
     public static function getTakedDays($oUser){
         $holidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())

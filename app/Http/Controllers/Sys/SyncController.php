@@ -20,8 +20,8 @@ class SyncController extends Controller
     public static function toSynchronize($withRedirect = true)
     {
         $config = \App\Utils\Configuration::getConfigurations();
-        // $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        $synchronized = true;
+        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        // $synchronized = true;
 
         $newDate = Carbon::now();
         $newDate->subMinutes(10);

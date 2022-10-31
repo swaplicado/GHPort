@@ -108,9 +108,9 @@ var app = new Vue({
             .then(response => {
                 var data = response.data;
                 if(data.success){
-                    this.actual_vac_days = data.oUser.actual_vac_days,
+                    this.actual_vac_days = data.oUser.actual_vac_days;
                     // this.prop_vac_days = data.oUser.prop_vac_days,
-                    this.prox_vac_days = data.oUser.prox_vac_days
+                    this.prox_vac_days = data.oUser.prox_vac_days;
                     $('#modal_solicitud').modal('hide');
                     SGui.showOk();
                     this.oCopyUser = data.oUser;
@@ -157,9 +157,9 @@ var app = new Vue({
             .then(response => {
                 var data = response.data;
                 if(data.success){
-                    this.actual_vac_days = data.oUser.actual_vac_days,
+                    this.actual_vac_days = data.oUser.actual_vac_days;
                     // this.prop_vac_days = data.oUser.prop_vac_days,
-                    this.prox_vac_days = data.oUser.prox_vac_days
+                    this.prox_vac_days = data.oUser.prox_vac_days;
                     SGui.showOk();
                     this.oCopyUser = data.oUser;
                     this.reDrawVacationsTable(data);
@@ -290,9 +290,9 @@ var app = new Vue({
             .then(response => {
                 var data = response.data;
                 if(data.success){
-                    this.actual_vac_days = data.oUser.actual_vac_days,
+                    this.actual_vac_days = data.oUser.actual_vac_days;
                     // this.prop_vac_days = data.oUser.prop_vac_days,
-                    this.prox_vac_days = data.oUser.prox_vac_days
+                    this.prox_vac_days = data.oUser.prox_vac_days;
                     SGui.showMessage('', data.message, data.icon);
                     this.oCopyUser = data.oUser;
                     this.reDrawVacationsTable(data);

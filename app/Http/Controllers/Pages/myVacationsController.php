@@ -52,7 +52,7 @@ class myVacationsController extends Controller
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
-// dd($user);
+
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
