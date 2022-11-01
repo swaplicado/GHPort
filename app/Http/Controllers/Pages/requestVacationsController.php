@@ -10,11 +10,14 @@ use App\Mail\authorizeVacationMail;
 use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
+use App\Models\Vacations\requestVacationLog;
 use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Constants\SysConst;
 use App\Models\Vacations\MailLog;
 use Spatie\Async\Pool;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class requestVacationsController extends Controller
 {
@@ -90,6 +93,8 @@ class requestVacationsController extends Controller
             $application_log->created_by = \Auth::user()->id;
             $application_log->updated_by = \Auth::user()->id;
             $application_log->save();
+
+            $this->sendRequestVacation($application);
 
             $employee = \DB::table('users')
                                 ->where('id', $request->id_user)
@@ -313,5 +318,105 @@ class requestVacationsController extends Controller
         $mailLog = MailLog::find($request->mail_log_id);
 
         return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
+    }
+
+    public function sendRequestVacation($oApplication){
+        $lHolidays = \DB::table('holidays')
+                        ->where('is_deleted', 0)
+                        ->pluck('fecha')
+                        ->toArray();
+
+        $employee = \DB::table('users')
+                        ->where('id', $oApplication->user_id)
+                        ->first();
+
+        $appBreakDowns = ApplicationsBreakdown::where('application_id', $oApplication->id_application)->get();
+
+        $typeIncident = \DB::table('cat_incidence_tps')
+                            ->where('id_incidence_tp', $oApplication->type_incident_id)
+                            ->first();
+
+        $userVacation = \DB::table('vacation_users')
+                            ->where('user_id', $employee->id)
+                            ->where('is_deleted', 0)
+                            ->get();
+
+        $rows = [];
+        $start_date = $this->checkDate(Carbon::parse($oApplication->start_date), $lHolidays, $employee);
+        foreach($appBreakDowns as $br){
+            $year = $userVacation->where('year', $br->application_year)->first();
+            $end_date = clone $start_date;
+            for ($i=0; $i<($br->days_effective - 1); $i++) { 
+                $end_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
+            }
+            $row = [
+                'breakdown_id' => $br->id_application_breakdown,
+                'effective_days' => $br->days_effective,
+                'year' => $br->application_year,
+                'anniversary' => $year->id_anniversary,
+                'start_date' => $start_date->toDateString(),
+                'end_date' => $end_date->toDateString(),
+            ];
+
+            array_push($rows, $row); 
+
+            $start_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
+        }
+
+        $arrJson = [
+            'application_id' => $oApplication->id_application,
+            'employee_id' => $employee->external_id_n,
+            'company_id' => $employee->company_id,
+            'type_pay_id' => $employee->payment_frec_id,
+            'type_incident_id' => $typeIncident->id_incidence_tp,
+            'class_incident_id' => $typeIncident->incidence_cl_id,
+            'date_ini' => $oApplication->start_date,
+            'date_end' => $oApplication->end_date,
+            'total_days' => $oApplication->total_days,
+            'rows' => $rows,
+        ];
+
+        $client = new Client([
+            'base_uri' => '192.168.1.233:9001',
+            'timeout' => 10.0,
+        ]);
+
+        $response = $client->request('GET', '#/' . $arrJson);
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        $oVacLog = new requestVacationLog();
+        $oVacLog->application_id = $oApplication->id_application;
+        $oVacLog->employee_id = $oApplication->user_id;
+        $oVacLog->response_code = $data->code;
+        $oVacLog->message = $data->message;
+        $oVacLog->created_by = \Auth::user()->id;
+        $oVacLog->updated_by = \Auth::user()->id;
+        $oVacLog->save();
+    }
+
+    public function checkDate($oDate, $lHolidays, $employee){
+        for($i = 0; $i < 31; $i++){
+            switch ($oDate->dayOfWeek) {
+                case 6:
+                    if($employee->payment_frec_id == SysConst::QUINCENA){
+                        $oDate->add(2, 'days');
+                    }
+                    break;
+                case 0:
+                    $oDate->add(1, 'days');
+                    break;
+                default:
+                    break;
+            }
+            
+            if(!in_array($oDate->toDateString(), $lHolidays)){
+                break;
+            }else{
+                $oDate->add(1, 'days');
+            }
+        }
+
+        return $oDate;
     }
 }

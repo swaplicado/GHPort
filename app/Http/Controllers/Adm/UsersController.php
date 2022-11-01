@@ -14,10 +14,14 @@ class UsersController extends Controller
 {
     private $lJobs;
     private $lOrgChartJobs;
+    private $lCompanies;
 
     public function saveUsersFromJSON($lUsers)
     {
         $lGhPortUsers = User::pluck('id', 'external_id_n');
+        $this->lCompanies = \DB::table('ext_company')
+                        ->where('is_deleted', 0)
+                        ->get();
 
         $this->lJobs = Job::pluck('id_job', 'external_id_n');
         $this->lOrgChartJobs = \DB::table('ext_jobs_vs_org_chart_job')->get();
@@ -41,6 +45,7 @@ class UsersController extends Controller
     {
         $currectDate = Carbon::now()->toDateString();
         $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
+        $comp = !is_null($this->lCompanies->where('external_id', $jUser->company_id)->first()) ? $this->lCompanies->where('external_id', $jUser->company_id)->first()->id_company : 6;
         User::where('id', $id)
                     ->update(
                             [
@@ -59,7 +64,7 @@ class UsersController extends Controller
                                 'vacation_plan_id' => 1,
                                 'is_active' => $jUser->is_active,
                                 'is_delete' => $jUser->is_deleted,
-
+                                'company_id' => $comp
                             ]
                         );
 
@@ -117,6 +122,7 @@ class UsersController extends Controller
         }
 
         $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
+        $comp = !is_null($this->lCompanies->where('external_id', $jUser->company_id)->first()) ? $this->lCompanies->where('external_id', $jUser->company_id)->first()->id_company : 6;
         $oUser = new User();
 
         $oUser->username = $username;
@@ -134,7 +140,7 @@ class UsersController extends Controller
         $oUser->last_dismiss_date_n = $jUser->leave_date;
         $oUser->current_hire_log_id = 1;
         $oUser->is_unionized = 0;
-        $oUser->company_id = 1;
+        $oUser->company_id = $comp;
         $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
         $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
         $oUser->vacation_plan_id = 1;

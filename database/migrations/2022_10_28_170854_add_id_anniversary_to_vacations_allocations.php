@@ -13,7 +13,7 @@ class AddIdAnniversaryToVacationsAllocations extends Migration
      */
     public function up()
     {
-        Schema::table('vacations_allocations', function (Blueprint $table) {
+        Schema::table('vacation_allocations', function (Blueprint $table) {
             $table->integer('id_anniversary')->after('anniversary_count');
         });
     }
