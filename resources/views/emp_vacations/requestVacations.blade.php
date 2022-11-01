@@ -24,6 +24,7 @@
             this.checkMailRoute = <?php echo json_encode(route('requestVacations_checkMail')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
+            //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexes = {
                 'id':0,
                 'user_id':1,
@@ -31,15 +32,16 @@
                 'request_status_id':3,
                 'take_holidays':4,
                 'take_rest_days':5,
-                'employee':6,
-                'created_at':7,
-                'approved_date':8,
-                'start_date':9,
-                'end_date':10,
-                'return_date':11,
-                'total_days':12,
-                'applications_st_name':13,
-                'comments':14
+                'folio':6,
+                'employee':7,
+                'created_at':8,
+                'approved_date':9,
+                'start_date':10,
+                'end_date':11,
+                'return_date':12,
+                'total_days':13,
+                'applications_st_name':14,
+                'comments':15
             };
         }
         var oServerData = new GlobalData();
@@ -88,6 +90,7 @@
                 <th>request_status_id</th>
                 <th>take_holidays</th>
                 <th>take_rest_days</th>
+                <th>Folio</th>
                 <th>Empleado</th>
                 <th>Fecha solicitud</th>
                 <th style="max-width: 15%;">Fecha aprobado/rechazado</th>
@@ -107,6 +110,7 @@
                         <td>@{{rec.request_status_id}}</td>
                         <td>@{{rec.take_holidays}}</td>
                         <td>@{{rec.take_rest_days}}</td>
+                        <td>@{{rec.folio_n}}</td>
                         <td>@{{emp.employee}}</td>
                         <td>@{{formatDate(rec.created_at)}}</td>
                         <td>

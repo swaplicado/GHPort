@@ -277,8 +277,10 @@ class myVacationsController extends Controller
             }
 
             \DB::beginTransaction();
-            
+            $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
+            $application->date_send_n = $date->toDateString();
+            $application->folio_n = $this->makeFolio($date, $application->user_id);
             $application->update();
 
             $application_log = new ApplicationLog();
@@ -351,5 +353,21 @@ class myVacationsController extends Controller
         $mailLog = MailLog::find($request->mail_log_id);
 
         return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
+    }
+
+    public function makeFolio($date, $employee_id){
+        $employee_num = \DB::table('users')
+                        ->where('id', $employee_id)
+                        ->value('employee_num');
+
+        if(strlen($employee_num) < 4){
+            for($i = 0; $i < 4-sizeof($employee_num); $i++ ){
+                $employee_num = '0'.$employee_num;
+            }
+        }
+
+        $folio = $date->format('Y').$date->format('m').$date->format('d').$employee_num;
+
+        return $folio;
     }
 }

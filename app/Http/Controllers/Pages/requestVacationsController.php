@@ -343,14 +343,17 @@ class requestVacationsController extends Controller
 
         $rows = [];
         $start_date = $this->checkDate(Carbon::parse($oApplication->start_date), $lHolidays, $employee);
+        $count = 0;
         foreach($appBreakDowns as $br){
             $year = $userVacation->where('year', $br->application_year)->first();
             $end_date = clone $start_date;
             for ($i=0; $i<($br->days_effective - 1); $i++) { 
                 $end_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
             }
+            $count++;
             $row = [
                 'breakdown_id' => $br->id_application_breakdown,
+                'folio' => $oApplication->folio_n.'-'.$count,
                 'effective_days' => $br->days_effective,
                 'year' => $br->application_year,
                 'anniversary' => $year->id_anniversary,
@@ -365,11 +368,13 @@ class requestVacationsController extends Controller
 
         $arrJson = [
             'application_id' => $oApplication->id_application,
+            'folio' => $oApplication->folio_n,
             'employee_id' => $employee->external_id_n,
             'company_id' => $employee->company_id,
             'type_pay_id' => $employee->payment_frec_id,
             'type_incident_id' => $typeIncident->id_incidence_tp,
             'class_incident_id' => $typeIncident->incidence_cl_id,
+            'date_send' => $oApplication->date_send_n,
             'date_ini' => $oApplication->start_date,
             'date_end' => $oApplication->end_date,
             'total_days' => $oApplication->total_days,

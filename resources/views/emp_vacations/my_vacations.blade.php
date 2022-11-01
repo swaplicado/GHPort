@@ -35,19 +35,21 @@
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
+            //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexes = {
                 'id':0,
                 'request_status_id':1,
                 'take_holidays':2,
                 'take_rest_days':3,
                 'request_date':4,
-                'accept_reject_date':5,
-                'start_date':6,
-                'end_date':7,
-                'return_date':8,
-                'taked_days':9,
-                'status':10,
-                'comments':11
+                'folio':5,
+                'accept_reject_date':6,
+                'start_date':7,
+                'end_date':8,
+                'return_date':9,
+                'taked_days':10,
+                'status':11,
+                'comments':12
             };
         }
         var oServerData = new GlobalData();
@@ -182,6 +184,7 @@
                             <th>take_holidays</th>
                             <th>take_rest_days</th>
                             <th>Fecha solicitud</th>
+                            <th>Folio</th>
                             <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
                             <th>Fecha incio</th>
                             <th>Fecha fin</th>
@@ -197,6 +200,7 @@
                                 <td>@{{rec.take_holidays}}</td>
                                 <td>@{{rec.take_rest_days}}</td>
                                 <td>@{{formatDate(rec.created_at)}}</td>
+                                <td>@{{rec.folio_n}}</td>
                                 <td>
                                     @{{
                                         (rec.request_status_id == oData.APPLICATION_APROBADO) ?

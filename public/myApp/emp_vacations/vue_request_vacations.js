@@ -159,6 +159,7 @@ var app = new Vue({
                             rec.request_status_id,
                             rec.take_holidays,
                             rec.take_rest_days,
+                            rec.folio_n,
                             emp.employee,
                             this.formatDate(rec.created_at),
                             ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
