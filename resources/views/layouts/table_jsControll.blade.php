@@ -188,5 +188,16 @@
                 app.showRejectRegistry(table['{{$table_id}}'].row('.selected').data());
             });
         @endif
+        
+        @if(isset($show))
+            $('#btn_show').click(function () {
+                if(table['{{$table_id}}'].row('.selected').data() == undefined){
+                    SGui.showError("Debe seleccionar un renglón");
+                    return;
+                }
+
+                app.showDataModal(table['{{$table_id}}'].row('.selected').data());
+            });
+        @endif
     });
 </script>

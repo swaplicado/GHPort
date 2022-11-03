@@ -28,6 +28,11 @@
         <span class="bx bxs-dislike"></span>
     </button>
 @endif
+@if(isset($show))
+    <button id="btn_show" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 5px" title="Ver registro">
+        <span class="bx bx-show-alt"></span>
+    </button>
+@endif
 @if(isset($filterYear))
 <label>Filtrar por año:</label>
 <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">

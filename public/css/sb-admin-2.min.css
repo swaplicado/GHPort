@@ -11970,7 +11970,7 @@ a:focus {
 }
 
 .btn-circle {
-    border-radius: 100%;
+    border-radius: 100% !important;
     height: 2.5rem;
     width: 2.5rem;
     font-size: 1rem;
@@ -12655,7 +12655,7 @@ body.sidebar-toggled footer.sticky-footer {
   color: rgba(42, 52, 84, 1);
   text-decoration: none;
   border-radius: 50%;
-  padding: 10px 10px 5px;
+  padding: 10px 10px 10px;
 }
 .btn3d:active{
   box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),

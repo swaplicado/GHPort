@@ -33,6 +33,7 @@ class VacationsController extends Controller
                         $oVacAll->created_by = 1;
                         $oVacAll->updated_by = 1;
                         $oVacAll->anniversary_count = $vac->anniversary;
+                        // $oVacAll->id_anniversary = $vac->anniversary;
                         $oVacAll->save();
                     }
 
@@ -51,6 +52,7 @@ class VacationsController extends Controller
                         $oVacAll->created_by = 1;
                         $oVacAll->updated_by = 1;
                         $oVacAll->anniversary_count = $inc->anniversary;
+                        // $oVacAll->id_anniversary = $vac->anniversary;
                         $oVacAll->save();
                     }
                 }
