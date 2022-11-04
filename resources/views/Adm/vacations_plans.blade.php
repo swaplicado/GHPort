@@ -10,6 +10,8 @@
             this.lVacationPlans = <?php echo json_encode($lVacationPlans); ?>;
             this.saveRoute = <?php echo json_encode(route('vacationPlans_save')); ?>;
             this.showVacationRoute = <?php echo json_encode(route('vacationPlans_show')); ?>;
+            this.deleteVacationRoute = <?php echo json_encode(route('vacationPlans_delete')); ?>;
+            this.updateRoute = <?php echo json_encode(route('vacationPlans_update')); ?>;
             this.indexes = {
                 'id': 0,
                 'payment_frec_id_n': 1,
@@ -36,7 +38,7 @@
         </h3>
     </div>
     <div class="card-body">
-        @include('layouts.table_buttons', ['crear' => true, 'show' => true])
+        @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'show' => true, 'delete' => true])
         <br>
         <br>
         <table class="table table-bordered" id="table_vacationsPlans" style="width: 100%;">
@@ -75,6 +77,8 @@
                                         'noSort' => true,
                                         'show' => true,
                                         'crear_modal' => true,
+                                        'delete' => true,
+                                        'edit_modal' => true,
                                     ] )
                                     
 <script type="text/javascript" src="{{ asset('myApp/Adm/vue_vacations_plans.js') }}"></script>

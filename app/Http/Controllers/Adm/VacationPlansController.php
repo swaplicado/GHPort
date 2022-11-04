@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vacations\VacationPlan;
 use App\Models\Vacations\VacationPlanDay;
+use App\Models\Vacations\VacationPlanDayLog;
 
 class VacationPlansController extends Controller
 {
@@ -83,9 +84,10 @@ class VacationPlansController extends Controller
                 \DB::rollBack();
                 return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
             }
+            return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro Guardado con éxito', 'icon' => 'success']);
+        }else{
+            return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
         }
-
-        return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro Guardado con éxito', 'icon' => 'success']);
     }
 
     public function getVacationPlanDays(Request $request){
@@ -96,5 +98,80 @@ class VacationPlansController extends Controller
         }
 
         return json_encode(['success' => true, 'vacationPlanDays' => $oVacationPlanDays]);
+    }
+
+    public function deleteVacationPlan(Request $request){
+        try {
+            \DB::beginTransaction();
+                $oVacationPlan = VacationPlan::findOrFail($request->vacation_plan_id);
+                $oVacationPlan->is_deleted = 1;
+                $oVacationPlan->updated_by = \Auth::user()->id;
+                $oVacationPlan->update();
+
+                $lVacationPlans = VacationPlan::where('is_deleted', 0)->get();
+
+                \DB::commit();
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro eliminado con éxito', 'icon' => 'success']);
+    }
+
+    public function updateVacationPlan(Request $request){
+        if($this->checkDataBeforeSave($request->years)){
+            $years = $this->listYears(json_decode(json_encode($request->years), FALSE));
+            $name = $request->name;
+            $payment_frec = $request->payment_frec;
+            $unionized = $request->unionized;
+            $start_date = $request->start_date;
+
+            try {
+                \DB::beginTransaction();
+                $oVacationPlan = VacationPlan::findOrFail($request->idVacPlan);
+                $this->saveVacationPLanLog($oVacationPlan->id_vacation_plan, $oVacationPlan->created_by);
+                $oVacPlanDay = VacationPlanDay::where('vacations_plan_id', $request->idVacPlan)->get();
+                foreach($oVacPlanDay as $oVacDay){
+                    $oVacDay->delete();
+                }
+                $oVacationPlan->vacation_plan_name = $name;
+                $oVacationPlan->payment_frec_id_n = $payment_frec != 0 ? $payment_frec : null;
+                $oVacationPlan->is_unionized_n = $unionized;
+                $oVacationPlan->start_date_n = $start_date;
+                $oVacationPlan->updated_by = \Auth::user()->id;
+                $oVacationPlan->update();
+
+                foreach($years as $year){
+                    $oVacationPlanDays = new VacationPlanDay();
+                    $oVacationPlanDays->vacations_plan_id = $oVacationPlan->id_vacation_plan;
+                    $oVacationPlanDays->until_year = $year->year;
+                    $oVacationPlanDays->vacation_days = $year->days;
+                    $oVacationPlanDays->save();
+                }
+
+                $lVacationPlans = VacationPlan::where('is_deleted', 0)->get();
+
+                \DB::commit();
+            } catch (\Throwable $th) {
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+            }
+
+            return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro actualizado con éxito', 'icon' => 'success']);
+        }else{
+            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+        }
+    }
+
+    public function saveVacationPLanLog($vacation_plan_id, $created_by){
+        $oVacationPlanDays = VacationPlanDay::where('vacations_plan_id', $vacation_plan_id)->get();
+        foreach($oVacationPlanDays as $oVac){
+            $oLog = new VacationPlanDayLog();
+            $oLog->vacations_plan_id = $vacation_plan_id;
+            $oLog->until_year = $oVac->until_year;
+            $oLog->vacation_days = $oVac->vacation_days;
+            $oLog->created_by = $created_by;
+            $oLog->save();
+        }
     }
 }

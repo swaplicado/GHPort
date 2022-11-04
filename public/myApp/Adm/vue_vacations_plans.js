@@ -13,21 +13,59 @@ var app = new Vue({
         start_date: null,
         years: [{'year': 1, 'days': ''}],
         copyYears: null,
+        idVacPlan: null,
     },
     mounted(){
         
     },
     methods: {
         showModal(data = null){
-            this.onlyShow = false;
-            this.rowCount = 0;
-            this.years = [{'year': 1, 'days': ''}];
-            this.name = null;
-            this.payment_frec = 0;
-            this.unionized = false;
-            this.start_date = null;
-            this.copyYears = JSON.parse(JSON.stringify(this.years));
+            if(data == null){
+                this.idVacPlan = null;
+                this.onlyShow = false;
+                this.rowCount = 0;
+                this.years = [{'year': 1, 'days': ''}];
+                this.name = null;
+                this.payment_frec = 0;
+                this.unionized = false;
+                this.start_date = null;
+                this.copyYears = JSON.parse(JSON.stringify(this.years));
+            }else{
+                SGui.showWaiting(15000);
+                this.getDataVacPlan(data);
+                this.onlyShow = false;
+                this.rowCount = this.years.length;
+                this.name = data[this.indexes.vacation_plan_name];
+                this.payment_frec = data[this.indexes.payment_frec_id_n] != '' ? data[this.indexes.payment_frec_id_n] : 0;
+                this.unionized = data[this.indexes.is_unionized_n] == 1 ? true : false;
+                this.start_date = data[this.indexes.start_date_n];
+                this.copyYears = JSON.parse(JSON.stringify(this.years));
+                this.idVacPlan = data[this.indexes.id];
+            }
             $('#modal_vacation_plan').modal('show');
+        },
+
+        getDataVacPlan(data){
+            axios.post(this.oData.showVacationRoute, {
+                'vacation_plan_id': data[this.indexes.id],
+            })
+            .then(response => {
+                var oVacation = response.data;
+                if(oVacation.success){
+                    this.years = [];
+                    for(let plan of oVacation.vacationPlanDays){
+                        var value = {'year': plan.until_year, 'days': plan.vacation_days};
+                        this.years.push(value);
+                    }
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                SGui.showError(error);
+            });
         },
 
         showDataModal(data){
@@ -167,6 +205,11 @@ var app = new Vue({
 
         saveVacationPlan(){
             this.disabledSave = true;
+            if(this.idVacPlan == null){
+                var route = this.oData.saveRoute;
+            }else{
+                var route = this.oData.updateRoute;
+            }
             if(this.name == null){
                 SGui.showMessage('', 'Debe ingresar un nombre de plan de vacaciones', 'warning');
                 this.disabledSave = false;
@@ -186,7 +229,8 @@ var app = new Vue({
             }
             SGui.showWaiting(15000);
             if(this.checkDataBeforeSave()){
-                axios.post(this.oData.saveRoute, {
+                axios.post(route, {
+                    'idVacPlan': this.idVacPlan,
                     'years': this.years,
                     'name': this.name,
                     'payment_frec': this.payment_frec,
@@ -245,6 +289,41 @@ var app = new Vue({
                             'y el siguiente renglon con el año 6 con sus días correspondientes.',
                 }
             );
-        }
+        },
+
+        deleteVacationPlan(id){
+            axios.post(this.oData.deleteVacationRoute, {
+                'vacation_plan_id': id,
+            })
+            .then(response => {
+                var data = response.data;
+                if(data.success){
+                    SGui.showMessage('', data.message, data.icon);
+                    this.reDrawVacPlanTable(data);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        deleteRegistry(data){
+            Swal.fire({
+                title: '¿Desea eliminar el registro?',
+                html: data[this.indexes.vacation_plan_name],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.deleteVacationPlan(data[this.indexes.id]);
+                }
+            })
+        },
     },
 })
