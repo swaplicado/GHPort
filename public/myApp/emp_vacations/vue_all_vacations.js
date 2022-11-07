@@ -3,14 +3,15 @@ var app = new Vue({
     data: {
         oData: oServerData,
         lEmployees: oServerData.lEmployees,
-        year: oServerData.year
+        year: oServerData.year,
+        period: 'Todo',
     },
     mounted(){
         
     },
     methods: {
         filterYear(){
-            SGui.showWaiting(5000);
+            SGui.showWaiting(15000);
             axios.post(this.oData.getPeriodRoute, {
                 'startYear': this.year,
             })
@@ -18,6 +19,7 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     SGui.showOk();
+                    this.period = this.year;
                     this.lEmployees = data.lEmployees;
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -30,7 +32,7 @@ var app = new Vue({
         },
 
         showCompletePeriod(){
-            SGui.showWaiting(5000);
+            SGui.showWaiting(15000);
             axios.post(this.oData.getPeriodRoute, {
                 'startYear': null,
             })
@@ -38,6 +40,8 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     SGui.showOk();
+                    this.period = 'Todo';
+                    this.year = moment().format('YYYY');
                     this.lEmployees = data.lEmployees;
                 }else{
                     SGui.showMessage('', data.message, data.icon);

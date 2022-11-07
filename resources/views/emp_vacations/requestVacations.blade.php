@@ -32,16 +32,17 @@
                 'request_status_id':3,
                 'take_holidays':4,
                 'take_rest_days':5,
-                'folio':6,
-                'employee':7,
-                'created_at':8,
-                'approved_date':9,
-                'start_date':10,
-                'end_date':11,
-                'return_date':12,
-                'total_days':13,
-                'applications_st_name':14,
-                'comments':15
+                'sup_comments': 6,
+                'folio':7,
+                'employee':8,
+                'created_at':9,
+                'approved_date':10,
+                'start_date':11,
+                'end_date':12,
+                'return_date':13,
+                'total_days':14,
+                'applications_st_name':15,
+                'comments':16
             };
         }
         var oServerData = new GlobalData();
@@ -90,6 +91,7 @@
                 <th>request_status_id</th>
                 <th>take_holidays</th>
                 <th>take_rest_days</th>
+                <th>sup comments</th>
                 <th>Folio</th>
                 <th>Empleado</th>
                 <th>Fecha solicitud</th>
@@ -110,6 +112,7 @@
                         <td>@{{rec.request_status_id}}</td>
                         <td>@{{rec.take_holidays}}</td>
                         <td>@{{rec.take_rest_days}}</td>
+                        <td>@{{rec.sup_comments_n}}</td>
                         <td>@{{rec.folio_n}}</td>
                         <td>@{{emp.employee}}</td>
                         <td>@{{formatDate(rec.created_at)}}</td>
@@ -169,7 +172,7 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_requestVac',
-                                        'colTargets' => [1,2,4,5],
+                                        'colTargets' => [1,2,4,5,6],
                                         'colTargetsSercheable' => [0,3],
                                         'select' => true,
                                         'noSort' => true,

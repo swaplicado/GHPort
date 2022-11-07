@@ -183,6 +183,7 @@ var app = new Vue({
                         rec.request_status_id,
                         rec.take_holidays,
                         rec.take_rest_days,
+                        rec.emp_comments_n,
                         this.formatDate(rec.created_at),
                         rec.folio_n,
                         ((rec.request_status_id == this.oData.APPLICATION_APROBADO) ?
@@ -195,7 +196,7 @@ var app = new Vue({
                         this.formatDate(rec.returnDate),
                         rec.total_days,
                         rec.applications_st_name,
-                        rec.emp_comments_n
+                        rec.sup_comments_n,
                     ]
                 );
             }

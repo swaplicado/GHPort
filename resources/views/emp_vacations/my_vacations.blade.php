@@ -35,21 +35,22 @@
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
-            //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
+            //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexes = {
                 'id':0,
                 'request_status_id':1,
                 'take_holidays':2,
                 'take_rest_days':3,
-                'request_date':4,
-                'folio':5,
-                'accept_reject_date':6,
-                'start_date':7,
-                'end_date':8,
-                'return_date':9,
-                'taked_days':10,
-                'status':11,
-                'comments':12
+                'comments':4,
+                'request_date':5,
+                'folio':6,
+                'accept_reject_date':7,
+                'start_date':8,
+                'end_date':9,
+                'return_date':10,
+                'taked_days':11,
+                'status':12,
+                'sup_comments':13,
             };
         }
         var oServerData = new GlobalData();
@@ -183,6 +184,7 @@
                             <th>request_status_id</th>
                             <th>take_holidays</th>
                             <th>take_rest_days</th>
+                            <th>emp coment.</th>
                             <th>Fecha solicitud</th>
                             <th>Folio</th>
                             <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
@@ -191,7 +193,7 @@
                             <th>Fecha regreso</th>
                             <th>Dias efic.</th>
                             <th>Estatus</th>
-                            <th>coment.</th>
+                            <th>sup coment.</th>
                         </thead>
                         <tbody>
                             <tr v-for="rec in oUser.applications">
@@ -199,6 +201,7 @@
                                 <td>@{{rec.request_status_id}}</td>
                                 <td>@{{rec.take_holidays}}</td>
                                 <td>@{{rec.take_rest_days}}</td>
+                                <td>@{{rec.emp_comments_n}}</td>
                                 <td>@{{formatDate(rec.created_at)}}</td>
                                 <td>@{{rec.folio_n}}</td>
                                 <td>
@@ -215,7 +218,7 @@
                                 <td>@{{formatDate(rec.returnDate)}}</td>
                                 <td>@{{rec.total_days}}</td>
                                 <td>@{{rec.applications_st_name}}</td>
-                                <td>@{{rec.emp_comments_n}}</td>
+                                <td>@{{rec.sup_comments_n}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -279,7 +282,7 @@
 
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_myRequest',
-                                        'colTargets' => [0,2,3],
+                                        'colTargets' => [0,2,3,4],
                                         'colTargetsSercheable' => [1],
                                         'select' => true,
                                         // 'noSearch' => true,

@@ -50,7 +50,7 @@ var app = new Vue({
                 SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
                 return;
             }
-            this.comments = data[this.indexes.comments];
+            this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
             this.status = data[this.indexes.applications_st_name];
@@ -72,7 +72,7 @@ var app = new Vue({
                 SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas o aprobadas', 'warning');
                 return;
             }
-            this.comments = data[this.indexes.comments];
+            this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
             this.status = data[this.indexes.applications_st_name];
@@ -159,6 +159,7 @@ var app = new Vue({
                             rec.request_status_id,
                             rec.take_holidays,
                             rec.take_rest_days,
+                            rec.sup_comments_n,
                             rec.folio_n,
                             emp.employee,
                             this.formatDate(rec.created_at),
