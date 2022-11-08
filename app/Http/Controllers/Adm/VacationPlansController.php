@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\User;
+use App\Constants\SysConst;
 use App\Models\Adm\VacationUser;
 use App\Models\Adm\VacationUserLog;
 use App\Models\Vacations\VacationPlan;
@@ -15,6 +16,7 @@ use App\Models\Vacations\VacationPlanDayLog;
 class VacationPlansController extends Controller
 {
     public function index(){
+        \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
         $lVacationPlans = VacationPlan::where('is_deleted', 0)->get();
 
         return view('Adm.vacations_plans')->with('lVacationPlans', $lVacationPlans);
@@ -54,6 +56,7 @@ class VacationPlansController extends Controller
     }
 
     public function saveVacationPlan(Request $request){
+        \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
         if($this->checkDataBeforeSave($request->years)){
             $years = $this->listYears(json_decode(json_encode($request->years), FALSE));
             $name = $request->name;
@@ -320,6 +323,5 @@ class VacationPlansController extends Controller
             $vacUserLog->updated_by = \Auth::user()->id;
             $vacUserLog->save();
         }
-
     }
 }

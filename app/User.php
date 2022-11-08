@@ -57,8 +57,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function authorizedRole($id_rol){
-        abort_unless($this->rol_id == $id_rol, 401);
+    public function authorizedRole($rol){
+        if(!is_array($rol)){
+            abort_unless($this->rol_id == $rol, 401);
+        }else{
+            $continue = false;
+            foreach($rol as $r){
+                if($this->rol_id == $r){
+                    $continue = true;
+                    break;
+                }
+            }
+            abort_unless($continue, 401);
+        }
     }
 
     public function IsMyEmployee($id_employee){
