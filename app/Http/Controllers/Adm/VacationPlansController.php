@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\User;
+use App\Models\Adm\VacationUser;
 use App\Models\Vacations\VacationPlan;
 use App\Models\Vacations\VacationPlanDay;
 use App\Models\Vacations\VacationPlanDayLog;
@@ -172,6 +175,119 @@ class VacationPlansController extends Controller
             $oLog->vacation_days = $oVac->vacation_days;
             $oLog->created_by = $created_by;
             $oLog->save();
+        }
+    }
+
+    public function getUsersAssigned(Request $request){
+        try {
+            $lUsers = \DB::table('users')
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->where('id', '!=', 1)
+                        ->where('vacation_plan_id', '!=', $request->vacation_plan_id)
+                        ->select('id','vacation_plan_id', 'full_name', 'full_name_ui')
+                        ->orderBy('full_name_ui')
+                        ->get();
+    
+            $lUsersAssigned = \DB::table('users')
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->where('id', '!=', 1)
+                                ->where('vacation_plan_id', $request->vacation_plan_id)
+                                ->select('id','vacation_plan_id', 'full_name', 'full_name_ui')
+                                ->orderBy('full_name_ui')
+                                ->get();
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lUsers' => $lUsers, 'lUsersAssigned' => $lUsersAssigned]);
+    }
+
+    public function saveAssignVacationPlan(Request $request){
+        try {
+            $lUserAssigned_id = collect($request->lUsersAssigned)->pluck('id');
+    
+            $lUsersUnsigned = User::where('vacation_plan_id', $request->vacation_plan_id)
+                                    ->where('is_delete', 0)
+                                    ->where('is_active', 1)
+                                    ->whereNotIn('id', $lUserAssigned_id)
+                                    ->get();
+
+            \DB::beginTransaction();
+            foreach($lUsersUnsigned as $userUns){
+                $userUns->vacation_plan_id = 1;
+                $userUns->update();
+                $this->generateVacationUser($userUns->id, 1);
+            }
+    
+            $lUsers = User::whereIn('id', $lUserAssigned_id)->get();
+    
+            foreach($lUsers as $user){
+                $user->vacation_plan_id = $request->vacation_plan_id;
+                $user->update();
+                $this->generateVacationUser($user->id, $request->vacation_plan_id);
+            }
+
+            \DB::commit();
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true]);
+    }
+
+    public function generateVacationUser($user_id, $vacation_plan_id){
+        $vacation_plan = VacationPlan::findOrFail($vacation_plan_id);
+
+        $vacation_plan_day = VacationPlanDay::where('vacations_plan_id', $vacation_plan_id)->get();
+
+        $vacationUser = VacationUser::where('user_id', $user_id)
+                                    ->where('is_deleted', 0)
+                                    ->get();
+
+        if(sizeof($vacationUser) > 0){
+            $vacationUser = $vacationUser->where('date_start', '>', $vacation_plan->start_date_n);
+            foreach($vacationUser as $vac){
+                $oDays = $vacation_plan_day->where('until_year', $vac->id_anniversary)->first();
+                if(is_null($oDays)){
+                    $oDays = $vacation_plan_day->last();
+                }
+                $vac->vacation_days =  $oDays->vacation_days;
+                $vac->update();
+            }
+        }else{
+            $oUser = \DB::table('users as u')
+                        ->join('user_admission_logs as ual', 'ual.user_id', '=', 'u.id')
+                        ->where('id', $user_id)
+                        ->first();
+
+            $date = Carbon::parse($oUser->last_admission_date);
+            for($i=1; $i<=50; $i++){
+                $oDays = $vacation_plan_day->where('until_year', $i)->first();
+                if(is_null($oDays)){
+                    $oDays = $vacation_plan_day->last();
+                }
+
+                $oVacAll = new VacationUser();
+                $oVacAll->user_id = $oUser->id;
+                $oVacAll->user_admission_log_id = $oUser->id_user_admission_log;
+                $oVacAll->id_anniversary = $i;
+                $oVacAll->year = $date->year;
+                $oVacAll->date_start = $date->format('Y-m-d');
+                $oVacAll->date_end = $date->addYear(1)->subDays(1)->format('Y-m-d');
+                $oVacAll->vacation_days = $oDays->vacation_days;
+                $oVacAll->is_closed = 0;
+                $oVacAll->is_closed_manually = 0;
+                $oVacAll->is_expired = $date->lt(Carbon::today()) ? $date->diffInYears(Carbon::today()) > 2 : 0;
+                $oVacAll->is_expired_manually = 0;
+                $oVacAll->is_deleted = 0;
+                $oVacAll->created_by = \Auth::user()->id;
+                $oVacAll->updated_by = \Auth::user()->id;
+                $oVacAll->save();
+
+                $date->addDays(1);
+            }
         }
     }
 }

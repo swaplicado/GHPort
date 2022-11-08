@@ -4,6 +4,8 @@ var app = new Vue({
         oData: oServerData,
         lVacationPlans: oServerData.lVacationPlans, //No modificar el valor de lVacationPlans
         indexes: oServerData.indexes,
+        indexesUsers: oServerData.indexesUsers,
+        indexesUsersAssign: oServerData.indexesUsersAssign,
         rowCount: 0,
         onlyShow: false,
         disabledSave: false,
@@ -14,6 +16,10 @@ var app = new Vue({
         years: [{'year': 1, 'days': ''}],
         copyYears: null,
         idVacPlan: null,
+        lUsers: [],
+        lUsersAssigned: [],
+        vacation_plan_name: null,
+        vacation_plan_id: null,
     },
     mounted(){
         
@@ -215,6 +221,11 @@ var app = new Vue({
                 this.disabledSave = false;
                 return;
             }
+            if(this.start_date == null){
+                SGui.showMessage('', 'Debe ingresar una fecha de inicio de plan de vacaciones', 'warning');
+                this.disabledSave = false;
+                return;
+            }
             for(let year of this.years){
                 if(year.year == '' || year.year == null){
                     SGui.showMessage('', 'Debe llenar todos los campos de año', 'warning');
@@ -325,5 +336,144 @@ var app = new Vue({
                 }
             })
         },
+
+        showAssignModal(data){
+            this.lUsers = [];
+            this.lUsersAssigned = [];
+            this.vacation_plan_name = data[this.indexes.vacation_plan_name];
+            this.vacation_plan_id = data[this.indexes.id];
+            this.reDrawUsersTable(this.lUsers);
+            this.reDrawUsersAssignTable(this.lUsersAssigned);
+            this.getAssignedUsers(data[this.indexes.id]);
+            table['table_users'].search('');
+            table['table_users_assigned'].search('');
+            $('#modal_assign').modal('show');
+        },
+
+        getAssignedUsers(vacation_plan_id){
+            SGui.showWaiting(15000);
+            axios.post(this.oData.getUsersAssignedRoute, {
+                'vacation_plan_id': vacation_plan_id
+            })
+            .then( response => {
+                var data = response.data;
+                if(data.success){
+                    this.lUsers = data.lUsers;
+                    this.lUsersAssigned = data.lUsersAssigned;
+                    this.reDrawUsersTable(this.lUsers);
+                    this.reDrawUsersAssignTable(this.lUsersAssigned);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
+        reDrawUsersTable(lUsers){
+            var dataUsers = [];
+            for(let user of lUsers){
+                dataUsers.push(
+                    [
+                        user.id,
+                        user.full_name_ui
+                    ]
+                );
+            }
+            table['table_users'].clear().draw();
+            table['table_users'].rows.add(dataUsers).draw();
+        },
+
+        reDrawUsersAssignTable(lUsersAssigned){
+            var dataUsersAssign = [];
+            for(let user of lUsersAssigned){
+                dataUsersAssign.push(
+                    [
+                        user.id,
+                        user.full_name_ui
+                    ]
+                );
+            }
+            table['table_users_assigned'].clear().draw();
+            table['table_users_assigned'].rows.add(dataUsersAssign).draw();
+        },
+
+        passTolUsers(){
+            if (table['table_users_assigned'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            }
+            var data = table['table_users_assigned'].row('.selected').data();
+
+            this.lUsers.push({'id': data[this.indexesUsersAssign.id], 'full_name_ui': data[this.indexesUsersAssign.full_name_ui]});
+            const index = this.lUsersAssigned.findIndex(({ id }) => id == data[this.indexesUsersAssign.id]);
+            this.lUsersAssigned.splice(index, 1);
+            this.lUsers.sort((a, b) => {
+                const nameA = a.full_name_ui.toUpperCase();
+                const nameB = b.full_name_ui.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+            table['table_users'].search('');
+            table['table_users_assigned'].search('');
+            this.reDrawUsersAssignTable(this.lUsersAssigned);
+            this.reDrawUsersTable(this.lUsers);
+        },
+
+        passTolUsersAssign(){
+            if (table['table_users'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            }
+            var data = table['table_users'].row('.selected').data();
+
+            this.lUsersAssigned.push({'id': data[this.indexesUsers.id], 'full_name_ui': data[this.indexesUsers.full_name_ui]});
+            const index = this.lUsers.findIndex(({ id }) => id == data[this.indexesUsers.id]);
+            this.lUsers.splice(index, 1);
+            this.lUsersAssigned.sort((a, b) => {
+                const nameA = a.full_name_ui.toUpperCase();
+                const nameB = b.full_name_ui.toUpperCase();
+                if (nameA < nameB) {
+                    return -1;
+                }
+                if (nameA > nameB) {
+                    return 1;
+                }
+                return 0;
+            });
+            table['table_users'].search('');
+            table['table_users_assigned'].search('');
+            this.reDrawUsersAssignTable(this.lUsersAssigned);
+            this.reDrawUsersTable(this.lUsers);
+        },
+
+        saveAssignVacationPlan(){
+            SGui.showWaiting(15000);
+            axios.post(this.oData.saveAssignVacationPlanRoute, {
+                'lUsersAssigned': this.lUsersAssigned,
+                'vacation_plan_id': this.vacation_plan_id
+            })
+            .then( response => {
+                var data = response.data;
+                if(data.success){
+                    SGui.showOk();
+                    $('#modal_assign').modal('hide');
+                }else{
+                    SGui.showMessage('',data.message,data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        }
     },
 })

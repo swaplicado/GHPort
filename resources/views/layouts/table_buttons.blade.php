@@ -34,15 +34,15 @@
     </button>
 @endif
 @if(isset($filterYear))
-<label>Filtrar por año:</label>
-<button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
-    <span class="bx bx-minus" ></span>
-</button>
-<input type="number" class="form-control" v-model="year" readonly style="width: 10ch; display: inline;">
-<button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style = "display: inline;">
-    <span class="bx bx-plus"></span>
-</button>
-<button type="button" class="btn btn-primary"  v-on:click="filterYear();">
-    <span class="bx bx-search"></span>
-</button>
+    <label>Filtrar por año:</label>
+    <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
+        <span class="bx bx-minus" ></span>
+    </button>
+    <input type="number" class="form-control" v-model="year" readonly style="width: 10ch; display: inline;">
+    <button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style = "display: inline;">
+        <span class="bx bx-plus"></span>
+    </button>
+    <button type="button" class="btn btn-primary"  v-on:click="filterYear();">
+        <span class="bx bx-search"></span>
+    </button>
 @endif

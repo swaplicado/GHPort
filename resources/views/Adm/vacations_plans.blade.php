@@ -12,6 +12,8 @@
             this.showVacationRoute = <?php echo json_encode(route('vacationPlans_show')); ?>;
             this.deleteVacationRoute = <?php echo json_encode(route('vacationPlans_delete')); ?>;
             this.updateRoute = <?php echo json_encode(route('vacationPlans_update')); ?>;
+            this.getUsersAssignedRoute = <?php echo json_encode(route('vacationPlans_getUsersAssigned')); ?>;
+            this.saveAssignVacationPlanRoute = <?php echo json_encode(route('vacationPlans_saveAssignVacationPlan')); ?>;
             this.indexes = {
                 'id': 0,
                 'payment_frec_id_n': 1,
@@ -21,6 +23,14 @@
                 'unionized': 5,
                 'start_date_n': 6
             };
+            this.indexesUsers = {
+                'id': 0,
+                'full_name_ui': 1,
+            }
+            this.indexesUsersAssign = {
+                'id': 0,
+                'full_name_ui': 1,
+            }
         }
         var oServerData = new GlobalData();
     </script>
@@ -29,6 +39,7 @@
 @section('content') 
 <div class="card shadow mb-4" id="vacationsPlans">
     @include('Adm.modal_form_vacation_plan')
+    @include('Adm.modal_assign_vacation_plan')
     <div class="card-header">
         <h3>
             <b>PLAN DE VACACIONES</b>
@@ -38,7 +49,15 @@
         </h3>
     </div>
     <div class="card-body">
-        @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'show' => true, 'delete' => true])
+        @include('layouts.table_buttons', [
+            'crear' => true,
+            // 'editar' => true,
+            'show' => true,
+            'delete' => true
+        ])
+        <button id="btn_asign" type="button" class="btn3d bg-gradient-light" style="display: inline-block; margin-right: 5px" title="Asignaciones">
+            <span class="bx bx-transfer-alt"></span>
+        </button>
         <br>
         <br>
         <table class="table table-bordered" id="table_vacationsPlans" style="width: 100%;">
@@ -78,8 +97,44 @@
                                         'show' => true,
                                         'crear_modal' => true,
                                         'delete' => true,
-                                        'edit_modal' => true,
-                                    ] )
+                                        // 'edit_modal' => true,
+                                    ])
+
+@include('layouts.table_jsControll',[
+                                        'table_id' => 'table_users',
+                                        'colTargets' => [0],
+                                        'colTargetsSercheable' => [],
+                                        'select' => true,
+                                        // 'noSearch' => true,
+                                        'noDom' => true,
+                                        'noPaging' => true,
+                                        'noInfo' => true,
+                                        'noColReorder' => true,
+                                        'noSort' => true
+                                    ])
+
+@include('layouts.table_jsControll',[
+                                        'table_id' => 'table_users_assigned',
+                                        'colTargets' => [0],
+                                        'colTargetsSercheable' => [],
+                                        'select' => true,
+                                        // 'noSearch' => true,
+                                        'noDom' => true,
+                                        'noPaging' => true,
+                                        'noInfo' => true,
+                                        'noColReorder' => true,
+                                        'noSort' => true
+                                    ])
                                     
 <script type="text/javascript" src="{{ asset('myApp/Adm/vue_vacations_plans.js') }}"></script>
+<script>
+    $('#btn_asign').click(function () {
+        if (table['table_vacationsPlans'].row('.selected').data() == undefined) {
+            SGui.showError("Debe seleccionar un renglón");
+            return;
+        }
+
+        app.showAssignModal(table['table_vacationsPlans'].row('.selected').data());
+    });
+</script>
 @endsection
