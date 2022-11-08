@@ -53,7 +53,7 @@
             'crear' => true,
             // 'editar' => true,
             'show' => true,
-            'delete' => true
+            // 'delete' => true
         ])
         <button id="btn_asign" type="button" class="btn3d bg-gradient-light" style="display: inline-block; margin-right: 5px" title="Asignaciones">
             <span class="bx bx-transfer-alt"></span>
@@ -96,7 +96,7 @@
                                         'noSort' => true,
                                         'show' => true,
                                         'crear_modal' => true,
-                                        'delete' => true,
+                                        // 'delete' => true,
                                         // 'edit_modal' => true,
                                     ])
 

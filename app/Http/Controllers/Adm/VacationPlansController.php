@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\User;
 use App\Models\Adm\VacationUser;
+use App\Models\Adm\VacationUserLog;
 use App\Models\Vacations\VacationPlan;
 use App\Models\Vacations\VacationPlanDay;
 use App\Models\Vacations\VacationPlanDayLog;
@@ -216,6 +217,7 @@ class VacationPlansController extends Controller
 
             \DB::beginTransaction();
             foreach($lUsersUnsigned as $userUns){
+                $this->saveVacationUserLog($userUns);
                 $userUns->vacation_plan_id = 1;
                 $userUns->update();
                 $this->generateVacationUser($userUns->id, 1);
@@ -224,6 +226,7 @@ class VacationPlansController extends Controller
             $lUsers = User::whereIn('id', $lUserAssigned_id)->get();
     
             foreach($lUsers as $user){
+                $this->saveVacationUserLog($user);
                 $user->vacation_plan_id = $request->vacation_plan_id;
                 $user->update();
                 $this->generateVacationUser($user->id, $request->vacation_plan_id);
@@ -289,5 +292,34 @@ class VacationPlansController extends Controller
                 $date->addDays(1);
             }
         }
+    }
+
+    public function saveVacationUserLog($oUser){
+        $oVacUser = VacationUser::where('user_id', $oUser->id)
+                                ->where('is_deleted', 0)
+                                ->get();
+
+        foreach($oVacUser as $v){
+            $vacUserLog = new VacationUserLog();
+            $vacUserLog->date_log = Carbon::now()->toDateString();
+            $vacUserLog->user_id = $oUser->id;
+            $vacUserLog->user_admission_log_id = $v->user_admission_log_id;
+            $vacUserLog->id_anniversary = $v->id_anniversary;
+            $vacUserLog->year = $v->year;
+            $vacUserLog->date_start = $v->date_start;
+            $vacUserLog->date_end = $v->date_end;
+            $vacUserLog->vacation_days = $v->vacation_days;
+            $vacUserLog->is_closed = $v->is_closed;
+            $vacUserLog->is_closed_manually = $v->is_closed_manually;
+            $vacUserLog->closed_by_n = $v->closed_by_n;
+            $vacUserLog->is_expired = $v->is_expired;
+            $vacUserLog->is_expired_manually = $v->is_expired_manually;
+            $vacUserLog->expired_by_n = $v->expired_by_n;
+            $vacUserLog->is_deleted = $v->is_deleted;
+            $vacUserLog->created_by = \Auth::user()->id;
+            $vacUserLog->updated_by = \Auth::user()->id;
+            $vacUserLog->save();
+        }
+
     }
 }
