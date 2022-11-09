@@ -50,7 +50,7 @@
         <br>
         <br>
         <table class="table table-bordered" id="table_mails" style="width: 100%;">
-            <thead>
+            <thead class="thead-light">
                 <th>mailLog_id</th>
                 <th>sys_mail_st_id</th>
                 <th>Fecha e-mail</th>

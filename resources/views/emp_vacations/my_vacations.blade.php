@@ -107,7 +107,7 @@
                         </table>
                     </div>
                     <br>
-                    <table class="table table-bordered display" id="vacationsTable" style="width: 100%;">
+                    <table class="table table-bordered" id="vacationsTable" style="width: 100%;">
                         <thead class="thead-light">
                             <th>Periodo</th>
                             <th>Aniversario</th>

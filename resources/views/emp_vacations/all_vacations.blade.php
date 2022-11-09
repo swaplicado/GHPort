@@ -41,7 +41,7 @@
         </div>
         <br>
         <br>
-        <table class="table table-bordered display" id="vacationsTable" style="width: 100%;">
+        <table class="table table-bordered" id="vacationsTable" style="width: 100%;">
             <thead class="thead-light">
                 <th>emp_id</th>
                 <th>Nombre</th>

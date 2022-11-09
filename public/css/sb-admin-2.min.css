@@ -12668,9 +12668,9 @@ body.sidebar-toggled footer.sticky-footer {
     color: white;
 }
 
-.display{
+/* .display{
     display: none;
-  }
+  } */
 
 .inline{
     display: inline !important;

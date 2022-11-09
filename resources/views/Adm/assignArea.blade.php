@@ -62,8 +62,8 @@
         <br>
         <br>
         <div class="table-responsive">
-            <table class="table table-bordered display" id="table_areas" width="100%" cellspacing="0">
-                <thead>
+            <table class="table table-bordered" id="table_areas" width="100%" cellspacing="0">
+                <thead class="thead-light">
                     <tr>
                         <th>Area_id</th>
                         <th>father_area_id</th>

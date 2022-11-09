@@ -27,6 +27,8 @@
                             "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                         }
                     },
+                    // "scrollX": true,
+                    "responsive": false,
                     @if(isset($noInfo))
                         "info": false,
                     @endif
@@ -50,11 +52,17 @@
                     @if(isset($order))
                         "order": <?php echo json_encode($order) ?>,
                     @endif
-                    "responsive": true,
-                    "lengthMenu": [
-                        [ 10, 25, 50, 100, -1 ],
-                        [ 'Mostrar 10', 'Mostrar 25', 'Mostrar 50', 'Mostrar 100', 'Mostrar todo' ]
-                    ],
+                    @if(isset($responsive))
+                        "responsive": true,
+                    @endif
+                    @if(isset($lengthMenu))
+                        "lengthMenu": <?php echo json_encode($lengthMenu) ?>,
+                    @else
+                        "lengthMenu": [
+                            [ 10, 25, 50, 100, -1 ],
+                            [ 'Mostrar 10', 'Mostrar 25', 'Mostrar 50', 'Mostrar 100', 'Mostrar todo' ]
+                        ],
+                    @endif
                     "columnDefs": [
                         {
                             "targets": <?php echo json_encode($colTargets) ?>,
@@ -81,7 +89,8 @@
                             }
                         ],
                     "initComplete": function(){ 
-                        $("#{{$table_id}}").show();
+                        // $("#{{$table_id}}").show();
+                        $("#{{$table_id}}").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
                     }
                 });
             

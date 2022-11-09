@@ -28,7 +28,7 @@
                 <div class="collapse" id="id_{{$emp->employee_num}}">
                     <div class="card-body">
                         <div class="col-md-6 card border-left-primary">
-                            <table style="margin-left: 10px;">
+                            <table class="table" id="table_info_employee_{{$emp->employee_num}}" style="margin-left: 10px; width: 90%">
                                 <thead>
                                     <th></th>
                                     <th></th>
@@ -62,7 +62,7 @@
                             </table>
                         </div>
                         <br>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" id="table_emp_vacation_{{$emp->employee_num}}">
                             <thead class="thead-light">
                                 <th>Periodo</th>
                                 <th>Aniversario</th>
@@ -109,4 +109,32 @@
         @endforeach
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    @foreach($lEmployees as $emp)
+        @include('layouts.table_jsControll', [
+                                            'table_id' => 'table_info_employee_'.$emp->employee_num,
+                                            'colTargets' => [],
+                                            'colTargetsSercheable' => [],
+                                            'noSearch' => true,
+                                            'noDom' => true,
+                                            'noPaging' => true,
+                                            'noInfo' => true,
+                                            'noColReorder' => true,
+                                            'noSort' => true
+                                            ])
+
+        @include('layouts.table_jsControll', [
+                                            'table_id' => 'table_emp_vacation_'.$emp->employee_num,
+                                            'colTargets' => [],
+                                            'colTargetsSercheable' => [],
+                                            'noSearch' => true,
+                                            'noDom' => true,
+                                            'noPaging' => true,
+                                            'noInfo' => true,
+                                            'noColReorder' => true,
+                                            'noSort' => true
+                                            ])
+    @endforeach
 @endsection
