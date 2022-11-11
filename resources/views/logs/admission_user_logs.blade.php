@@ -14,7 +14,7 @@
     <div class="card-header">
         <h3>
             <b>BITACORA ADMISIÓN COLABORADORES</b>
-            <a href="#" target="_blank">
+            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_admision_colaboradores" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
         </h3>

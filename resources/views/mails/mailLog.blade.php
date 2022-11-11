@@ -30,8 +30,8 @@
 <div class="card shadow mb-4" id="mailLogs">
     <div class="card-header">
         <h3>
-            <b>E-Mails Log</b>
-            <a href="#">
+            <b>REGISTROS E-Mails</b>
+            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:emaillogs" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
         </h3>

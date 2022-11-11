@@ -25,7 +25,7 @@
     <div class="card-header">
         <h3>
             <b>BITACORA SOLICITUDES VACACIONES</b>
-            <a href="#" target="_blank">
+            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_solicitudes_vacaciones" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
         </h3>

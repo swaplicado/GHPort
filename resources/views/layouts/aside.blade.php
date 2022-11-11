@@ -17,7 +17,7 @@
     <!-- Nav Item - Dashboard -->
     <li class="nav-item">
         <a class="nav-link" href="{{ route('home') }}">
-        <i class="fas fa-fw fa-home"></i>
+        <i class="bx bxs-home bx-sm"></i>
         <span>HOME</span></a>
     </li>
 
@@ -25,9 +25,9 @@
     <hr class="sidebar-divider">
 
     <!-- Heading -->
-    <div class="sidebar-heading">
+    {{-- <div class="sidebar-heading">
         Interface
-    </div>
+    </div> --}}
 
     <!-- Nav Item - Pages Collapse Menu -->
     {{-- <li class="nav-item">

@@ -86,7 +86,7 @@
                 <button type="button" class="btn btn-primary" :disabled="disabledSave" v-on:click="saveVacationPlan();">Guardar</a>
             </div>
             <div class="modal-footer" v-else>
-                <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
