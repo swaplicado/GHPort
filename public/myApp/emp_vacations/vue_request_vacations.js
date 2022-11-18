@@ -68,8 +68,8 @@ var app = new Vue({
         },
 
         showRejectRegistry(data){
-            if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO && parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_APROBADO){
-                SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas o aprobadas', 'warning');
+            if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
+                SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas', 'warning');
                 return;
             }
             this.comments = data[this.indexes.sup_comments];

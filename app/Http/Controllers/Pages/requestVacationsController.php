@@ -160,8 +160,8 @@ class requestVacationsController extends Controller
                 SysConst::APPLICATION_APROBADO
             ];
             
-            if($application->request_status_id != SysConst::APPLICATION_ENVIADO && $application->request_status_id != SysConst::APPLICATION_APROBADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas o aprobadas', 'icon' => 'warning']);
+            if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas', 'icon' => 'warning']);
             }
             
             \DB::beginTransaction();
