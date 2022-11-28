@@ -12,6 +12,7 @@ use App\Models\Vacations\Programed;
 use Carbon\Carbon;
 use App\User;
 use Illuminate\Support\Arr;
+use App\Utils\EmployeeVacationUtils;
 
 class VacationsController extends Controller
 {
@@ -33,7 +34,7 @@ class VacationsController extends Controller
                         $oVacAll->created_by = 1;
                         $oVacAll->updated_by = 1;
                         $oVacAll->anniversary_count = $vac->anniversary;
-                        // $oVacAll->id_anniversary = $vac->anniversary;
+                        $oVacAll->id_anniversary = $vac->year;
                         $oVacAll->save();
                     }
 
@@ -52,10 +53,11 @@ class VacationsController extends Controller
                         $oVacAll->created_by = 1;
                         $oVacAll->updated_by = 1;
                         $oVacAll->anniversary_count = $inc->anniversary;
-                        // $oVacAll->id_anniversary = $vac->anniversary;
+                        $oVacAll->id_anniversary = $vac->year;
                         $oVacAll->save();
                     }
                 }
+                EmployeeVacationUtils::syncVacConsumed($user->id);
             }
         } catch (\Throwable $th) {
         }

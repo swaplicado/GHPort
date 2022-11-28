@@ -2,7 +2,9 @@
 
 use Carbon\Carbon;
 use App\Constants\SysConst;
-
+use App\Models\Vacations\Application;
+use App\Models\Adm\VacationAllocation;
+use App\Models\Vacations\ApplicationsBreakdown;
 class EmployeeVacationUtils {
     public const months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     
@@ -89,7 +91,8 @@ class EmployeeVacationUtils {
 
         $consumed_byAnniversary = \DB::table('vacation_allocations as va')
                                     ->where('va.user_id', $id)
-                                    ->where('va.anniversary_count', $year)
+                                    ->where('va.id_anniversary', $year)
+                                    ->where('va.application_breakdown_id', null)
                                     ->where('va.is_deleted', 0)
                                     ->get();
 
@@ -224,6 +227,19 @@ class EmployeeVacationUtils {
 
             $oVacConsumed = EmployeeVacationUtils::getVacationConsumed($id, $vac->year);
             $vac_request = EmployeeVacationUtils::getVacationRequested($id, $vac->year);
+            foreach($oVacConsumed as $Vcon){
+                if($Vcon->application_breakdown_id != null){
+                    $application_id = \DB::table('applications_breakdowns as ab')
+                                        ->where('id_application_breakdown', $Vcon->application_breakdown_id)
+                                        ->value('application_id');
+    
+                    foreach($vac_request as $req){
+                        if($req->id_application == $application_id){
+                            $req->days_effective = $req->days_effective - $Vcon->day_consumption;
+                        }
+                    }
+                }
+            }
             $vac_programed = EmployeeVacationUtils::getProgramed($id, $vac->year);
 
             $vac->request = 0;
@@ -423,5 +439,21 @@ class EmployeeVacationUtils {
         }
 
         return $oUser->applications;
+    }
+
+    public static function syncVacConsumed($id){
+        $config = \App\Utils\Configuration::getConfigurations();
+        
+        $lVacRequest = Application::where('user_id', $id)->where('is_deleted', 0)->get();
+        $vacAlloc = VacationAllocation::where('user_id', $id)->where('is_deleted', 0)->get();
+        foreach($lVacRequest as $req){
+            $app_breakdowns_ids = ApplicationsBreakdown::where('application_id', $req->id_application)->pluck('id_application_breakdown')->toArray();
+            $consumedDays = $vacAlloc->whereIn('application_breakdown_id', $app_breakdowns_ids)->sum('day_consumption');
+            $total_days = $req->total_days - $consumedDays;
+            if($total_days <= 0){
+                $req->request_status_id = SysConst::APPLICATION_CONSUMIDO;
+                $req->update();
+            }
+        }
     }
 }

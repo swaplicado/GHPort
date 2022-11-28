@@ -16,6 +16,7 @@ class VacationAllocation extends Model
         'is_deleted',
         'created_by',
         'updated_by',
-        'anniversary_count'
+        'anniversary_count',
+        'id_anniversary'
     ];
 }

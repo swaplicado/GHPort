@@ -14,6 +14,7 @@ class AddIdAnniversaryToVacationsAllocations extends Migration
     public function up()
     {
         Schema::table('vacation_allocations', function (Blueprint $table) {
+            $table->integer('anniversary_count')->after('is_deleted');
             $table->integer('id_anniversary')->after('anniversary_count');
         });
     }
@@ -25,7 +26,8 @@ class AddIdAnniversaryToVacationsAllocations extends Migration
      */
     public function down()
     {
-        Schema::table('vacations_allocations', function (Blueprint $table) {
+        Schema::table('vacation_allocations', function (Blueprint $table) {
+            $table->dropColumn('anniversary_count');
             $table->dropColumn('id_anniversary');
         });
     }
