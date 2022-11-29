@@ -18,12 +18,19 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+
 Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('/logout', 'Auth\LoginController@logout');
     Route::get('home', 'Pages\HomeController@index')->name('home');
     Route::get('orgChart', 'Adm\OrgChartController@index')->name('orgChart');
     Route::get('assignArea', 'Adm\OrgChartController@assignArea')->name('assignArea');
     Route::post('updateArea', 'Adm\OrgChartController@updateAssignArea')->name('update_assignArea');
+    Route::get('profile', 'Pages\profileController@index')->name('profile');
+    Route::post('profile/update', 'Pages\profileController@updatePass')->name('profile_update');
 
     Route::get('myEmplVacations', 'Pages\EmployeesVacationsController@employeesDirectIndex')->name('myEmplVacations');
     Route::get('allEmplVacations', 'Pages\EmployeesVacationsController@allEmployeesIndex')->name('allEmplVacations');

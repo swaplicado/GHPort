@@ -333,7 +333,7 @@
 		'default-more' : 'Selecciona un rango de fecha mayor a %d días',
 		'default-less' : 'Selecciona un rango de fecha menor a %d días',
 		'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
-		'default-default': ''
+		'default-default': 'Seleccione rango de fecha'
 	};
 
     $('#two-inputs').dateRangePicker(

@@ -94,7 +94,12 @@ class requestVacationsController extends Controller
             $application_log->updated_by = \Auth::user()->id;
             $application_log->save();
 
-            $this->sendRequestVacation($application);
+            $data = json_decode($this->sendRequestVacation($application));
+
+            if($data->code == 500 || $data->code == 550){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
 
             $employee = \DB::table('users')
                                 ->where('id', $request->id_user)
@@ -398,6 +403,8 @@ class requestVacationsController extends Controller
         $oVacLog->created_by = \Auth::user()->id;
         $oVacLog->updated_by = \Auth::user()->id;
         $oVacLog->save();
+
+        return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
     }
 
     public function checkDate($oDate, $lHolidays, $employee){

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Utils\orgChartUtils;
+use App\Notifications\PasswordReset;
 
 class User extends Authenticatable
 {
@@ -91,5 +92,9 @@ class User extends Authenticatable
 
         $emp = collect($lEmployees)->where('id', $id_employee)->first();
         abort_unless(!is_null($emp), 401);
+    }
+
+    public function sendPasswordResetNotification($token){
+        $this->notify(new PasswordReset($token));
     }
 }
