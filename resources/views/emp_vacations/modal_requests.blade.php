@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div style="text-align: left;">
-                            <div class="form-check">
+                            {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" disabled v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">
                                 <label class="form-check-label" for="restDays">
                                     Tomar dias de descanso.
@@ -23,7 +23,7 @@
                                 <label class="form-check-label" for="holidays">
                                     Tomar dias no laborables.
                                 </label>
-                            </div>
+                            </div> --}}
                         </div>
                         <div style="text-align: center">
                             <span id="two-inputs">
