@@ -14,6 +14,7 @@ var app = new Vue({
     methods: {
         getEmployees(index, emp_id, org_job_id, is_head_user){
             if(is_head_user && typeof this.copylEmployees[index].has_geted == 'undefined'){
+                SGui.showWaiting(5000);
                 this.copylEmployees[index].has_geted = true;
                 var route = this.oData.getlEmployees_route;
                 route = route.replace(':OrgjobId', org_job_id);

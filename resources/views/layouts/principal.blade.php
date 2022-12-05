@@ -103,6 +103,11 @@
     <script src="{{ asset('js/sb-admin-2.min.js') }}"></script>
     <script src="{{ asset('myApp/gui/SGui.js') }}"></script>
     <script type="text/javascript" src="{{ asset('axios/axios.min.js') }}"></script>
+    <script>
+        function showPageWaiting(){
+            SGui.showWaiting(120000);
+        }
+    </script>
     @yield('scripts')
 
 </body>

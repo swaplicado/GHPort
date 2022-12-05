@@ -96,7 +96,7 @@ class Menu {
     private static function createMenuElement($route, $icon, $name)
     {
         return '<li class="nav-item">
-                    <a class="nav-link" href="'.$route.'">
+                    <a class="nav-link" href="'.$route.'" onclick="showPageWaiting()">
                         <i class="'.$icon.'"></i>
                         <span>'.$name.'</span>
                     </a>
@@ -114,7 +114,7 @@ class Menu {
                         <div class="py-2 collapse-inner rounded">';
         
         foreach($list as $l){
-            $str = $str.'<a class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
+            $str = $str.'<a onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
         }
                     
         $str = $str.'</div></div></li>';
