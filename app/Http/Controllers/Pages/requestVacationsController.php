@@ -84,6 +84,7 @@ class requestVacationsController extends Controller
                                                                                         true);
             
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
+            $application->approved_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
             $application->update();
 
@@ -173,6 +174,7 @@ class requestVacationsController extends Controller
             $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
+            $application->rejected_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
             $application->update();
 
@@ -391,20 +393,21 @@ class requestVacationsController extends Controller
             'timeout' => 10.0,
         ]);
 
-        $response = $client->request('GET', '#/' . $arrJson);
+        $response = $client->request('GET', 'postIncidents/' . json_encode($arrJson));
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
 
         $oVacLog = new requestVacationLog();
         $oVacLog->application_id = $oApplication->id_application;
         $oVacLog->employee_id = $oApplication->user_id;
-        $oVacLog->response_code = $data->code;
-        $oVacLog->message = $data->message;
+        $oVacLog->response_code = $data->response->code;
+        $oVacLog->message = $data->response->message;
         $oVacLog->created_by = \Auth::user()->id;
         $oVacLog->updated_by = \Auth::user()->id;
         $oVacLog->save();
 
         return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
+            // return null;
     }
 
     public function checkDate($oDate, $lHolidays, $employee){

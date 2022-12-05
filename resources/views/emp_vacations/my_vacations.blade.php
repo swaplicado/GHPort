@@ -205,9 +205,9 @@
                                 <td>@{{rec.folio_n}}</td>
                                 <td>
                                     @{{
-                                        (rec.request_status_id == oData.APPLICATION_APROBADO) ?
+                                        (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
                                             rec.approved_date_n :
-                                            ((rec.request_status_id == oData.APPLICATION_RECHAZADO) ?
+                                            ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
                                                 rec.approved_date_n :
                                                 '')
                                     }}

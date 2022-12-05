@@ -186,9 +186,9 @@ var app = new Vue({
                         rec.emp_comments_n,
                         this.formatDate(rec.created_at),
                         rec.folio_n,
-                        ((rec.request_status_id == this.oData.APPLICATION_APROBADO) ?
+                        ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
                             rec.approved_date_n :
-                                ((rec.request_status_id == this.oData.APPLICATION_RECHAZADO) ?
+                                ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
                                     rec.approved_date_n :
                                         '')),
                         this.formatDate(rec.start_date),
