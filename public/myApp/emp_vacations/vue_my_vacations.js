@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#myVacations',
     data: {
         oData: oServerData,
+        oDateUtils: new SDateUtils(),
         vacationUtils: new vacationUtils(),
         indexes: oServerData.indexes,
         oUser: oServerData.oUser,  //No modificar, mejor modificar oCopyUser
@@ -60,14 +61,14 @@ var app = new Vue({
             var result = this.vacationUtils.getTakedDays(
                             this.lHolidays,
                             this.oUser.payment_frec_id,
-                            moment(this.startDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
-                            moment(this.endDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
+                            moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                            moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                             this.oData.const,
                             this.take_rest_days,
                             this.take_holidays
                         );
 
-            this.returnDate = moment(result[0]).format("ddd DD-MM-YYYY");
+            this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
             this.takedDays = result[1];
             this.lDays = result[2];
         },
@@ -95,15 +96,15 @@ var app = new Vue({
             SGui.showWaiting(15000);
             axios.post(route, {
                 'id_application': this.idRequest,
-                'startDate': moment(this.startDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
-                'endDate': moment(this.endDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
+                'startDate': moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'endDate': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'comments': this.comments,
                 'takedDays': this.takedDays,
                 // 'lDays': this.lDays,
                 'take_holidays': this.take_holidays,
                 'take_rest_days': this.take_rest_days,
-                'returnDate': moment(this.returnDate, 'ddd DD-MM-YYYY').format("YYYY-MM-DD"),
-                'tot_calendar_days': (moment(this.endDate, 'ddd DD-MM-YYYY').diff(moment(this.startDate, 'ddd DD-MM-YYYY'), 'days') + 1)
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'tot_calendar_days': (moment(this.endDate, 'ddd DD-MMM-YYYY').diff(moment(this.startDate, 'ddd DD-MMM-YYYY'), 'days') + 1)
             })
             .then(response => {
                 var data = response.data;
@@ -184,16 +185,16 @@ var app = new Vue({
                         rec.take_holidays,
                         rec.take_rest_days,
                         rec.emp_comments_n,
-                        this.formatDate(rec.created_at),
+                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.folio_n,
                         ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
-                            rec.approved_date_n :
+                            this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
-                                    rec.approved_date_n :
+                                    this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                         '')),
-                        this.formatDate(rec.start_date),
-                        this.formatDate(rec.end_date),
-                        this.formatDate(rec.returnDate),
+                        this.oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY'),
+                        this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),
+                        this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                         rec.total_days,
                         rec.applications_st_name,
                         rec.sup_comments_n,
@@ -209,7 +210,7 @@ var app = new Vue({
             for(let vac of data.oUser.vacation){
                 dataVac.push(
                     [
-                        vac.date_start + ' a ' + vac.date_end,
+                        this.oDateUtils.formatDate(vac.date_start) + ' a ' + this.oDateUtils.formatDate(vac.date_end),
                         vac.id_anniversary,
                         vac.vacation_days,
                         vac.num_vac_taken,
@@ -270,8 +271,8 @@ var app = new Vue({
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.startDate = data[this.indexes.start_date];
-                    this.endDate = data[this.indexes.end_date];
+                    this.startDate = moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY');
+                    this.endDate = moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY');
                     this.comments = data[this.indexes.comments];
                     this.idRequest = data[this.indexes.id];
                     this.status = data[this.indexes.status];

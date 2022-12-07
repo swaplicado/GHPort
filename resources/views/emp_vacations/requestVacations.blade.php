@@ -115,19 +115,19 @@
                         <td>@{{rec.sup_comments_n}}</td>
                         <td>@{{rec.folio_n}}</td>
                         <td>@{{emp.employee}}</td>
-                        <td>@{{formatDate(rec.created_at)}}</td>
+                        <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
                         <td>
                             @{{
                                 (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
-                                    rec.approved_date_n :
+                                    oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                     ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
-                                        formatDate(rec.updated_at) :
+                                        oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
                                         '')
                             }}
                         </td>
-                        <td>@{{formatDate(rec.start_date)}}</td>
-                        <td>@{{formatDate(rec.end_date)}}</td>
-                        <td>@{{formatDate(rec.returnDate)}}</td>
+                        <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
+                        <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
+                        <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
                         <td>@{{rec.total_days}}</td>
                         <td>@{{rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name}}</td>
                         <td>@{{rec.emp_comments_n}}</td>

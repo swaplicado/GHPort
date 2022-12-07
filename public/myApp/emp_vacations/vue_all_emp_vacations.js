@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#allEmpVacationApp',
     data: {
         oData: oServerData,
+        oDateUtils: new SDateUtils(),
         lEmployees: oServerData.lEmployees,
         copylEmployees: [],
         emp: null,
@@ -33,21 +34,33 @@ var app = new Vue({
                                 'role="button" aria-expanded="false" aria-controls="'+emp.employee_num+'" '+
                                 'onclick="getEmployees('+(i + lEmployees_size)+',' +emp.id+','+ emp.org_chart_job_id+','+ emp.is_head_user+');"'+
                             '> '+
-                            '<h6 class="m-0 font-weight-bold text-primary">'+emp.employee+' '+ 
-                                '<span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span> '+
-                                'Vacaciónes pendientes: '+emp.tot_vacation_remaining+' días ';
-    
-                            if(emp.is_head_user){
-                                head_accord = head_accord +
-                                    '<span>'+
-                                        '<span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>'+
-                                        'Encargado de area'+
-                                        '<span class="bx bxs-group"></span>'+
-                                    '</span>';
-                            }
-                            head_accord = head_accord +
-                            '</h6> '+
-                            '</a> ';
+                            '<h6 class="m-0 font-weight-bold text-primary">'
+                            +'<div class="row">'
+                                +'<div class="col-md-3">'
+                                    +emp.employee+' '
+                                +'</div>'
+                                +'<div class="col-md-9">'
+                                    +'<div class="row">'
+                                        +'<span class="col-md-4">'
+                                            +'<span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>'
+                                            +'Vacaciónes pendientes: '+emp.tot_vacation_remaining+' días '
+                                        +'</span>';
+
+                                        if(emp.is_head_user){
+                                            head_accord = head_accord +
+                                                '<span class="col-md-8">'+
+                                                    '<span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>'+
+                                                    'Encargado de area'+
+                                                    '<span class="bx bxs-group"></span>'+
+                                                '</span>';
+                                        }
+
+                            head_accord = head_accord
+                                    +'</div>'
+                                +'</div>'
+                            +'</div>'
+                            +'</h6> '
+                            +'</a> ';
     
                         var body_accord = '<div class="collapse" id="id_'+emp.employee_num+'">'+
                             '<div class="card-body">'+

@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#requestVacations',
     data: {
         oData: oServerData,
+        oDateUtils: new SDateUtils(),
         indexes: oServerData.indexes,
         lEmployees: oServerData.lEmployees,
         year: oServerData.year,
@@ -33,14 +34,14 @@ var app = new Vue({
             var result = this.vacationUtils.getTakedDays(
                 this.lHolidays,
                 data[this.indexes.payment_frec_id],
-                moment(this.startDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD'),
-                moment(this.endDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD'),
+                moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+                moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 this.oData.const,
                 this.take_rest_days,
                 this.take_holidays
             );
 
-            this.returnDate = moment(result[0]).format('ddd DD-MM-YYYY');
+            this.returnDate = this.oDateUtils.formatDate(result[0]);
             this.takedDays = result[1];
             this.lDays = result[2];
         },
@@ -162,15 +163,15 @@ var app = new Vue({
                             rec.sup_comments_n,
                             rec.folio_n,
                             emp.employee,
-                            this.formatDate(rec.created_at),
+                            this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                             ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
-                                rec.approved_date_n :
+                                this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
-                                this.formatDate(rec.updated_at) :
+                                    this.oDateUtils.formatDate(rec.updated_at, 'ddd DD-MMM-YYYY') :
                                     '')),
-                            this.formatDate(rec.start_date),
-                            this.formatDate(rec.end_date),
-                            this.formatDate(rec.returnDate),
+                            this.oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY'),
+                            this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),
+                            this.oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY'),
                             rec.total_days,
                             rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
                             rec.emp_comments_n

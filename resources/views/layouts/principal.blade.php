@@ -34,6 +34,7 @@
     <script src="{{ asset('moment/moment-with-locales.js')}}"></script>
     <script src="{{ asset('datatables/dataTables.js')}}"></script>
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('myApp/Utils/SDateUtils.js') }}"></script>
     @yield('headJs')
 
 </head>

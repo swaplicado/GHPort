@@ -85,7 +85,7 @@
                                 </tr>
                                 <tr>
                                     <th>Fecha ingreso:</th>
-                                    <td>@{{oUser.last_admission_date}}</td>
+                                    <td>@{{oDateUtils.formatDate(oUser.last_admission_date)}}</td>
                                 </tr>
                                 <tr>
                                     <th>Antigüedad:</th>
@@ -119,7 +119,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="vac in oUser.vacation">
-                                <td>@{{vac.date_start}} a @{{vac.date_end}}</td>
+                                <td>@{{oDateUtils.formatDate(vac.date_start)}} a @{{oDateUtils.formatDate(vac.date_end)}}</td>
                                 <td>@{{vac.id_anniversary}}</td>
                                 <td>@{{vac.vacation_days}}</td>
                                 <td>@{{vac.num_vac_taken}}</td>
@@ -201,20 +201,20 @@
                                 <td>@{{rec.take_holidays}}</td>
                                 <td>@{{rec.take_rest_days}}</td>
                                 <td>@{{rec.emp_comments_n}}</td>
-                                <td>@{{formatDate(rec.created_at)}}</td>
+                                <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
                                 <td>@{{rec.folio_n}}</td>
                                 <td>
                                     @{{
                                         (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
-                                            rec.approved_date_n :
+                                            oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                             ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
-                                                rec.approved_date_n :
+                                                oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
                                                 '')
                                     }}
                                 </td>
-                                <td>@{{formatDate(rec.start_date)}}</td>
-                                <td>@{{formatDate(rec.end_date)}}</td>
-                                <td>@{{formatDate(rec.returnDate)}}</td>
+                                <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
+                                <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
+                                <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
                                 <td>@{{rec.total_days}}</td>
                                 <td>@{{rec.applications_st_name}}</td>
                                 <td>@{{rec.sup_comments_n}}</td>
@@ -365,8 +365,8 @@
         },
 		getValue: function(){
 			if ($('#date-range200').val() && $('#date-range201').val() ){
-                app.startDate = moment($('#date-range200').val()).format("ddd DD-MM-YYYY");
-                app.endDate = moment($('#date-range201').val()).format("ddd DD-MM-YYYY");
+                app.startDate = app.oDateUtils.formatDate($('#date-range200').val());
+                app.endDate = app.oDateUtils.formatDate($('#date-range201').val());
                 app.getDataDays();
 				return $('#date-range200').val() + ' a ' + $('#date-range201').val();
             }
@@ -378,8 +378,8 @@
 			$('#date-range200').val(s1);
 			$('#date-range201').val(s2);
             if($('#date-range200').val() && $('#date-range201').val()){
-                app.startDate = moment($('#date-range200').val()).format("ddd DD-MM-YYYY");
-                app.endDate = moment($('#date-range201').val()).format("ddd DD-MM-YYYY");
+                app.startDate = app.oDateUtils.formatDate($('#date-range200').val(), 'ddd DD-MMM-YYYY');
+                app.endDate = app.oDateUtils.formatDate($('#date-range201').val(), 'ddd DD-MMM-YYYY');
             }else{
                 app.startDate = '';
                 app.endDate = '';

@@ -26,14 +26,25 @@
                 role="button" aria-expanded="false" :aria-controls="emp.employee_num"
                 v-on:click="getEmployees(index, emp.id, emp.org_chart_job_id, emp.is_head_user);"
             >
-                <h6 class="m-0 font-weight-bold text-primary">@{{emp.employee}} 
-                    <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
-                    Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días
-                    <span v-if="emp.is_head_user">
-                        <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
-                        Encargado de area
-                        <span class="bx bxs-group"></span>
-                    </span>
+                <h6 class="m-0 font-weight-bold text-primary"> 
+                    <div class="row">
+                        <div class="col-md-3">
+                            @{{emp.employee}}
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <span class="col-md-4">
+                                    <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
+                                    Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días
+                                </span>
+                                <span v-if="emp.is_head_user" class="col-md-8">
+                                    <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
+                                    Encargado de area
+                                    <span class="bx bxs-group"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </h6>
             </a>
             <div class="collapse" :id='"id_"+emp.employee_num'>
@@ -51,7 +62,7 @@
                                 </tr>
                                 <tr>
                                     <th>Fecha ingreso:</th>
-                                    <td>@{{emp.last_admission_date}}</td>
+                                    <td>@{{oDateUtils.formatDate(emp.last_admission_date)}}</td>
                                 </tr>
                                 <tr>
                                     <th>Antigüedad:</th>
@@ -85,7 +96,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="vac in emp.vacation">
-                                <td>@{{vac.date_start}} a @{{vac.date_end}}</td>
+                                <td>@{{oDateUtils.formatDate(vac.date_start)}} a @{{oDateUtils.formatDate(vac.date_end)}}</td>
                                 <td>@{{vac.id_anniversary}}</td>
                                 <td>@{{vac.vacation_days}}</td>
                                 <td>@{{vac.num_vac_taken}}</td>

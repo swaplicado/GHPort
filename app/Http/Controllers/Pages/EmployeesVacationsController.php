@@ -15,6 +15,9 @@ class EmployeesVacationsController extends Controller
 {
     public $months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
+    /**
+     * Vista vacaciones de los empleados directos
+     */
     public function employeesDirectIndex(){
         $config = \App\Utils\Configuration::getConfigurations();
         $lEmployees = $this->getDirectEmployees(\Auth::user()->org_chart_job_id);
@@ -22,6 +25,9 @@ class EmployeesVacationsController extends Controller
         return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees);
     }
 
+    /**
+     * Vista las vacaciones de todos los empleados por debajo de un usuario
+     */
     public function allEmployeesIndex(){
         $config = \App\Utils\Configuration::getConfigurations();
 
@@ -30,6 +36,9 @@ class EmployeesVacationsController extends Controller
         return view('emp_vacations.all_emp_vacations')->with('lEmployees', $lEmployees);
     }
 
+    /**
+     * Regresa las vacaciones de los empleados directos
+     */
     public function getDirectEmployees($orgJobId){
         $config = \App\Utils\Configuration::getConfigurations();
         $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($orgJobId);
@@ -58,6 +67,9 @@ class EmployeesVacationsController extends Controller
         return $lEmployees;
     }
 
+    /**
+     * regresa las vacaciones de todos los empleados por debajo del usuario
+     */
     public function getAlllEmployees($orgJobId, $config){
         $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($orgJobId);
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
