@@ -31,12 +31,12 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="row">
-                                    <span class="col-md-4">
-                                        <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
+                                    <span class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>
+                                    <span class="col-md-3">
                                         Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días
                                     </span>
-                                    <span v-if="emp.is_head_user" class="col-md-8">
-                                        <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
+                                    <span v-if="emp.is_head_user" class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>
+                                    <span v-if="emp.is_head_user" class="col-md-3">
                                         Encargado de area
                                         <span class="bx bxs-group"></span>
                                     </span>

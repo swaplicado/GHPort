@@ -33,12 +33,12 @@
                         </div>
                         <div class="col-md-9">
                             <div class="row">
-                                <span class="col-md-4">
-                                    <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
+                                <span class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>
+                                <span class="col-md-3">
                                     Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días
                                 </span>
-                                <span v-if="emp.is_head_user" class="col-md-8">
-                                    <span style="width: 0; border-right: 1px solid #bcbdc2; height: calc(4.375rem - 2rem); margin: auto 1rem"></span>
+                                <span v-if="emp.is_head_user" class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>
+                                <span v-if="emp.is_head_user" class="col-md-3">
                                     Encargado de area
                                     <span class="bx bxs-group"></span>
                                 </span>
@@ -50,7 +50,7 @@
             <div class="collapse" :id='"id_"+emp.employee_num'>
                 <div class="card-body">
                     <div class="col-md-6 card border-left-primary">
-                        <table style="margin-left: 10px;">
+                        <table style="margin-left: 10px;" :id="'table_info_'+emp.employee_num">
                             <thead>
                                 <th></th>
                                 <th></th>
@@ -84,7 +84,7 @@
                         </table>
                     </div>
                     <br>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" :id="'table_'+emp.employee_num">
                         <thead class="thead-light">
                             <th>Periodo</th>
                             <th>Aniversario</th>
@@ -131,6 +131,78 @@
     <script type="text/javascript">
         function getEmployees(i, id, org_chart_job_id, is_head_user) {
             app.getEmployees(i, id, org_chart_job_id, is_head_user);
+        }
+    </script>
+    @foreach($lEmployees as $emp)
+        @include('layouts.table_jsControll', [
+                                            'table_id' => 'table_info_'.$emp->employee_num,
+                                            'colTargets' => [],
+                                            'colTargetsSercheable' => [],
+                                            'noSearch' => true,
+                                            'noDom' => true,
+                                            'noPaging' => true,
+                                            'noInfo' => true,
+                                            'noColReorder' => true,
+                                            'noSort' => true
+                                            ])
+
+        @include('layouts.table_jsControll', [
+                                            'table_id' => 'table_'.$emp->employee_num,
+                                            'colTargets' => [],
+                                            'colTargetsSercheable' => [],
+                                            'noSearch' => true,
+                                            'noDom' => true,
+                                            'noPaging' => true,
+                                            'noInfo' => true,
+                                            'noColReorder' => true,
+                                            'noSort' => true
+                                            ])
+    @endforeach
+    <script id="jsDatatable">
+        function load(id){
+            $('#'+id).DataTable({
+                "language": {
+                        "sProcessing":     "Procesando...",
+                        "sLengthMenu":     "Mostrar _MENU_ registros",
+                        "sZeroRecords":    "No se encontraron resultados",
+                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":    "",
+                        "sSearch":         "Buscar:",
+                        "sUrl":            "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst":    "Primero",
+                            "sLast":     "Último",
+                            "sNext":     "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
+                    },
+
+                "responsive": false,
+                "columnDefs": [
+                    {
+                        "targets": [],
+                        "visible": false,
+                        "searchable": false,
+                    }
+                ],
+                "searching": false,
+                "bSort": false,
+                "paging": false,
+                "info": false,
+                "colReorder": false,
+                "initComplete": function(){ 
+                    $('#'+id).wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                }
+            });
         }
     </script>
 @endsection
