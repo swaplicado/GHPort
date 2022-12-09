@@ -50,8 +50,10 @@
                                 <br>
                                 <br>
                             </span>
+                            <br>
+                            <br>
                             <div>
-                                <button type="button" class="btn btn-primary" id="clear">Limpiar</button>
+                                <button type="button" class="btn btn-primary" id="clear" :disabled="!valid">Limpiar</button>
                             </div>
                         </div>
                     </div>
@@ -90,7 +92,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" v-on:click="requestVac()">Guardar</a>
+                <button type="button" class="btn btn-primary" v-on:click="requestVac()" :disabled="!valid">Guardar</a>
             </div>
         </div>
     </div>

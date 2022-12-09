@@ -70,11 +70,12 @@ var app = new Vue({
             $('#modal_solicitud').modal('show');
         },
 
-        showRejectRegistry(data){
+        async showRejectRegistry(data){
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas', 'warning');
                 return;
             }
+            await this.getEmpApplicationsEA(data[this.indexes.user_id]);
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
@@ -85,8 +86,8 @@ var app = new Vue({
             this.isApprove = false;
             this.take_holidays = parseInt(data[this.indexes.take_holidays]);
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
-            $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
-            $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.getReturnDate(data);
 
             $('#modal_solicitud').modal('show');

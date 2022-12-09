@@ -72,6 +72,16 @@ class myVacationsController extends Controller
         $take_rest_days = $request->take_rest_days;
         
         try {
+
+            $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA(\Auth::user()->id);
+
+            foreach($arrApplicationsEA as $arr){
+                $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
+                if($isBetWeen){
+                    return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                }
+            }
+
             // $user = $this->getUserVacationsData();
             $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
 
@@ -158,8 +168,16 @@ class myVacationsController extends Controller
         // $lDays = $request->lDays;
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
-        
         try {
+            $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA(\Auth::user()->id);
+
+            foreach($arrApplicationsEA as $arr){
+                $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
+                if($isBetWeen){
+                    return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                }
+            }
+
             $application = Application::findOrFail($request->id_application);
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){

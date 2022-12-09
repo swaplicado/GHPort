@@ -23,7 +23,9 @@ var app = new Vue({
         prox_vac_days: oServerData.oUser.prox_vac_days,
         take_rest_days: false,
         take_holidays: false,
-        applicationsEA: []
+        applicationsEA: [],
+        isNewApplication: false,
+        valid: true,
     },
     mounted(){
         
@@ -32,6 +34,18 @@ var app = new Vue({
         async showModal(data = null){
             await this.getEmpApplicationsEA(this.oUser.id);
             if(data != null){
+                this.valid = (data[this.indexes.request_status_id] == this.oData.const.APPLICATION_ENVIADO || 
+                                data[this.indexes.request_status_id] == this.oData.const.APPLICATION_APROBADO ||
+                                    data[this.indexes.request_status_id] == this.oData.const.APPLICATION_RECHAZADO) ?
+                                        false :
+                                            true;
+                dateRangePickerValid = this.valid;
+                if(!this.valid){
+                    SGui.showMessage('', 'No se puede editar una solicitud con estatus: '+data[this.indexes.status], 'warning');
+                }
+                $('#clear').trigger('click');
+                $('#two-inputs').data('dateRangePicker').redraw();
+                this.isNewApplication = false;
                 this.comments = data[this.indexes.comments];
                 this.idRequest = data[this.indexes.id];
                 this.status = data[this.indexes.status];
@@ -39,11 +53,13 @@ var app = new Vue({
                 this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
                 $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
 			    $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
+                this.isNewApplication = true;
             }else{
                 if(this.HasRequestCreated()){
                     SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
                     return;
                 }
+                this.isNewApplication = true;
                 this.startDate = null;
                 this.endDate = null;
                 this.returnDate = null;
@@ -54,6 +70,8 @@ var app = new Vue({
                 this.status = null;
                 this.take_rest_days = false;
                 this.take_holidays = false;
+                this.valid = true;
+                dateRangePickerValid = this.valid;
                 $('#clear').trigger('click');
                 $('#two-inputs').data('dateRangePicker').redraw();
             }
@@ -103,7 +121,6 @@ var app = new Vue({
                 'endDate': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'comments': this.comments,
                 'takedDays': this.takedDays,
-                // 'lDays': this.lDays,
                 'take_holidays': this.take_holidays,
                 'take_rest_days': this.take_rest_days,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
@@ -113,7 +130,6 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     this.actual_vac_days = data.oUser.actual_vac_days;
-                    // this.prop_vac_days = data.oUser.prop_vac_days,
                     this.prox_vac_days = data.oUser.prox_vac_days;
                     $('#modal_solicitud').modal('hide');
                     SGui.showOk();
@@ -140,7 +156,6 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     SGui.showOk();
-                    // this.oCopyUser = data.oUser;
                     this.reDrawRequestTable(data);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -162,7 +177,6 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     this.actual_vac_days = data.oUser.actual_vac_days;
-                    // this.prop_vac_days = data.oUser.prop_vac_days,
                     this.prox_vac_days = data.oUser.prox_vac_days;
                     SGui.showOk();
                     this.oCopyUser = data.oUser;
@@ -297,16 +311,12 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     this.actual_vac_days = data.oUser.actual_vac_days;
-                    // this.prop_vac_days = data.oUser.prop_vac_days,
                     this.prox_vac_days = data.oUser.prox_vac_days;
                     SGui.showMessage('', data.message, data.icon);
                     this.oCopyUser = data.oUser;
                     this.reDrawVacationsTable(data);
                     this.reDrawRequestTable(data.oUser);
                     this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
-                    // (async () => {
-                    //     console.log(data);
-                    //   })();
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -385,6 +395,18 @@ var app = new Vue({
                 swal.close()
                 resolve(error);
             }));
+        },
+
+        checkSelectDates(){
+            if(this.isNewApplication){
+                for(let appEA of this.applicationsEA){
+                    if(moment(appEA, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                        $('#clear').trigger('click');
+                        SGui.showMessage('', 'Ya existe una soliccitud de vacaciones para el dia: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
+                        break;
+                    }
+                }
+            }
         }
     },
 })

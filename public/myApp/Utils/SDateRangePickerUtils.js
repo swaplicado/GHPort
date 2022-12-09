@@ -115,6 +115,7 @@ class SDateRangePicker {
      * Necesario declarar la funcion global dateRangePickerSetValue.
      * Necesario declarar la funcion global dateRangePickerGetValue.
      * Necesario declarar la funcion global dateRangePickerClearValue.
+     * Necesario declarar la variable global dateRangePickerValid.
      * @param {*} container_id 
      * @param {*} initialCalendarDate 
      * @param {*} user_payment_frec_id 
@@ -175,7 +176,7 @@ class SDateRangePicker {
             separator : ' a ',
             beforeShowDay: function(t)
             {
-                var valid = true;
+                var valid = dateRangePickerValid;
                 var _class = '';
                 var _tooltip = '';
                 if(user_payment_frec_id == const_QUINCENA){
