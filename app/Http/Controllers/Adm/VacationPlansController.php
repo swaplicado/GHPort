@@ -252,6 +252,12 @@ class VacationPlansController extends Controller
                                     ->where('is_deleted', 0)
                                     ->get();
 
+        $oUser = \DB::table('users as u')
+                    ->join('user_admission_logs as ual', 'ual.user_id', '=', 'u.id')
+                    ->where('id', $user_id)
+                    ->first();
+
+        $date = Carbon::parse($oUser->benefits_date);
         if(sizeof($vacationUser) > 0){
             $vacationUser = $vacationUser->where('date_start', '>', $vacation_plan->start_date_n);
             foreach($vacationUser as $vac){
@@ -260,15 +266,13 @@ class VacationPlansController extends Controller
                     $oDays = $vacation_plan_day->last();
                 }
                 $vac->vacation_days =  $oDays->vacation_days;
+                $vac->year = $date->year;
+                $vac->date_start = $date->format('Y-m-d');
+                $vac->date_end = $date->addYear(1)->subDays(1)->format('Y-m-d');
+                $vac->is_expired = $date->lt(Carbon::today()) ? $date->diffInYears(Carbon::today()) > 2 : 0;
                 $vac->update();
             }
         }else{
-            $oUser = \DB::table('users as u')
-                        ->join('user_admission_logs as ual', 'ual.user_id', '=', 'u.id')
-                        ->where('id', $user_id)
-                        ->first();
-
-            $date = Carbon::parse($oUser->last_admission_date);
             for($i=1; $i<=50; $i++){
                 $oDays = $vacation_plan_day->where('until_year', $i)->first();
                 if(is_null($oDays)){

@@ -55,7 +55,7 @@ class UsersController extends Controller
                                 'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
                                 'full_name_ui' => $jUser->firstname.' - '.$jUser->num_employee,
                                 'short_name' => $jUser->firstname,
-                                'benefits_date' => $jUser->admission_date,
+                                'benefits_date' => $jUser->benefit_date,
                                 'vacation_date' => $jUser->admission_date,
                                 'payment_frec_id' => $jUser->way_pay,
                                 'last_admission_date' => $jUser->admission_date,
@@ -134,7 +134,7 @@ class UsersController extends Controller
         $oUser->full_name = $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname;
         $oUser->full_name_ui = $jUser->firstname.' - '.$jUser->num_employee;
         $oUser->short_name = $jUser->firstname;
-        $oUser->benefits_date = $jUser->admission_date;
+        $oUser->benefits_date = $jUser->benefit_date;
         $oUser->vacation_date = $jUser->admission_date;
         $oUser->last_admission_date = $jUser->admission_date;
         $oUser->last_dismiss_date_n = $jUser->leave_date;
