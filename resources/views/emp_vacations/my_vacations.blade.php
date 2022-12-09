@@ -34,6 +34,7 @@
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
+            this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexes = {
@@ -304,94 +305,42 @@
 </script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
+<script src="{{ asset('myApp/Utils/SDateRangePickerUtils.js') }}"></script>
 <script>
-    $.dateRangePickerLanguages['es'] =
-	{
-		'selected': 'De:',
-		'days': 'Dias',
-		'apply': 'Cerrar',
-		'week-1' : 'Lun',
-		'week-2' : 'Mar',
-		'week-3' : 'Mie',
-		'week-4' : 'Jue',
-		'week-5' : 'Vie',
-		'week-6' : 'Sab',
-		'week-7' : 'Dom',
-		'month-name': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','octubre','Noviembre','Diciembre'],
-		'shortcuts' : 'Shortcuts',
-		'past': 'Past',
-		'7days' : '7 días',
-		'14days' : '14 días',
-		'30days' : '30 días',
-		'previous' : 'Anterior',
-		'prev-week' : 'Semana',
-		'prev-month' : 'Mes',
-		'prev-quarter' : 'Quincena',
-		'prev-year' : 'Año',
-		'less-than' : 'El rango de fecha debe ser mayor a %d días',
-		'more-than' : 'El rango de fecha debe ser menor a %d días',
-		'default-more' : 'Selecciona un rango de fecha mayor a %d días',
-		'default-less' : 'Selecciona un rango de fecha menor a %d días',
-		'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
-		'default-default': 'Seleccione rango de fecha'
-	};
+    var oDateRangePicker  = new SDateRangePicker();
+    var dateRangePickerArrayApplications = [];
+    oDateRangePicker.setDateRangePicker(
+        'two-inputs',
+        oServerData.initialCalendarDate,
+        oServerData.oUser.payment_frec_id,
+        oServerData.const.QUINCENA,
+        'date-range200',
+        'date-range201',
+        'clear',
+        oServerData.lHolidays
+    );
 
-    $('#two-inputs').dateRangePicker(
-	{
-        startDate: oServerData.initialCalendarDate,
-        inline:true,
-		container: '#two-inputs',
-		alwaysOpen:true,
-        language: 'es',
-		separator : ' a ',
-        beforeShowDay: function(t)
-        {
-            var valid = true;
-            var _class = '';
-            var _tooltip = '';
-            if(oServerData.oUser.payment_frec_id == oServerData.const.QUINCENA){
-                _class = (t.getDay() == 0 || t.getDay() == 6) ? 
-                            'restDay' : 
-                                (oServerData.lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD')) ? 
-                                    'holiday' : '');
-            } else {
-                _class = (t.getDay() == 0) ? 
-                            'restDay' : 
-                                (oServerData.lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD')) ? 
-                                    'holiday' : '');
-            }
- 
-            return [valid,_class,_tooltip];
-        },
-		getValue: function(){
-			if ($('#date-range200').val() && $('#date-range201').val() ){
-                app.startDate = app.oDateUtils.formatDate($('#date-range200').val());
-                app.endDate = app.oDateUtils.formatDate($('#date-range201').val());
-                app.getDataDays();
-				return $('#date-range200').val() + ' a ' + $('#date-range201').val();
-            }
-			else{
-				return '';
-            }
-		},
-		setValue: function(s,s1,s2){
-			$('#date-range200').val(s1);
-			$('#date-range201').val(s2);
-            if($('#date-range200').val() && $('#date-range201').val()){
-                app.startDate = app.oDateUtils.formatDate($('#date-range200').val(), 'ddd DD-MMM-YYYY');
-                app.endDate = app.oDateUtils.formatDate($('#date-range201').val(), 'ddd DD-MMM-YYYY');
-            }else{
-                app.startDate = '';
-                app.endDate = '';
-            }
+    function dateRangePickerSetValue(){
+        if($('#date-range200').val() && $('#date-range201').val()){
+            app.startDate = app.oDateUtils.formatDate($('#date-range200').val(), 'ddd DD-MMM-YYYY');
+            app.endDate = app.oDateUtils.formatDate($('#date-range201').val(), 'ddd DD-MMM-YYYY');
+        }else{
+            app.startDate = '';
+            app.endDate = '';
+        }
+        app.getDataDays();
+    }
+
+    function dateRangePickerGetValue(){
+        if ($('#date-range200').val() && $('#date-range201').val() ){
+            app.startDate = app.oDateUtils.formatDate($('#date-range200').val());
+            app.endDate = app.oDateUtils.formatDate($('#date-range201').val());
             app.getDataDays();
-		}
-	});
+        }
+    }
 
-    $('#clear').click(function(evt){
-        evt.stopPropagation();
-        $('#two-inputs').data('dateRangePicker').clear();
+    function dateRangePickerClearValue(){
         app.returnDate = null;
-    });
+    }
 </script>
 @endsection

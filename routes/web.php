@@ -46,12 +46,14 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('myVacations/deleteRequest', 'Pages\myVacationsController@deleteRequestVac')->name('myVacations_delete_requestVac');
     Route::post('myVacations/sendRequest', 'Pages\myVacationsController@sendRequestVac')->name('myVacations_send_requestVac');
     Route::post('myVacations/checkMail', 'Pages\myVacationsController@checkMail')->name('myVacations_checkMail');
+    Route::post('myVacations/getEmpApplicationsEA', 'Pages\myVacationsController@getEmpApplicationsEA')->name('myVacations_getEmpApplicationsEA');
     
     Route::get('requestVacations/{id?}', 'Pages\requestVacationsController@index')->name('requestVacations');
     Route::post('requestVacations/accept', 'Pages\requestVacationsController@acceptRequest')->name('requestVacations_acceptRequest');
     Route::post('requestVacations/reject', 'Pages\requestVacationsController@rejectRequest')->name('requestVacations_rejectRequest');
     Route::post('requestVacations/filterYear', 'Pages\requestVacationsController@filterYear')->name('requestVacations_filterYear');
     Route::post('requestVacations/checkMail', 'Pages\requestVacationsController@checkMail')->name('requestVacations_checkMail');
+    Route::post('requestVacations/getEmpApplicationsEA', 'Pages\requestVacationsController@getEmpApplicationsEA')->name('requestVacations_getEmpApplicationsEA');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');

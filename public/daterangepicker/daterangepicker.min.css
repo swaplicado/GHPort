@@ -15,12 +15,14 @@
 }
 
 .date-picker-wrapper {
+    width: 90%;
+    height: auto;
     position: absolute;
     z-index: 1;
     border: 1px solid #bfbfbf;
     background-color: #efefef;
     padding: 5px 12px;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 20px;
     color: #aaa;
     font-family: Arial, sans-serif;
@@ -114,6 +116,8 @@
 }
 
 .date-picker-wrapper .month-wrapper {
+    width: 100% !important;
+    height: 90%;
     border: 1px solid #bfbfbf;
     border-radius: 3px;
     background-color: #fff;
@@ -123,14 +127,28 @@
     _overflow: hidden
 }
 
-.date-picker-wrapper .month-wrapper table {
-    width: 190px;
-    float: left
-}
 
-.date-picker-wrapper .month-wrapper table.month2 {
-    width: 190px;
-    float: left
+@media only screen and (min-width: 992px){
+    .date-picker-wrapper .month-wrapper table {
+        width: 47%;
+        float: left;
+    }
+
+    .date-picker-wrapper .month-wrapper table.month2 {
+        width: 47%;
+        float: left
+    }
+}
+@media only screen and (max-width: 991px){
+    .date-picker-wrapper .month-wrapper table {
+        width: 100%;
+        float: left
+    }
+
+    .date-picker-wrapper .month-wrapper table.month2 {
+        width: 100%;
+        float: left
+    }
 }
 
 .date-picker-wrapper .month-wrapper table td,
@@ -139,7 +157,8 @@
     text-align: center;
     line-height: 14px;
     margin: 0;
-    padding: 0
+    padding: 0;
+    font-size: 14px;
 }
 
 .date-picker-wrapper .month-wrapper table .day {
@@ -224,23 +243,41 @@
     color: #fff
 }
 
-.date-picker-wrapper .gap {
-    position: relative;
-    z-index: 1;
-    width: 15px;
-    height: 100%;
-    background-color: red;
-    font-size: 0;
-    line-height: 0;
-    float: left;
-    top: -5px;
-    /* margin: 0 10px -10px; */
-    visibility: hidden;
-    height: 0
+@media only screen and (min-width: 992px){
+    .date-picker-wrapper .gap {
+        position: relative;
+        z-index: 1;
+        width: 15px;
+        height: 100%;
+        /* background-color: red; */
+        font-size: 0;
+        line-height: 0;
+        float: left;
+        top: -5px;
+        /* margin: 0 10px -10px; */
+        visibility: hidden;
+        height: 0
+    }
+}
+@media only screen and (max-width: 991px){
+    .date-picker-wrapper .gap {
+        position: relative;
+        z-index: 1;
+        width: 15px;
+        height: 5px !important;
+        /* background-color: red; */
+        font-size: 0;
+        line-height: 0;
+        float: left;
+        top: -5px;
+        /* margin: 0 10px -10px; */
+        visibility: hidden;
+        height: 0
+    }
 }
 
 .date-picker-wrapper .gap .gap-lines {
-    height: 100%;
+    height: 0%;
     overflow: hidden
 }
 
@@ -426,11 +463,11 @@
     -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .3);
     box-shadow: 0 0 3px rgba(0, 0, 0, .3);
     display: none;
-    background-color: #ff0;
+    background-color: rgb(255, 255, 255);
     padding: 0 6px;
     border-radius: 2px;
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 20px;
+    line-height: 24px;
     -webkit-filter: drop-shadow(0 0 3px rgba(0, 0, 0, .3));
     -moz-filter: drop-shadow(0 0 3px rgba(0, 0, 0, .3));
     -ms-filter: drop-shadow(0 0 3px rgba(0, 0, 0, .3));
@@ -443,7 +480,7 @@
     position: absolute;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 4px solid #ff0;
+    border-top: 4px solid rgb(255, 255, 255);
     left: 50%;
     margin-left: -4px;
     bottom: -4px
@@ -474,4 +511,29 @@
 
 .date-picker-wrapper .month-wrapper table .day.holiday {
     background-color: #9f55d4
+}
+
+.date-picker-wrapper .month-wrapper table .day.birthDay {
+    background: url('../img/birthday-cake.png');
+    background-repeat:no-repeat;
+    background-size: 90% 90%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* width: 20px;
+    height: 20px; */
+}
+
+.date-picker-wrapper .month-wrapper table .day.requestedVac {
+    background-color: #f590eb;
+    color: white;
+}
+
+.date-picker-wrapper .month-wrapper table .day.aniversary {
+    background: url('../img/confetti.png');
+    background-repeat:no-repeat;
+    background-size: 90% 90%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

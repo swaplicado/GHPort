@@ -22,21 +22,23 @@ var app = new Vue({
         prop_vac_days: oServerData.oUser.prop_vac_days,
         prox_vac_days: oServerData.oUser.prox_vac_days,
         take_rest_days: false,
-        take_holidays: false
+        take_holidays: false,
+        applicationsEA: []
     },
     mounted(){
         
     },
     methods: {
-        showModal(data = null){
+        async showModal(data = null){
+            await this.getEmpApplicationsEA(this.oUser.id);
             if(data != null){
                 this.comments = data[this.indexes.comments];
                 this.idRequest = data[this.indexes.id];
                 this.status = data[this.indexes.status];
                 this.take_holidays = parseInt(data[this.indexes.take_holidays]);
                 this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
-                $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
-			    $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
+                $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
+			    $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             }else{
                 if(this.HasRequestCreated()){
                     SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
@@ -53,6 +55,7 @@ var app = new Vue({
                 this.take_rest_days = false;
                 this.take_holidays = false;
                 $('#clear').trigger('click');
+                $('#two-inputs').data('dateRangePicker').redraw();
             }
             $('#modal_solicitud').modal('show');
         },
@@ -357,5 +360,31 @@ var app = new Vue({
         sleep(milliseconds) {
             return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
+
+        getEmpApplicationsEA(user_id){
+            SGui.showWaiting(3000);
+            return new Promise((resolve) => 
+            axios.post(this.oData.applicationsEARoute, {
+                'user_id':  user_id
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    dateRangePickerArrayApplications = data.arrAplications;
+                    this.applicationsEA = data.arrAplications;
+                    swal.close()
+                    resolve(dateRangePickerArrayApplications);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                    swal.close()
+                    resolve(null);
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close()
+                resolve(error);
+            }));
+        }
     },
 })

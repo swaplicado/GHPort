@@ -21,6 +21,7 @@ var app = new Vue({
         take_rest_days: false,
         take_holidays: false,
         vacationUtils: new vacationUtils(),
+        applicationsEA: []
     },
     mounted(){
         
@@ -46,11 +47,12 @@ var app = new Vue({
             this.lDays = result[2];
         },
 
-        showAcceptRegistry(data){
+        async showAcceptRegistry(data){
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
                 return;
             }
+            await this.getEmpApplicationsEA(data[this.indexes.user_id]);
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
@@ -61,8 +63,8 @@ var app = new Vue({
             this.isApprove = true;
             this.take_holidays = parseInt(data[this.indexes.take_holidays]);
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
-            $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
-            $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.getReturnDate(data);
 
             $('#modal_solicitud').modal('show');
@@ -236,5 +238,32 @@ var app = new Vue({
         sleep(milliseconds) {
             return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
+
+        getEmpApplicationsEA(user_id){
+            SGui.showWaiting(3000);
+            return new Promise((resolve) => 
+                axios.post(this.oData.applicationsEARoute, {
+                    'user_id':  user_id
+                })
+                .then(response => {
+                    let data = response.data;
+                    if(data.success){
+                        this.applicationsEA = data.arrAplications;
+                        dateRangePickerArrayApplications = data.arrAplications;
+                        swal.close()
+                        resolve(dateRangePickerArrayApplications);
+                    }else{
+                        SGui.showMessage('', data.message, data.icon);
+                        swal.close()
+                        resolve(null);
+                    }
+                })
+                .catch( function (error){
+                    console.log(error);
+                    swal.close()
+                    resolve(error);
+                })
+            );
+        }
     },
 })

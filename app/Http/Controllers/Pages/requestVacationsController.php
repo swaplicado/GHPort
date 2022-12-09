@@ -434,4 +434,14 @@ class requestVacationsController extends Controller
 
         return $oDate;
     }
+
+    public function getEmpApplicationsEA(Request $request){
+        try {
+            $data = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
+        }
+
+        return json_encode(['success' => true, 'arrAplications' => $data]);
+    }
 }

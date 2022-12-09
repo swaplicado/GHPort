@@ -456,4 +456,28 @@ class EmployeeVacationUtils {
             }
         }
     }
+
+    /**
+     * Obtine las aplications de un usuario, solo con estatus enviado y aprobado.
+     * Regresa un array con todos los dias comprendidos de cada aplication
+     */
+    public static function getEmpApplicationsEA($user_id){
+        $applicationsEA = Application::where('user_id', $user_id)
+                                    ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO])
+                                    ->where('is_deleted', 0)
+                                    ->select('start_date', 'end_date')
+                                    ->get();
+        
+        $arrDatesApplications = [];
+        foreach($applicationsEA as $app){
+            $date = Carbon::parse($app->start_date);
+            $arrDatesApplications[] = $date->toDateString();
+            $diff = Carbon::parse($app->start_date)->diffInDays(Carbon::parse($app->end_date));
+            for($i = 0; $i < $diff; $i++){
+                $arrDatesApplications[] = $date->addDay()->toDateString();
+            }
+        }
+
+        return $arrDatesApplications;
+    }
 }
