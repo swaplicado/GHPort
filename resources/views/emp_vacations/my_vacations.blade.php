@@ -325,7 +325,7 @@
         if($('#date-range200').val() && $('#date-range201').val()){
             app.startDate = app.oDateUtils.formatDate($('#date-range200').val(), 'ddd DD-MMM-YYYY');
             app.endDate = app.oDateUtils.formatDate($('#date-range201').val(), 'ddd DD-MMM-YYYY');
-            // app.checkSelectDates();
+            app.checkSelectDates();
         }else{
             app.startDate = '';
             app.endDate = '';

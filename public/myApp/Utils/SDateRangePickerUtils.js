@@ -72,24 +72,28 @@ class SDateRangePicker {
                     if(table[table_id].row('.selected').data()[payment_frec_index] == const_QUINCENA){
                         if(t.getDay() == 0 || t.getDay() == 6){
                             _class = 'restDay';
-                            _tooltip = 'Inhabil';
-                        }else if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                            _tooltip = _tooltip + 'Inhabil. ';
+                        }
+                        if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
-                            _tooltip = 'Festivo';
-                        }else if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                            _tooltip = _tooltip + 'Festivo. ';
+                        }
+                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'requestedVac';
-                            _tooltip = 'Solicitud de vacaciones';
+                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                         }
                     } else {
                         if(t.getDay() == 0){
                             _class = 'restDay';
-                            _tooltip = 'Inhabil';
-                        }else if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                            _tooltip = _tooltip + 'Inhabil. ';
+                        }
+                        if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
-                            _tooltip = 'Festivo';
-                        }else if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                            _tooltip = _tooltip + 'Festivo. ';
+                        }
+                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'requestedVac';
-                            _tooltip = 'Solicitud de vacaciones';
+                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                         }
                     }
                 }
@@ -182,24 +186,28 @@ class SDateRangePicker {
                 if(user_payment_frec_id == const_QUINCENA){
                     if(t.getDay() == 0 || t.getDay() == 6){
                         _class = 'restDay';
-                        _tooltip = 'Inhabil';
-                    }else if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _tooltip = _tooltip + 'Inhabil. ';
+                    }
+                    if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
-                        _tooltip = 'Festivo';
-                    }else if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _tooltip = _tooltip + 'Festivo. ';
+                    }
+                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'requestedVac';
-                        _tooltip = 'Solicitud de vacaciones';
+                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
                 } else {
                     if(t.getDay() == 0){
                         _class = 'restDay';
-                        _tooltip = 'Inhabil';
-                    }else if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _tooltip = _tooltip + 'Inhabil. ';
+                    }
+                    if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
-                        _tooltip = 'Festivo';
-                    }else if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _tooltip = _tooltip + 'Festivo. ';
+                    }
+                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'requestedVac';
-                        _tooltip = 'Solicitud de vacaciones';
+                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
                 }
     
