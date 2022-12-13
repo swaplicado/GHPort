@@ -37,7 +37,7 @@ class myVacationsController extends Controller
         $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
         $now = Carbon::now();
-        $initialCalendarDate = $now->subDays(30)->toDateString();
+        $initialCalendarDate = $now->addDays(1)->toDateString();
 
         $holidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
