@@ -113,13 +113,13 @@
                     <br>
                     <table class="table table-bordered" id="vacationsTable" style="width: 100%;">
                         <thead class="thead-light">
-                            <th>Periodo</th>
+                            <th class="no-sort">Periodo</th>
                             <th>Aniversario</th>
-                            <th>Vac. ganadas</th>
-                            <th>Vac. gozadas</th>
-                            <th>Vac. vencidas</th>
-                            <th>Vac. solicitadas</th>
-                            <th>Vac. pendientes</th>
+                            <th class="no-sort">Vac. ganadas</th>
+                            <th class="no-sort">Vac. gozadas</th>
+                            <th class="no-sort">Vac. vencidas</th>
+                            <th class="no-sort">Vac. solicitadas</th>
+                            <th class="no-sort">Vac. pendientes</th>
                         </thead>
                         <tbody>
                             <tr v-for="vac in oUser.vacation">
@@ -132,16 +132,18 @@
                                 <td v-if="vac.remaining >= 0">@{{vac.remaining}}</td>
                                 <td v-else style="color: red">@{{vac.remaining}}</td>
                             </tr>
-                            <tr class="thead-light">
-                                <td></td>
-                                <th>Total</th>
-                                <td>@{{oUser.tot_vacation_days}}</td>
-                                <td>@{{oUser.tot_vacation_taken}}</td>
-                                <td>@{{oUser.tot_vacation_expired}}</td>
-                                <td>@{{oUser.tot_vacation_request}}</td>
-                                <td v-if="oUser.tot_vacation_remaining >= 0">@{{oUser.tot_vacation_remaining}}</td>
-                                <td v-else style="color: red">@{{oUser.tot_vacation_remaining}}</td>
-                            </tr>
+                            <tfoot>
+                                <tr class="thead-light">
+                                    <td></td>
+                                    <th>Total</th>
+                                    <td>@{{oUser.tot_vacation_days}}</td>
+                                    <td>@{{oUser.tot_vacation_taken}}</td>
+                                    <td>@{{oUser.tot_vacation_expired}}</td>
+                                    <td>@{{oUser.tot_vacation_request}}</td>
+                                    <td v-if="oUser.tot_vacation_remaining >= 0">@{{oUser.tot_vacation_remaining}}</td>
+                                    <td v-else style="color: red">@{{oUser.tot_vacation_remaining}}</td>
+                                </tr>
+                            </tfoot>
                         </tbody>
                     </table>
                 </div>
@@ -284,7 +286,9 @@
                                         'noPaging' => true,
                                         'noInfo' => true,
                                         'noColReorder' => true,
-                                        'noSort' => true
+                                        'noSort' => true,
+                                        'order' => [[1, $config->orderVac]],
+                                        'ordering' => true,
                                     ] )
 
 @include('layouts.table_jsControll', [
@@ -292,11 +296,7 @@
                                         'colTargets' => [0,2,3,4,5],
                                         'colTargetsSercheable' => [1],
                                         'select' => true,
-                                        // 'noSearch' => true,
                                         'noDom' => true,
-                                        // 'noPaging' => true,
-                                        // 'noInfo' => true,
-                                        // 'noSort' => true,
                                         'order' => [[4, 'desc']],
                                         'edit_modal' => true,
                                         'crear_modal' => true,

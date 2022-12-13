@@ -105,16 +105,18 @@
                                 <td style="color: red" v-if="vac.remaining < 0">@{{vac.remaining}}</td>
                                 <td v-else>@{{vac.remaining}}</td>
                             </tr>
-                            <tr class="thead-light">
-                                <td></td>
-                                <th>Total</th>
-                                <td>@{{emp.tot_vacation_days}}</td>
-                                <td>@{{emp.tot_vacation_taken}}</td>
-                                <td>@{{emp.tot_vacation_expired}}</td>
-                                <td>@{{emp.tot_vacation_request}}</td>
-                                <td style="color: red" v-if="emp.tot_vacation_remaining < 0">@{{emp.tot_vacation_remaining}}</td>
-                                <td v-else>@{{emp.tot_vacation_remaining}}</td>
-                            </tr>
+                            <tfoot>
+                                <tr class="thead-light">
+                                    <td></td>
+                                    <th>Total</th>
+                                    <td>@{{emp.tot_vacation_days}}</td>
+                                    <td>@{{emp.tot_vacation_taken}}</td>
+                                    <td>@{{emp.tot_vacation_expired}}</td>
+                                    <td>@{{emp.tot_vacation_request}}</td>
+                                    <td style="color: red" v-if="emp.tot_vacation_remaining < 0">@{{emp.tot_vacation_remaining}}</td>
+                                    <td v-else>@{{emp.tot_vacation_remaining}}</td>
+                                </tr>
+                            </tfoot>
                         </tbody>
                     </table>
                     <br>
@@ -155,7 +157,9 @@
                                             'noPaging' => true,
                                             'noInfo' => true,
                                             'noColReorder' => true,
-                                            'noSort' => true
+                                            'noSort' => true,
+                                            'ordering' => true,
+                                            'order' => [[1, 'desc']],
                                             ])
     @endforeach
     <script id="jsDatatable">

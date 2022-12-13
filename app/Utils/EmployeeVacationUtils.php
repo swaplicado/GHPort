@@ -52,6 +52,8 @@ class EmployeeVacationUtils {
      * Obtiene las vacaciones de un empleado, sin descontar las solicitudes ni las programadas
      */
     public static function getEmployeeVacations($id, $years, $startYear = null){
+        $config = \App\Utils\Configuration::getConfigurations();
+
         $oVacation = \DB::table('vacation_users as vu')
                         ->where('vu.is_deleted', 0)
                         ->where('vu.user_id', $id)
@@ -71,7 +73,7 @@ class EmployeeVacationUtils {
                             'vu.is_expired',
                             'vu.is_expired_manually',
                         )
-                        ->orderBy('year', 'desc')
+                        ->orderBy('year', $config->orderVac)
                         ->get();
 
         return $oVacation;

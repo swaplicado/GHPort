@@ -22,7 +22,7 @@ class EmployeesVacationsController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $lEmployees = $this->getDirectEmployees(\Auth::user()->org_chart_job_id);
 
-        return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees);
+        return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }
 
     /**
@@ -33,7 +33,7 @@ class EmployeesVacationsController extends Controller
 
         $lEmployees = $this->getAlllEmployees(\Auth::user()->org_chart_job_id, $config);
 
-        return view('emp_vacations.all_emp_vacations')->with('lEmployees', $lEmployees);
+        return view('emp_vacations.all_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }
 
     /**

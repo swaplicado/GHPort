@@ -84,13 +84,13 @@
                         <br>
                         <table class="table table-bordered" :id="'table_emp_vacation_'+emp.employee_num">
                             <thead class="thead-light">
-                                <th>Periodo</th>
+                                <th class="no-sort">Periodo</th>
                                 <th>Aniversario</th>
-                                <th>Vac. ganadas</th>
-                                <th>Vac. gozadas</th>
-                                <th>Vac. vencidas</th>
-                                <th>Vac. solicitadas</th>
-                                <th>Vac. pendientes</th>
+                                <th class="no-sort">Vac. ganadas</th>
+                                <th class="no-sort">Vac. gozadas</th>
+                                <th class="no-sort">Vac. vencidas</th>
+                                <th class="no-sort">Vac. solicitadas</th>
+                                <th class="no-sort">Vac. pendientes</th>
                             </thead>
                             <tbody>
                                 <tr v-for="vac in emp.vacation">
@@ -103,16 +103,18 @@
                                     <td v-if="vac.remaining < 0" style="color: red">@{{vac.remaining}}</td>
                                     <td v-else>@{{vac.remaining}}</td>
                                 </tr>
-                                <tr class="thead-light">
-                                    <td></td>
-                                    <th>Total</th>
-                                    <td>@{{emp.tot_vacation_days}}</td>
-                                    <td>@{{emp.tot_vacation_taken}}</td>
-                                    <td>@{{emp.tot_vacation_expired}}</td>
-                                    <td>@{{emp.tot_vacation_request}}</td>
-                                    <td v-if="emp.tot_vacation_remaining < 0" style="color: red">@{{emp.tot_vacation_remaining}}</td>
-                                    <td v-else>@{{emp.tot_vacation_remaining}}</td>
-                                </tr>
+                                <tfoot>
+                                    <tr class="thead-light">
+                                        <td></td>
+                                        <th>Total</th>
+                                        <td>@{{emp.tot_vacation_days}}</td>
+                                        <td>@{{emp.tot_vacation_taken}}</td>
+                                        <td>@{{emp.tot_vacation_expired}}</td>
+                                        <td>@{{emp.tot_vacation_request}}</td>
+                                        <td v-if="emp.tot_vacation_remaining < 0" style="color: red">@{{emp.tot_vacation_remaining}}</td>
+                                        <td v-else>@{{emp.tot_vacation_remaining}}</td>
+                                    </tr>
+                                </tfoot>
                             </tbody>
                         </table>
                     </div>
@@ -145,7 +147,9 @@
                                             'noPaging' => true,
                                             'noInfo' => true,
                                             'noColReorder' => true,
-                                            'noSort' => true
+                                            'noSort' => true,
+                                            'ordering' => true,
+                                            'order' => [[1, $config->orderVac]],
                                             ])
     @endforeach
 

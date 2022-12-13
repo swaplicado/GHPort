@@ -57,7 +57,8 @@ class myVacationsController extends Controller
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
                                                 ->with('year', Carbon::now()->year)
-                                                ->with('constants', $constants);
+                                                ->with('constants', $constants)
+                                                ->with('config', $config);
     }
 
     public function setRequestVac(Request $request){

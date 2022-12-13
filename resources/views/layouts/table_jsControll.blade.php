@@ -63,16 +63,25 @@
                             [ 'Mostrar 10', 'Mostrar 25', 'Mostrar 50', 'Mostrar 100', 'Mostrar todo' ]
                         ],
                     @endif
+                    @if(isset($ordering))
+                        "ordering": true,
+                    @endif
                     "columnDefs": [
                         {
                             "targets": <?php echo json_encode($colTargets) ?>,
                             "visible": false,
                             "searchable": false,
+                            "orderable": false,
                         },
                         {
                             "targets": <?php echo json_encode($colTargetsSercheable) ?>,
                             "visible": false,
                             "searchable": true,
+                            "orderable": false,
+                        },
+                        {
+                            "orderable": false,
+                            "targets": "no-sort",
                         }
                     ],
                     "buttons": [
