@@ -29,7 +29,11 @@
                 <h6 class="m-0 font-weight-bold text-primary"> 
                     <div class="row">
                         <div class="col-md-3">
-                            @{{emp.employee}}
+                            @{{emp.employee}} &nbsp; &nbsp;
+                            <img v-if="emp.company_id == 1" src="../img/aeth.png" width="60px" height="20px" alt="">
+                            <img v-else-if="emp.company_id == 2" src="../img/tron.png" width="25px" height="20px" alt="">
+                            <img v-else-if="emp.company_id == 3" src="../img/swap_logo_22.png" width="50px" height="20px" alt="">
+                            <img v-else-if="emp.company_id == 5" src="../img/ame.png" width="50px" height="20px" alt="">
                         </div>
                         <div class="col-md-9">
                             <div class="row">
