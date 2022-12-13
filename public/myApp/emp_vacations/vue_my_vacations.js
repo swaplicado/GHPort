@@ -202,12 +202,14 @@ var app = new Vue({
                         rec.take_holidays,
                         rec.take_rest_days,
                         rec.emp_comments_n,
+                        rec.user_apr_rej_id,
                         this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.folio_n,
+                        rec.user_apr_rej_name,
                         ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
                             this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
-                                    this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
+                                    this.oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
                                         '')),
                         this.oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY'),
                         this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),

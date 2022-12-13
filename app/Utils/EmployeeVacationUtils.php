@@ -148,11 +148,12 @@ class EmployeeVacationUtils {
     }
 
     /**
-     * Obtiene las solicitudes de vacaciones con el estatus recibido de un empleado
+     * Obtiene las solicitudes de vacaciones con el estatus que se inserte en el metodo
      */
     public static function getApplications($id, $year, $status = [1,2,3,4]){
         $oRequested = \DB::table('applications as a')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
+                        ->leftJoin('users as u', 'u.id', '=', 'a.user_apr_rej_id')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', $status)
                         ->where('a.is_deleted', 0)
@@ -161,10 +162,15 @@ class EmployeeVacationUtils {
                             $query->where('as.is_deleted', 0)
                                 ->orWhere('as.is_deleted', null);
                         })
+                        ->where(function($query){
+                            $query->where('a.user_apr_rej_id', '!=', null)
+                                ->orWhere('a.user_apr_rej_id', null);
+                        })
                         ->select(
                             'a.*',
                             'as.applications_st_name',
-                            'as.applications_st_code'
+                            'as.applications_st_code',
+                            'u.full_name_ui as user_apr_rej_name',
                         )
                         ->get();
 

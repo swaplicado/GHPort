@@ -84,6 +84,7 @@ class requestVacationsController extends Controller
                                                                                         true);
             
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
+            $application->user_apr_rej_id = \Auth::user()->id;
             $application->approved_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
             $application->update();
@@ -174,6 +175,7 @@ class requestVacationsController extends Controller
             $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
+            $application->user_apr_rej_id = \Auth::user()->id;
             $application->rejected_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
             $application->update();

@@ -36,6 +36,7 @@
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
+
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexes = {
                 'id':0,
@@ -43,15 +44,17 @@
                 'take_holidays':2,
                 'take_rest_days':3,
                 'comments':4,
-                'request_date':5,
-                'folio':6,
-                'accept_reject_date':7,
-                'start_date':8,
-                'end_date':9,
-                'return_date':10,
-                'taked_days':11,
-                'status':12,
-                'sup_comments':13,
+                'user_apr_rej_id':5,
+                'request_date':6,
+                'folio':7,
+                'user_apr_rej_name':8,
+                'accept_reject_date':9,
+                'start_date':10,
+                'end_date':11,
+                'return_date':12,
+                'taked_days':13,
+                'status':14,
+                'sup_comments':15,
             };
         }
         var oServerData = new GlobalData();
@@ -185,9 +188,11 @@
                             <th>take_holidays</th>
                             <th>take_rest_days</th>
                             <th>emp coment.</th>
+                            <th>Usuario apr/rec id</th>
                             <th>Fecha solicitud</th>
                             <th>Folio</th>
-                            <th style="max-width: 20%;">Fecha aprobado/rechazado</th>
+                            <th>Usuario apr/rec</th>
+                            <th style="max-width: 20%;">Fecha apr/rec</th>
                             <th>Fecha incio</th>
                             <th>Fecha fin</th>
                             <th>Fecha regreso</th>
@@ -202,8 +207,10 @@
                                 <td>@{{rec.take_holidays}}</td>
                                 <td>@{{rec.take_rest_days}}</td>
                                 <td>@{{rec.emp_comments_n}}</td>
+                                <td>@{{rec.user_apr_rej_id}}</td>
                                 <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
                                 <td>@{{rec.folio_n}}</td>
+                                <td>@{{rec.user_apr_rej_name}}</td>
                                 <td>
                                     @{{
                                         (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
@@ -282,7 +289,7 @@
 
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_myRequest',
-                                        'colTargets' => [0,2,3,4],
+                                        'colTargets' => [0,2,3,4,5],
                                         'colTargetsSercheable' => [1],
                                         'select' => true,
                                         // 'noSearch' => true,

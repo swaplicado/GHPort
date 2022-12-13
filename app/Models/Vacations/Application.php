@@ -19,6 +19,7 @@ class Application extends Model
         'user_id',
         'request_status_id',
         'type_incident_id',
+        'user_apr_rej_id',
         'approved_date_n',
         'rejected_date_n',
         'sup_comments_n',

@@ -34,16 +34,18 @@
                 'take_holidays':4,
                 'take_rest_days':5,
                 'sup_comments': 6,
-                'folio':7,
-                'employee':8,
-                'created_at':9,
-                'approved_date':10,
-                'start_date':11,
-                'end_date':12,
-                'return_date':13,
-                'total_days':14,
-                'applications_st_name':15,
-                'comments':16
+                'user_apr_rej_id': 7,
+                'folio':8,
+                'user_apr_rej_name':9,
+                'employee':10,
+                'created_at':11,
+                'approved_date':12,
+                'start_date':13,
+                'end_date':14,
+                'return_date':15,
+                'total_days':16,
+                'applications_st_name':17,
+                'comments':18
             };
         }
         var oServerData = new GlobalData();
@@ -93,10 +95,12 @@
                 <th>take_holidays</th>
                 <th>take_rest_days</th>
                 <th>sup comments</th>
+                <th>Usuario apr/rec id</th>
                 <th>Folio</th>
+                <th>Usuario apr/rec</th>
                 <th>Empleado</th>
                 <th>Fecha solicitud</th>
-                <th style="max-width: 15%;">Fecha aprobado/rechazado</th>
+                <th style="max-width: 15%;">Fecha apr/rec</th>
                 <th>Fecha inicio</th>
                 <th>Fecha fin</th>
                 <th>Fecha regreso</th>
@@ -114,7 +118,9 @@
                         <td>@{{rec.take_holidays}}</td>
                         <td>@{{rec.take_rest_days}}</td>
                         <td>@{{rec.sup_comments_n}}</td>
+                        <td>@{{rec.user_apr_rej_id}}</td>
                         <td>@{{rec.folio_n}}</td>
+                        <td>@{{rec.user_apr_rej_name}}</td>
                         <td>@{{emp.employee}}</td>
                         <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
                         <td>
@@ -173,7 +179,7 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_requestVac',
-                                        'colTargets' => [1,2,4,5,6],
+                                        'colTargets' => [1,2,4,5,6,7],
                                         'colTargetsSercheable' => [0,3],
                                         'select' => true,
                                         'noSort' => true,

@@ -164,7 +164,9 @@ var app = new Vue({
                             rec.take_holidays,
                             rec.take_rest_days,
                             rec.sup_comments_n,
+                            rec.user_apr_rej_id,
                             rec.folio_n,
+                            rec.user_apr_rej_name,
                             emp.employee,
                             this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                             ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
