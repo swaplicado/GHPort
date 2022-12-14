@@ -27,28 +27,25 @@
                 v-on:click="getEmployees(index, emp.id, emp.org_chart_job_id, emp.is_head_user);"
             >
                 <h6 class="m-0 font-weight-bold text-primary"> 
-                    <div class="row">
-                        <div class="col-md-3">
-                            @{{emp.employee}} &nbsp; &nbsp;
-                            <img v-if="emp.company_id == 1" src="../img/aeth.png" width="60px" height="20px" alt="">
-                            <img v-else-if="emp.company_id == 2" src="../img/tron.png" width="25px" height="20px" alt="">
-                            <img v-else-if="emp.company_id == 3" src="../img/swap_logo_22.png" width="50px" height="20px" alt="">
-                            <img v-else-if="emp.company_id == 5" src="../img/ame.png" width="50px" height="20px" alt="">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="row">
-                                <span class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>
-                                <span class="col-md-3">
-                                    Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días
-                                </span>
-                                <span v-if="emp.is_head_user" class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>
-                                <span v-if="emp.is_head_user" class="col-md-3">
+                    <table style="width: 100%">
+                        <tbody>
+                            <tr>
+                                <td style="width: 30%">@{{emp.employee}}</td>
+                                <td style="width: 10%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
+                                    <img v-if="emp.company_id == 1" src="../img/aeth.png" width="60px" height="20px" alt="">
+                                    <img v-else-if="emp.company_id == 2" src="../img/tron.png" width="25px" height="20px" alt="">
+                                    <img v-else-if="emp.company_id == 3" src="../img/swap_logo_22.png" width="50px" height="20px" alt="">
+                                    <img v-else-if="emp.company_id == 5" src="../img/ame.png" width="50px" height="20px" alt="">
+                                </td>
+                                <td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días</td>
+                                <td v-if="emp.is_head_user" style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
                                     Encargado de area
                                     <span class="bx bxs-group"></span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                                </td>
+                                <td v-else style="width: 30%;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </h6>
             </a>
             <div class="collapse" :id='"id_"+emp.employee_num'>

@@ -35,45 +35,41 @@ var app = new Vue({
                                 +'onclick="getEmployees('+(i + lEmployees_size)+',' +emp.id+','+ emp.org_chart_job_id+','+ emp.is_head_user+');"'
                             +'> '
                             +'<h6 class="m-0 font-weight-bold text-primary">'
-                            +'<div class="row">'
-                                +'<div class="col-md-3">'
-                                    +emp.employee+' '
-                                    if(emp.company_id == 1){
-                                        head_accord = head_accord
-                                            +'<img src="../img/aeth.png" width="50px" height="20px" alt="">';
-                                    }else if(emp.company_id == 2){
-                                        head_accord = head_accord
-                                            +'<img src="../img/tron.png" width="25px" height="20px" alt="">';
-                                    }else if(emp.company_id == 3){
-                                        head_accord = head_accord
-                                            +'<img src="../img/swap_logo_22.png" width="40px" height="20px" alt="">';
-                                    }else if(emp.company_id == 5){
-                                        head_accord = head_accord
-                                            +'<img src="../img/ame.png" width="50px" height="20px" alt="">';
-                                    }
-
-                            head_accord = head_accord
-                                +'</div>'
-                                +'<div class="col-md-9">'
-                                    +'<div class="row">'
-                                    +'<span class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>'                                    
-                                        +'<span class="col-md-4">'
-                                            +'Vacaciónes pendientes: '+emp.tot_vacation_remaining+' días '
-                                        +'</span>';
-
-                                        if(emp.is_head_user){
+                                +'<table style="width: 100%">'
+                                    +'<tbody>'
+                                        +'<tr>'
+                                            +'<td style="width: 30%">'+emp.employee+'</td>'
+                                            +'<td style="width: 10%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">'
+                                                if(emp.company_id == 1){
+                                                    head_accord = head_accord
+                                                        +'<img src="../img/aeth.png" width="50px" height="20px" alt="">';
+                                                }else if(emp.company_id == 2){
+                                                    head_accord = head_accord
+                                                        +'<img src="../img/tron.png" width="25px" height="20px" alt="">';
+                                                }else if(emp.company_id == 3){
+                                                    head_accord = head_accord
+                                                        +'<img src="../img/swap_logo_22.png" width="40px" height="20px" alt="">';
+                                                }else if(emp.company_id == 5){
+                                                    head_accord = head_accord
+                                                        +'<img src="../img/ame.png" width="50px" height="20px" alt="">';
+                                                }
                                             head_accord = head_accord
-                                            +'<span class="col-md-1" style="width: 0; border-right: 1px solid #bcbdc2; height: 1rem; margin: auto 1rem"></span>'
-                                                +'<span class="col-md-3">'
+                                            +'</td>'
+                                            +'<td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes:'+emp.tot_vacation_remaining+' días</td>';
+                                            if(emp.is_head_user){
+                                                head_accord = head_accord
+                                                +'<td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">'
                                                     +'Encargado de area'
                                                     +'<span class="bx bxs-group"></span>'
-                                                +'</span>';
-                                        }
-
-                            head_accord = head_accord
-                                    +'</div>'
-                                +'</div>'
-                            +'</div>'
+                                                +'</td>';
+                                            }else{
+                                                head_accord = head_accord
+                                                +'<td style="width: 30%;"></td>'
+                                            }
+                                            head_accord = head_accord
+                                        +'</tr>'
+                                    +'</tbody>'
+                                +'</table>'
                             +'</h6> '
                             +'</a> ';
     
