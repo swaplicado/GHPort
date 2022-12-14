@@ -43,9 +43,19 @@ class UsersController extends Controller
 
     private function updUser($jUser, $id)
     {
+        $config = \App\Utils\Configuration::getConfigurations();
+        $tokName = ['firstname' => $jUser->firstname, 'lastname1' => $jUser->lastname1, 'lastname2' => $jUser->lastname2, 'num_employee' => $jUser->num_employee];
         $currectDate = Carbon::now()->toDateString();
         $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
         $comp = !is_null($this->lCompanies->where('external_id', $jUser->company_id)->first()) ? $this->lCompanies->where('external_id', $jUser->company_id)->first()->id_company : 6;
+        $full_name_ui = '';
+        $ui = $config->name_ui;
+        for($i = 0; $i < sizeof($ui); $i++){
+            $full_name_ui = $full_name_ui.$tokName[$ui[$i]];
+            if($i < (sizeof($ui) - 1)){
+                $full_name_ui = $full_name_ui.' - ';
+            }
+        }
         User::where('id', $id)
                     ->update(
                             [
@@ -53,7 +63,7 @@ class UsersController extends Controller
                                 'first_name' => $jUser->lastname1,
                                 'last_name' => $jUser->lastname2,
                                 'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
-                                'full_name_ui' => $jUser->firstname.' - '.$jUser->num_employee,
+                                'full_name_ui' => $full_name_ui,
                                 'short_name' => $jUser->firstname,
                                 'benefits_date' => $jUser->benefit_date,
                                 'vacation_date' => $jUser->admission_date,
@@ -79,7 +89,8 @@ class UsersController extends Controller
         if ((!$jUser->is_active) || $jUser->is_deleted) {
             return;
         }
-
+        $config = \App\Utils\Configuration::getConfigurations();
+        $tokName = ['firstname' => $jUser->firstname, 'lastname1' => $jUser->lastname1, 'lastname2' => $jUser->lastname2, 'num_employee' => $jUser->num_employee];
         $name = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->firstname);
         $lastname1 = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->lastname1);
         $lastname2 = str_replace([' LA ', ' DE ', ' LOS ', ' DEL ', ' LAS ', ' EL ', ], ' ', $jUser->lastname2);
@@ -121,6 +132,15 @@ class UsersController extends Controller
             }
         }
 
+        $full_name_ui = '';
+        $ui = $config->name_ui;
+        for($i = 0; $i < sizeof($ui); $i++){
+            $full_name_ui = $full_name_ui.$tokName[$ui[$i]];
+            if($i < (sizeof($ui) - 1)){
+                $full_name_ui = $full_name_ui.' - ';
+            }
+        }
+
         $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
         $comp = !is_null($this->lCompanies->where('external_id', $jUser->company_id)->first()) ? $this->lCompanies->where('external_id', $jUser->company_id)->first()->id_company : 6;
         $oUser = new User();
@@ -132,7 +152,7 @@ class UsersController extends Controller
         $oUser->first_name = $jUser->lastname1;
         $oUser->last_name = $jUser->lastname2;
         $oUser->full_name = $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname;
-        $oUser->full_name_ui = $jUser->firstname.' - '.$jUser->num_employee;
+        $oUser->full_name_ui = $full_name_ui;
         $oUser->short_name = $jUser->firstname;
         $oUser->benefits_date = $jUser->benefit_date;
         $oUser->vacation_date = $jUser->admission_date;
