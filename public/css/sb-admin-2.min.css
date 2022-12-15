@@ -12675,3 +12675,11 @@ body.sidebar-toggled footer.sticky-footer {
 .inline{
     display: inline !important;
 }
+
+.myTdHead {
+    color: #6e707e;
+    background-color: #eaecf4;
+    border-color: #e3e6f0;
+    font-weight: bold;
+    text-decoration: black;
+}

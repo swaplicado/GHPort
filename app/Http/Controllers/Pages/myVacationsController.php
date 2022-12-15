@@ -399,4 +399,26 @@ class myVacationsController extends Controller
 
         return json_encode(['success' => true, 'arrAplications' => $data]);
     }
+
+    public function getMyVacationHistory(Request $request){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id, true);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'oUser' => $user]);
+    }
+
+    public function hiddeHistory(Request $request){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'oUser' => $user]);
+    }
 }

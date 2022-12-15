@@ -52,13 +52,17 @@ class EmployeeVacationUtils {
     /**
      * Obtiene las vacaciones de un empleado, sin descontar las solicitudes ni las programadas
      */
-    public static function getEmployeeVacations($id, $years, $startYear = null){
+    public static function getEmployeeVacations($id, $years, $getYears = null, $startYear = null){
         $config = \App\Utils\Configuration::getConfigurations();
 
         $oVacation = \DB::table('vacation_users as vu')
                         ->where('vu.is_deleted', 0)
                         ->where('vu.user_id', $id)
                         ->where('vu.date_end', '<', Carbon::now()->addYears($years));
+
+        if(!is_null($getYears)){
+            $oVacation = $oVacation->where('vu.date_start', '>=', Carbon::now()->subYears($getYears));
+        }
 
         if(!is_null($startYear)){
             $oVacation = $oVacation->where('year', '>=', $startYear);
@@ -189,7 +193,7 @@ class EmployeeVacationUtils {
      *  vencidas,
      *  solicitadas
      */
-    public static function getEmployeeVacationsData($id){
+    public static function getEmployeeVacationsData($id, $isAllHistory = false){
         $config = \App\Utils\Configuration::getConfigurations();
 
         $user = \DB::table('users as u')
@@ -226,7 +230,11 @@ class EmployeeVacationUtils {
                     )
                     ->first();
 
-        $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+        if($isAllHistory){
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+        }else{
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years, $config->getVacations->years);
+        }
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;
         $user->prop_vac_days = 0;
@@ -329,7 +337,7 @@ class EmployeeVacationUtils {
     public static function getVacations($lEmployees, $startYear = null){
         $config = \App\Utils\Configuration::getConfigurations();
         foreach($lEmployees as $emp){
-            $emp->vacation = EmployeeVacationUtils::getEmployeeVacations($emp->id, $config->showVacation->years, $startYear);
+            $emp->vacation = EmployeeVacationUtils::getEmployeeVacations($emp->id, $config->showVacation->years, null, $startYear);
 
             foreach($emp->vacation as $vac){
                 $date_start = Carbon::parse($vac->date_start);

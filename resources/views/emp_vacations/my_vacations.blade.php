@@ -35,6 +35,8 @@
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
+            this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
+            this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
 
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
@@ -109,6 +111,15 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float: right;">
+                                <button class="btn btn-primary" v-on:click="getHistoryVac();">Ver historial</button>
+                                <button class="btn btn-secondary" v-on:click="hiddeHistory();">Ocultar historial</button>
+                            </div>
+                        </div>
                     </div>
                     <br>
                     <table class="table table-bordered" id="vacationsTable" style="width: 100%;">

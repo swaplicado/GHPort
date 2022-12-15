@@ -226,6 +226,7 @@ var app = new Vue({
 
         reDrawVacationsTable(data){
             var dataVac = [];
+            var footer = [];
             for(let vac of data.oUser.vacation){
                 dataVac.push(
                     [
@@ -239,7 +240,7 @@ var app = new Vue({
                     ]
                 );
             }
-            dataVac.push(
+            footer =
                 [
                     '',
                     'Total',
@@ -248,10 +249,22 @@ var app = new Vue({
                     data.oUser.tot_vacation_expired,
                     data.oUser.tot_vacation_request,
                     data.oUser.tot_vacation_remaining
-                ]
-            );
+                ];
+
             table['vacationsTable'].clear().draw();
+            document.getElementById('vacationsTable').deleteTFoot();
             table['vacationsTable'].rows.add(dataVac).draw();
+            ofoot = document.getElementById('vacationsTable').createTFoot();
+            var row = ofoot.insertRow(0);
+            var count = 0;
+            for(var fo of footer){
+                let cell = row.insertCell(count);
+                if(fo == 'Total'){
+                    cell.classList.add('myTdHead');
+                }
+                cell.innerHTML = fo;
+                count++;
+            }
         },
 
         deleteRegistry(data){
@@ -409,6 +422,48 @@ var app = new Vue({
                     }
                 }
             }
+        },
+
+        getHistoryVac(){
+            SGui.showWaiting(10000);
+            axios.post(this.oData.getMyVacationHistoryRoute, {
+                'user_id':  this.oUser.id
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    this.reDrawVacationsTable(data);
+                    swal.close();
+                }else{
+                    swal.close();
+                    SGui.showMessage('', data.message, data.icon);s
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close();   
+            });
+        },
+
+        hiddeHistory(){
+            SGui.showWaiting(10000);
+            axios.post(this.oData.hiddeHistoryRoute, {
+                'user_id':  this.oUser.id
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    this.reDrawVacationsTable(data);
+                    swal.close();
+                }else{
+                    swal.close();
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close();   
+            });
         }
     },
 })
