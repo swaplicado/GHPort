@@ -125,4 +125,26 @@ class EmployeesVacationsController extends Controller
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
+
+    public function getVacationHistory(Request $request){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id, true);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'oUser' => $user]);
+    }
+
+    public function hiddeHistory(Request $request){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'oUser' => $user]);
+    }
 }

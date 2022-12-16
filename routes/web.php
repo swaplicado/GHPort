@@ -34,7 +34,12 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('profile/update', 'Pages\profileController@updatePass')->name('profile_update');
 
     Route::get('myEmplVacations', 'Pages\EmployeesVacationsController@employeesDirectIndex')->name('myEmplVacations');
+    Route::post('myEmplVacations/getVacationHistory', 'Pages\EmployeesVacationsController@getVacationHistory')->name('myEmplVacations_getVacationHistory');
+    Route::post('myEmplVacations/hiddeHistory', 'Pages\EmployeesVacationsController@hiddeHistory')->name('myEmplVacations_hiddeHistory');
+
     Route::get('allEmplVacations', 'Pages\EmployeesVacationsController@allEmployeesIndex')->name('allEmplVacations');
+    Route::post('allEmplVacations/getVacationHistory', 'Pages\EmployeesVacationsController@getVacationHistory')->name('allEmplVacations_getVacationHistory');
+    Route::post('allEmplVacations/hiddeHistory', 'Pages\EmployeesVacationsController@hiddeHistory')->name('allEmplVacations_hiddeHistory');
     Route::get('getlEmployees/{OrgjobId}', 'Pages\EmployeesVacationsController@getDirectEmployees')->name('getlEmployees');
     Route::get('allVacations', 'Pages\EmployeesVacationsController@allVacationsIndex')->name('allVacations');
     Route::post('allVacations/getPeriod', 'Pages\EmployeesVacationsController@allVacations')->name('allVacations_getPeriod');

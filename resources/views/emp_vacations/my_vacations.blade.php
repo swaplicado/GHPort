@@ -116,8 +116,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div style="float: right;">
-                                <button class="btn btn-primary" v-on:click="getHistoryVac();">Ver historial</button>
-                                <button class="btn btn-secondary" v-on:click="hiddeHistory();">Ocultar historial</button>
+                                <button class="btn btn-primary" v-on:click="getHistoryVac('vacationsTable');">Ver historial</button>
+                                <button class="btn btn-secondary" v-on:click="hiddeHistory('vacationsTable');">Ocultar historial</button>
                             </div>
                         </div>
                     </div>
@@ -321,6 +321,7 @@
         });
     });
 </script>
+<script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerUtils.js') }}"></script>

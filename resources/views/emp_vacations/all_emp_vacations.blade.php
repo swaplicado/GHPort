@@ -5,6 +5,8 @@
         function GlobalData(){
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
             this.getlEmployees_route = <?php echo json_encode(route('getlEmployees', ":OrgjobId")); ?>;
+            this.getVacationHistoryRoute = <?php echo json_encode(route('allEmplVacations_getVacationHistory')); ?>;
+            this.hiddeHistoryRoute = <?php echo json_encode(route('allEmplVacations_hiddeHistory')); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -85,6 +87,15 @@
                         </table>
                     </div>
                     <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float: right;">
+                                <button class="btn btn-primary" v-on:click="getHistoryVac('table_'+emp.employee_num, emp.id);">Ver historial</button>
+                                <button class="btn btn-secondary" v-on:click="hiddeHistory('table_'+emp.employee_num, emp.id);">Ocultar historial</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <table class="table table-bordered" :id="'table_'+emp.employee_num">
                         <thead class="thead-light">
                             <th>Periodo</th>
@@ -130,10 +141,19 @@
 @endsection
 
 @section('scripts')
+    <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_all_emp_vacations.js') }}"></script>
     <script type="text/javascript">
         function getEmployees(i, id, org_chart_job_id, is_head_user) {
             app.getEmployees(i, id, org_chart_job_id, is_head_user);
+        }
+
+        function getHistoryVac(table_id, user_id){
+            app.getHistoryVac(table_id, user_id);
+        }
+
+        function hiddeHistory(table_id, user_id){
+            app.hiddeHistory(table_id, user_id);
         }
     </script>
     @foreach($lEmployees as $emp)
@@ -165,7 +185,7 @@
     @endforeach
     <script id="jsDatatable">
         function load(id){
-            $('#'+id).DataTable({
+            table[id] = $('#'+id).DataTable({
                 "language": {
                         "sProcessing":     "Procesando...",
                         "sLengthMenu":     "Mostrar _MENU_ registros",

@@ -4,6 +4,8 @@
     <script>
         function GlobalData(){
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
+            this.getVacationHistoryRoute = <?php echo json_encode(route('myEmplVacations_getVacationHistory')); ?>;
+            this.hiddeHistoryRoute = <?php echo json_encode(route('myEmplVacations_hiddeHistory')); ?>;
         }
 
         var oServerData = new GlobalData();
@@ -83,6 +85,15 @@
                             </table>
                         </div>
                         <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div style="float: right;">
+                                    <button class="btn btn-primary" v-on:click="getHistoryVac('table_emp_vacation_'+emp.employee_num, emp.id);">Ver historial</button>
+                                    <button class="btn btn-secondary" v-on:click="hiddeHistory('table_emp_vacation_'+emp.employee_num, emp.id);">Ocultar historial</button>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
                         <table class="table table-bordered" :id="'table_emp_vacation_'+emp.employee_num">
                             <thead class="thead-light">
                                 <th class="no-sort">Periodo</th>
@@ -154,5 +165,6 @@
                                             ])
     @endforeach
 
+    <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_emp_vacations.js') }}"></script>
 @endsection

@@ -26,6 +26,7 @@ var app = new Vue({
         applicationsEA: [],
         isNewApplication: false,
         valid: true,
+        oReDrawTables: new SReDrawTables(),
     },
     mounted(){
         
@@ -424,7 +425,7 @@ var app = new Vue({
             }
         },
 
-        getHistoryVac(){
+        getHistoryVac(table_id){
             SGui.showWaiting(10000);
             axios.post(this.oData.getMyVacationHistoryRoute, {
                 'user_id':  this.oUser.id
@@ -432,11 +433,11 @@ var app = new Vue({
             .then(response => {
                 let data = response.data;
                 if(data.success){
-                    this.reDrawVacationsTable(data);
+                    this.oReDrawTables.reDrawVacationsTable(table_id, data);
                     swal.close();
                 }else{
                     swal.close();
-                    SGui.showMessage('', data.message, data.icon);s
+                    SGui.showMessage('', data.message, data.icon);
                 }
             })
             .catch( function (error){
@@ -445,7 +446,7 @@ var app = new Vue({
             });
         },
 
-        hiddeHistory(){
+        hiddeHistory(table_id){
             SGui.showWaiting(10000);
             axios.post(this.oData.hiddeHistoryRoute, {
                 'user_id':  this.oUser.id
@@ -453,7 +454,7 @@ var app = new Vue({
             .then(response => {
                 let data = response.data;
                 if(data.success){
-                    this.reDrawVacationsTable(data);
+                    this.oReDrawTables.reDrawVacationsTable(table_id, data);
                     swal.close();
                 }else{
                     swal.close();
