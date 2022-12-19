@@ -12683,3 +12683,22 @@ body.sidebar-toggled footer.sticky-footer {
     font-weight: bold;
     text-decoration: black;
 }
+
+.priority_1 {
+    background-color: #006600 !important;
+    color: white;
+}
+.priority_2 {
+    background-color: #009900 !important;
+    color: white;
+}
+.priority_3 {
+    background-color: #00CC00 !important;
+    color: white;
+}
+.priority_4 {
+    background-color: #00FF00 !important;
+}
+.priority_5 {
+    background-color: #66FF66 !important;
+}

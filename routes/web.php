@@ -81,4 +81,9 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('bitacoras/AdmissionUserLogs', 'Adm\logsController@indexAdmissionUserLogs')->name('bitacoras_AdmissionUserLogs');
     Route::get('bitacoras/ApplicationLogs', 'Adm\logsController@indexApplicationLogs')->name('bitacoras_ApplicationLogs');
     Route::post('bitacoras/getApplicationLogsData', 'Adm\logsController@getApplicationLogsData')->name('bitacoras_getApplicationLogsData');
+
+    Route::get('specialSeasonTypes', 'Pages\SpecialSeasonTypesController@index')->name('specialSeasonTypes');
+    Route::post('specialSeasonTypes/save', 'Pages\SpecialSeasonTypesController@saveSeasonType')->name('specialSeasonTypes_save');
+    Route::post('specialSeasonTypes/update', 'Pages\SpecialSeasonTypesController@updateSeasonType')->name('specialSeasonTypes_update');
+    Route::post('specialSeasonTypes/delete', 'Pages\SpecialSeasonTypesController@deleteSeasonType')->name('specialSeasonTypes_delete');
 });
