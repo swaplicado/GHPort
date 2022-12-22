@@ -22,6 +22,10 @@ class SpecialSeasonTypesController extends Controller
 
     public function saveSeasonType(Request $request){
         try {
+            $checkSeasonType = SpecialSeasonType::where('priority', $request->priority)->where('is_deleted', 0)->first();
+            if(!is_null($checkSeasonType)){
+                return json_encode(['success' => false, 'message' => 'Error al guardar el registro, ya existe un tipo de temporada especial con la misma prioridad', 'icon' => 'error']);
+            }
             \DB::beginTransaction();
                 $oSeasonType = new SpecialSeasonType();
                 $oSeasonType->name = $request->name;
@@ -75,16 +79,39 @@ class SpecialSeasonTypesController extends Controller
         return json_encode(['success' => true, 'lSpecialSeasonType' => $lSpecialSeasonType]);
     }
 
+    // public function deleteSeasonType(Request $request){
+    //     try {
+    //         \DB::beginTransaction();
+    //             $oSeasonType = SpecialSeasonType::find($request->id_special_season_type);
+    //             $oSeasonType->is_deleted = 1;
+    //             $oSeasonType->update();
+    //         \DB::commit();
+    //     } catch (\Throwable $th) {
+    //         \DB::rollBack();
+    //         return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+    //     }
+
+    //     $lSpecialSeasonType = SpecialSeasonType::leftJoin('users as u', 'u.id', '=', 'special_season_types.updated_by')
+    //                                             ->where('is_deleted', 0)
+    //                                             ->select(
+    //                                                 'special_season_types.*',
+    //                                                 'u.full_name_ui',
+    //                                             )
+    //                                             ->get();
+    //     return json_encode(['success' => true, 'lSpecialSeasonType' => $lSpecialSeasonType]);
+    // }
+
     public function deleteSeasonType(Request $request){
         try {
             \DB::beginTransaction();
-                $oSeasonType = SpecialSeasonType::find($request->id_special_season_type);
+                // $oSeasonType = SpecialSeasonType::where('is_deleted', 0)->where('priority', \DB::raw("(select min(`priority`) from special_season_types)"))->first();
+                $oSeasonType = SpecialSeasonType::where('is_deleted', 0)->orderBy('priority', 'asc')->first();
                 $oSeasonType->is_deleted = 1;
                 $oSeasonType->update();
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
         }
 
         $lSpecialSeasonType = SpecialSeasonType::leftJoin('users as u', 'u.id', '=', 'special_season_types.updated_by')

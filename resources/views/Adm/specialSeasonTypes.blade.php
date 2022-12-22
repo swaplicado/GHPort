@@ -31,7 +31,7 @@
     @include('Adm.modal_form_special_season_type')
     <div class="card-header">
         <h3>
-            <b>TEMPORADAS ESPECIALES</b>
+            <b>TIPOS TEMPORADAS ESPECIALES</b>
             <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:planvacaciones" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
@@ -41,7 +41,6 @@
         @include('layouts.table_buttons', [
             'crear' => true,
             'editar' => true,
-            // 'show' => true,
             'delete' => true
         ])
         <br>

@@ -86,4 +86,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('specialSeasonTypes/save', 'Pages\SpecialSeasonTypesController@saveSeasonType')->name('specialSeasonTypes_save');
     Route::post('specialSeasonTypes/update', 'Pages\SpecialSeasonTypesController@updateSeasonType')->name('specialSeasonTypes_update');
     Route::post('specialSeasonTypes/delete', 'Pages\SpecialSeasonTypesController@deleteSeasonType')->name('specialSeasonTypes_delete');
+
+    Route::get('seasons', 'Pages\SpecialSeasonsController@index')->name('specialSeasons');
+    Route::post('seasons/getSpecialSeason', 'Pages\SpecialSeasonsController@getSpecialSeason')->name('specialSeasons_getSpecialSeason');
 });
