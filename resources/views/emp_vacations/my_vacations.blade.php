@@ -328,6 +328,7 @@
 <script>
     var oDateRangePicker  = new SDateRangePicker();
     var dateRangePickerArrayApplications = [];
+    var dateRangePickerArraySpecialSeasons = [];
     var dateRangePickerValid = true;
     oDateRangePicker.setDateRangePicker(
         'two-inputs',

@@ -397,6 +397,7 @@ var app = new Vue({
                 let data = response.data;
                 if(data.success){
                     dateRangePickerArrayApplications = data.arrAplications;
+                    dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
                     this.applicationsEA = data.arrAplications;
                     swal.close()
                     resolve(dateRangePickerArrayApplications);

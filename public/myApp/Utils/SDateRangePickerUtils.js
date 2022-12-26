@@ -184,6 +184,11 @@ class SDateRangePicker {
                 var _class = '';
                 var _tooltip = '';
                 if(user_payment_frec_id == const_QUINCENA){
+                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
+                    if(result != undefined){
+                        _class = result.color;
+                        _tooltip = _tooltip + result.name + ' ';
+                    }
                     if(t.getDay() == 0 || t.getDay() == 6){
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';

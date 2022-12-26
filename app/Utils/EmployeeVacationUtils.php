@@ -5,6 +5,7 @@ use App\Constants\SysConst;
 use App\Models\Vacations\Application;
 use App\Models\Adm\VacationAllocation;
 use App\Models\Vacations\ApplicationsBreakdown;
+use App\Models\Seasons\SpecialSeason;
 class EmployeeVacationUtils {
     public const months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
     
@@ -497,5 +498,113 @@ class EmployeeVacationUtils {
         }
 
         return $arrDatesApplications;
+    }
+
+    /**
+     * Obtiene las temporadas especiles de un usuario.
+     * regresa un array con todos los dias comprendidos de cada temporada especial
+     */
+    public static function getEmpSpecialSeason($user_id){
+        $oUser = \DB::table('users as u')
+                    ->leftJoin('ext_jobs as j', 'u.job_id', '=', 'j.id_job')
+                    ->where('u.id', $user_id)
+                    ->where('u.is_delete', 0)
+                    ->where('u.is_active', 1)
+                    ->where('j.is_deleted', 0)
+                    ->select(
+                        'u.*',
+                        'j.department_id'
+                    )
+                    ->first();
+
+        $lSpecialSeason = \DB::table('special_season as ss')
+                            ->leftJoin('special_season_types as sst', 'sst.id_special_season_type', '=', 'ss.special_season_type_id')
+                            ->where(function($query) use($oUser) {
+                                $query->where('ss.user_id', $oUser->id)
+                                        ->orWhere('ss.depto_id', $oUser->department_id)
+                                        ->orWhere('ss.org_chart_job_id', $oUser->org_chart_job_id)
+                                        ->orWhere('ss.company_id', $oUser->company_id);
+                            })
+                            ->where('ss.is_deleted', 0)
+                            ->where('sst.is_deleted', 0)
+                            ->select(
+                                'ss.*',
+                                'sst.name',
+                                'sst.priority',
+                                'sst.color',
+                            )
+                            ->get();
+
+        $lspecialSeasonUser = $lSpecialSeason->where('user_id', '!=', null);
+        $lspecialSeasonDepto = $lSpecialSeason->where('depto_id', '!=', null);
+        $lspecialSeasonArea = $lSpecialSeason->where('org_chart_job_id', '!=', null);
+        $lspecialSeasonCompany = $lSpecialSeason->where('company_id', '!=', null);
+
+        $arrSpecialSeason = [];
+        foreach ($lspecialSeasonUser as $oSeasonUser) {
+            $date = Carbon::parse($oSeasonUser->start_date);
+            array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonUser->name, 'color' => $oSeasonUser->color]);
+            $diff = Carbon::parse($oSeasonUser->start_date)->diffInDays(Carbon::parse($oSeasonUser->end_date));
+            for($i = 0; $i < $diff; $i++){
+                array_push($arrSpecialSeason, ['date' => $date->addDay()->toDateString(), 'name' => $oSeasonUser->name, 'color' => $oSeasonUser->color]);
+            }
+        }
+
+
+        foreach ($lspecialSeasonDepto as $oSeasonDepto) {
+            $date = Carbon::parse($oSeasonDepto->start_date);
+            $result = array_filter($arrSpecialSeason, function($oSeason) use($date) {
+                return $oSeason['date'] == $date->toDateString();
+            });
+
+            sizeof($result) == 0 ? array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonDepto->name, 'color' => $oSeasonDepto->color]) : '';
+
+            $diff = Carbon::parse($oSeasonDepto->start_date)->diffInDays(Carbon::parse($oSeasonDepto->end_date));
+            for($i = 0; $i < $diff; $i++){
+                $date->addDay();
+                $result = array_filter($arrSpecialSeason, function($oSeason) use($date) {
+                    return $oSeason['date'] == $date->toDateString();
+                });
+                sizeof($result) == 0 ? array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonDepto->name, 'color' => $oSeasonDepto->color]) : '';
+            }
+        }
+
+        foreach ($lspecialSeasonArea as $oSeasonArea) {
+            $date = Carbon::parse($oSeasonArea->start_date);
+            $result = array_filter($arrSpecialSeason, function($oSeason) use($date) {
+                return $oSeason['date'] == $date->toDateString();
+            });
+
+            sizeof($result) == 0 ? array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonArea->name, 'color' => $oSeasonArea->color]) : '';
+
+            $diff = Carbon::parse($oSeasonArea->start_date)->diffInDays(Carbon::parse($oSeasonArea->end_date));
+            for($i = 0; $i < $diff; $i++){
+                $date->addDay();
+                $result = array_filter($arrSpecialSeason, function($oSeason) use($date) {
+                    return $oSeason['date'] == $date->toDateString();
+                });
+                sizeof($result) == 0 ? array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonArea->name, 'color' => $oSeasonArea->color]) : '';
+            }
+        }
+
+        foreach ($lspecialSeasonCompany as $oSeasonCompany) {
+            $date = Carbon::parse($oSeasonCompany->start_date);
+            $result = array_filter($arrSpecialSeason, function($oSeason) use($date) {
+                return $oSeason['date'] == $date->toDateString();
+            });
+
+            sizeof($result) == 0 ? array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonCompany->name, 'color' => $oSeasonCompany->color]) : '';
+
+            $diff = Carbon::parse($oSeasonCompany->start_date)->diffInDays(Carbon::parse($oSeasonCompany->end_date));
+            for($i = 0; $i < $diff; $i++){
+                $date->addDay();
+                $result = array_filter($arrSpecialSeason, function($oSeason) use($date) {
+                    return $oSeason['date'] == $date->toDateString();
+                });
+                sizeof($result) == 0 ? array_push($arrSpecialSeason, ['date' => $date->toDateString(), 'name' => $oSeasonCompany->name, 'color' => $oSeasonCompany->color]) : '';
+            }
+        }
+        
+        return $arrSpecialSeason;
     }
 }

@@ -12,8 +12,7 @@ use Carbon\Carbon;
 class SpecialSeasonsController extends Controller
 {
     public function index(){
-        // $OrgChartJob = OrgChartJob::find(\Auth::user()->org_chart_job_id);
-        $OrgChartJob = OrgChartJob::find(37);
+        $OrgChartJob = OrgChartJob::find(\Auth::user()->org_chart_job_id);
         $OrgChartJob->child = $OrgChartJob->getChildrens();
         $arrayOrgChartJobs = $OrgChartJob->getArrayChilds();
 

@@ -392,12 +392,13 @@ class myVacationsController extends Controller
 
     public function getEmpApplicationsEA(Request $request){
         try {
-            $data = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+            $lApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+            $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
         }
 
-        return json_encode(['success' => true, 'arrAplications' => $data]);
+        return json_encode(['success' => true, 'arrAplications' => $lApplicationsEA, 'arrSpecialSeasons' => $lSpecialSeason]);
     }
 
     public function getMyVacationHistory(Request $request){
