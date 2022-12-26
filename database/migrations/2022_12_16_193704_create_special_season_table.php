@@ -19,10 +19,11 @@ class CreateSpecialSeasonTable extends Migration
             $table->unsignedBigInteger('depto_id')->nullable();
             $table->unsignedBigInteger('job_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->unsignedBigInteger('special_season_type_id');
-            $table->date('is_deleted');
+            $table->boolean('is_deleted');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');
             $table->timestamps();
@@ -31,6 +32,7 @@ class CreateSpecialSeasonTable extends Migration
             $table->foreign('depto_id')->references('id_department')->on('ext_departments');
             $table->foreign('job_id')->references('id_job')->on('ext_jobs');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('company_id')->references('id_company')->on('ext_company');
             $table->foreign('special_season_type_id')->references('id_special_season_type')->on('special_season_types');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');

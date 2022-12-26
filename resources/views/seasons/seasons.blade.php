@@ -1,12 +1,24 @@
 @extends('layouts.principal')
 
 @section('headStyles')
-        <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
-        <style>
-            .table5rem td {
-                height: 5rem;
-            }
-        </style>
+    <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
+    <style>
+        .table5rem td {
+            height: 5rem;
+        }
+
+        /* (A) FLEX CONTAINER */
+        .wrap-flex {
+            display: flex;
+            align-items: stretch; /* baseline | center | stretch */
+            float: right;
+        }
+        
+        /* (B) NOT REALLY IMPORTANT - COSMETICS */
+        .wrap-flex > * {
+            width: 33%;
+        }
+    </style>
 @endsection
 
 @section('headJs')
@@ -21,12 +33,14 @@
         function GlobalData(){
             /*Ambas vistas*/
             this.lSpecialSeasonType = <?php echo json_encode($lSpecialSeasonType); ?>;
+            this.year = <?php echo json_encode($year); ?>;
 
             /*Datos para la vista temporadas especiales*/
-            this.lDeptos = <?php echo  json_encode($lDeptos); ?>;
-            this.lAreas = <?php echo  json_encode($lAreas); ?>;
-            this.lEmp = <?php echo  json_encode($lEmp); ?>;
-            this.getSpecialSeasonRoute = <?php echo  json_encode(route('specialSeasons_getSpecialSeason')); ?>;
+            this.lDeptos = <?php echo json_encode($lDeptos); ?>;
+            this.lAreas = <?php echo json_encode($lAreas); ?>;
+            this.lEmp = <?php echo json_encode($lEmp); ?>;
+            this.getSpecialSeasonRoute = <?php echo json_encode(route('specialSeasons_getSpecialSeason')); ?>;
+            this.saveSpecialSeasonRoute = <?php echo json_encode(route('specialSeasons_saveSpecialSeason')); ?>;
 
             /*Datos para la vista tipos temporadas especiales*/
             this.SeasonTypeSaveRoute = <?php echo json_encode(route('specialSeasonTypes_save')); ?>;
@@ -83,6 +97,18 @@
                             <button class="btn btn-primary" v-on:click="init();">Iniciar</button>
                         </div>
                     </div>
+                    <div class="wrap-flex">
+                        <label style="max-width: 6rem;">Filtrar por año:</label>
+                        &nbsp;
+                        <button v-on:click="year = year - 1; cleanOptions();" class="btn btn-secondary form-control" type="button" style = "width: 3rem;">
+                            <span class="bx bx-minus" ></span>
+                        </button>
+                        <input type="number" class="form-control" v-model="year" readonly style="width: 6rem;">
+                        <button v-on:click="year = year + 1; cleanOptions();" class="btn btn-secondary form-control" type="button" style = "width: 3rem;">
+                            <span class="bx bx-plus"></span>
+                        </button>
+                    </div>
+                    <br>
                     <br>
                     <div v-for="opt in lOptions" style="overflow-x: auto;">
                         <br>
@@ -108,21 +134,26 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td v-bind:class="[ table_class[opt.text][0].class ]" v-on:click="setSpecialSeason(opt.text, 0)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][1].class ]" v-on:click="setSpecialSeason(opt.text, 1)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][2].class ]" v-on:click="setSpecialSeason(opt.text, 2)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][3].class ]" v-on:click="setSpecialSeason(opt.text, 3)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][4].class ]" v-on:click="setSpecialSeason(opt.text, 4)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][5].class ]" v-on:click="setSpecialSeason(opt.text, 5)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][6].class ]" v-on:click="setSpecialSeason(opt.text, 6)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][7].class ]" v-on:click="setSpecialSeason(opt.text, 7)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][8].class ]" v-on:click="setSpecialSeason(opt.text, 8)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][9].class ]" v-on:click="setSpecialSeason(opt.text, 9)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][10].class ]" v-on:click="setSpecialSeason(opt.text, 10)"> </td>
-                                    <td v-bind:class="[ table_class[opt.text][11].class ]" v-on:click="setSpecialSeason(opt.text, 11)"> </td>
+                                    <td v-bind:class="[ table_class[opt.text]['Enero'].class ]" v-on:click="setSpecialSeason(opt.text, 'Enero')">@{{table_class[opt.text]['Enero'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Febrero'].class ]" v-on:click="setSpecialSeason(opt.text, 'Febrero')">@{{table_class[opt.text]['Febrero'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Marzo'].class ]" v-on:click="setSpecialSeason(opt.text, 'Marzo')">@{{table_class[opt.text]['Marzo'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Abril'].class ]" v-on:click="setSpecialSeason(opt.text, 'Abril')">@{{table_class[opt.text]['Abril'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Mayo'].class ]" v-on:click="setSpecialSeason(opt.text, 'Mayo')">@{{table_class[opt.text]['Mayo'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Junio'].class ]" v-on:click="setSpecialSeason(opt.text, 'Junio')">@{{table_class[opt.text]['Junio'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Julio'].class ]" v-on:click="setSpecialSeason(opt.text, 'Julio')">@{{table_class[opt.text]['Julio'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Agosto'].class ]" v-on:click="setSpecialSeason(opt.text, 'Agosto')">@{{table_class[opt.text]['Agosto'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Septiembre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Septiembre')">@{{table_class[opt.text]['Septiembre'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Octubre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Octubre')">@{{table_class[opt.text]['Octubre'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Noviembre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Noviembre')">@{{table_class[opt.text]['Noviembre'].text}}</td>
+                                    <td v-bind:class="[ table_class[opt.text]['Diciembre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Diciembre')">@{{table_class[opt.text]['Diciembre'].text}}</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div v-if="display_seasons" style="text-align: right">
+                        <br>
+                        <button class="btn btn-secondary" type="button" v-on:click="cleanOptions();">Cancelar</button>
+                        <button class="btn btn-primary" type="button" v-on:click="saveSpecialSeasons();">Guardar</button>
                     </div>
                 </div>
             </div>

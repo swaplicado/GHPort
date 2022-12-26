@@ -7,12 +7,29 @@ var appSpecialSeason = new Vue({
         lEmp: oServerData.lEmp,
         lComp: [],
         title: 'Departamento',
+        type: 'depto',
         colorTitle: 'colorDepartamentoTitle',
         colorBody: 'colorDepartamento',
         display_seasons: false,
-        table_class: [],
+        table_class: {},
         lOptions: [],
         lSpecialSeason: [],
+        lSpecialSeasonType: [],
+        year: oServerData.year,
+        months: [
+                'Enero',
+                'Febrero',
+                'Marzo',
+                'Abril',
+                'Mayo',
+                'Junio',
+                'Julio',
+                'Agosto',
+                'Septiembre',
+                'Octubre',
+                'Noviembre',
+                'Diciembre'
+            ],
     },
     mounted(){
         let self = this;
@@ -32,6 +49,7 @@ var appSpecialSeason = new Vue({
     methods: {
         initView(){
             console.log('appSpecialSeason');
+            this.SetDepto();
         },
 
         btn_SeasonActive(id, color) {
@@ -67,6 +85,7 @@ var appSpecialSeason = new Vue({
             this.title = 'Departamento';
             this.colorTitle = 'colorDepartamentoTitle';
             this.colorBody = 'colorDepartamento';
+            this.type = 'depto';
         },
 
         SetArea(){
@@ -86,6 +105,7 @@ var appSpecialSeason = new Vue({
             this.title = 'Area funcional';
             this.colorTitle = 'colorAreaTitle';
             this.colorBody = 'colorArea';
+            this.type = 'area';
         },
 
         SetEmpleado(){
@@ -105,6 +125,7 @@ var appSpecialSeason = new Vue({
             this.title = 'Empleado';
             this.colorTitle = 'colorEmpleadoTitle';
             this.colorBody = 'colorEmpleado';
+            this.type = 'emp';
         },
 
         SetEmpresa(){
@@ -114,56 +135,84 @@ var appSpecialSeason = new Vue({
             this.title = 'Empresa';
             this.colorTitle = 'colorEmpresaTitle';
             this.colorBody = 'colorEmpresa';
+            this.type = 'comp';
         },
 
         init(){
             var options = $('#selOptions').select2("data");
             if(options.length > 0){
+                SGui.showWaiting(10000);
                 axios.post(this.oData.getSpecialSeasonRoute, {
                     'options': options,
-                    'type': this.title,
+                    'type': this.type,
+                    'year': this.year,
                 })
                 .then( result => {
                     let data = result.data;
                     if(data.success){
                         this.lOptions = options;
                         this.lSpecialSeason = data.lSpecialSeason;
+                        this.lSpecialSeasonType = data.lSpecialSeasonType;
                         let oSpecialSeason = null;
                         for (const opt of options) {
-                            oSpecialSeason = this.lSpecialSeason.find(({ id_special_season }) => id_special_season === opt.id);
-                            let seasons = [];
+                            switch (this.type) {
+                                case 'depto':
+                                    oSpecialSeason = this.lSpecialSeason.filter(({ depto_id }) => depto_id == opt.id);
+                                    break;
+                                case 'area':
+                                    oSpecialSeason = this.lSpecialSeason.filter(({ org_chart_job_id }) => org_chart_job_id == opt.id);
+                                    break;
+                                case 'emp':
+                                    oSpecialSeason = this.lSpecialSeason.filter(({ user_id }) => user_id == opt.id);
+                                    break;
+                                case 'comp':
+                                    
+                                    break;
+                            
+                                default:
+                                    break;
+                            }
+                            
+                            let seasons = {};
                             if(oSpecialSeason != undefined && oSpecialSeason != null){
                                 for (const oSeason of oSpecialSeason) {
-                                    switch (oSeason.priority) {
-                                        case 1:
-                                            seasons.push({ class: 'priority_1', priority: oSeason.priority});
-                                            break;
-                                        case 2:
-                                            seasons.push({ class: 'priority_2', priority: oSeason.priority});
-                                            break;
-                                        case 3:
-                                            seasons.push({ class: 'priority_3', priority: oSeason.priority});
-                                            break;
-                                        case 4:
-                                            seasons.push({ class: 'priority_4', priority: oSeason.priority});
-                                            break;
-                                        case 5:
-                                            seasons.push({ class: 'priority_5', priority: oSeason.priority});
-                                            break;
-                                    
-                                        default:
-                                            seasons.push({ class: 'priority_0', priority: 0});
-                                            break;
+                                    seasons[oSeason.month] = {
+                                                        class: oSeason.color,
+                                                        priority: oSeason.priority,
+                                                        text: oSeason.name,
+                                                        season_id: oSeason.id_special_season,
+                                                        type: this.type,
+                                                        id_type: opt.id,
+                                                    };
+                                }
+                                let keys = Object.keys(seasons);
+                                for (let i = 0; i < this.months.length; i++) {
+                                    let res = keys.find(element => element == this.months[i]);
+                                    if(res == undefined){
+                                        seasons[this.months[i]] = { class: 'priority_0',
+                                                                    priority: 0,
+                                                                    text: '',
+                                                                    season_id: null,
+                                                                    type: this.type,
+                                                                    id_type: opt.id,
+                                                                };
                                     }
                                 }
                             }else{
-                                for (let i = 0; i < 12; i++) {
-                                    seasons.push({ class: 'priority_0', priority: 0});
+                                for (let i = 0; i < this.months.length; i++) {
+                                    seasons[this.months[i]] = { class: 'priority_0',
+                                                                priority: 0,
+                                                                text: '',
+                                                                season_id: null,
+                                                                type: this.type,
+                                                                id_type: opt.id,
+                                                            };
                                 }
                             }
                             this.table_class[opt.text] = seasons;
                         }
                         this.display_seasons = true;
+                        swal.close();
                     }else{
                         SGui.showMessage('', data.message, data.icon);
                     }
@@ -179,35 +228,96 @@ var appSpecialSeason = new Vue({
         },
 
         setSpecialSeason(key, index){
+            console.log(this.lSpecialSeasonType);
+            let result;
             switch (this.table_class[key][index].priority) {
                 case 0:
-                    this.table_class[key][index].priority = 5;
-                    this.table_class[key][index].class = 'priority_5';
+                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 5);
+                    if(result != undefined && result != null){
+                        this.table_class[key][index].priority = 5;
+                        this.table_class[key][index].class = 'priority_5';
+                        this.table_class[key][index].text = result.name;
+                        // this.table_class[key][index].season_id = result.id_special_season;
+                    }else{
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
+                    }
                     break;
+
                 case 1:
-                    this.table_class[key][index].priority--;
-                    this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
                     break;
+
                 case 2:
-                    this.table_class[key][index].priority--;
-                    this.table_class[key][index].class = 'priority_1';
+                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 1);
+                    if(result != undefined && result != null){
+                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].class = 'priority_1';
+                        this.table_class[key][index].text = result.name;
+                        // this.table_class[key][index].season_id = result.id_special_season;
+                    }else{
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
+                    }
                     break;
+
                 case 3:
-                    this.table_class[key][index].priority--;
-                    this.table_class[key][index].class = 'priority_2';
+                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 2);
+                    if(result != undefined && result != null){
+                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].class = 'priority_2';
+                        this.table_class[key][index].text = result.name;
+                        // this.table_class[key][index].season_id = result.id_special_season;
+                    }else{
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
+                    }
                     break;
+
                 case 4:
-                    this.table_class[key][index].priority--;
-                    this.table_class[key][index].class = 'priority_3';
+                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 3);
+                    if(result != undefined && result != null){
+                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].class = 'priority_3';
+                        this.table_class[key][index].text = result.name;
+                        // this.table_class[key][index].season_id = result.id_special_season;
+                    }else{
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
+                    }
                     break;
+
                 case 5:
-                    this.table_class[key][index].priority--;
-                    this.table_class[key][index].class = 'priority_4';
+                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 4);
+                    if(result != undefined && result != null){
+                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].class = 'priority_4';
+                        this.table_class[key][index].text = result.name;
+                        // this.table_class[key][index].season_id = result.id_special_season;
+                    }else{
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
+                    }
                     break;
             
                 default:
                     this.table_class[key][index].priority = 0;
                     this.table_class[key][index].class = 'priority_0';
+                    this.table_class[key][index].text = '';
+                    // this.table_class[key][index].season_id = '';
                     break;
             }
             this.$forceUpdate();
@@ -217,7 +327,29 @@ var appSpecialSeason = new Vue({
             this.display_seasons = false;
             this.lOptions = [];
             this.lSpecialSeason = [];
-            this.table_class = [];
+            this.table_class = {};
+        },
+
+        saveSpecialSeasons(){
+            console.log(this.table_class);
+            SGui.showWaiting(15000);
+            axios.post(this.oData.saveSpecialSeasonRoute,{
+                'table_class': this.table_class,
+                'type': this.type,
+                'year': this.year,
+            })
+            .then( response => {
+                let data  = response.data;
+                if(data.success){
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            })
         }
     }
 });
