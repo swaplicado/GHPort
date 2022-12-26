@@ -5,7 +5,7 @@ var appSpecialSeason = new Vue({
         lDeptos: oServerData.lDeptos,
         lAreas: oServerData.lAreas,
         lEmp: oServerData.lEmp,
-        lComp: [],
+        lCompany: oServerData.lCompany,
         title: 'Departamento',
         type: 'depto',
         colorTitle: 'colorDepartamentoTitle',
@@ -48,7 +48,6 @@ var appSpecialSeason = new Vue({
     },
     methods: {
         initView(){
-            console.log('appSpecialSeason');
             this.SetDepto();
         },
 
@@ -132,6 +131,16 @@ var appSpecialSeason = new Vue({
             this.btn_SeasonActive('btn_comp', '#ffed4a');
             this.cleanOptions();
             $('#selOptions').empty().trigger("change");
+            var datalCompany = [];
+            for(var i = 0; i<this.lCompany.length; i++){
+                datalCompany.push({id: this.lCompany[i].id_company, text: this.lCompany[i].company_name_ui});
+            }
+
+            $('#selOptions')
+                .select2({
+                    placeholder: 'selecciona',
+                    data: datalCompany,
+                });
             this.title = 'Empresa';
             this.colorTitle = 'colorEmpresaTitle';
             this.colorBody = 'colorEmpresa';
@@ -166,9 +175,8 @@ var appSpecialSeason = new Vue({
                                     oSpecialSeason = this.lSpecialSeason.filter(({ user_id }) => user_id == opt.id);
                                     break;
                                 case 'comp':
-                                    
+                                    oSpecialSeason = this.lSpecialSeason.filter(({ company_id }) => company_id == opt.id);
                                     break;
-                            
                                 default:
                                     break;
                             }
@@ -228,7 +236,6 @@ var appSpecialSeason = new Vue({
         },
 
         setSpecialSeason(key, index){
-            console.log(this.lSpecialSeasonType);
             let result;
             switch (this.table_class[key][index].priority) {
                 case 0:
@@ -331,7 +338,6 @@ var appSpecialSeason = new Vue({
         },
 
         saveSpecialSeasons(){
-            console.log(this.table_class);
             SGui.showWaiting(15000);
             axios.post(this.oData.saveSpecialSeasonRoute,{
                 'table_class': this.table_class,

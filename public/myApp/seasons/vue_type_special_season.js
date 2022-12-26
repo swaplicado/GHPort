@@ -20,7 +20,6 @@ var appTypeSpecialSeason = new Vue({
     },
     methods: {
         initView(){
-            console.log('appTypeSpecialSeason');
             this.checkLastPriority();
         },
 

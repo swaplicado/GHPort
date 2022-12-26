@@ -39,6 +39,7 @@
             this.lDeptos = <?php echo json_encode($lDeptos); ?>;
             this.lAreas = <?php echo json_encode($lAreas); ?>;
             this.lEmp = <?php echo json_encode($lEmp); ?>;
+            this.lCompany = <?php echo json_encode($lCompany); ?>;
             this.getSpecialSeasonRoute = <?php echo json_encode(route('specialSeasons_getSpecialSeason')); ?>;
             this.saveSpecialSeasonRoute = <?php echo json_encode(route('specialSeasons_saveSpecialSeason')); ?>;
 

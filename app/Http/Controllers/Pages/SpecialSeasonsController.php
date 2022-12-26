@@ -46,6 +46,12 @@ class SpecialSeasonsController extends Controller
                     ->select('id_org_chart_job', 'job_name')
                     ->get();
 
+        $lCompany = \DB::table('ext_company')
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->select('id_company', 'company_name_ui')
+                        ->get();
+
         $lTypeSpecialSeasons = \DB::table('special_season_types')
                                     ->where('is_deleted', 0)
                                     ->get();
@@ -64,6 +70,7 @@ class SpecialSeasonsController extends Controller
         return view('seasons.seasons')->with('lDeptos', $lDeptos)
                                     ->with('lAreas', $lAreas)
                                     ->with('lEmp', $lEmp)
+                                    ->with('lCompany', $lCompany)
                                     ->with('lTypeSpecialSeasons', $lTypeSpecialSeasons)
                                     ->with('lSpecialSeasonType', $lSpecialSeasonType)
                                     ->with('year', $year);
@@ -82,15 +89,14 @@ class SpecialSeasonsController extends Controller
                 case 'depto':
                     $lSpecialSeason = $lSpecialSeason->whereIn('ss.depto_id', $arrIds);
                     break;
-                case 'job':
-                    // $lSpecialSeason = $lSpecialSeason->whereIn('org_chart_job_id', $arrIds);
-                    break;
                 case 'user_id':
                     $lSpecialSeason = $lSpecialSeason->whereIn('ss.user_id', $arrIds);
                     break;
                 case 'comp':
+                    $lSpecialSeason = $lSpecialSeason->whereIn('ss.company_id', $arrIds);
                     break;
                 case 'area':
+                    $lSpecialSeason = $lSpecialSeason->whereIn('ss.org_chart_job_id', $arrIds);
                     break;
                 
                 default:
@@ -161,11 +167,14 @@ class SpecialSeasonsController extends Controller
                             case 'depto':
                                 $oSpecialSeason->depto_id = $d['id_type'];
                                 break;
-                            case 'job':
-                                $oSpecialSeason->job_id = $d['id_type'];
-                                break;
-                            case 'user_id':
+                            case 'emp':
                                 $oSpecialSeason->user_id = $d['id_type'];
+                                break;
+                            case 'area':
+                                $oSpecialSeason->org_chart_job_id = $d['id_type'];
+                                break;
+                            case 'comp':
+                                $oSpecialSeason->company_id = $d['id_type'];
                                 break;
                             
                             default:
