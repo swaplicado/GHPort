@@ -423,6 +423,12 @@ var app = new Vue({
                         break;
                     }
                 }
+                for(let oSeason of dateRangePickerArraySpecialSeasons){
+                    if(moment(oSeason.date, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                        SGui.showMessage('', 'El dia: \n' + this.oDateUtils.formatDate(oSeason.date, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name, 'info');
+                        break;
+                    }
+                }
             }
         },
 

@@ -20,6 +20,9 @@
                         @elseif($nome['type'] == 'img')
                             <td><img src="{{asset($nome['img'])}}" width="{{$nome['width']}}" height="{{$nome['height']}}"></td>
                             <td>{{$nome['text']}}</td>
+                        @elseif($nome['type'] == 'class')
+                            <td class="{{$nome['class']}}"></td>
+                            <td>{{$nome['text']}}</td>
                         @endif
                     </tr>
                     <tr>

@@ -11,17 +11,7 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        @include('layouts.Nomeclatura_calendario', [
-                            'nomeclatura' => [
-                                ['type' => 'color', 'color' => '#49e', 'text' => '(Solicitud de vacaciones actual)'],
-                                ['type' => 'color', 'color' => '#e0e0e0b1', 'text' => '(Día inhábil)'],
-                                ['type' => 'color', 'color' => '#9f55d4', 'text' => '(Día festivo)'],
-                                ['type' => 'color', 'color' => '#f590eb', 'text' => '(Solicitud de vacaciones)'],
-                                ['type' => 'color', 'color' => '#ffe684', 'text' => '(Día actual)'],
-                                ['type' => 'img', 'img' => 'img/confetti.png', 'width' => '30px', 'height' => '30px', 'text' => '(Aniversario)'],
-                                ['type' => 'img', 'img' => 'img/birthday-cake.png', 'width' => '30px', 'height' => '30px', 'text' => '(Cumpleaños)'],
-                            ]
-                        ])
+                        @include('layouts.Nomeclatura_calendario', [$nomeclatura])
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" disabled v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">

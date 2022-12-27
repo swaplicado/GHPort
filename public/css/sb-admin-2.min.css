@@ -12687,26 +12687,26 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 .priority_0 {
-    background-color: white !important;
-    color: black !important;
+    background-color: white;
+    color: black;
 }
 .priority_1 {
-    background-color: #006600 !important;
-    color: white !important;
+    background-color: #006600;
+    color: white;
 }
 .priority_2 {
-    background-color: #009900 !important;
-    color: white !important;
+    background-color: #009900;
+    color: white;
 }
 .priority_3 {
-    background-color: #00CC00 !important;
-    color: white !important;
+    background-color: #00CC00;
+    color: white;
 }
 .priority_4 {
-    background-color: #00FF00 !important;
+    background-color: #00FF00;
 }
 .priority_5 {
-    background-color: #66FF66 !important;
+    background-color: #66FF66;
 }
 
 [data-page]{

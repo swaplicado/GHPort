@@ -501,7 +501,45 @@ class EmployeeVacationUtils {
     }
 
     /**
-     * Obtiene las temporadas especiles de un usuario.
+     * Obtiene las temporadas especiales de un usuario.
+     * regresa una coleccion las temporadas especiales
+     */
+    public static function getSpecialSeasonByEmp($user_id){
+        $oUser = \DB::table('users as u')
+                    ->leftJoin('ext_jobs as j', 'u.job_id', '=', 'j.id_job')
+                    ->where('u.id', $user_id)
+                    ->where('u.is_delete', 0)
+                    ->where('u.is_active', 1)
+                    ->where('j.is_deleted', 0)
+                    ->select(
+                        'u.*',
+                        'j.department_id'
+                    )
+                    ->first();
+
+        $lSpecialSeason = \DB::table('special_season as ss')
+                            ->leftJoin('special_season_types as sst', 'sst.id_special_season_type', '=', 'ss.special_season_type_id')
+                            ->where(function($query) use($oUser) {
+                                $query->where('ss.user_id', $oUser->id)
+                                        ->orWhere('ss.depto_id', $oUser->department_id)
+                                        ->orWhere('ss.org_chart_job_id', $oUser->org_chart_job_id)
+                                        ->orWhere('ss.company_id', $oUser->company_id);
+                            })
+                            ->where('ss.is_deleted', 0)
+                            ->where('sst.is_deleted', 0)
+                            ->select(
+                                'ss.*',
+                                'sst.name',
+                                'sst.priority',
+                                'sst.color',
+                            )
+                            ->get();
+
+        return $lSpecialSeason;
+    }
+
+    /**
+     * Obtiene las temporadas especiales de un usuario.
      * regresa un array con todos los dias comprendidos de cada temporada especial
      */
     public static function getEmpSpecialSeason($user_id){

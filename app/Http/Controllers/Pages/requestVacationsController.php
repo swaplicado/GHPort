@@ -11,6 +11,7 @@ use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
 use App\Models\Vacations\requestVacationLog;
+use App\Models\Seasons\SpecialSeason;
 use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Constants\SysConst;
@@ -58,10 +59,37 @@ class requestVacationsController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 
+        $lSpecialSeason = \DB::table('special_season as ss')
+                            ->leftJoin('special_season_types as sst', 'sst.id_special_season_type', '=', 'ss.special_season_type_id')
+                            ->where('ss.is_deleted', 0)
+                            ->where('sst.is_deleted', 0)
+                            ->select(
+                                'ss.*',
+                                'sst.name',
+                                'sst.priority',
+                                'sst.color',
+                            )
+                            ->get();
+
+        $nomeclatura = [
+            ['type' => 'color', 'color' => '#49e', 'text' => '(Solicitud de vacaciones actual)'],
+            ['type' => 'color', 'color' => '#e0e0e0b1', 'text' => '(Día inhábil)'],
+            ['type' => 'color', 'color' => '#9f55d4', 'text' => '(Día festivo)'],
+            ['type' => 'color', 'color' => '#f590eb', 'text' => '(Solicitud de vacaciones)'],
+            ['type' => 'color', 'color' => '#ffe684', 'text' => '(Día actual)'],
+            ['type' => 'img', 'img' => 'img/confetti.png', 'width' => '30px', 'height' => '30px', 'text' => '(Aniversario)'],
+            ['type' => 'img', 'img' => 'img/birthday-cake.png', 'width' => '30px', 'height' => '30px', 'text' => '(Cumpleaños)'],
+        ];
+
+        foreach ($lSpecialSeason as $oSeason) {
+            array_push($nomeclatura, ['type' => 'class', 'class' => $oSeason->color, 'text' => $oSeason->name]);
+        }
+
         return view('emp_vacations.requestVacations')->with('lEmployees', $data[1])
                                                     ->with('year', $data[0])
                                                     ->with('lHolidays', $data[2])
                                                     ->with('constants', $constants)
+                                                    ->with('nomeclatura', $nomeclatura)
                                                     ->with('idApplication', $idApplication);
     }
 
@@ -440,10 +468,11 @@ class requestVacationsController extends Controller
     public function getEmpApplicationsEA(Request $request){
         try {
             $data = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+            $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
         }
 
-        return json_encode(['success' => true, 'arrAplications' => $data]);
+        return json_encode(['success' => true, 'arrAplications' => $data, 'arrSpecialSeasons' => $lSpecialSeason]);
     }
 }

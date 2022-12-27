@@ -70,10 +70,29 @@ class SDateRangePicker {
                 var _tooltip = '';
                 if(table[table_id].row('.selected').data() != undefined){
                     if(table[table_id].row('.selected').data()[payment_frec_index] == const_QUINCENA){
+                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
+                        if(result != undefined){
+                            _class = result.color;
+                            _tooltip = _tooltip + result.name + ' ';
+                        }
+                        if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                            _class = 'holiday';
+                            _tooltip = _tooltip + 'Festivo. ';
+                        }
+                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                            _class = 'requestedVac';
+                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                        }
                         if(t.getDay() == 0 || t.getDay() == 6){
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
                         }
+                    } else {
+                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
+                        if(result != undefined){
+                            _class = result.color;
+                            _tooltip = _tooltip + result.name + ' ';
+                        }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
@@ -82,18 +101,9 @@ class SDateRangePicker {
                             _class = 'requestedVac';
                             _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                         }
-                    } else {
                         if(t.getDay() == 0){
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
-                        }
-                        if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            _class = 'holiday';
-                            _tooltip = _tooltip + 'Festivo. ';
-                        }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            _class = 'requestedVac';
-                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                         }
                     }
                 }
@@ -189,10 +199,24 @@ class SDateRangePicker {
                         _class = result.color;
                         _tooltip = _tooltip + result.name + ' ';
                     }
+                    if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _class = 'holiday';
+                        _tooltip = _tooltip + 'Festivo. ';
+                    }
+                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _class = 'requestedVac';
+                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                    }
                     if(t.getDay() == 0 || t.getDay() == 6){
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
                     }
+                } else {
+                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
+                    if(result != undefined){
+                        _class = result.color;
+                        _tooltip = _tooltip + result.name + ' ';
+                    }
                     if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
                         _tooltip = _tooltip + 'Festivo. ';
@@ -201,18 +225,9 @@ class SDateRangePicker {
                         _class = 'requestedVac';
                         _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
-                } else {
                     if(t.getDay() == 0){
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
-                    }
-                    if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                        _class = 'holiday';
-                        _tooltip = _tooltip + 'Festivo. ';
-                    }
-                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                        _class = 'requestedVac';
-                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
                 }
     

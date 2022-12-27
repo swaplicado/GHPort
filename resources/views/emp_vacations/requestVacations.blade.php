@@ -207,6 +207,7 @@
 <script>
     var oDateRangePicker  = new SDateRangePicker();
     var dateRangePickerArrayApplications = [];
+    var dateRangePickerArraySpecialSeasons = [];
     $(document).ready(function (){
         oDateRangePicker.setDateRangePickerWithSelectDataTable(
             'two-inputs',
