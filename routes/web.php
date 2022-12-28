@@ -90,4 +90,5 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('seasons', 'Pages\SpecialSeasonsController@index')->name('specialSeasons');
     Route::post('seasons/getSpecialSeason', 'Pages\SpecialSeasonsController@getSpecialSeason')->name('specialSeasons_getSpecialSeason');
     Route::post('seasons/saveSpecialSeason', 'Pages\SpecialSeasonsController@saveSpecialSeason')->name('specialSeasons_saveSpecialSeason');
+    Route::post('seasons/copyToNextYear', 'Pages\SpecialSeasonsController@copyToNextYear')->name('specialSeasons_copyToNextYear');
 });

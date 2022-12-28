@@ -42,6 +42,7 @@
             this.lCompany = <?php echo json_encode($lCompany); ?>;
             this.getSpecialSeasonRoute = <?php echo json_encode(route('specialSeasons_getSpecialSeason')); ?>;
             this.saveSpecialSeasonRoute = <?php echo json_encode(route('specialSeasons_saveSpecialSeason')); ?>;
+            this.copyToNextYearRoute = <?php echo json_encode(route('specialSeasons_copyToNextYear')); ?>;
 
             /*Datos para la vista tipos temporadas especiales*/
             this.SeasonTypeSaveRoute = <?php echo json_encode(route('specialSeasonTypes_save')); ?>;
@@ -150,11 +151,16 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div v-if="display_seasons" style="text-align: right">
                         <br>
-                        <button class="btn btn-secondary" type="button" v-on:click="cleanOptions();">Cancelar</button>
-                        <button class="btn btn-primary" type="button" v-on:click="saveSpecialSeasons();">Guardar</button>
+                    </div>
+                    <div v-if="display_seasons" class="row">
+                        <div class="col-md-2">
+                            <button class="btn btn-info" v-on:click="copySeasonToNextYear();">Copiar al siguiente año</button>
+                        </div>
+                        <div class="col-md-4 offset-md-6" style="text-align: right;">
+                            <button class="btn btn-secondary" type="button" v-on:click="cleanOptions();">Cancelar</button>
+                            <button class="btn btn-primary" type="button" v-on:click="saveSpecialSeasons();">Guardar</button>
+                        </div>
                     </div>
                 </div>
             </div>

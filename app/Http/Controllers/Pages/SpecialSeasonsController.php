@@ -157,7 +157,12 @@ class SpecialSeasonsController extends Controller
             foreach ($request->table_class as $oKey => $data) {
                 foreach($data as $key => $d){
                     if($d['priority'] > 0){
-                        $oSpecialSeason = SpecialSeason::find($d['season_id']);
+                        $oSpecialSeason = SpecialSeason::where('id_special_season', $d['season_id'])
+                                                        ->whereYear('start_date', $request->year)
+                                                        ->whereYear('end_date', $request->year)
+                                                        ->where('is_deleted', 0)
+                                                        ->first();
+
                         if(is_null($oSpecialSeason)){
                             $oSpecialSeason = new SpecialSeason();
                         }
@@ -246,6 +251,137 @@ class SpecialSeasonsController extends Controller
             \DB::rollBack();
             return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
         }
+        return json_encode(['success' => true, 'message' => 'Registros guardados con éxito', 'icon' => 'success']);
+    }
+
+    public function getSpecialSeasonByTypeYear($year, $type, $type_id){
+        $oSpecialSeason = SpecialSeason::whereYear('start_date', $year)
+                                        ->whereYear('end_date', $year);
+
+        switch ($type) {
+            case 'depto':
+                $oSpecialSeason = $oSpecialSeason->where('depto_id', $type_id);
+                break;
+            case 'emp':
+                $oSpecialSeason = $oSpecialSeason->where('user_id', $type_id);
+                break;
+            case 'area':
+                $oSpecialSeason = $oSpecialSeason->where('org_chart_job_id', $type_id);
+                break;
+            case 'comp':
+                $oSpecialSeason = $oSpecialSeason->where('company_id', $type_id);
+                break;
+            
+            default:
+                break;
+        }
+
+        $oSpecialSeason = $oSpecialSeason->where('is_deleted', 0)->get();
+        
+        return $oSpecialSeason;
+    }
+
+    public function copyToNextYear(Request $request){
+        try {
+            \DB::beginTransaction();
+            
+            foreach ($request->table_class as $oKey => $data) {
+                foreach($data as $key => $d){
+                    $oSpecialSeason = $this->getSpecialSeasonByTypeYear($request->year, $request->type, $d['id_type']);
+                    foreach ($oSpecialSeason as $oSeason) {
+                        $oSeason->is_deleted = 1;
+                        $oSeason->update();
+                    }
+                }
+            }
+
+            foreach ($request->table_class as $oKey => $data) {
+                foreach($data as $key => $d){
+                    if($d['priority'] > 0){
+
+                        $oSpecialSeason = new SpecialSeason();
+
+                        switch ($request->type) {
+                            case 'depto':
+                                $oSpecialSeason->depto_id = $d['id_type'];
+                                break;
+                            case 'emp':
+                                $oSpecialSeason->user_id = $d['id_type'];
+                                break;
+                            case 'area':
+                                $oSpecialSeason->org_chart_job_id = $d['id_type'];
+                                break;
+                            case 'comp':
+                                $oSpecialSeason->company_id = $d['id_type'];
+                                break;
+
+                            default:
+                                break;
+                        }
+    
+                        switch ($key) {
+                            case 'Enero':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-01-01');
+                                break;
+                            case 'Febrero':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-02-01');
+                                break;
+                            case 'Marzo':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-03-01');
+                                break;
+                            case 'Abril':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-04-01');
+                                break;
+                            case 'Mayo':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-05-01');
+                                break;
+                            case 'Junio':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-06-01');
+                                break;
+                            case 'Julio':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-07-01');
+                                break;
+                            case 'Agosto':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-08-01');
+                                break;
+                            case 'Septiembre':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-09-01');
+                                break;
+                            case 'Octubre':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-10-01');
+                                break;
+                            case 'Noviembre':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-11-01');
+                                break;
+                            case 'Diciembre':
+                                $date = Carbon::createFromFormat('Y-m-d', $request->year.'-12-01');
+                                break;
+                            
+                            default:
+                                break;
+                        }
+    
+                        $special_season_type = \DB::table('special_season_types')
+                                                    ->where('priority', $d['priority'])
+                                                    ->where('is_deleted', 0)
+                                                    ->first();
+    
+                        $oSpecialSeason->start_date = $date->startOfMonth()->toDateString();
+                        $oSpecialSeason->end_date = $date->endOfMonth()->toDateString();
+                        $oSpecialSeason->special_season_type_id = $special_season_type->id_special_season_type;
+                        $oSpecialSeason->is_deleted = 0;
+                        $oSpecialSeason->created_by = \Auth::user()->id;
+                        $oSpecialSeason->updated_by = \Auth::user()->id;
+                        $oSpecialSeason->save();
+                    }
+                }
+            }
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
+        }
+
         return json_encode(['success' => true, 'message' => 'Registros guardados con éxito', 'icon' => 'success']);
     }
 }

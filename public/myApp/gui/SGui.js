@@ -62,6 +62,21 @@ class SGui {
         })
     }
 
+    static showConfirm(title, sMessage, icon){
+        return new Promise(function(resolve) {
+            swal.fire({
+                title: title,
+                text: sMessage,
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonText: 'confirmar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                resolve(result.isConfirmed);
+            });
+        });
+    }
+
     static sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }

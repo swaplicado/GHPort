@@ -220,6 +220,7 @@ var appSpecialSeason = new Vue({
                             this.table_class[opt.text] = seasons;
                         }
                         this.display_seasons = true;
+                        this.$forceUpdate();
                         swal.close();
                     }else{
                         SGui.showMessage('', data.message, data.icon);
@@ -347,15 +348,49 @@ var appSpecialSeason = new Vue({
             .then( response => {
                 let data  = response.data;
                 if(data.success){
+                    this.init();
+                    swal.close();
                     SGui.showOk();
                 }else{
+                    this.init();
+                    swal.close();
                     SGui.showMessage('', data.message, data.icon);
                 }
             })
             .catch(function(error){
+                this.init();
+                swal.close();
                 console.log(error);
                 SGui.showError(error);
-            })
+            });
+        },
+
+        copySeasonToNextYear(){
+            (async () => {
+                if (await SGui.showConfirm('Se actualizarán los registros del proximo año','Desea continuar?','warning')) {
+                    SGui.showWaiting(15000);
+                    axios.post(this.oData.copyToNextYearRoute,{
+                        'table_class': this.table_class,
+                        'type': this.type,
+                        'year': (this.year + 1),
+                    })
+                    .then( response => {
+                        let data  = response.data;
+                        if(data.success){
+                            swal.close();
+                            SGui.showOk();
+                        }else{
+                            swal.close();
+                            SGui.showMessage('', data.message, data.icon);
+                        }
+                    })
+                    .catch(function(error){
+                        swal.close();
+                        console.log(error);
+                        SGui.showError(error);
+                    });
+                }
+            })();
         }
     }
 });
