@@ -42,7 +42,7 @@ var app = new Vue({
                 this.take_holidays
             );
 
-            this.returnDate = this.oDateUtils.formatDate(result[0]);
+            this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
             this.takedDays = result[1];
             this.lDays = result[2];
         },
