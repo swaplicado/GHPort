@@ -27,6 +27,7 @@ var app = new Vue({
         isNewApplication: false,
         valid: true,
         oReDrawTables: new SReDrawTables(),
+        totCalendarDays: 0,
     },
     mounted(){
         
@@ -67,6 +68,7 @@ var app = new Vue({
                 this.comments = null;
                 this.idRequest = null;
                 this.takedDays = 0;
+                this.totCalendarDays = 0;
                 this.lDays = [];
                 this.status = null;
                 this.take_rest_days = false;
@@ -93,6 +95,7 @@ var app = new Vue({
             this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
             this.takedDays = result[1];
             this.lDays = result[2];
+            this.totCalendarDays = result[3];
         },
 
         formatDate(sDate){
@@ -125,7 +128,7 @@ var app = new Vue({
                 'take_holidays': this.take_holidays,
                 'take_rest_days': this.take_rest_days,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
-                'tot_calendar_days': (moment(this.endDate, 'ddd DD-MMM-YYYY').diff(moment(this.startDate, 'ddd DD-MMM-YYYY'), 'days') + 1)
+                'tot_calendar_days': this.totCalendarDays,
             })
             .then(response => {
                 var data = response.data;

@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Utils\dateUtils;
 
 class authorizeVacationMail extends Mailable
 {
@@ -34,6 +35,10 @@ class authorizeVacationMail extends Mailable
         $application = \DB::table('applications')
                             ->where('id_application', $this->id_application)
                             ->first();
+
+        $application->start_date = dateUtils::formatDate($application->start_date, 'ddd D-M-Y');
+        $application->end_date = dateUtils::formatDate($application->end_date, 'ddd D-M-Y');
+        $this->returnDate = dateUtils::formatDate($this->returnDate, 'ddd D-M-Y');
 
         $employee = \DB::table('users')
                         ->where('id', $this->employee_id)

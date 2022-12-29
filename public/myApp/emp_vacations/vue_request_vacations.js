@@ -21,7 +21,8 @@ var app = new Vue({
         take_rest_days: false,
         take_holidays: false,
         vacationUtils: new vacationUtils(),
-        applicationsEA: []
+        applicationsEA: [],
+        totCalendarDays: 0,
     },
     mounted(){
         
@@ -45,6 +46,7 @@ var app = new Vue({
             this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
             this.takedDays = result[1];
             this.lDays = result[2];
+            this.totCalendarDays = result[3];
         },
 
         async showAcceptRegistry(data){
@@ -102,7 +104,7 @@ var app = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
-                'returnDate': moment(this.returnDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD')
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')
             })
             .then(response => {
                 var data = response.data;
@@ -131,7 +133,7 @@ var app = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
-                'returnDate': moment(this.returnDate, 'ddd DD-MM-YYYY').format('YYYY-MM-DD')
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')
             })
             .then(response => {
                 var data = response.data;

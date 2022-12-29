@@ -12,9 +12,9 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Días al último aniversario</th>
-                            <th>Días proporcionales al momento</th>
-                            <th>Días al proximo aniversario</th>
+                            <th>Días correspondientes al aniversario actual</th>
+                            <th>Días proporcionales del próximo aniversario</th>
+                            <th>Días al cumplir el próximo aniversario</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,16 +68,21 @@
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="comments" style="display: inline;">Dias efectivos:</label>
-                            <input class="form-control" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
+                            <label class="form-label" for="efectiveDays" style="display: inline;">Dias efectivos:</label>
+                            <input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
                         </div>
                         <br>
-                        {{-- <div>
+                        <div>
+                            <label class="form-label" for="calendarDays" style="display: inline;">Dias calendario:</label>
+                            <input class="form-control" name="calendarDays" type="number" v-model="totCalendarDays" readonly style="width: 10%; display: inline;">
+                        </div>
+                        <br>
+                        <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
                             <ul name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>
-                        </div> --}}
+                        </div>
                         <div>
                             <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>
                             <input class="form-control" v-model="startDate" readonly style="width: 20%; display: inline;">

@@ -1,14 +1,16 @@
 class vacationUtils{
     getTakedDays(lHolidays, payment_frec_id, startDate, endDate, constants, take_rest_days, take_holidays){
-        if((startDate == null || startDate == "" || typeof startDate == undefined) ||
-            (endDate == null || endDate == "" || typeof endDate == undefined)){
-            return [null, 0];
+        if((startDate == null || startDate == "" || startDate == undefined || startDate == "Fecha inválida") ||
+            (endDate == null || endDate == "" || endDate == undefined || endDate == "Fecha inválida")){
+            return [null, 0, [], 0];
         }
         var takedDays = 0;
+        var totCalendarDays = (moment(endDate, 'YYYY-MM-DD').diff(moment(startDate, 'YYYY-MM-DD'), 'days') + 1);
         var diffDays = moment(endDate).diff(moment(startDate), 'days');
         var oDate = moment(startDate);
         var returnDate = moment(endDate).add('1', 'days');
         var lDays = [];
+        let oDateUtils = new SDateUtils();
         for(var i = 0; i < 31; i++){
             switch (returnDate.weekday()) {
                 case 5:
@@ -38,7 +40,7 @@ class vacationUtils{
                     (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
                 ){
                     takedDays = takedDays + 1;
-                    lDays.push(oDate.format('YYYY-MM-DD'));
+                    lDays.push( oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY') );
                 }
                 oDate.add('1', 'days');
             }else{
@@ -47,7 +49,7 @@ class vacationUtils{
                     (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
                 ){
                     takedDays = takedDays + 1;
-                    lDays.push(oDate.format('YYYY-MM-DD'));
+                    lDays.push( oDateUtils.formatDate(oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY') );
                 }
                 oDate.add('1', 'days');
             }
@@ -55,6 +57,6 @@ class vacationUtils{
 
         }
 
-        return [returnDate, takedDays, lDays];
+        return [returnDate, takedDays, lDays, totCalendarDays];
     }
 }

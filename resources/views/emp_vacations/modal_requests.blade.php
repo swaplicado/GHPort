@@ -46,16 +46,21 @@
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="comments" style="display: inline;">Dias efectivos:</label>
-                            <input class="form-control" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
+                            <label class="form-label" for="takedDays" style="display: inline;">Dias efectivos:</label>
+                            <input class="form-control" name="takedDays" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
                         </div>
                         <br>
-                        {{-- <div>
+                        <div>
+                            <label class="form-label" for="totCalendarDays" style="display: inline;">Dias calendario:</label>
+                            <input class="form-control" name="totCalendarDays" type="number" v-model="totCalendarDays" readonly style="width: 10%; display: inline;">
+                        </div>
+                        <br>
+                        <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
                             <ul name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>
-                        </div> --}}
+                        </div>
                         <div>
                             <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>
                             <input class="form-control" v-model="startDate" readonly style="width: 20%; display: inline;">
