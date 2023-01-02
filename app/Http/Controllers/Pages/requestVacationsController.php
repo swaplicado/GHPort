@@ -48,6 +48,7 @@ class requestVacationsController extends Controller
 
     public function index($idApplication = null){
         \Auth::user()->authorizedRole(SysConst::JEFE);
+        $config = \App\Utils\Configuration::getConfigurations();
         $year = Carbon::now()->year;
         $data = $this->getData($year);
         $constants = [
@@ -90,7 +91,8 @@ class requestVacationsController extends Controller
                                                     ->with('lHolidays', $data[2])
                                                     ->with('constants', $constants)
                                                     ->with('nomeclatura', $nomeclatura)
-                                                    ->with('idApplication', $idApplication);
+                                                    ->with('idApplication', $idApplication)
+                                                    ->with('config', $config);
     }
 
     public function acceptRequest(Request $request){

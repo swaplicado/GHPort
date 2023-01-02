@@ -1,4 +1,4 @@
-var app = new Vue({
+var appRequestVacation = new Vue({
     el: '#requestVacations',
     data: {
         oData: oServerData,
@@ -28,6 +28,10 @@ var app = new Vue({
         
     },
     methods: {
+        initView(){
+            
+        },
+
         formatDate(sDate){
             return moment(sDate).format('ddd DD-MM-YYYY');
         },

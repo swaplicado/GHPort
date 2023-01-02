@@ -645,4 +645,22 @@ class EmployeeVacationUtils {
         
         return $arrSpecialSeason;
     }
+
+    /**
+     * Metodo para obtener los datos necesarios para la vista mis vacaciones
+     */
+    public static function getEmployeeDataForMyVacation($employee_id){
+        $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
+            
+        $from = Carbon::parse($user->last_admission_date);
+        $to = Carbon::today()->locale('es');
+
+        $human = $to->diffForHumans($from, true, false, 6);
+
+        $user->antiquity = $human;
+
+        $user->applications = EmployeeVacationUtils::getTakedDays($user);
+
+        return $user;
+    }
 }

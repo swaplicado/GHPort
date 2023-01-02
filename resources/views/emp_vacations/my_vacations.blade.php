@@ -30,7 +30,7 @@
             this.year = <?php echo json_encode($year); ?>;
             this.requestVacRoute = <?php echo json_encode(route('myVacations_setRequestVac')); ?>;
             this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
-            this.filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
+            this.myVacations_filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
@@ -40,7 +40,7 @@
             this.const = <?php echo json_encode($constants); ?>;
 
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
-            this.indexes = {
+            this.indexesMyRequestTable = {
                 'id':0,
                 'request_status_id':1,
                 'take_holidays':2,
@@ -77,7 +77,7 @@
                 </h3>
             </div>
             <div>
-                <div class="card-body">
+                <div class="card-body" v-if="oUser != null">
                     <div class="col-md-6 card border-left-primary">
                         <table style="margin-left: 10px;">
                             <thead>
@@ -170,7 +170,7 @@
                 </h3>
             </div>
             <div>
-                <div class="card-body">
+                <div class="card-body" v-if="oUser != null">
                     @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true])
                     <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                         <label for="rqStatus">Filtrar por estatus: </label>
@@ -260,23 +260,23 @@
 
                 switch (registerVal) {
                     case 0:
-                        filter = parseInt( data[oServerData.indexes.request_status_id] );
+                        filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 1;
                         
                     case 1:
-                        filter = parseInt( data[oServerData.indexes.request_status_id] );
+                        filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 2;
 
                     case 2:
-                        filter = parseInt( data[oServerData.indexes.request_status_id] );
+                        filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 3;
 
                     case 3:
-                        filter = parseInt( data[oServerData.indexes.request_status_id] );
+                        filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 4;
 
                     case 4:
-                        filter = parseInt( data[oServerData.indexes.request_status_id] );
+                        filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 5;
 
                     default:
@@ -324,6 +324,10 @@
 <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
+<script>
+    appMyVacations.initValuesForUser(oServerData.oUser);
+    var app = appMyVacations;
+</script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerUtils.js') }}"></script>
 <script>
     var oDateRangePicker  = new SDateRangePicker();
