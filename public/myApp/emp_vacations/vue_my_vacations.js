@@ -1,12 +1,13 @@
-var app = new Vue({
+var appMyVacations = new Vue({
     el: '#myVacations',
     data: {
         oData: oServerData,
         oDateUtils: new SDateUtils(),
         vacationUtils: new vacationUtils(),
-        indexes: oServerData.indexes,
-        oUser: oServerData.oUser,  //No modificar, mejor modificar oCopyUser
-        oCopyUser: oServerData.oUser,
+        indexes: oServerData.indexesMyRequestTable,
+        oUser: null,  //No modificar, mejor modificar oCopyUser
+        oCopyUser: null,
+        lEmployees: [],
         lHolidays: oServerData.lHolidays,
         startDate: null,
         endDate: null,
@@ -18,9 +19,9 @@ var app = new Vue({
         lDays: [],
         lRec: [],
         year: oServerData.year,
-        actual_vac_days: oServerData.oUser.actual_vac_days,
-        prop_vac_days: oServerData.oUser.prop_vac_days,
-        prox_vac_days: oServerData.oUser.prox_vac_days,
+        actual_vac_days: null,
+        prop_vac_days: null,
+        prox_vac_days: null,
         take_rest_days: false,
         take_holidays: false,
         applicationsEA: [],
@@ -28,11 +29,286 @@ var app = new Vue({
         valid: true,
         oReDrawTables: new SReDrawTables(),
         totCalendarDays: 0,
+        tempData: null,
+        renderTableMyVacations: false,
+        renderTableMyRequest: false,
     },
     mounted(){
         
     },
+    updated: function(){
+        var self = this
+        this.$nextTick(function () {
+            if(typeof self.$refs.vacationsTable != 'undefined' && !self.renderTableMyVacations){
+                this.createVacationsTable(this.tempData);
+            }
+            if(typeof self.$refs.table_myRequest != 'undefined' && !self.renderTableMyRequest){
+                this.createMyRequestTable(this.tempData);
+            }
+        })
+    },
     methods: {
+        /**
+         * Metodo para inicialisar la vista cuando se usa en gestión de vacaciones
+         */
+        initView(lEmployees){
+            this.lEmployees = lEmployees;
+            var datalEmp = [{id: '', text: ''}];
+            for(var i = 0; i<this.lEmployees.length; i++){
+                datalEmp.push({id: this.lEmployees[i].id, text: this.lEmployees[i].employee});
+            }
+
+            $('#selectEmp')
+                .select2({
+                    placeholder: 'selecciona',
+                    data: datalEmp,
+                });
+        },
+
+        /**
+         * Metodo para filtrar la tabla myRequest en la vista gestion de vacaciones
+         */
+        filterMyVacationTable(){
+            table['table_myRequest'].draw();
+        },
+
+        /**
+         * Metodo para obtener los datos de vacaciones del empleado en la vista gestion de vacaciones
+         */
+        getEmployeeData(){
+            SGui.showWaiting(15000);
+            this.cleanData();
+            let employee_id = $('#selectEmp').select2().val();
+            if(employee_id == null || employee_id == undefined || employee_id == ''){
+                SGui.showMessage('', 'Debe seleccionar un colaborador', 'info');
+                return;
+            }
+
+            axios.post(this.oData.getEmployeeDataRoute, {
+                'employee_id': employee_id,
+            })
+            .then(result => {
+                let data = result.data;
+                if(data.success){
+                    this.tempData = data;
+                    this.year = data.year;
+                    this.initValuesForUser(data.oUser);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        /**
+         * inicializar valores para la vista gestion de vacaciones
+         */
+        initValuesForUser(oUser){
+            this.oUser = oUser;
+            this.oCopyUser = oUser;
+            this.actual_vac_days = oUser.actual_vac_days;
+            this.prop_vac_days = oUser.prop_vac_days;
+            this.prox_vac_days = oUser.prox_vac_days;
+        },
+
+        /**
+         * Limpiar valores para la vista gestion de vacaciones
+         */
+        cleanData(){
+            this.tempData = [];
+            this.oUser = null;
+            this.oCopyUser = null;
+            this.actual_vac_days = null;
+            this.prop_vac_days = null;
+            this.prox_vac_days = null;
+            this.renderTableMyVacations = false;
+            this.renderTableMyRequest = false;
+        },
+
+        /**
+         * Crear datatable vacationsTable en la vista gestion de vacaciones
+         */
+        createVacationsTable(data){
+            table['vacationsTable'] = $('#vacationsTable').DataTable({
+                "language": {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                "responsive": false,
+                "ordering": true,
+                "bSort": false,
+                "colReorder": false,
+                "order": [1, 'desc'],
+                "columnDefs": [
+                    {
+                        "targets": [],
+                        "visible": false,
+                        "searchable": false,
+                        "orderable": false,
+                    },
+                    {
+                        "targets": [],
+                        "visible": false,
+                        "searchable": true,
+                        "orderable": false,
+                    },
+                    {
+                        "orderable": false,
+                        "targets": "no-sort",
+                    }
+                ],
+                "buttons": [
+                    
+                ],
+                "searching": false,
+                "paging": false,
+                "dom": 'Bfrtip',
+                "initComplete": function(){ 
+                    $("#vacationsTable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                },
+            });
+            this.reDrawVacationsTable(data);
+            this.renderTableMyVacations = true;
+        },
+
+        /**
+         * crear datatable table_myRequest en la vista gestion de vacaciones 
+         */
+        createMyRequestTable(data){
+            table['table_myRequest'] = $('#table_myRequest').DataTable({
+                "language": {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                "responsive": false,
+                "ordering": true,
+                "bSort": false,
+                "colReorder": false,
+                "order": [1, 'desc'],
+                "columnDefs": [
+                    {
+                        "targets": [0,2,3,4,5],
+                        "visible": false,
+                        "searchable": false,
+                        "orderable": false,
+                    },
+                    {
+                        "targets": [1],
+                        "visible": false,
+                        "searchable": true,
+                        "orderable": false,
+                    },
+                    {
+                        "orderable": false,
+                        "targets": "no-sort",
+                    }
+                ],
+                "buttons": [
+                    
+                ],
+                "initComplete": function() {
+                    $("#table_myRequest").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+
+                    $('#table_myRequest tbody').on('click', 'tr', function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selected');
+                        }
+                        else {
+                            table['table_myRequest'].$('tr.selected').removeClass('selected');
+                            $(this).addClass('selected');
+                        }
+                    });
+
+                    /**
+                     * Editar un registro con vue modal
+                     */
+                    $('#btn_edit').click(function () {
+                        if (table['table_myRequest'].row('.selected').data() == undefined) {
+                            SGui.showError("Debe seleccionar un renglón");
+                            return;
+                        }
+                
+                        app.showModal(table['table_myRequest'].row('.selected').data());
+                    });
+
+                    /**
+                     * Crear un registro con vue modal
+                     */
+                    $('#btn_crear').click(function () {        
+                        app.showModal();
+                    });
+
+                    /**
+                     * Borrar un registro con vue
+                     */
+                    $('#btn_delete').click(function  () {
+                        if (table['table_myRequest'].row('.selected').data() == undefined) {
+                            SGui.showError("Debe seleccionar un renglón");
+                            return;
+                        }
+                        app.deleteRegistry(table['table_myRequest'].row('.selected').data());
+                    });
+
+                    /**
+                    * Enviar un registro con vue
+                    */
+                    $('#btn_send').click(function  () {
+                        if (table['table_myRequest'].row('.selected').data() == undefined) {
+                            SGui.showError("Debe seleccionar un renglón");
+                            return;
+                        }
+                        app.sendRegistry(table['table_myRequest'].row('.selected').data());
+                    });
+                },
+            });
+            this.reDrawRequestTable(data.oUser);
+            this.renderTableMyRequest = true;
+        },
+
         async showModal(data = null){
             await this.getEmpApplicationsEA(this.oUser.id);
             if(data != null){
@@ -75,10 +351,10 @@ var app = new Vue({
                 this.take_holidays = false;
                 this.valid = true;
                 dateRangePickerValid = this.valid;
-                $('#clear').trigger('click');
-                $('#two-inputs').data('dateRangePicker').redraw();
+                // $('#clear').trigger('click');
+                // $('#two-inputs').data('dateRangePicker').redraw();
             }
-            $('#modal_solicitud').modal('show');
+            $('#modal_Mysolicitud').modal('show');
         },
 
         getDataDays(){
@@ -153,8 +429,9 @@ var app = new Vue({
 
         filterYear(){
             SGui.showWaiting(5000);
-            axios.post(this.oData.filterYearRoute, {
+            axios.post(this.oData.myVacations_filterYearRoute, {
                 'year': this.year,
+                'employee_id': this.oUser.id,
             })
             .then(response => {
                 var data = response.data;

@@ -57,7 +57,7 @@
                         <br>
                         <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
-                            <ul name="listDays">
+                            <ul class="ulColumns" name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>
                         </div>

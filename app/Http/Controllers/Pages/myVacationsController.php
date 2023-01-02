@@ -24,18 +24,7 @@ class myVacationsController extends Controller
     public function index(){
         $config = \App\Utils\Configuration::getConfigurations();
 
-        $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
-
-        $from = Carbon::parse($user->last_admission_date);
-        $to = Carbon::today()->locale('es');
-
-        $human = $to->diffForHumans($from, true, false, 6);
-
-        $user->antiquity = $human;
-
-        // $user->applications = EmployeeVacationUtils::getTakedDays($user);
-        $user->applications = EmployeeVacationUtils::getTakedDays($user);
-
+        $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(\Auth::user()->id);
         $now = Carbon::now();
         $initialCalendarDate = $now->addDays(1)->toDateString();
 
@@ -269,7 +258,7 @@ class myVacationsController extends Controller
 
     public function filterYear(Request $request){
         try {
-            $applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, $request->year);
+            $applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
         }
@@ -421,7 +410,7 @@ class myVacationsController extends Controller
     public function getMyVacationHistory(Request $request){
         try {
             $config = \App\Utils\Configuration::getConfigurations();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id, true);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id, true);
         } catch (\Throwable $th) {
             return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
@@ -432,7 +421,7 @@ class myVacationsController extends Controller
     public function hiddeHistory(Request $request){
         try {
             $config = \App\Utils\Configuration::getConfigurations();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
