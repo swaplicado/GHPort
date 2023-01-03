@@ -93,4 +93,6 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('seasons/copyToNextYear', 'Pages\SpecialSeasonsController@copyToNextYear')->name('specialSeasons_copyToNextYear');
 
     Route::post('getEmployeeData', 'Pages\vacationManagementController@getEmployeeData')->name('vacationManagement_getEmployeeData');
+    Route::get('getDirectEmployees', 'Pages\vacationManagementController@getDirectEmployees')->name('vacationManagement_getDirectEmployees');
+    Route::get('getAllEmployees', 'Pages\vacationManagementController@getAllEmployees')->name('vacationManagement_getAllEmployees');
 });
