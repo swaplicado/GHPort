@@ -86,6 +86,8 @@
             this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
+            this.getDirectEmployeesRoute = <?php echo json_encode(route('vacationManagement_getDirectEmployees')); ?>;
+            this.getAllEmployeesRoute = <?php echo json_encode(route('vacationManagement_getAllEmployees')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
                 'id': 0,
@@ -220,6 +222,14 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
             </div>
             <div class="card-body">
                 <div class="row">
+                    <div class="col-auto">
+                        <div class="ks-cboxtags">
+                            <div class="ks-cbox">
+                                <input type="checkbox" id="checkBoxAllEmployees" v-on:click="getAllEmployees();">
+                                <label for="checkBoxAllEmployees">Todos los colaboradores</label>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-auto">
                         <label for="">Selecciona colaborador:</label>
                     </div>

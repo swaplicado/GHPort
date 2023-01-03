@@ -109,6 +109,69 @@ var appMyVacations = new Vue({
         },
 
         /**
+         * Metodo para obtener la lista de los empleados directos o todos los empleados
+         */
+        getAllEmployees(){
+            this.cleanData();
+            let is_checked = document.getElementById('checkBoxAllEmployees').checked;
+            if(is_checked){
+                SGui.showWaiting(15000);
+                axios.get(this.oData.getAllEmployeesRoute,{
+
+                })
+                .then( response => {
+                    let data = response.data;
+                    if(data.success){
+                        $('#selectEmp').empty().trigger("change");
+                        let lAlllEmployees = data.lEmployees;
+                        let datalEmp = [{id: '', text: ''}];
+                        for(var i = 0; i<lAlllEmployees.length; i++){
+                            datalEmp.push({id: lAlllEmployees[i].id, text: lAlllEmployees[i].employee});
+                        }
+                        $('#selectEmp')
+                            .select2({
+                                placeholder: 'selecciona',
+                                data: datalEmp,
+                            });
+
+                        SGui.showOk();
+                    }else{
+                        SGui.showMessage('', data.message, data.icon);
+                    }
+                })
+                .catch( function(error){
+                    SGui.showError(error);
+                    console.log(error);
+                })
+            }else{
+                SGui.showWaiting(15000);
+                axios.get(this.oData.getDirectEmployeesRoute,{
+
+                })
+                .then( response => {
+                    let  data = response.data;
+                    if(data.success){
+                        $('#selectEmp').empty().trigger("change");
+                        let lDirectlEmployees = data.lEmployees;
+                        let datalEmp = [{id: '', text: ''}];
+                        for(var i = 0; i<lDirectlEmployees.length; i++){
+                            datalEmp.push({id: lDirectlEmployees[i].id, text: lDirectlEmployees[i].employee});
+                        }
+                        $('#selectEmp')
+                            .select2({
+                                placeholder: 'selecciona',
+                                data: datalEmp,
+                            });
+
+                        SGui.showOk();
+                    }else{
+                        SGui.showMessage('', data.message, data.icon);
+                    }
+                })
+            }
+        },
+
+        /**
          * inicializar valores para la vista gestion de vacaciones
          */
         initValuesForUser(oUser){
