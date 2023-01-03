@@ -266,10 +266,10 @@ class VacationPlansController extends Controller
                     $oDays = $vacation_plan_day->last();
                 }
                 $vac->vacation_days =  $oDays->vacation_days;
-                $vac->year = $date->year;
-                $vac->date_start = $date->format('Y-m-d');
-                $vac->date_end = $date->addYear(1)->subDays(1)->format('Y-m-d');
-                $vac->is_expired = $date->lt(Carbon::today()) ? $date->diffInYears(Carbon::today()) > 2 : 0;
+                // $vac->year = $date->year;
+                // $vac->date_start = $date->format('Y-m-d');
+                // $vac->date_end = $date->addYear(1)->subDays(1)->format('Y-m-d');
+                // $vac->is_expired = $date->lt(Carbon::today()) ? $date->diffInYears(Carbon::today()) > 2 : 0;
                 $vac->update();
             }
         }else{
