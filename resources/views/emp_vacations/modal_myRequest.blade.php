@@ -43,9 +43,9 @@
                             </div> --}}
                         </div>
                         <div style="text-align: center">
-                            <span id="two-inputs">
+                            <span id="two-inputs-myRequest">
                                 <span hidden>
-                                    <input id="date-range200" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
+                                    <input id="date-range200-myRequest" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201-myRequest" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
                                 </span>
                                 <input class="form-control" v-model="startDate" style="width: 30%; display: inline" readonly> a <input class="form-control" v-model="endDate" style="width: 30%; display: inline" readonly>
                                 <br>
@@ -79,7 +79,7 @@
                         <br>
                         <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
-                            <ul name="listDays">
+                            <ul class="ulColumns3" name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>
                         </div>

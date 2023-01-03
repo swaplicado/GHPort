@@ -212,7 +212,7 @@ class SDateRangePicker {
                         _tooltip = _tooltip + 'Inhabil. ';
                     }
                 } else {
-                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
+                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
                     if(result != undefined){
                         _class = result.color;
                         _tooltip = _tooltip + result.name + ' ';

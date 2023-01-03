@@ -77,10 +77,11 @@ class myVacationsController extends Controller
         // $lDays = $request->lDays;
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
+        $employee_id = $request->employee_id;
         
         try {
 
-            $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA(\Auth::user()->id);
+            $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
@@ -90,7 +91,7 @@ class myVacationsController extends Controller
             }
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
 
             foreach($user->applications as $ap){
                 if($ap->request_status_id == 1){
@@ -114,7 +115,7 @@ class myVacationsController extends Controller
             $application->total_days = $takedDays;
             $application->tot_calendar_days = $tot_calendar_days;
             $application->return_date = $returnDate;
-            $application->user_id = \Auth::user()->id;
+            $application->user_id = $employee_id;
             $application->request_status_id = SysConst::APPLICATION_CREADO;
             $application->type_incident_id = SysConst::TYPE_VACACIONES;
             $application->emp_comments_n = $comments;
@@ -159,7 +160,7 @@ class myVacationsController extends Controller
         }
 
         // $user = $this->getUserVacationsData();
-        $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
+        $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
         $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
         return json_encode(['success' => true, 'message' => 'Solicitud guardada con éxito', 'oUser' => $user]);
@@ -175,8 +176,10 @@ class myVacationsController extends Controller
         // $lDays = $request->lDays;
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
+        $employee_id = $request->employee_id;
+
         try {
-            $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA(\Auth::user()->id);
+            $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
@@ -197,7 +200,7 @@ class myVacationsController extends Controller
             $application->update();
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
     
             if($user->tot_vacation_remaining < $takedDays){
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
@@ -251,7 +254,7 @@ class myVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al editar el registro', 'icon' => 'error']);
         }
         // $user = $this->getUserVacationsData();
-        $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
+        $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
         $user->applications = EmployeeVacationUtils::getTakedDays($user);
         return json_encode(['success' => true, 'message' => 'Registro editado con éxito', 'icon' => 'success', 'oUser' => $user]);
     }
@@ -280,8 +283,8 @@ class myVacationsController extends Controller
             $application->update();
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
-            $user->applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, $request->year);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->employee_id);
+            $user->applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
             $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
             \DB::commit();
@@ -316,11 +319,12 @@ class myVacationsController extends Controller
             $application_log->save();
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData(\Auth::user()->id);
-            $user->applications = EmployeeVacationUtils::getApplications(\Auth::user()->id, $request->year);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->employee_id);
+            $user->applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
             $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
-            $arrOrgJobs = orgChartUtils::getDirectFatherOrgChartJob(\Auth::user()->org_chart_job_id);
+            $employee = User::find($request->employee_id);
+            $arrOrgJobs = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
 
             $superviser = \DB::table('users')
                             ->where('is_delete', 0)
@@ -350,7 +354,7 @@ class myVacationsController extends Controller
                 try {
                     Mail::to($superviser->email)->send(new requestVacationMail(
                                                             $application->id_application,
-                                                            \Auth::user()->id,
+                                                            $request->employee_id,
                                                             $request->lDays,
                                                             $request->returnDate
                                                         )

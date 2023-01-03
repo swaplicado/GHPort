@@ -2,11 +2,11 @@
 @section('headStyles')
 <link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
 <style>
-    ul {
+    /* ul {
         -webkit-column-count: 3;
         -moz-column-count: 3;
         column-count: 3;
-    }
+    } */
 
     input:invalid {
         color: red;
@@ -330,25 +330,25 @@
 </script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerUtils.js') }}"></script>
 <script>
-    var oDateRangePicker  = new SDateRangePicker();
+    var oDateRangePickerForMyRequest  = new SDateRangePicker();
     var dateRangePickerArrayApplications = [];
     var dateRangePickerArraySpecialSeasons = [];
     var dateRangePickerValid = true;
-    oDateRangePicker.setDateRangePicker(
-        'two-inputs',
+    oDateRangePickerForMyRequest.setDateRangePicker(
+        'two-inputs-myRequest',
         oServerData.initialCalendarDate,
         oServerData.oUser.payment_frec_id,
         oServerData.const.QUINCENA,
-        'date-range200',
-        'date-range201',
+        'date-range200-myRequest',
+        'date-range201-myRequest',
         'clear',
         oServerData.lHolidays
     );
 
     function dateRangePickerSetValue(){
-        if($('#date-range200').val() && $('#date-range201').val()){
-            app.startDate = app.oDateUtils.formatDate($('#date-range200').val(), 'ddd DD-MMM-YYYY');
-            app.endDate = app.oDateUtils.formatDate($('#date-range201').val(), 'ddd DD-MMM-YYYY');
+        if($('#date-range200-myRequest').val() && $('#date-range201-myRequest').val()){
+            app.startDate = app.oDateUtils.formatDate($('#date-range200-myRequest').val(), 'ddd DD-MMM-YYYY');
+            app.endDate = app.oDateUtils.formatDate($('#date-range201-myRequest').val(), 'ddd DD-MMM-YYYY');
             app.checkSelectDates();
         }else{
             app.startDate = '';
@@ -358,9 +358,9 @@
     }
 
     function dateRangePickerGetValue(){
-        if ($('#date-range200').val() && $('#date-range201').val() ){
-            app.startDate = app.oDateUtils.formatDate($('#date-range200').val());
-            app.endDate = app.oDateUtils.formatDate($('#date-range201').val());
+        if ($('#date-range200-myRequest').val() && $('#date-range201-myRequest').val() ){
+            app.startDate = app.oDateUtils.formatDate($('#date-range200-myRequest').val());
+            app.endDate = app.oDateUtils.formatDate($('#date-range201-myRequest').val());
             app.getDataDays();
         }
     }

@@ -4,11 +4,11 @@
     <link href={{ asset('select2js/css/select2.min.css') }} rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('daterangepicker/daterangepicker.min.css') }}">
     <style>
-        .ulColumns {
+        /* .ulColumns {
             -webkit-column-count: 3;
             -moz-column-count: 3;
             column-count: 3;
-        }
+        } */
 
         .table5rem td {
             height: 5rem;
@@ -82,6 +82,10 @@
             this.myVacations_filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
             this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
+            this.requestVacRoute = <?php echo json_encode(route('myVacations_setRequestVac')); ?>;
+            this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
+            this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
+            this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
                 'id': 0,
@@ -228,6 +232,7 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
                 </div>
                 <br>
                 <div v-if="oUser != null">
+                    @include('emp_vacations.modal_myRequest')
                     <div class="card shadow mb-4">
                         <div class="card-header">
                             <h3>Vacaciones: @{{ oUser.employee }}</h3>
@@ -528,8 +533,10 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
     </script>
     <script>
         var oDateRangePicker = new SDateRangePicker();
+        var oDateRangePickerForMyRequest;
         var dateRangePickerArrayApplications = [];
         var dateRangePickerArraySpecialSeasons = [];
+        let dateRangePickerValid = true;
         $(document).ready(function() {
             oDateRangePicker.setDateRangePickerWithSelectDataTable(
                 'two-inputs',
@@ -541,5 +548,29 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
                 oServerData.lHolidays
             );
         });
+
+        function dateRangePickerSetValue(){
+            if($('#date-range200-myRequest').val() && $('#date-range201-myRequest').val()){
+                app.startDate = app.oDateUtils.formatDate($('#date-range200-myRequest').val(), 'ddd DD-MMM-YYYY');
+                app.endDate = app.oDateUtils.formatDate($('#date-range201-myRequest').val(), 'ddd DD-MMM-YYYY');
+                app.checkSelectDates();
+            }else{
+                app.startDate = '';
+                app.endDate = '';
+            }
+            app.getDataDays();
+        }
+
+        function dateRangePickerGetValue(){
+            if ($('#date-range200-myRequest').val() && $('#date-range201-myRequest').val() ){
+                app.startDate = app.oDateUtils.formatDate($('#date-range200-myRequest').val());
+                app.endDate = app.oDateUtils.formatDate($('#date-range201-myRequest').val());
+                app.getDataDays();
+            }
+        }
+
+        function dateRangePickerClearValue(){
+            app.returnDate = null;
+        }
     </script>
 @endsection
