@@ -12835,3 +12835,13 @@ body.sidebar-toggled footer.sticky-footer {
 .ks-cboxtags .ks-cbox input[type="checkbox"]:focus + label {
   border: 2px solid #1bdbf8;
 }
+.wrap {
+    display: table;
+    height: 100px;
+    width: auto;
+    padding: 10px;
+}
+.wrap .elem {
+    display: table-cell;
+    vertical-align: middle;
+}

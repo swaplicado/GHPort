@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        @include('layouts.Nomeclatura_calendario', [$nomeclatura])
+                        @include('layouts.Nomeclatura_calendario', ['id' => 'nomeclaturaRequest'])
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" disabled v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">

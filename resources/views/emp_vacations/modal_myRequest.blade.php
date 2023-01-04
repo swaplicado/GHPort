@@ -27,7 +27,7 @@
                 </table>
                 <div class="card">
                     <div class="card-body">
-                        @include('layouts.Nomeclatura_calendario', [$nomeclatura])
+                        @include('layouts.Nomeclatura_calendario', ['id' => 'nomeclaturaMyRequest'])
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">
