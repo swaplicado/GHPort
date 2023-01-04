@@ -1,5 +1,7 @@
 /**
  * Necesario declarar la variable global dateRangePickerArrayApplications = [] en la vista.
+ * Necesario declarar la variable global aniversaryDay = '' en la vista.
+ * Necesario declarar la variable global birthDay = '' en la vista.
  */
 
 class SDateRangePicker {
@@ -87,6 +89,14 @@ class SDateRangePicker {
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
                         }
+                        if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                            _class = 'aniversary';
+                            _tooltip = _tooltip + 'Aniversario. ';
+                        }
+                        if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                            _class = 'birthDay';
+                            _tooltip = _tooltip + 'Cumpleaños. ';
+                        }
                     } else {
                         let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
                         if(result != undefined){
@@ -104,6 +114,14 @@ class SDateRangePicker {
                         if(t.getDay() == 0){
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
+                        }
+                        if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                            _class = 'aniversary';
+                            _tooltip = _tooltip + 'Aniversario. ';
+                        }
+                        if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                            _class = 'birthDay';
+                            _tooltip = _tooltip + 'Cumpleaños. ';
                         }
                     }
                 }
@@ -211,6 +229,14 @@ class SDateRangePicker {
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
                     }
+                    if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                        _class = 'aniversary';
+                        _tooltip = _tooltip + 'Aniversario. ';
+                    }
+                    if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                        _class = 'birthDay';
+                        _tooltip = _tooltip + 'Cumpleaños. ';
+                    }
                 } else {
                     let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
                     if(result != undefined){
@@ -228,6 +254,14 @@ class SDateRangePicker {
                     if(t.getDay() == 0){
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
+                    }
+                    if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                        _class = 'aniversary';
+                        _tooltip = _tooltip + 'Aniversario. ';
+                    }
+                    if(birthday == moment(t.getTime()).format('MM-DD')){
+                        _class = 'birthDay';
+                        _tooltip = _tooltip + 'Cumpleaños. ';
                     }
                 }
     

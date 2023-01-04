@@ -3,30 +3,6 @@
 @section('headStyles')
     <link href={{ asset('select2js/css/select2.min.css') }} rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('daterangepicker/daterangepicker.min.css') }}">
-    <style>
-        /* .ulColumns {
-            -webkit-column-count: 3;
-            -moz-column-count: 3;
-            column-count: 3;
-        } */
-
-        .table5rem td {
-            height: 5rem;
-        }
-
-        /* (A) FLEX CONTAINER */
-        .wrap-flex {
-            display: flex;
-            align-items: stretch;
-            /* baseline | center | stretch */
-            float: right;
-        }
-
-        /* (B) NOT REALLY IMPORTANT - COSMETICS */
-        .wrap-flex>* {
-            width: 33%;
-        }
-    </style>
 @endsection
 
 @section('headJs')
@@ -55,26 +31,27 @@
             this.applicationsEARoute = <?php echo json_encode(route('requestVacations_getEmpApplicationsEA')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
-            this.indexes = {
+            this.indexesRequest = {
                 'id': 0,
                 'user_id': 1,
-                'payment_frec_id': 2,
-                'request_status_id': 3,
-                'take_holidays': 4,
-                'take_rest_days': 5,
-                'sup_comments': 6,
-                'user_apr_rej_id': 7,
-                'folio': 8,
-                'user_apr_rej_name': 9,
-                'employee': 10,
-                'created_at': 11,
-                'approved_date': 12,
-                'start_date': 13,
-                'end_date': 14,
-                'return_date': 15,
-                'total_days': 16,
-                'applications_st_name': 17,
-                'comments': 18
+                'benefits_date': 2,
+                'payment_frec_id': 3,
+                'request_status_id': 4,
+                'take_holidays': 5,
+                'take_rest_days': 6,
+                'sup_comments': 7,
+                'user_apr_rej_id': 8,
+                'folio': 9,
+                'user_apr_rej_name': 10,
+                'employee': 11,
+                'created_at': 12,
+                'approved_date': 13,
+                'start_date': 14,
+                'end_date': 15,
+                'return_date': 16,
+                'total_days': 17,
+                'applications_st_name': 18,
+                'comments': 19
             };
 
         //data para la vista my_vacations
@@ -158,6 +135,7 @@
                     <thead class="thead-light">
                         <th>id</th>
                         <th>user_id</th>
+                        <th>benefits_date</th>
                         <th>emp_frecuency_pay</th>
                         <th>request_status_id</th>
                         <th>take_holidays</th>
@@ -181,6 +159,7 @@
                             <tr v-for="rec in emp.applications">
                                 <td>@{{ rec.id_application }}</td>
                                 <td>@{{ rec.user_id }}</td>
+                                <td>@{{ emp.benefits_date }}</td>
                                 <td>@{{ emp.payment_frec_id }}</td>
                                 <td>@{{ rec.request_status_id }}</td>
                                 <td>@{{ rec.take_holidays }}</td>
@@ -222,22 +201,38 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-auto">
-                        <div class="ks-cboxtags">
-                            <div class="ks-cbox">
-                                <input type="checkbox" id="checkBoxAllEmployees" v-on:click="getAllEmployees();">
-                                <label for="checkBoxAllEmployees">Todos los colaboradores</label>
+                    <div class="inline">
+                        <div class="wrap">
+                            <div class="elem">
+                                <div class="ks-cboxtags">
+                                    <div class="ks-cbox">
+                                        <input type="checkbox" id="checkBoxAllEmployees" v-on:click="getAllEmployees();">
+                                        <label for="checkBoxAllEmployees">Todos los colaboradores</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <label for="">Selecciona colaborador:</label>
+                    <div class="inline">
+                        <div class="wrap">
+                            <div class="elem">
+                                <label for="" style="padding-top: 5px">Selecciona colaborador:</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <select class="select2-class" id="selectEmp" style="width: 100%"></select>
+                    <div class="inline">
+                        <div class="wrap" style="min-width: 25rem">
+                            <div class="elem">
+                                <select class="select2-class" id="selectEmp" style="width: 100%"></select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <button class="btn btn-primary" v-on:click="getEmployeeData();">Ver vacaciones</button>
+                    <div class="inline">
+                        <div class="wrap">
+                            <div class="elem">
+                                <button class="btn btn-primary" v-on:click="getEmployeeData();">Ver vacaciones</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <br>
@@ -392,15 +387,15 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
                     if (settings.nTable.id == 'table_requestVac'){
                         switch (registerVal) {
                             case 0:
-                                filter = parseInt(data[oServerData.indexes.request_status_id]);
+                                filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 2;
     
                             case 1:
-                                filter = parseInt(data[oServerData.indexes.request_status_id]);
+                                filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 3;
     
                             case 2:
-                                filter = parseInt(data[oServerData.indexes.request_status_id]);
+                                filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 4;
     
                             default:
@@ -443,8 +438,8 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
     </script>
     @include('layouts.table_jsControll', [
         'table_id' => 'table_requestVac',
-        'colTargets' => [1, 2, 4, 5, 6, 7],
-        'colTargetsSercheable' => [0, 3],
+        'colTargets' => [1, 2, 3, 5, 6, 7, 8],
+        'colTargetsSercheable' => [0, 4],
         'select' => true,
         'noSort' => true,
         'accept' => true,
@@ -547,13 +542,15 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
         var dateRangePickerArrayApplications = [];
         var dateRangePickerArraySpecialSeasons = [];
         let dateRangePickerValid = true;
+        var aniversaryDay = '';
+        var birthday = '';
         $(document).ready(function() {
             oDateRangePicker.setDateRangePickerWithSelectDataTable(
                 'two-inputs',
                 'table_requestVac',
                 'date-range200',
                 'date-range201',
-                oServerData.indexes.payment_frec_id,
+                oServerData.indexesRequest.payment_frec_id,
                 oServerData.const.QUINCENA,
                 oServerData.lHolidays
             );

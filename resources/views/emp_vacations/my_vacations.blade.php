@@ -325,6 +325,8 @@
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
 <script>
+    var aniversaryDay = '';
+    var birthday = '';
     appMyVacations.initValuesForUser(oServerData.oUser);
     var app = appMyVacations;
 </script>

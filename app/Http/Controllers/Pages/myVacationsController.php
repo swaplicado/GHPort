@@ -42,28 +42,11 @@ class myVacationsController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 
-        $lSpecialSeason = EmployeeVacationUtils::getSpecialSeasonByEmp(\Auth::user()->id);
-
-        $nomeclatura = [
-            ['type' => 'color', 'color' => '#49e', 'text' => '(Solicitud de vacaciones actual)'],
-            ['type' => 'color', 'color' => '#e0e0e0b1', 'text' => '(Día inhábil)'],
-            ['type' => 'color', 'color' => '#9f55d4', 'text' => '(Día festivo)'],
-            ['type' => 'color', 'color' => '#f590eb', 'text' => '(Solicitud de vacaciones)'],
-            ['type' => 'color', 'color' => '#ffe684', 'text' => '(Día actual)'],
-            ['type' => 'img', 'img' => asset('img/confetti.png'), 'width' => '30px', 'height' => '30px', 'text' => '(Aniversario)'],
-            ['type' => 'img', 'img' => asset('img/birthday-cake.png'), 'width' => '30px', 'height' => '30px', 'text' => '(Cumpleaños)'],
-        ];
-
-        foreach ($lSpecialSeason as $oSeason) {
-            array_push($nomeclatura, ['type' => 'class', 'class' => $oSeason->color, 'text' => $oSeason->name]);
-        }
-
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
                                                 ->with('year', Carbon::now()->year)
                                                 ->with('constants', $constants)
-                                                ->with('nomeclatura', $nomeclatura)
                                                 ->with('config', $config);
     }
 
