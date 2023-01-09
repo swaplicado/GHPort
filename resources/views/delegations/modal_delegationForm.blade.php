@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row">
+                        <div class="row" v-if="is_admin">
                             <div class="col-md-6">
                                 <label for="user_delegated">Usuario ausente:</label>
                                 <select class="select2-class" name="" id="user_delegated" style="width: 100%"></select>

@@ -51,6 +51,7 @@ class requestVacationsController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $year = Carbon::now()->year;
         $data = $this->getData($year);
+        $myManagers = orgChartUtils::getMyManagers(\Auth::user()->org_chart_job_id);
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -65,6 +66,7 @@ class requestVacationsController extends Controller
                                                     ->with('lHolidays', $data[2])
                                                     ->with('constants', $constants)
                                                     ->with('idApplication', $idApplication)
+                                                    ->with('myManagers', $myManagers)
                                                     ->with('config', $config);
     }
 

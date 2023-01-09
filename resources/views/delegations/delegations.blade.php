@@ -8,13 +8,16 @@
     <script src="{{ asset('select2js/js/select2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.select2-class').select2({});
+            $('.select2-class').select2({
+                dropdownParent: $('#modal_delegation')
+            });
         })
     </script>
     <script>
         function GlobalData(){
             this.lUsers = <?php echo json_encode($lUsers); ?>;
             this.lDelegations = <?php echo json_encode($lDelegations); ?>;
+            this.is_admin = <?php echo json_encode($is_admin); ?>;
             this.indexesDelegation = {
                 'id_delegation': 0,
                 'user_delegation_id': 1,

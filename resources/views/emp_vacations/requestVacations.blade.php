@@ -109,7 +109,8 @@
             </div>
             <div class="card-body">
                 @include('layouts.table_buttons', ['accept' => true, 'reject' => true])
-                <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
+                <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
+                    &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
                     <select class="form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
                         <option value="0" selected>Nuevos</option>

@@ -8,6 +8,7 @@ var app = new Vue({
         end_date: null,
         user_delegated: null,
         user_delegation: null,
+        is_admin: oServerData.is_admin,
     },
     mounted(){
         var datalUser = [{id: '', text: ''}];

@@ -6,18 +6,6 @@
         .table5rem td {
             height: 5rem;
         }
-
-        /* (A) FLEX CONTAINER */
-        .wrap-flex {
-            display: flex;
-            align-items: stretch; /* baseline | center | stretch */
-            float: right;
-        }
-        
-        /* (B) NOT REALLY IMPORTANT - COSMETICS */
-        .wrap-flex > * {
-            width: 33%;
-        }
     </style>
 @endsection
 
