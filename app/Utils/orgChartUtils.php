@@ -54,4 +54,21 @@ class OrgChartUtils {
     public static function getMyEmployees($id){
         
     }
+
+    /**
+     * Obtiene todos los encargados de area
+     */
+    public static function getAllManagers(){
+        $lOrgCharts = OrgChartJob::where('positions', 1)
+                                ->where('is_deleted', 0)
+                                ->pluck('id_org_chart_job');
+
+        $lUsers = \DB::table('users')
+                    ->whereIn('org_chart_job_id', $lOrgCharts)
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->get();
+
+        return $lUsers;
+    }
 }
