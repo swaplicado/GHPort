@@ -76,7 +76,8 @@ class OrgChartUtils {
      * Obtine todos los encargados de area solo por debajo del usuario
      */
     public static function getMyManagers($id){
-        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($id);
+        // $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($id);
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($id);
 
         $lOrgCharts = OrgChartJob::where('positions', 1)
                                 ->where('is_deleted', 0)

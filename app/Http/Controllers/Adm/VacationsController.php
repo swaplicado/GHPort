@@ -25,39 +25,41 @@ class VacationsController extends Controller
             \DB::statement("ALTER TABLE programed_aux AUTO_INCREMENT =  1");
             foreach($lSiieVacs as $rVac){
                 $user = User::where('external_id_n', $rVac->employee_id)->first();
-                foreach($rVac->rows as $vac){
-                    if($vac->vacation_consumed > 0){
-                        $oVacAll = new VacationAllocation();
-                        $oVacAll->user_id = $user->id;
-                        $oVacAll->day_consumption = $vac->vacation_consumed;
-                        $oVacAll->is_deleted = 0;
-                        $oVacAll->created_by = 1;
-                        $oVacAll->updated_by = 1;
-                        $oVacAll->anniversary_count = $vac->anniversary;
-                        $oVacAll->id_anniversary = $vac->year;
-                        $oVacAll->save();
+                if(!is_null($user)){
+                    foreach($rVac->rows as $vac){
+                        if($vac->vacation_consumed > 0){
+                            $oVacAll = new VacationAllocation();
+                            $oVacAll->user_id = $user->id;
+                            $oVacAll->day_consumption = $vac->vacation_consumed;
+                            $oVacAll->is_deleted = 0;
+                            $oVacAll->created_by = 1;
+                            $oVacAll->updated_by = 1;
+                            $oVacAll->anniversary_count = $vac->anniversary;
+                            $oVacAll->id_anniversary = $vac->year;
+                            $oVacAll->save();
+                        }
+    
+                        if($vac->vacation_programm > 0){
+                            $this->insertProgramed($vac, $user->id);
+                        }
                     }
-
-                    if($vac->vacation_programm > 0){
-                        $this->insertProgramed($vac, $user->id);
+    
+                    foreach($rVac->incidents as $inc){
+                        if($inc->day_consumed > 0){
+                            $oVacAll = new VacationAllocation();
+                            $oVacAll->user_id = $user->id;
+                            $oVacAll->day_consumption = $inc->day_consumed;
+                            $oVacAll->application_breakdown_id = $inc->id_breakdown;
+                            $oVacAll->is_deleted = 0;
+                            $oVacAll->created_by = 1;
+                            $oVacAll->updated_by = 1;
+                            $oVacAll->anniversary_count = $inc->anniversary;
+                            $oVacAll->id_anniversary = $vac->year;
+                            $oVacAll->save();
+                        }
                     }
+                    EmployeeVacationUtils::syncVacConsumed($user->id);
                 }
-
-                foreach($rVac->incidents as $inc){
-                    if($inc->day_consumed > 0){
-                        $oVacAll = new VacationAllocation();
-                        $oVacAll->user_id = $user->id;
-                        $oVacAll->day_consumption = $inc->day_consumed;
-                        $oVacAll->application_breakdown_id = $inc->id_breakdown;
-                        $oVacAll->is_deleted = 0;
-                        $oVacAll->created_by = 1;
-                        $oVacAll->updated_by = 1;
-                        $oVacAll->anniversary_count = $inc->anniversary;
-                        $oVacAll->id_anniversary = $vac->year;
-                        $oVacAll->save();
-                    }
-                }
-                EmployeeVacationUtils::syncVacConsumed($user->id);
             }
         } catch (\Throwable $th) {
         }

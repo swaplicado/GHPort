@@ -23,12 +23,14 @@
             this.const = <?php echo json_encode($constants); ?>;
 
         //data para la vista requestVacations
+            this.myManagers = <?php echo json_encode($myManagers); ?>;
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
             this.acceptRequestRoute = <?php echo json_encode(route('requestVacations_acceptRequest')); ?>;
             this.rejectRequestRoute = <?php echo json_encode(route('requestVacations_rejectRequest')); ?>;
             this.filterYearRoute = <?php echo json_encode(route('requestVacations_filterYear')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('requestVacations_checkMail')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('requestVacations_getEmpApplicationsEA')); ?>;
+            this.getDataManagerRoute = <?php echo json_encode(route('requestVacations_getDataManager')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesRequest = {
@@ -108,6 +110,21 @@
                 </h3>
             </div>
             <div class="card-body">
+                <div v-if="myManagers.length > 0" class="row">
+                    <div class="col-md-1">
+                        <label for="selManager">Ver como:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="select2-class form-control" id="selManager"></select>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary" v-on:click="seeLikeManager();">Ver solicitudes</button>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-secondary" v-on:click="cleanManager();">Limpiar</button>
+                    </div>
+                </div>
+                <br>
                 @include('layouts.table_buttons', ['accept' => true, 'reject' => true])
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
                     &nbsp;&nbsp;

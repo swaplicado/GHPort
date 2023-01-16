@@ -4,6 +4,8 @@ var appRequestVacation = new Vue({
         oData: oServerData,
         oDateUtils: new SDateUtils(),
         indexes: oServerData.indexesRequest,
+        myManagers: oServerData.myManagers,
+        selectedmanager: null,
         lEmployees: oServerData.lEmployees,
         year: oServerData.year,
         lHolidays: oServerData.lHolidays,
@@ -25,7 +27,17 @@ var appRequestVacation = new Vue({
         totCalendarDays: 0,
     },
     mounted(){
-        
+        var self = this;
+        var dataMyManagers = [{id: '', text: ''}];
+        for (let i = 0; i < this.myManagers.length; i++) {
+            dataMyManagers.push({id: this.myManagers[i].id, text: this.myManagers[i].full_name_ui });
+        }
+
+        $('#selManager')
+            .select2({
+                placeholder: 'selecciona',
+                data: dataMyManagers,
+            });
     },
     methods: {
         initView(){
@@ -110,7 +122,8 @@ var appRequestVacation = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
-                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+                'manager_id': this.selectedmanager,
             })
             .then(response => {
                 var data = response.data;
@@ -139,7 +152,8 @@ var appRequestVacation = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
-                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+                'manager_id': this.selectedmanager,
             })
             .then(response => {
                 var data = response.data;
@@ -201,6 +215,7 @@ var appRequestVacation = new Vue({
             SGui.showWaiting(5000);
             axios.post(this.oData.filterYearRoute, {
                 'year': this.year,
+                'manager_id': this.selectedmanager,
             })
             .then(response => {
                 var data = response.data;
@@ -277,6 +292,60 @@ var appRequestVacation = new Vue({
                     resolve(error);
                 })
             );
+        },
+
+        seeLikeManager(){
+            SGui.showWaiting(15000);
+            this.selectedmanager = parseInt($('#selManager').val());
+            if(this.selectedmanager == null || this.selectedmanager == '' || isNaN(this.selectedmanager)){
+                swal.close();
+                SGui.showMessage('', 'Debe seleccionar un supervisor', 'info');
+                return;
+            }
+            let manager_id = $('#selManager').val();
+            let manager_name = $('#selManager').find(':selected').text();
+            axios.post( this.oData.getDataManagerRoute,{
+                'manager_id': parseInt(manager_id),
+                'manager_name': manager_name,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    SGui.showOk();
+                    this.year = data.year;
+                    this.reDrawRequestTable(data.lEmployees);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
+        cleanManager(){
+            SGui.showWaiting(15000);
+            axios.post( this.oData.getDataManagerRoute,{
+                'manager_id': null,
+                'manager_name': null,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    SGui.showOk();
+                    this.year = data.year;
+                    this.reDrawRequestTable(data.lEmployees);
+                    $('#selManager').val('').trigger('change');
+                    this.selectedmanager = null;
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
         }
     },
 })

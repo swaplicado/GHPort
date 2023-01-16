@@ -74,7 +74,7 @@ class User extends Authenticatable
     }
 
     public function IsMyEmployee($id_employee){
-        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob(\Auth::user()->org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob(\Auth::user()->org_chart_job_id);
         $lEmployees = \DB::table('users as u')
                         ->where('u.is_active', 1)
                         ->where('u.is_delete', 0)
