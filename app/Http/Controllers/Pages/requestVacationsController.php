@@ -22,8 +22,12 @@ use GuzzleHttp\Exception\RequestException;
 
 class requestVacationsController extends Controller
 {
-    public function getData($year){
-        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob(\Auth::user()->org_chart_job_id);
+    public function getData($year, $org_chart_job_id = null){
+        if(is_null($org_chart_job_id)){
+            $org_chart_job_id = \Auth::user()->org_chart_job_id;
+        }
+
+        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
 
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
 
@@ -68,6 +72,32 @@ class requestVacationsController extends Controller
                                                     ->with('idApplication', $idApplication)
                                                     ->with('myManagers', $myManagers)
                                                     ->with('config', $config);
+    }
+
+    public function getDataManager(Request $request){
+        try {
+            $year = Carbon::now()->year;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+                            
+                if(is_null($oManager)){
+                    return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
+                }
+
+                $data = $this->getData($year, $oManager->org_chart_job_id);
+            }else{
+                $data = $this->getData($year);
+            }
+
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'error al obtener los registros del supervisor '.$oManager->full_name_ui, 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lEmployees' => $data[1], 'year' => $data[0], 'lHolidays' => $data[2]]);
     }
 
     public function acceptRequest(Request $request){
@@ -129,7 +159,17 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al aprobrar la solicitud', 'icon' => 'error']);
         }
 
-        $data = $this->getData($request->year);
+        $org_chart_job_id = null;
+        if(!is_null($request->manager_id)){
+            $oManager = \DB::table('users')
+                            ->where('id', $request->manager_id)
+                            ->where('is_deleted', 0)
+                            ->where('is_active', 1)
+                            ->first();
+
+            $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+        }
+        $data = $this->getData($request->year, $org_chart_job_id);
 
         $mypool = Pool::create();
         $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
@@ -213,7 +253,17 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al rechazar la solicitud', 'icon' => 'error']);
         }
 
-        $data = $this->getData($request->year);
+        $org_chart_job_id = null;
+        if(!is_null($request->manager_id)){
+            $oManager = \DB::table('users')
+                            ->where('id', $request->manager_id)
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->first();
+
+            $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+        }
+        $data = $this->getData($request->year, $org_chart_job_id);
 
         $mypool = Pool::create();
         $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
@@ -246,7 +296,18 @@ class requestVacationsController extends Controller
 
     public function filterYear(Request $request){
         try {
-            $data = $this->getData($request->year);
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                            ->where('id', $request->manager_id)
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->first();
+                        
+                if(is_null($oManager)){
+                    return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
+                }
+            }
+            $data = $this->getData($request->year, $oManager->org_chart_job_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
         }
