@@ -58,13 +58,14 @@ class OrgChartUtils {
     /**
      * Obtiene todos los encargados de area
      */
-    public static function getAllManagers(){
+    public static function getAllManagers($arrExcept = []){
         $lOrgCharts = OrgChartJob::where('positions', 1)
                                 ->where('is_deleted', 0)
                                 ->pluck('id_org_chart_job');
 
         $lUsers = \DB::table('users')
                     ->whereIn('org_chart_job_id', $lOrgCharts)
+                    ->whereNotIn('id', $arrExcept)
                     ->where('is_active', 1)
                     ->where('is_delete', 0)
                     ->get();
