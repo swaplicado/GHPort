@@ -98,4 +98,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('getAllEmployees', 'Pages\vacationManagementController@getAllEmployees')->name('vacationManagement_getAllEmployees');
 
     Route::get('delegation', 'Pages\delegationController@index')->name('delegation');
+    Route::post('delegation/saveDelegation', 'Pages\delegationController@saveDelegation')->name('delegation_saveDelegation');
+    Route::post('delegation/updateDelegation', 'Pages\delegationController@updateDelegation')->name('delegation_updateDelegation');
+    Route::post('delegation/deleteDelegation', 'Pages\delegationController@deleteDelegation')->name('delegation_deleteDelegation');
 });
