@@ -78,12 +78,12 @@ class EmployeesVacationsController extends Controller
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
 
         foreach($lEmployees as $key => $emp){
+            $orgJob = orgChartUtils::getDirectChildsOrgChartJob($emp->org_chart_job_id);
+            $lEmployees[$key] = EmployeeVacationUtils::getEmployeeVacationsData($emp->id);
             $from = Carbon::parse($emp->last_admission_date);
             $to = Carbon::today()->locale('es');
             $human = $to->diffForHumans($from, true, false, 6);
             $lEmployees[$key]->antiquity = $human;
-            $orgJob = orgChartUtils::getDirectChildsOrgChartJob($emp->org_chart_job_id);
-            $lEmployees[$key] = EmployeeVacationUtils::getEmployeeVacationsData($emp->id);
             if(count($orgJob) > 0){
                 $lEmployees[$key]->is_head_user = true;
                 $lEmployees[$key]->subEmployees = $this->getAlllEmployees($emp->org_chart_job_id, $config);
