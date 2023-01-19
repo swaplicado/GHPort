@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
+use \App\Utils\delegationUtils;
 
 class profileController extends Controller
 {
     public function index(){
         $user = \Auth::user();
+        // $user = delegationUtils::getUser();
 
         return view('users.profile')->with('user', $user);
     }
@@ -23,6 +25,7 @@ class profileController extends Controller
         try {
             \DB::beginTransaction();
             $user = User::findOrFail(\Auth::user()->id);
+            // $user = User::findOrFail(delegationUtils::getIdUser());
             $user->password = Hash::make($request->password);
             $user->update();
             \DB::commit();

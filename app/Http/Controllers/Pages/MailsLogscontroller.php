@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\requestVacationMail;
 use App\Mail\authorizeVacationMail;
 use Carbon\Carbon;
+use \App\Utils\delegationUtils;
 
 class MailsLogscontroller extends Controller
 {
@@ -18,7 +19,8 @@ class MailsLogscontroller extends Controller
                     ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
                     ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
                     ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    ->where('ml.created_by', \Auth::user()->id)
+                    // ->where('ml.created_by', \Auth::user()->id)
+                    ->where('ml.created_by', delegationUtils::getIdUser())
                     ->where('ml.is_deleted', 0)
                     ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
                     ->get();
@@ -69,7 +71,8 @@ class MailsLogscontroller extends Controller
                     ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
                     ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
                     ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    ->where('ml.created_by', \Auth::user()->id)
+                    // ->where('ml.created_by', \Auth::user()->id)
+                    ->where('ml.created_by', delegationUtils::getIdUser())
                     ->where('ml.is_deleted', 0)
                     ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
                     ->get();
@@ -80,7 +83,8 @@ class MailsLogscontroller extends Controller
     public function sendMailRequestVac($email, $application){
         Mail::to($email)->send(new requestVacationMail(
                 $application->id_application,
-                \Auth::user()->id,
+                // \Auth::user()->id,
+                delegationUtils::getIdUser(),
                 [],
                 $application->return_date
             )
@@ -110,7 +114,8 @@ class MailsLogscontroller extends Controller
                     ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
                     ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
                     ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    ->where('ml.created_by', \Auth::user()->id)
+                    // ->where('ml.created_by', \Auth::user()->id)
+                    ->where('ml.created_by', delegationUtils::getIdUser())
                     ->where('ml.is_deleted', 0)
                     ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
                     ->get();
@@ -128,7 +133,8 @@ class MailsLogscontroller extends Controller
                     ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
                     ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
                     ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    ->where('ml.created_by', \Auth::user()->id)
+                    // ->where('ml.created_by', \Auth::user()->id)
+                    ->where('ml.created_by', delegationUtils::getIdUser())
                     ->where('ml.is_deleted', 0)
                     ->whereBetween('ml.date_log', [$startOfYear, $endOfYear])
                     ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')

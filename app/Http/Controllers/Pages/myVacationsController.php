@@ -17,6 +17,8 @@ use App\Constants\SysConst;
 use App\Models\Adm\OrgChartJob;
 use App\Utils\orgChartUtils;
 use Spatie\Async\Pool;
+use \App\Utils\delegationUtils;
+
 class myVacationsController extends Controller
 {
     public $months_code = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
@@ -24,7 +26,8 @@ class myVacationsController extends Controller
     public function index(){
         $config = \App\Utils\Configuration::getConfigurations();
 
-        $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(\Auth::user()->id);
+        // $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(\Auth::user()->id);
+        $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(delegationUtils::getIdUser());
         $now = Carbon::now();
         $initialCalendarDate = $now->addDays(1)->toDateString();
 
@@ -132,8 +135,10 @@ class myVacationsController extends Controller
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
             $application_log->application_status_id = $application->request_status_id;
-            $application_log->created_by = \Auth::user()->id;
-            $application_log->updated_by = \Auth::user()->id;
+            // $application_log->created_by = \Auth::user()->id;
+            // $application_log->updated_by = \Auth::user()->id;
+            $application_log->created_by = delegationUtils::getIdUser();
+            $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
             \DB::commit();
@@ -297,8 +302,10 @@ class myVacationsController extends Controller
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
             $application_log->application_status_id = $application->request_status_id;
-            $application_log->created_by = \Auth::user()->id;
-            $application_log->updated_by = \Auth::user()->id;
+            // $application_log->created_by = \Auth::user()->id;
+            // $application_log->updated_by = \Auth::user()->id;
+            $application_log->created_by = delegationUtils::getIdUser();
+            $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
             // $user = $this->getUserVacationsData();
@@ -322,8 +329,10 @@ class myVacationsController extends Controller
             $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
             $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_VACACIONES;
             $mailLog->is_deleted = 0;
-            $mailLog->created_by = \Auth::user()->id;
-            $mailLog->updated_by = \Auth::user()->id;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
             
             \DB::commit();
@@ -373,7 +382,7 @@ class myVacationsController extends Controller
                         ->value('employee_num');
 
         if(strlen($employee_num) < 4){
-            for($i = 0; $i < 4-sizeof($employee_num); $i++ ){
+            for($i = 0; $i < (4 - strlen($employee_num)); $i++ ){
                 $employee_num = '0'.$employee_num;
             }
         }

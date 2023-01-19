@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\Adm\Delegation;
 use App\Utils\OrgChartUtils;
 use App\Utils\EmployeeVacationUtils;
+use \App\Utils\delegationUtils;
 
 class delegationController extends Controller
 {
     public function getData($arrExcept){
-        if(\Auth::user()->rol_id == 4){
+        // if(\Auth::user()->rol_id == 4){
+        if(delegationUtils::getRolIdUser() == 4){
             $lDelegations_created = \DB::table('delegations as d')
                                 ->leftJoin('users as uA', 'u.id', '=', 'd.user_delegation_id')
                                 ->leftJoin('users as uB', 'u.id', '=', 'd.user_delegated_id')
@@ -26,7 +28,8 @@ class delegationController extends Controller
             
             $lDelegations_asigned = null;
         }else{
-            $arr_org_charts = OrgChartUtils::getAllChildsOrgChartJob(\Auth::user()->org_chart_job_id);
+            // $arr_org_charts = OrgChartUtils::getAllChildsOrgChartJob(\Auth::user()->org_chart_job_id);
+            $arr_org_charts = OrgChartUtils::getAllChildsOrgChartJob(delegationUtils::getOrgChartJobIdUser());
             $lEmployees = EmployeeVacationUtils::getlEmployees($arr_org_charts)->pluck('id');
 
             $lDelegations_created = \DB::table('delegations as d')
@@ -35,7 +38,8 @@ class delegationController extends Controller
                                 ->where('d.is_deleted', 0)
                                 ->where('d.is_active', 1)
                                 ->whereIn('user_delegated_id', $lEmployees)
-                                ->orWhere('user_delegated_id', \Auth::user()->id)
+                                // ->orWhere('user_delegated_id', \Auth::user()->id)
+                                ->orWhere('user_delegated_id', delegationUtils::getIdUser())
                                 ->select(
                                     'd.*',
                                     'uA.full_name_ui as user_delegation_name',
@@ -46,7 +50,8 @@ class delegationController extends Controller
             $lDelegations_asigned = \DB::table('delegations as d')
                                 ->leftJoin('users as uA', 'uA.id', '=', 'd.user_delegation_id')
                                 ->leftJoin('users as uB', 'uB.id', '=', 'd.user_delegated_id')
-                                ->where('user_delegation_id', \Auth::user()->id)
+                                // ->where('user_delegation_id', \Auth::user()->id)
+                                ->where('user_delegation_id', delegationUtils::getIdUser())
                                 ->where('d.is_deleted', 0)
                                 ->where('d.is_active', 1)
                                 ->select(
@@ -63,7 +68,8 @@ class delegationController extends Controller
     }
 
     public function index(){
-        $arrExcept = [\Auth::user()->id];
+        // $arrExcept = [\Auth::user()->id];
+        $arrExcept = [delegationUtils::getIdUser()];
         $data = $this->getData($arrExcept);
 
         return view('delegations.delegations')->with('lUsers', $data[0])
@@ -73,10 +79,12 @@ class delegationController extends Controller
 
     public function saveDelegation(Request $request){
         if($request->user_delegated == NULL || $request->user_delegated == ''){
-            if(\Auth::user()->rol_id == 4){
+            // if(\Auth::user()->rol_id == 4){
+            if(delegationUtils::getRolIdUser() == 4){
                 return json_encode(['success' => false, 'message' => 'Debe seleccionar el usuario ausente.', 'icon' => 'warning']);
             }else{
-                $request->user_delegated = \Auth::user()->id;
+                // $request->user_delegated = \Auth::user()->id;
+                $request->user_delegated = delegationUtils::getIdUser();
             }
         }
 
@@ -89,11 +97,14 @@ class delegationController extends Controller
             $oDelegation->user_delegated_id = $request->user_delegated;
             $oDelegation->is_active = 1;
             $oDelegation->is_deleted = 0;
-            $oDelegation->created_by = \Auth::user()->id;
-            $oDelegation->updated_by = \Auth::user()->id;
+            // $oDelegation->created_by = \Auth::user()->id;
+            // $oDelegation->updated_by = \Auth::user()->id;
+            $oDelegation->created_by = delegationUtils::getIdUser();
+            $oDelegation->updated_by = delegationUtils::getIdUser();
             $oDelegation->save();
 
-            $arrExcept = [\Auth::user()->id];
+            // $arrExcept = [\Auth::user()->id];
+            $arrExcept = [delegationUtils::getIdUser()];
             $data = $this->getData($arrExcept);
             \DB::commit();
         } catch (\Throwable $th) {
@@ -113,7 +124,8 @@ class delegationController extends Controller
             $oDelegation->is_active = !$request->closeDelegation;
             $oDelegation->update();
 
-            $arrExcept = [\Auth::user()->id];
+            // $arrExcept = [\Auth::user()->id];
+            $arrExcept = [delegationUtils::getIdUser()];
             $data = $this->getData($arrExcept);
             \DB::commit();
         } catch (\Throwable $th) {
@@ -131,7 +143,8 @@ class delegationController extends Controller
             $oDelegation->is_deleted = 1;
             $oDelegation->update();
 
-            $arrExcept = [\Auth::user()->id];
+            // $arrExcept = [\Auth::user()->id];
+            $arrExcept = [delegationUtils::getIdUser()];
             $data = $this->getData($arrExcept);
             \DB::commit();
         } catch (\Throwable $th) {
@@ -140,5 +153,21 @@ class delegationController extends Controller
         }
 
         return json_encode(['success' => true, 'lDelegations' => $data[1]]);
+    }
+
+    public function setDelegation(Request $request){
+        session()->put('is_delegation', true);
+        // session()->put('user_delegated', ['id' => $oUser->id, 'username' => $oUser->username, 'full_name' => $oUser->full_name]);
+        session()->put('user_delegated_id', $request->user_delegation);
+
+        return redirect(route('home'));
+    }
+
+    public function recoverDelegation(Request $request){
+        session()->put('is_delegation', false);
+        // session()->put('user_delegated_id', ['id' => null, 'username' => null, 'full_name' => null]);
+        session()->put('user_delegated_id', null);
+
+        return redirect(route('home'));
     }
 }

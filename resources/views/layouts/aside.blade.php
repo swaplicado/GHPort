@@ -1,6 +1,10 @@
 <!-- Sidebar -->
+@if(!Session::get('is_delegation'))
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+@else
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar" style = "background-color: #00838F;
+    background-image: none;">  
+@endif
     <div class="sidebar-brand d-flex align-items-center justify-content-center">
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">

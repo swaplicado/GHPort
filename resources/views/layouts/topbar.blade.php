@@ -9,6 +9,19 @@
     <!-- Topbar Navbar -->
     <img src="{{asset('img/logo HD.png')}}"  width="200" height="100"/>
     <ul class="navbar-nav ml-auto">
+        <li class="nav-item mx-1">
+            @if(Session::get('tot_delegations') > 0)
+                <a class="nav-link" href="#" role="button" onclick="$('#modal_select_delegation').modal('show');">
+                    <i class="fa fa-object-group fa-lg"></i>
+                        <span class="badge badge-danger badge-counter">{{ Session::get('tot_delegations') }}</span>
+                </a>
+            @else
+                <a class="nav-link" href="#">
+                    <i class="fa fa-object-group fa-lg"></i>
+                        <span class="badge badge-danger badge-counter"></span>
+                </a>
+            @endif
+        </li>
             
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
@@ -46,7 +59,19 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->username }}</span>
+                @if(!Session::get('is_delegation'))
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                        {{ Auth::user()->username }}
+                    </span>
+                @else
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                        {{ Auth::user()->username }} 
+                        <br> 
+                        delegación de 
+                        <br> 
+                        {{\App\Utils\delegationUtils::getUsernameUser()}}
+                    </span>
+                @endif
                 <img class="img-profile rounded-circle" src="{{ asset('img/avatar/profile2.png') }}">
             </a>
             <!-- Dropdown - User Information -->

@@ -12,11 +12,13 @@ use App\Models\Adm\VacationUserLog;
 use App\Models\Vacations\VacationPlan;
 use App\Models\Vacations\VacationPlanDay;
 use App\Models\Vacations\VacationPlanDayLog;
+use \App\Utils\delegationUtils;
 
 class VacationPlansController extends Controller
 {
     public function index(){
-        \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        // \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
         $lVacationPlans = VacationPlan::where('is_deleted', 0)->get();
 
         return view('Adm.vacations_plans')->with('lVacationPlans', $lVacationPlans);
@@ -56,7 +58,8 @@ class VacationPlansController extends Controller
     }
 
     public function saveVacationPlan(Request $request){
-        \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        // \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
         if($this->checkDataBeforeSave($request->years)){
             $years = $this->listYears(json_decode(json_encode($request->years), FALSE));
             $name = $request->name;
@@ -72,8 +75,10 @@ class VacationPlansController extends Controller
                 $oVacationPlan->is_unionized_n = $unionized;
                 $oVacationPlan->start_date_n = $start_date;
                 $oVacationPlan->is_deleted = 0;
-                $oVacationPlan->created_by = \Auth::user()->id;
-                $oVacationPlan->updated_by = \Auth::user()->id;
+                // $oVacationPlan->created_by = \Auth::user()->id;
+                // $oVacationPlan->updated_by = \Auth::user()->id;
+                $oVacationPlan->created_by = delegationUtils::getIdUser();
+                $oVacationPlan->updated_by = delegationUtils::getIdUser();
                 $oVacationPlan->save();
 
                 foreach($years as $year){
@@ -112,7 +117,8 @@ class VacationPlansController extends Controller
             \DB::beginTransaction();
                 $oVacationPlan = VacationPlan::findOrFail($request->vacation_plan_id);
                 $oVacationPlan->is_deleted = 1;
-                $oVacationPlan->updated_by = \Auth::user()->id;
+                // $oVacationPlan->updated_by = \Auth::user()->id;
+                $oVacationPlan->updated_by = delegationUtils::getIdUser();
                 $oVacationPlan->update();
 
                 $lVacationPlans = VacationPlan::where('is_deleted', 0)->get();
@@ -145,7 +151,8 @@ class VacationPlansController extends Controller
                 $oVacationPlan->payment_frec_id_n = $payment_frec != 0 ? $payment_frec : null;
                 $oVacationPlan->is_unionized_n = $unionized;
                 $oVacationPlan->start_date_n = $start_date;
-                $oVacationPlan->updated_by = \Auth::user()->id;
+                // $oVacationPlan->updated_by = \Auth::user()->id;
+                $oVacationPlan->updated_by = delegationUtils::getIdUser();
                 $oVacationPlan->update();
 
                 foreach($years as $year){
@@ -292,8 +299,10 @@ class VacationPlansController extends Controller
                 $oVacAll->is_expired = $date->lt(Carbon::today()) ? $date->diffInYears(Carbon::today()) > 2 : 0;
                 $oVacAll->is_expired_manually = 0;
                 $oVacAll->is_deleted = 0;
-                $oVacAll->created_by = \Auth::user()->id;
-                $oVacAll->updated_by = \Auth::user()->id;
+                // $oVacAll->created_by = \Auth::user()->id;
+                // $oVacAll->updated_by = \Auth::user()->id;
+                $oVacAll->created_by = delegationUtils::getIdUser();
+                $oVacAll->updated_by = delegationUtils::getIdUser();
                 $oVacAll->save();
 
                 $date->addDays(1);
@@ -323,8 +332,10 @@ class VacationPlansController extends Controller
             $vacUserLog->is_expired_manually = $v->is_expired_manually;
             $vacUserLog->expired_by_n = $v->expired_by_n;
             $vacUserLog->is_deleted = $v->is_deleted;
-            $vacUserLog->created_by = \Auth::user()->id;
-            $vacUserLog->updated_by = \Auth::user()->id;
+            // $vacUserLog->created_by = \Auth::user()->id;
+            // $vacUserLog->updated_by = \Auth::user()->id;
+            $vacUserLog->created_by = delegationUtils::getIdUser();
+            $vacUserLog->updated_by = delegationUtils::getIdUser();
             $vacUserLog->save();
         }
     }

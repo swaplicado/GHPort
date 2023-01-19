@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\Menu\Menu;
+use \App\Utils\delegationUtils;
 
 class MenuMiddleware
 {
@@ -16,7 +17,7 @@ class MenuMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $sMenu = Menu::createMenu(\Auth::user());
+        $sMenu = Menu::createMenu(delegationUtils::getUser());
         session(['menu' => $sMenu]);
 
         return $next($request);

@@ -8,11 +8,13 @@ use App\Models\Seasons\SpecialSeasonType;
 use App\Models\Seasons\SpecialSeason;
 use App\Models\Adm\OrgChartJob;
 use Carbon\Carbon;
+use \App\Utils\delegationUtils;
 
 class SpecialSeasonsController extends Controller
 {
     public function index(){
-        $OrgChartJob = OrgChartJob::find(\Auth::user()->org_chart_job_id);
+        // $OrgChartJob = OrgChartJob::find(\Auth::user()->org_chart_job_id);
+        $OrgChartJob = OrgChartJob::find(delegationUtils::getOrgChartJobIdUser());
         $OrgChartJob->child = $OrgChartJob->getChildrens();
         $arrayOrgChartJobs = $OrgChartJob->getArrayChilds();
 
@@ -236,8 +238,10 @@ class SpecialSeasonsController extends Controller
                         $oSpecialSeason->end_date = $date->endOfMonth()->toDateString();
                         $oSpecialSeason->special_season_type_id = $special_season_type->id_special_season_type;
                         $oSpecialSeason->is_deleted = 0;
-                        $oSpecialSeason->created_by = \Auth::user()->id;
-                        $oSpecialSeason->updated_by = \Auth::user()->id;
+                        // $oSpecialSeason->created_by = \Auth::user()->id;
+                        // $oSpecialSeason->updated_by = \Auth::user()->id;
+                        $oSpecialSeason->created_by = delegationUtils::getIdUser();
+                        $oSpecialSeason->updated_by = delegationUtils::getIdUser();
                         $oSpecialSeason->save();
                     }else if ($d['season_id'] != null){
                         $oSpecialSeason = SpecialSeason::find($d['season_id']);
@@ -370,8 +374,10 @@ class SpecialSeasonsController extends Controller
                         $oSpecialSeason->end_date = $date->endOfMonth()->toDateString();
                         $oSpecialSeason->special_season_type_id = $special_season_type->id_special_season_type;
                         $oSpecialSeason->is_deleted = 0;
-                        $oSpecialSeason->created_by = \Auth::user()->id;
-                        $oSpecialSeason->updated_by = \Auth::user()->id;
+                        // $oSpecialSeason->created_by = \Auth::user()->id;
+                        // $oSpecialSeason->updated_by = \Auth::user()->id;
+                        $oSpecialSeason->created_by = delegationUtils::getIdUser();
+                        $oSpecialSeason->updated_by = delegationUtils::getIdUser();
                         $oSpecialSeason->save();
                     }
                 }

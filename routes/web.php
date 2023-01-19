@@ -101,4 +101,6 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('delegation/saveDelegation', 'Pages\delegationController@saveDelegation')->name('delegation_saveDelegation');
     Route::post('delegation/updateDelegation', 'Pages\delegationController@updateDelegation')->name('delegation_updateDelegation');
     Route::post('delegation/deleteDelegation', 'Pages\delegationController@deleteDelegation')->name('delegation_deleteDelegation');
+    Route::post('delegation/setDelegation', 'Pages\delegationController@setDelegation')->name('delegation_setDelegation');
+    Route::post('delegation/recoverDelegation', 'Pages\delegationController@recoverDelegation')->name('delegation_recoverDelegation');
 });

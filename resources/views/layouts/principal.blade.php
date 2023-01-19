@@ -56,7 +56,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-
+                    @include('delegations.modal_select_delegations')
                     <!-- Contenido de la pagina -->
                     @yield('content')
 

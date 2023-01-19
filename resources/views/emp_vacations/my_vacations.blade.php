@@ -163,7 +163,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    <b>SOLICITUDES VACACIONES</b>
+                    <b>MIS SOLICITUDES VACACIONES</b>
                     <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" target="_blank">
                         <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
                     </a>
