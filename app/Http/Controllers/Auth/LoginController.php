@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\RedirectsUsers;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use App\Models\Adm\Delegation;
+use \Carbon\Carbon;
 
 class LoginController extends Controller
 {
@@ -64,20 +65,36 @@ class LoginController extends Controller
         session()->put('user_delegated_id', null);
         // session()->put('user_delegated', ['id' => null, 'username' => null, 'full_name' => null]);
         
+        $lDelegations_asigned = Delegation::where('user_delegation_id', \Auth::user()->id)
+                                        ->where('is_deleted', 0)
+                                        ->where('is_active', 1)
+                                        ->get();
+
+        foreach($lDelegations_asigned as $oDel){
+            if(!is_null($oDel->end_date)){
+                $date = Carbon::parse($oDel->end_date);
+                $now = carbon::today();
+                if($date->lessThan($now)){
+                    $oDel->is_active = 0;
+                    $oDel->update();
+                }
+            }
+        }
+
         $lDelegations_asigned = \DB::table('delegations as d')
-                                ->leftJoin('users as uA', 'uA.id', '=', 'd.user_delegation_id')
-                                ->leftJoin('users as uB', 'uB.id', '=', 'd.user_delegated_id')
-                                ->where('user_delegation_id', \Auth::user()->id)
-                                ->where('d.is_deleted', 0)
-                                ->where('d.is_active', 1)
-                                ->select(
-                                    'd.*',
-                                    'uA.id as user_delegation_id',
-                                    'uB.id as user_delegated_id',
-                                    'uA.full_name_ui as user_delegation_name',
-                                    'uB.full_name_ui as user_delegated_name',
-                                )
-                                ->get();
+                            ->leftJoin('users as uA', 'uA.id', '=', 'd.user_delegation_id')
+                            ->leftJoin('users as uB', 'uB.id', '=', 'd.user_delegated_id')
+                            ->where('user_delegation_id', \Auth::user()->id)
+                            ->where('d.is_deleted', 0)
+                            ->where('d.is_active', 1)
+                            ->select(
+                                'd.*',
+                                'uA.id as user_delegation_id',
+                                'uB.id as user_delegated_id',
+                                'uA.full_name_ui as user_delegation_name',
+                                'uB.full_name_ui as user_delegated_name',
+                            )
+                            ->get();
                                 
         session()->put('tot_delegations', count($lDelegations_asigned));
         $lDelegations = [];

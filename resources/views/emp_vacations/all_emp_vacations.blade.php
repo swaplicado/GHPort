@@ -53,7 +53,7 @@
             <div class="collapse" :id='"id_"+emp.employee_num'>
                 <div class="card-body">
                     <div class="col-md-6 card border-left-primary">
-                        <table style="margin-left: 10px;" :id="'table_info_'+emp.employee_num">
+                        <table class="table" style="margin-left: 10px;" :id="'table_info_'+emp.employee_num">
                             <thead>
                                 <th></th>
                                 <th></th>
