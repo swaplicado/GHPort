@@ -10,6 +10,7 @@ use App\Models\Adm\OrgChartJob;
 use Carbon\Carbon;
 use Carbon\Translator;
 use App\Constants\SysConst;
+use \App\Utils\delegationUtils;
 
 class EmployeesVacationsController extends Controller
 {
@@ -20,7 +21,8 @@ class EmployeesVacationsController extends Controller
      */
     public function employeesDirectIndex(){
         $config = \App\Utils\Configuration::getConfigurations();
-        $lEmployees = $this->getDirectEmployees(\Auth::user()->org_chart_job_id);
+        // $lEmployees = $this->getDirectEmployees(\Auth::user()->org_chart_job_id);
+        $lEmployees = $this->getDirectEmployees(delegationUtils::getOrgChartJobIdUser());
 
         return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }
@@ -31,7 +33,8 @@ class EmployeesVacationsController extends Controller
     public function allEmployeesIndex(){
         $config = \App\Utils\Configuration::getConfigurations();
 
-        $lEmployees = $this->getAlllEmployees(\Auth::user()->org_chart_job_id, $config);
+        // $lEmployees = $this->getAlllEmployees(\Auth::user()->org_chart_job_id, $config);
+        $lEmployees = $this->getAlllEmployees(delegationUtils::getOrgChartJobIdUser(), $config);
 
         return view('emp_vacations.all_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }

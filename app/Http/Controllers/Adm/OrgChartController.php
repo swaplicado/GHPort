@@ -10,6 +10,7 @@ use App\Models\Adm\AreaHeadUser;
 use App\User;
 use App\Models\Adm\OrgChartJob;
 use App\Constants\SysConst;
+use \App\Utils\delegationUtils;
 class OrgChartController extends Controller
 {
     public function index(){
@@ -56,7 +57,8 @@ class OrgChartController extends Controller
     }
 
     public function assignArea(){
-        \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        // \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
         $areas = \DB::table('org_chart_jobs as ocj')
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
@@ -87,7 +89,8 @@ class OrgChartController extends Controller
     }
 
     public function updateAssignArea(Request $request){
-        \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        // \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
         /** FALTA ACTUALIZAR HEAD USER */
         try {
             \DB::beginTransaction();

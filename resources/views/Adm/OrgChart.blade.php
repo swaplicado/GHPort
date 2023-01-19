@@ -60,6 +60,11 @@
           .childrenMargin((d) => 40)
           .compactMarginBetween((d) => 15)
           .compactMarginPair((d) => 80)
+          .linkUpdate(function(d, i, arr){
+            d3.select(this)
+              .attr("stroke", 'blue')
+              .attr("stroke-width", 2)
+          })
           .nodeContent(function (d, i, arr, state) {
             return `
             <div style="padding-top:30px;background-color:none;margin-left:1px;height:${

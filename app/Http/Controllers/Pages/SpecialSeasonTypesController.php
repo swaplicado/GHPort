@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Seasons\SpecialSeasonType;
+use \App\Utils\delegationUtils;
 
 class SpecialSeasonTypesController extends Controller
 {
@@ -33,8 +34,10 @@ class SpecialSeasonTypesController extends Controller
                 $oSeasonType->priority = $request->priority;
                 $oSeasonType->color = $request->color;
                 $oSeasonType->description = $request->description;
-                $oSeasonType->created_by = \Auth::user()->id;
-                $oSeasonType->updated_by = \Auth::user()->id;
+                // $oSeasonType->created_by = \Auth::user()->id;
+                // $oSeasonType->updated_by = \Auth::user()->id;
+                $oSeasonType->created_by = delegationUtils::getIdUser();
+                $oSeasonType->updated_by = delegationUtils::getIdUser();
                 $oSeasonType->save();
             \DB::commit();
         } catch (\Throwable $th) {
@@ -61,7 +64,8 @@ class SpecialSeasonTypesController extends Controller
                 $oSeasonType->priority = $request->priority;
                 $oSeasonType->color = $request->color;
                 $oSeasonType->description = $request->description;
-                $oSeasonType->updated_by = \Auth::user()->id;
+                // $oSeasonType->updated_by = \Auth::user()->id;
+                $oSeasonType->updated_by = delegationUtils::getIdUser();
                 $oSeasonType->update();
             \DB::commit();
         } catch (\Throwable $th) {

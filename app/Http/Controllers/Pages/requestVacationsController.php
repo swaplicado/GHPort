@@ -19,12 +19,14 @@ use App\Models\Vacations\MailLog;
 use Spatie\Async\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use \App\Utils\delegationUtils;
 
 class requestVacationsController extends Controller
 {
     public function getData($year, $org_chart_job_id = null){
         if(is_null($org_chart_job_id)){
-            $org_chart_job_id = \Auth::user()->org_chart_job_id;
+            // $org_chart_job_id = \Auth::user()->org_chart_job_id;
+            $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         }
 
         $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
@@ -51,11 +53,13 @@ class requestVacationsController extends Controller
     }
 
     public function index($idApplication = null){
-        \Auth::user()->authorizedRole(SysConst::JEFE);
+        // \Auth::user()->authorizedRole(SysConst::JEFE);
+        delegationUtils::getAutorizeRolUser(SysConst::JEFE);
         $config = \App\Utils\Configuration::getConfigurations();
         $year = Carbon::now()->year;
         $data = $this->getData($year);
-        $myManagers = orgChartUtils::getMyManagers(\Auth::user()->org_chart_job_id);
+        // $myManagers = orgChartUtils::getMyManagers(\Auth::user()->org_chart_job_id);
+        $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -101,8 +105,10 @@ class requestVacationsController extends Controller
     }
 
     public function acceptRequest(Request $request){
-        \Auth::user()->authorizedRole(SysConst::JEFE);
-        \Auth::user()->IsMyEmployee($request->id_user);
+        // \Auth::user()->authorizedRole(SysConst::JEFE);
+        // \Auth::user()->IsMyEmployee($request->id_user);
+        delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+        delegationUtils::getIsMyEmployeeUser()($request->id_user);
         try {
             $application = Application::findOrFail($request->id_application);
 
@@ -119,7 +125,8 @@ class requestVacationsController extends Controller
                                                                                         true);
             
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
-            $application->user_apr_rej_id = \Auth::user()->id;
+            // $application->user_apr_rej_id = \Auth::user()->id;
+            $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
             $application->update();
@@ -127,8 +134,10 @@ class requestVacationsController extends Controller
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
             $application_log->application_status_id = $application->request_status_id;
-            $application_log->created_by = \Auth::user()->id;
-            $application_log->updated_by = \Auth::user()->id;
+            // $application_log->created_by = \Auth::user()->id;
+            // $application_log->updated_by = \Auth::user()->id;
+            $application_log->created_by = delegationUtils::getIdUser();
+            $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
             $data = json_decode($this->sendRequestVacation($application));
@@ -149,8 +158,10 @@ class requestVacationsController extends Controller
             $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
             $mailLog->type_mail_id = SysConst::MAIL_ACEPT_RECH_SOLICITUD;
             $mailLog->is_deleted = 0;
-            $mailLog->created_by = \Auth::user()->id;
-            $mailLog->updated_by = \Auth::user()->id;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
             
             \DB::commit();
@@ -201,8 +212,10 @@ class requestVacationsController extends Controller
     }
 
     public function rejectRequest(Request $request){
-        \Auth::user()->authorizedRole(SysConst::JEFE);
-        \Auth::user()->IsMyEmployee($request->id_user);
+        // \Auth::user()->authorizedRole(SysConst::JEFE);
+        // \Auth::user()->IsMyEmployee($request->id_user);
+        delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+        delegationUtils::getIsMyEmployeeUser($request->id_user);
         try {
             $application = Application::findOrFail($request->id_application);
 
@@ -220,7 +233,8 @@ class requestVacationsController extends Controller
             $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
-            $application->user_apr_rej_id = \Auth::user()->id;
+            // $application->user_apr_rej_id = \Auth::user()->id;
+            $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->rejected_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
             $application->update();
@@ -228,8 +242,10 @@ class requestVacationsController extends Controller
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
             $application_log->application_status_id = $application->request_status_id;
-            $application_log->created_by = \Auth::user()->id;
-            $application_log->updated_by = \Auth::user()->id;
+            // $application_log->created_by = \Auth::user()->id;
+            // $application_log->updated_by = \Auth::user()->id;
+            $application_log->created_by = delegationUtils::getIdUser();
+            $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
             $employee = \DB::table('users')
@@ -243,8 +259,10 @@ class requestVacationsController extends Controller
             $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
             $mailLog->type_mail_id = SysConst::MAIL_ACEPT_RECH_SOLICITUD;
             $mailLog->is_deleted = 0;
-            $mailLog->created_by = \Auth::user()->id;
-            $mailLog->updated_by = \Auth::user()->id;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
             
             \DB::commit();
@@ -470,8 +488,10 @@ class requestVacationsController extends Controller
         $oVacLog->employee_id = $oApplication->user_id;
         $oVacLog->response_code = $data->response->code;
         $oVacLog->message = $data->response->message;
-        $oVacLog->created_by = \Auth::user()->id;
-        $oVacLog->updated_by = \Auth::user()->id;
+        // $oVacLog->created_by = \Auth::user()->id;
+        // $oVacLog->updated_by = \Auth::user()->id;
+        $oVacLog->created_by = delegationUtils::getIdUser();
+        $oVacLog->updated_by = delegationUtils::getIdUser();
         $oVacLog->save();
 
         return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);

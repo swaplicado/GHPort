@@ -9,11 +9,11 @@
         <figure>
           <blockquote class="blockquote">
             <h1>Bienvenido</h1>
-            <h1>{{Auth::user()->full_name}}</h1>
+            <h1>{{\App\Utils\delegationUtils::getFullNameUser()}}</h1>
             <h1> a PGH</h1>
           </blockquote>
           <figcaption class="blockquote-footer" style="padding-left: 7%">
-            Bienvenido {{Auth::user()->full_name}} a Portal Gestion Humana
+              Bienvenido {{\App\Utils\delegationUtils::getFullNameUser()}} a Portal Gestion Humana
           </figcaption>
         </figure>
       </div>
