@@ -103,4 +103,12 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('delegation/deleteDelegation', 'Pages\delegationController@deleteDelegation')->name('delegation_deleteDelegation');
     Route::post('delegation/setDelegation', 'Pages\delegationController@setDelegation')->name('delegation_setDelegation');
     Route::post('delegation/recoverDelegation', 'Pages\delegationController@recoverDelegation')->name('delegation_recoverDelegation');
+
+    Route::get('specialVacations', 'Pages\specialVacationsController@index')->name('specialVacations');
+    Route::post('specialVacations/setRequestVac', 'Pages\specialVacationsController@setRequestVac')->name('specialVacations_setRequestVac');
+    Route::post('specialVacations/updateRequestVac', 'Pages\specialVacationsController@updateRequestVac')->name('specialVacations_updateRequestVac');
+    Route::post('specialVacations/getEmpApplicationsEA', 'Pages\specialVacationsController@getEmpApplicationsEA')->name('specialVacations_getEmpApplicationsEA');
+    Route::post('specialVacations/deleteRequestVac', 'Pages\specialVacationsController@deleteRequestVac')->name('specialVacations_deleteRequestVac');
+    Route::post('specialVacations/filterYear', 'Pages\specialVacationsController@filterYear')->name('specialVacations_filterYear');
+    Route::post('specialVacations/sendRequestVac', 'Pages\specialVacationsController@sendRequestVac')->name('specialVacations_sendRequestVac');
 });

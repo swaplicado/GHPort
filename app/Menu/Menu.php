@@ -78,12 +78,19 @@ class Menu {
                     !Session::get('is_delegation') ?
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
+                    (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General'],
                 ];
                 break;
             
             default:
                 $lMenus = [];
                 break;
+
+        }
+        
+        $config = \App\Utils\Configuration::getConfigurations();
+        if(in_array($oUser->id, $config->special_vacations_access)){
+            array_push($lMenus, (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General']);
         }
 
         $sMenu = "";
