@@ -72,7 +72,7 @@
                         {{\App\Utils\delegationUtils::getUsernameUser()}}
                     </span>
                 @endif
-                <img class="img-profile rounded-circle" src="{{ asset('img/avatar/profile2.png') }}">
+                <img class="img-profile rounded-circle" src="data:image/jpg;base64,{{ Auth::user()->getPhoto() }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

@@ -10,6 +10,8 @@ use App\User;
 use App\Models\Adm\Job;
 use App\Models\Adm\UserAdmissionLog;
 use Illuminate\Support\Str;
+use App\Models\Adm\UsersPhotos;
+
 class UsersController extends Controller
 {
     private $lJobs;
@@ -81,6 +83,18 @@ class UsersController extends Controller
         $oUser = User::find($id);
         if(!is_null($oUser)){
             $this->updateUserAdmissionLog($oUser);
+        }
+
+        $oUsersPhotos = UsersPhotos::where('user_id', $oUser->id)->first();
+
+        if(is_null($oUsersPhotos)){
+            $oUsersPhotos = new UsersPhotos();
+            $oUsersPhotos->user_id = $oUser->id;
+            $oUsersPhotos->photo_base64_n = null;
+            $oUsersPhotos->is_deleted = 0;
+            $oUsersPhotos->created_by = 1;
+            $oUsersPhotos->updated_by = 1;
+            $oUsersPhotos->save();
         }
     }
 
@@ -174,6 +188,14 @@ class UsersController extends Controller
         $oUser->save();
 
         $this->setUserAdmissionLog($oUser);
+
+        $oUsersPhotos = new UsersPhotos();
+        $oUsersPhotos->user_id = $oUser->id;
+        $oUsersPhotos->photo_base64_n = null;
+        $oUsersPhotos->is_deleted = 0;
+        $oUsersPhotos->created_by = 1;
+        $oUsersPhotos->updated_by = 1;
+        $oUsersPhotos->save();
     }
 
     private function getUserName($usernameTmp)

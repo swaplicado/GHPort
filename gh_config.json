@@ -1,13 +1,28 @@
 {
-    "lastSyncDateTime": "2022-10-05 17:38:07",
+    "lastSyncDateTime": "2023-01-24 21:04:22",
     "expiration_vacations": {
-        "years": 1,
-        "months": 6,
+        "years": 100,
+        "months": 0,
         "days": 0
     },
     "showVacation": {
         "years": 1,
         "months": 0,
         "days": 0
-    }
+    },
+    "getVacations": {
+        "years": 3,
+        "months": 0,
+        "days": 0
+    },
+    "orderVac": "desc",
+    "name_ui": [
+        "firstname",
+        "lastname1",
+        "num_employee"
+    ],
+    "special_vacations_access": [
+        114,
+        94
+    ]
 }
