@@ -104,10 +104,6 @@ class User extends Authenticatable
                             ->where('is_deleted', 0)
                             ->value('photo_base64_n');
 
-        if(is_null($photo64)){
-            $photo64 = asset('img/avatar/profile2.png');
-        }
-
         return $photo64;
     }
 }
