@@ -14,6 +14,8 @@ use App\Http\Controllers\Adm\JobsController;
 use App\Http\Controllers\Adm\UsersController;
 use App\Http\Controllers\Adm\holidaysController;
 use App\Http\Controllers\Adm\VacationsController;
+use App\Http\Controllers\Adm\UsersPhotosController;
+use App\Models\Adm\UsersPhotos;
 
 class SyncController extends Controller
 {
@@ -21,6 +23,7 @@ class SyncController extends Controller
     {
         $config = \App\Utils\Configuration::getConfigurations();
         $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        $photos = SyncController::SyncPhotos();
         // $synchronized = true;
 
         $newDate = Carbon::now();
@@ -35,7 +38,7 @@ class SyncController extends Controller
     {
         $client = new Client([
             'base_uri' => '192.168.1.233:9001',
-            'timeout' => 10.0,
+            'timeout' => 30.0,
         ]);
 
         try {
@@ -68,5 +71,35 @@ class SyncController extends Controller
         }
         
         return true;
+    }
+
+    public static function SyncPhotos(){
+      $lUsersPhotos = UsersPhotos::where('photo_base64_n', null)
+                                  ->where('is_deleted', 0)
+                                  ->pluck('id');
+                                  
+      if(count($lUsersPhotos) > 0){
+          $lUsers = User::whereIn('id', $lUsersPhotos)
+                      ->where('is_delete', 0)
+                      ->where('is_active', 1)
+                      ->pluck('external_id_n');
+
+
+          try {
+              $client = new Client([
+                  'base_uri' => '192.168.1.233:9001',
+                  'timeout' => 30.0,
+              ]);
+      
+              $response = $client->request('GET', 'getEmployeesPhoto/' . $lUsers);
+              $jsonString = $response->getBody()->getContents();
+              $data = json_decode($jsonString);
+
+              $UsersPhotosController = new UsersPhotosController();
+              $UsersPhotosController->saveUsersFromJSON($data);
+          } catch (\Throwable $th) {
+              return false;
+          }
+      }
     }
 }

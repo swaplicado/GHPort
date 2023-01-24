@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Utils\orgChartUtils;
 use App\Notifications\PasswordReset;
+use App\Models\Adm\UsersPhotos;
 
 class User extends Authenticatable
 {
@@ -96,5 +97,17 @@ class User extends Authenticatable
 
     public function sendPasswordResetNotification($token){
         $this->notify(new PasswordReset($token));
+    }
+
+    public function getPhoto(){
+        $photo64 = UsersPhotos::where('user_id', $this->id)
+                            ->where('is_deleted', 0)
+                            ->value('photo_base64_n');
+
+        if(is_null($photo64)){
+            $photo64 = asset('img/avatar/profile2.png');
+        }
+
+        return $photo64;
     }
 }

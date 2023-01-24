@@ -111,4 +111,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('specialVacations/deleteRequestVac', 'Pages\specialVacationsController@deleteRequestVac')->name('specialVacations_deleteRequestVac');
     Route::post('specialVacations/filterYear', 'Pages\specialVacationsController@filterYear')->name('specialVacations_filterYear');
     Route::post('specialVacations/sendRequestVac', 'Pages\specialVacationsController@sendRequestVac')->name('specialVacations_sendRequestVac');
+    
+    Route::get('jobVsOrgChartJob', 'Adm\jobVsOrgChartJobController@index')->name('jobVsOrgChartJob');
+    Route::post('jobVsOrgChartJob/update', 'Adm\jobVsOrgChartJobController@update')->name('jobVsOrgChartJob_update');
 });
