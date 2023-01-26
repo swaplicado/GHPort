@@ -11,11 +11,11 @@ var app = new Vue({
 
     },
     methods: {
-        showModal(id, name, area, jobs, img){
+        showModal(id, name, area, jobs){
             this.name = name;
             this.area = area;
             this.jobs = jobs;
-            this.img = img;
+            this.img = document.getElementById('img_'+id).src
             $('#modal_OrgChart').modal('show');
         }
     },
