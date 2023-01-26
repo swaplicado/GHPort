@@ -9,15 +9,15 @@ use App\Models\Adm\UsersPhotos;
 
 class UsersPhotosController extends Controller
 {
-    public function saveUsersFromJSON($lUsers)
+    public function saveUsersPhotosFromJSON($lPhotos)
     {
         $lGhPortUsers = User::pluck('id', 'external_id_n');
         
-        foreach ($lUsers as $jUser) {
+        foreach ($lPhotos->photos as $oPhoto) {
             try {
-                if (isset($lGhPortUsers[$jUser->id_employee])) {
-                    $id_user = $lGhPortUsers[$jUser->id_employee];
-                    $this->updUserPhoto($jUser, $id_user);
+                if (isset($lGhPortUsers[$oPhoto->idEmployee])) {
+                    $id_user = $lGhPortUsers[$oPhoto->idEmployee];
+                    $this->updUserPhoto($oPhoto, $id_user);
                 }
             }
             catch (\Throwable $th) {
@@ -27,21 +27,21 @@ class UsersPhotosController extends Controller
         }
     }
 
-    private function updUserPhoto($jUser, $id){
-        $oUsersPhotos = UsersPhotos::where('user_id', $oUser->id)->first();
+    private function updUserPhoto($oPhoto, $id){
+        $oUsersPhotos = UsersPhotos::where('user_id', $id)->first();
 
         if(is_null($oUsersPhotos)){
-            $this->insertUserPhotos($jUser, $id_user);
+            $this->insertUserPhotos($oPhoto, $id);
         }else{
-            $oUsersPhotos->photo_base64_n = $jUser->photo;
+            $oUsersPhotos->photo_base64_n = $oPhoto->photo;
             $oUsersPhotos->update();
         }
     }
 
-    private function insertUserPhotos($jUser, $id){
+    private function insertUserPhotos($oPhoto, $id){
         $oUsersPhotos = new UsersPhotos();
         $oUsersPhotos->user_id = $id;
-        $oUsersPhotos->photo_base64_n = $jUser->photo;
+        $oUsersPhotos->photo_base64_n = $oPhoto->photo;
         $oUsersPhotos->is_deleted = 0;
         $oUsersPhotos->created_by = 1;
         $oUsersPhotos->updated_by = 1;
