@@ -16,6 +16,7 @@ use App\Http\Controllers\Adm\holidaysController;
 use App\Http\Controllers\Adm\VacationsController;
 use App\Http\Controllers\Adm\UsersPhotosController;
 use App\Models\Adm\UsersPhotos;
+use App\User;
 
 class SyncController extends Controller
 {
@@ -24,7 +25,7 @@ class SyncController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
         $photos = SyncController::SyncPhotos();
-        // $synchronized = true;
+        $synchronized = true;
 
         $newDate = Carbon::now();
         $newDate->subMinutes(10);
@@ -96,7 +97,7 @@ class SyncController extends Controller
               $data = json_decode($jsonString);
 
               $UsersPhotosController = new UsersPhotosController();
-              $UsersPhotosController->saveUsersFromJSON($data);
+              $UsersPhotosController->saveUsersPhotosFromJSON($data);
           } catch (\Throwable $th) {
               return false;
           }

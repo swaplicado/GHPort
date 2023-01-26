@@ -22,7 +22,9 @@ class OrgChartController extends Controller
 
         foreach($areas as $area){
             if($area->positions == 1){
-                $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->select('full_name')->get()->toArray();
+                $area->users = User::leftJoin('users_vs_photos as up', 'up.user_id', '=', 'users.id')
+                                    ->where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])
+                                    ->select('full_name', 'up.photo_base64_n as photo64')->get()->toArray();
                 $area->is_head = true;
             }else{
                 $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->select('full_name')->get()->toArray();
@@ -35,7 +37,7 @@ class OrgChartController extends Controller
             if($ar->is_head){
                 $lAreas[] = [
                     'name' => count($ar->users) > 0 ? $ar->users[0]['full_name'] : '',
-                    'imageUrl' => count($ar->users) > 0 ? "https://cdn.balkan.app/shared/2.jpg" : asset('img/warning.png'),
+                    'imageUrl' => count($ar->users) > 0 ? "data:image/jpg;base64,".$ar->users[0]['photo64'] : asset('img/warning.png'),
                     'positionName' => $ar->job_name,
                     'id' => $ar->id_org_chart_job,
                     'parentId' => $ar->top_org_chart_job_id_n,

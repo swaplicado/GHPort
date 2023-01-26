@@ -44,8 +44,8 @@
     </script>
     <script src="{{asset('myApp/Adm/vue_OrgChart.js')}}"></script>
     <script>
-        function showModal(id, name, area, jobs, img){
-            app.showModal(id, name, area, jobs, img);
+        function showModal(id, name, area, jobs){
+            app.showModal(id, name, area, jobs);
         }
     </script>
     <script>
@@ -69,12 +69,12 @@
             return `
             <div style="padding-top:30px;background-color:none;margin-left:1px;height:${
               d.height
-            }px;border-radius:2px;overflow:visible" onclick="showModal('${d.data.id}', '${d.data.name}', '${d.data.positionName}', '${d.data.jobs}', '${d.data.imageUrl}')">
+            }px;border-radius:2px;overflow:visible" onclick="showModal('${d.data.id}', '${d.data.name}', '${d.data.positionName}', '${d.data.jobs}' )">
               <div style="height:${
                 d.height - 32
               }px;padding-top:0px;background-color:white;border:1px solid lightgray;">
 
-                <img src=" ${
+                <img id="img_${d.data.id}" src=" ${
                   d.data.imageUrl
                 }" style="margin-top:-30px;margin-left:${d.width / 2 - 30}px;border-radius:100px;width:60px;height:60px;" />
                
