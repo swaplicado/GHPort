@@ -68,17 +68,17 @@
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="efectiveDays" style="display: inline;">Dias efectivos:</label>
+                            <label class="form-label" for="efectiveDays" style="display: inline;">Días efectivos:</label>
                             <input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="calendarDays" style="display: inline;">Dias calendario:</label>
+                            <label class="form-label" for="calendarDays" style="display: inline;">Días calendario:</label>
                             <input class="form-control" name="calendarDays" type="number" v-model="totCalendarDays" readonly style="width: 10%; display: inline;">
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="listDays">Dias de vacaciones:</label>
+                            <label class="form-label" for="listDays">Días de vacaciones:</label>
                             <ul class="ulColumns3" name="listDays">
                                 <li v-for="day in lDays">@{{day}}</li>
                             </ul>

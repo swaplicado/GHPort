@@ -13,7 +13,7 @@
             <h1> a PGH</h1>
           </blockquote>
           <figcaption class="blockquote-footer" style="padding-left: 7%">
-              Bienvenido {{\App\Utils\delegationUtils::getFullNameUser()}} a Portal Gestion Humana
+              Bienvenido {{\App\Utils\delegationUtils::getFullNameUser()}} a Portal Gestión Humana
           </figcaption>
         </figure>
       </div>

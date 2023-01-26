@@ -26,7 +26,7 @@
                                 <td>@{{name}}</td>
                             </tr>
                             <tr>
-                                <td><b>Area:</b></td>
+                                <td><b>Área:</b></td>
                                 <td>@{{area}}</td>
                             </tr>
                             <tr>

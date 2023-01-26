@@ -48,7 +48,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="selArea">Area asignada:</label>
+                        <label for="selArea">Área asignada:</label>
                         <select class="select2-class" class="form-control" id="selArea" name="selArea" style="width: 90%;"></select>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
 
     <div class="card-header">
         <h3>
-            <b>Puestos vs Areas</b>
+            <b>Puestos vs áreas</b>
             <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
@@ -88,7 +88,7 @@
                         <th>OrgChartJob_id</th>
                         <th>Job_id</th>
                         <th>Puesto</th>
-                        <th>Area</th>
+                        <th>Área</th>
                         <th>Num. Colab.</th>
                     </tr>
                 </thead>

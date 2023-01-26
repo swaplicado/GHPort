@@ -24,121 +24,117 @@ class SDateRangePicker {
         payment_frec_index,
         const_QUINCENA,
         lHolidays
-    ){  
-        $.dateRangePickerLanguages['es'] =
-        {
+    ) {
+        $.dateRangePickerLanguages['es'] = {
             'selected': 'De:',
-            'days': 'Dias',
+            'days': 'Días',
             'apply': 'Cerrar',
-            'week-1' : 'Lun',
-            'week-2' : 'Mar',
-            'week-3' : 'Mie',
-            'week-4' : 'Jue',
-            'week-5' : 'Vie',
-            'week-6' : 'Sab',
-            'week-7' : 'Dom',
-            'month-name': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','octubre','Noviembre','Diciembre'],
-            'shortcuts' : 'Shortcuts',
+            'week-1': 'Lun',
+            'week-2': 'Mar',
+            'week-3': 'Mie',
+            'week-4': 'Jue',
+            'week-5': 'Vie',
+            'week-6': 'Sab',
+            'week-7': 'Dom',
+            'month-name': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'octubre', 'Noviembre', 'Diciembre'],
+            'shortcuts': 'Shortcuts',
             'past': 'Past',
-            '7days' : '7 días',
-            '14days' : '14 días',
-            '30days' : '30 días',
-            'previous' : 'Anterior',
-            'prev-week' : 'Semana',
-            'prev-month' : 'Mes',
-            'prev-quarter' : 'Quincena',
-            'prev-year' : 'Año',
-            'less-than' : 'El rango de fecha debe ser mayor a %d días',
-            'more-than' : 'El rango de fecha debe ser menor a %d días',
-            'default-more' : 'Selecciona un rango de fecha mayor a %d días',
-            'default-less' : 'Selecciona un rango de fecha menor a %d días',
-            'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
+            '7days': '7 días',
+            '14days': '14 días',
+            '30days': '30 días',
+            'previous': 'Anterior',
+            'prev-week': 'Semana',
+            'prev-month': 'Mes',
+            'prev-quarter': 'Quincena',
+            'prev-year': 'Año',
+            'less-than': 'El rango de fecha debe ser mayor a %d días',
+            'more-than': 'El rango de fecha debe ser menor a %d días',
+            'default-more': 'Selecciona un rango de fecha mayor a %d días',
+            'default-less': 'Selecciona un rango de fecha menor a %d días',
+            'default-range': 'Selecciona un rango de fecha entre %d y %d días',
             'default-default': ''
         };
-    
-        $('#'+container_id).dateRangePicker(
-        {
+
+        $('#' + container_id).dateRangePicker({
             // startDate: oServerData.initialCalendarDate,
-            inline:true,
-            container: '#'+container_id,
-            alwaysOpen:true,
+            inline: true,
+            container: '#' + container_id,
+            alwaysOpen: true,
             language: 'es',
-            separator : ' a ',
+            separator: ' a ',
             showShortcuts: false,
-            beforeShowDay: function(t)
-            {
+            beforeShowDay: function(t) {
                 var valid = false;
                 var _class = '';
                 var _tooltip = '';
-                if(table[table_id].row('.selected').data() != undefined){
-                    if(table[table_id].row('.selected').data()[payment_frec_index] == const_QUINCENA){
-                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
-                        if(result != undefined){
+                if (table[table_id].row('.selected').data() != undefined) {
+                    if (table[table_id].row('.selected').data()[payment_frec_index] == const_QUINCENA) {
+                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
+                        if (result != undefined) {
                             _class = result.color;
                             _tooltip = _tooltip + result.name + ' ';
                         }
-                        if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        if (lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
                         }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        if (dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                             _class = 'requestedVac';
                             _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                         }
-                        if(t.getDay() == 0 || t.getDay() == 6){
+                        if (t.getDay() == 0 || t.getDay() == 6) {
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
                         }
-                        if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                        if (moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')) {
                             _class = 'aniversary';
                             _tooltip = _tooltip + 'Aniversario. ';
                         }
-                        if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                        if (birthday == moment(t.getTime()).format('YYYY-MM-DD')) {
                             _class = 'birthDay';
                             _tooltip = _tooltip + 'Cumpleaños. ';
                         }
                     } else {
-                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
-                        if(result != undefined){
+                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
+                        if (result != undefined) {
                             _class = result.color;
                             _tooltip = _tooltip + result.name + ' ';
                         }
-                        if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        if (lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
                         }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        if (dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                             _class = 'requestedVac';
                             _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                         }
-                        if(t.getDay() == 0){
+                        if (t.getDay() == 0) {
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
                         }
-                        if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                        if (moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')) {
                             _class = 'aniversary';
                             _tooltip = _tooltip + 'Aniversario. ';
                         }
-                        if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                        if (birthday == moment(t.getTime()).format('YYYY-MM-DD')) {
                             _class = 'birthDay';
                             _tooltip = _tooltip + 'Cumpleaños. ';
                         }
                     }
                 }
-     
-                return [valid,_class,_tooltip];
+
+                return [valid, _class, _tooltip];
             },
-            getValue: function(){
-                if ($('#'+first_input_date_id).val() && $('#'+second_input_date_id).val() ){
-                    return $('#'+first_input_date_id).val() + ' a ' + $('#'+second_input_date_id).val();
-                }
-                else{
+            getValue: function() {
+                if ($('#' + first_input_date_id).val() && $('#' + second_input_date_id).val()) {
+                    return $('#' + first_input_date_id).val() + ' a ' + $('#' + second_input_date_id).val();
+                } else {
                     return '';
                 }
             },
-            setValue: function(s,s1,s2){
-                $('#'+first_input_date_id).val(s1);
-                $('#'+second_input_date_id).val(s2);
+            setValue: function(s, s1, s2) {
+                $('#' + first_input_date_id).val(s1);
+                $('#' + second_input_date_id).val(s2);
             }
         });
     }
@@ -166,126 +162,122 @@ class SDateRangePicker {
         second_input_date_id,
         clear_btn_id,
         lHolidays
-    ){
-        $.dateRangePickerLanguages['es'] =
-        {
+    ) {
+        $.dateRangePickerLanguages['es'] = {
             'selected': 'De:',
-            'days': 'Dias',
+            'days': 'Días',
             'apply': 'Cerrar',
-            'week-1' : 'Lun',
-            'week-2' : 'Mar',
-            'week-3' : 'Mie',
-            'week-4' : 'Jue',
-            'week-5' : 'Vie',
-            'week-6' : 'Sab',
-            'week-7' : 'Dom',
-            'month-name': ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','octubre','Noviembre','Diciembre'],
-            'shortcuts' : 'Shortcuts',
+            'week-1': 'Lun',
+            'week-2': 'Mar',
+            'week-3': 'Mie',
+            'week-4': 'Jue',
+            'week-5': 'Vie',
+            'week-6': 'Sab',
+            'week-7': 'Dom',
+            'month-name': ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'octubre', 'Noviembre', 'Diciembre'],
+            'shortcuts': 'Shortcuts',
             'past': 'Past',
-            '7days' : '7 días',
-            '14days' : '14 días',
-            '30days' : '30 días',
-            'previous' : 'Anterior',
-            'prev-week' : 'Semana',
-            'prev-month' : 'Mes',
-            'prev-quarter' : 'Quincena',
-            'prev-year' : 'Año',
-            'less-than' : 'El rango de fecha debe ser mayor a %d días',
-            'more-than' : 'El rango de fecha debe ser menor a %d días',
-            'default-more' : 'Selecciona un rango de fecha mayor a %d días',
-            'default-less' : 'Selecciona un rango de fecha menor a %d días',
-            'default-range' : 'Selecciona un rango de fecha entre %d y %d días',
+            '7days': '7 días',
+            '14days': '14 días',
+            '30days': '30 días',
+            'previous': 'Anterior',
+            'prev-week': 'Semana',
+            'prev-month': 'Mes',
+            'prev-quarter': 'Quincena',
+            'prev-year': 'Año',
+            'less-than': 'El rango de fecha debe ser mayor a %d días',
+            'more-than': 'El rango de fecha debe ser menor a %d días',
+            'default-more': 'Selecciona un rango de fecha mayor a %d días',
+            'default-less': 'Selecciona un rango de fecha menor a %d días',
+            'default-range': 'Selecciona un rango de fecha entre %d y %d días',
             'default-default': 'Seleccione rango de fecha'
         };
 
-        $('#'+container_id).dateRangePicker(
-        {
+        $('#' + container_id).dateRangePicker({
             startDate: initialCalendarDate,
-            inline:true,
-            container: '#'+container_id,
-            alwaysOpen:true,
+            inline: true,
+            container: '#' + container_id,
+            alwaysOpen: true,
             language: 'es',
-            separator : ' a ',
-            beforeShowDay: function(t)
-            {
+            separator: ' a ',
+            beforeShowDay: function(t) {
                 var valid = dateRangePickerValid;
                 var _class = '';
                 var _tooltip = '';
-                if(user_payment_frec_id == const_QUINCENA){
-                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
-                    if(result != undefined){
+                if (user_payment_frec_id == const_QUINCENA) {
+                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
+                    if (result != undefined) {
                         _class = result.color;
                         _tooltip = _tooltip + result.name + ' ';
                     }
-                    if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                    if (lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                         _class = 'holiday';
                         _tooltip = _tooltip + 'Festivo. ';
                     }
-                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                    if (dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                         _class = 'requestedVac';
                         _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
-                    if(t.getDay() == 0 || t.getDay() == 6){
+                    if (t.getDay() == 0 || t.getDay() == 6) {
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
                     }
-                    if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                    if (moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')) {
                         _class = 'aniversary';
                         _tooltip = _tooltip + 'Aniversario. ';
                     }
-                    if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                    if (birthday == moment(t.getTime()).format('YYYY-MM-DD')) {
                         _class = 'birthDay';
                         _tooltip = _tooltip + 'Cumpleaños. ';
                     }
                 } else {
                     let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
-                    if(result != undefined){
+                    if (result != undefined) {
                         _class = result.color;
                         _tooltip = _tooltip + result.name + ' ';
                     }
-                    if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                    if (lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                         _class = 'holiday';
                         _tooltip = _tooltip + 'Festivo. ';
                     }
-                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                    if (dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))) {
                         _class = 'requestedVac';
                         _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
-                    if(t.getDay() == 0){
+                    if (t.getDay() == 0) {
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
                     }
-                    if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                    if (moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')) {
                         _class = 'aniversary';
                         _tooltip = _tooltip + 'Aniversario. ';
                     }
-                    if(birthday == moment(t.getTime()).format('MM-DD')){
+                    if (birthday == moment(t.getTime()).format('MM-DD')) {
                         _class = 'birthDay';
                         _tooltip = _tooltip + 'Cumpleaños. ';
                     }
                 }
-    
-                return [valid,_class,_tooltip];
+
+                return [valid, _class, _tooltip];
             },
-            getValue: function(){
+            getValue: function() {
                 dateRangePickerGetValue();
-                if ($('#'+first_input_date_id).val() && $('#'+second_input_date_id).val() ){
-                    return $('#'+first_input_date_id).val() + ' a ' + $('#'+second_input_date_id).val();
-                }
-                else{
+                if ($('#' + first_input_date_id).val() && $('#' + second_input_date_id).val()) {
+                    return $('#' + first_input_date_id).val() + ' a ' + $('#' + second_input_date_id).val();
+                } else {
                     return '';
                 }
             },
-            setValue: function(s,s1,s2){
-                $('#'+first_input_date_id).val(s1);
-                $('#'+second_input_date_id).val(s2);
+            setValue: function(s, s1, s2) {
+                $('#' + first_input_date_id).val(s1);
+                $('#' + second_input_date_id).val(s2);
                 dateRangePickerSetValue();
             }
         });
 
-        $('#'+clear_btn_id).click(function(evt){
+        $('#' + clear_btn_id).click(function(evt) {
             evt.stopPropagation();
-            $('#'+container_id).data('dateRangePicker').clear();
+            $('#' + container_id).data('dateRangePicker').clear();
             dateRangePickerClearValue();
         });
     }

@@ -41,7 +41,7 @@
                                 </td>
                                 <td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días</td>
                                 <td v-if="emp.is_head_user" style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
-                                    Encargado de area
+                                    Encargado de área
                                     <span class="bx bxs-group"></span>
                                 </td>
                                 <td v-else style="width: 30%;"></td>
@@ -98,7 +98,7 @@
                     <br>
                     <table class="table table-bordered" :id="'table_'+emp.employee_num">
                         <thead class="thead-light">
-                            <th>Periodo</th>
+                            <th>Período</th>
                             <th>Aniversario</th>
                             <th>Vac. ganadas</th>
                             <th>Vac. gozadas</th>

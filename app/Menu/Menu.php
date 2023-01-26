@@ -45,8 +45,8 @@ class Menu {
             case '3':
                 $lMenus = [
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
-                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs areas'],
+                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Áreas funcionales'],
+                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs áreas'],
                     (object) ['type' => $list, 'list' => [
                                                     ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colaboradores'],
                                                     ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colaboradores']
@@ -54,7 +54,7 @@ class Menu {
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
-                    (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
+                    (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                 ];
                 break;
@@ -63,8 +63,8 @@ class Menu {
             case '4':
                 $lMenus = [
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
-                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs areas'],
+                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Áreas funcionales'],
+                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs áreas'],
                     (object) ['type' => $list, 'list' => [
                                                     ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colaboradores'],
                                                     ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colaboradores']
@@ -80,7 +80,7 @@ class Menu {
                     !Session::get('is_delegation') ?
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
-                    (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General'],
+                    (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. dir. general'],
                 ];
                 break;
             
@@ -92,7 +92,7 @@ class Menu {
         
         $config = \App\Utils\Configuration::getConfigurations();
         if(in_array($oUser->id, $config->special_vacations_access)){
-            array_push($lMenus, (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General']);
+            array_push($lMenus, (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. dir. general']);
         }
 
         $sMenu = "";

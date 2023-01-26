@@ -20,13 +20,13 @@
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
             <div style="float: right;">
-                <h4>Periodo: @{{period}}</h4>
+                <h4>Período: @{{period}}</h4>
             </div>
         </h3>
     </div>
     <div class="card-body">
         <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
-            <button class="btn btn-info" v-on:click="showCompletePeriod()">Todos los periodos</button>&nbsp;&nbsp;
+            <button class="btn btn-info" v-on:click="showCompletePeriod()">Todos los períodos</button>&nbsp;&nbsp;
             <label>Ver a partir del año:</label>
             <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
                 <span class="bx bx-minus" ></span>

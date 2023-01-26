@@ -31,7 +31,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Area: @{{area}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Área: @{{area}}</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -39,7 +39,7 @@
             <div class="modal-body">
                 {{--<label for="selUser" hidden>Usuario encargado:</label>
                 <select class="select2-class" id="selUser" name="selUser" style="width: 90%;"></select>--}}
-                <label for="selArea">Area superior:</label>
+                <label for="selArea">Área superior:</label>
                 <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
             </div>
             <div class="modal-footer">
@@ -51,7 +51,7 @@
 </div>
     <div class="card-header">
         <h3>
-            <b>AREAS FUNCIONALES</b>
+            <b>ÁREAS FUNCIONALES</b>
             <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
@@ -68,9 +68,9 @@
                         <th>Area_id</th>
                         <th>father_area_id</th>
                         <th>user_id</th>
-                        <th>Area</th>
-                        <th>Responsable area</th>
-                        <th>Area superior</th>
+                        <th>Área</th>
+                        <th>Responsable área</th>
+                        <th>Área superior</th>
                     </tr>
                 </thead>
                 <tbody>

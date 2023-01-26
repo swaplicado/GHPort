@@ -124,7 +124,7 @@
                     <br>
                     <table class="table table-bordered" id="vacationsTable" style="width: 100%;">
                         <thead class="thead-light">
-                            <th class="no-sort">Periodo</th>
+                            <th class="no-sort">Período</th>
                             <th>Aniversario</th>
                             <th class="no-sort">Vac. ganadas</th>
                             <th class="no-sort">Vac. gozadas</th>
@@ -209,7 +209,7 @@
                             <th>Fecha incio</th>
                             <th>Fecha fin</th>
                             <th>Fecha regreso</th>
-                            <th>Dias efic.</th>
+                            <th>Días efic.</th>
                             <th>Estatus</th>
                             <th>sup coment.</th>
                         </thead>

@@ -13,7 +13,7 @@ var app = new Vue({
         payment_frec: 0,
         unionized: false,
         start_date: null,
-        years: [{'year': 1, 'days': ''}],
+        years: [{ 'year': 1, 'days': '' }],
         copyYears: null,
         idVacPlan: null,
         lUsers: [],
@@ -21,22 +21,22 @@ var app = new Vue({
         vacation_plan_name: null,
         vacation_plan_id: null,
     },
-    mounted(){
-        
+    mounted() {
+
     },
     methods: {
-        showModal(data = null){
-            if(data == null){
+        showModal(data = null) {
+            if (data == null) {
                 this.idVacPlan = null;
                 this.onlyShow = false;
                 this.rowCount = 0;
-                this.years = [{'year': 1, 'days': ''}];
+                this.years = [{ 'year': 1, 'days': '' }];
                 this.name = null;
                 this.payment_frec = 0;
                 this.unionized = false;
                 this.start_date = null;
                 this.copyYears = JSON.parse(JSON.stringify(this.years));
-            }else{
+            } else {
                 SGui.showWaiting(15000);
                 this.getDataVacPlan(data);
                 this.onlyShow = false;
@@ -51,148 +51,148 @@ var app = new Vue({
             $('#modal_vacation_plan').modal('show');
         },
 
-        getDataVacPlan(data){
+        getDataVacPlan(data) {
             axios.post(this.oData.showVacationRoute, {
-                'vacation_plan_id': data[this.indexes.id],
-            })
-            .then(response => {
-                var oVacation = response.data;
-                if(oVacation.success){
-                    this.years = [];
-                    for(let plan of oVacation.vacationPlanDays){
-                        var value = {'year': plan.until_year, 'days': plan.vacation_days};
-                        this.years.push(value);
+                    'vacation_plan_id': data[this.indexes.id],
+                })
+                .then(response => {
+                    var oVacation = response.data;
+                    if (oVacation.success) {
+                        this.years = [];
+                        for (let plan of oVacation.vacationPlanDays) {
+                            var value = { 'year': plan.until_year, 'days': plan.vacation_days };
+                            this.years.push(value);
+                        }
+                        SGui.showOk();
+                    } else {
+                        SGui.showMessage('', data.message, data.icon);
                     }
-                    SGui.showOk();
-                }else{
-                    SGui.showMessage('', data.message, data.icon);
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-                SGui.showError(error);
-            });
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
         },
 
-        showDataModal(data){
+        showDataModal(data) {
             SGui.showWaiting(15000);
             axios.post(this.oData.showVacationRoute, {
-                'vacation_plan_id': data[this.indexes.id],
-            })
-            .then(response => {
-                var oVacation = response.data;
-                if(oVacation.success){
-                    this.onlyShow = true;
-                    this.name = data[this.indexes.vacation_plan_name];
-                    this.payment_frec = data[this.indexes.payment_frec_id_n] != '' ? data[this.indexes.payment_frec_id_n] : 0;
-                    this.unionized = data[this.indexes.is_unionized_n] == 0 ? false : true;
-                    this.start_date = data[this.indexes.start_date_n];
-                    this.years = [];
-                    
-                    for(let plan of oVacation.vacationPlanDays){
-                        var value = {'year': plan.until_year, 'days': plan.vacation_days};
-                        this.years.push(value);
+                    'vacation_plan_id': data[this.indexes.id],
+                })
+                .then(response => {
+                    var oVacation = response.data;
+                    if (oVacation.success) {
+                        this.onlyShow = true;
+                        this.name = data[this.indexes.vacation_plan_name];
+                        this.payment_frec = data[this.indexes.payment_frec_id_n] != '' ? data[this.indexes.payment_frec_id_n] : 0;
+                        this.unionized = data[this.indexes.is_unionized_n] == 0 ? false : true;
+                        this.start_date = data[this.indexes.start_date_n];
+                        this.years = [];
+
+                        for (let plan of oVacation.vacationPlanDays) {
+                            var value = { 'year': plan.until_year, 'days': plan.vacation_days };
+                            this.years.push(value);
+                        }
+                        $('#modal_vacation_plan').modal('show');
+                        SGui.showOk();
+                    } else {
+                        this.onlyShow = false;
+                        SGui.showMessage('', data.message, data.icon);
                     }
-                    $('#modal_vacation_plan').modal('show');
-                    SGui.showOk();
-                }else{
+                })
+                .catch(function(error) {
                     this.onlyShow = false;
-                    SGui.showMessage('', data.message, data.icon);
-                }
-            })
-            .catch(function(error) {
-                this.onlyShow = false;
-                console.log(error);
-                SGui.showError(error);
-            });
+                    console.log(error);
+                    SGui.showError(error);
+                });
         },
 
-        addRow(){
-            if(this.rowCount < 50){
+        addRow() {
+            if (this.rowCount < 50) {
                 this.rowCount++;
-                var value = {'year': parseInt(this.years[this.rowCount - 1].year) + 1, 'days': ''};
+                var value = { 'year': parseInt(this.years[this.rowCount - 1].year) + 1, 'days': '' };
                 this.years.push(value);
                 this.copyYears = JSON.parse(JSON.stringify(this.years));
             }
         },
 
-        removeRow(index){
+        removeRow(index) {
             this.years.splice(index, 1);
             this.rowCount--;
             this.copyYears = JSON.parse(JSON.stringify(this.years));
         },
 
-        recalcRows(index){
+        recalcRows(index) {
             this.years[index].year = Math.floor(Math.abs(this.years[index].year));
-            if(parseInt(this.years[index].year) <= 50){
-                if(parseInt(this.copyYears[index - 1].year) < parseInt(this.years[index].year)){
-                    for(index; index < this.years.length; index++){
-                        if(this.years[index + 1] != undefined){
+            if (parseInt(this.years[index].year) <= 50) {
+                if (parseInt(this.copyYears[index - 1].year) < parseInt(this.years[index].year)) {
+                    for (index; index < this.years.length; index++) {
+                        if (this.years[index + 1] != undefined) {
                             this.years[index + 1].year = parseInt(this.years[index].year) + 1;
                         }
                     }
                     this.copyYears = JSON.parse(JSON.stringify(this.years));
-                }else{
+                } else {
                     this.years = JSON.parse(JSON.stringify(this.copyYears));
-                    SGui.showMessage('','No se puede insertar un año menor o igual al año anterior','info');
+                    SGui.showMessage('', 'No se puede insertar un año menor o igual al año anterior', 'info');
                 }
-            }else{
+            } else {
                 this.years = JSON.parse(JSON.stringify(this.copyYears));
-                SGui.showMessage('','No se puede insertar un año mayor a 50','info');
+                SGui.showMessage('', 'No se puede insertar un año mayor a 50', 'info');
             }
             this.$mount();
         },
 
-        checkDayBefore(index){
+        checkDayBefore(index) {
             this.years[index].days = Math.floor(Math.abs(this.years[index].days));
-            if(this.years[index].days > 50){
+            if (this.years[index].days > 50) {
                 this.years[index].days = 50;
             }
-            if(this.years[index - 1] != undefined){
-                if(this.years[index - 1].days != ''){
-                    if(parseInt(this.copyYears[index - 1].days) <= parseInt(this.years[index].days)){
+            if (this.years[index - 1] != undefined) {
+                if (this.years[index - 1].days != '') {
+                    if (parseInt(this.copyYears[index - 1].days) <= parseInt(this.years[index].days)) {
                         return true;
-                    }else{
-                        SGui.showMessage('','No se puede insertar numero de dias menor al año anterior','info');
+                    } else {
+                        SGui.showMessage('', 'No se puede insertar numero de días menor al año anterior', 'info');
                         return false;
                     }
-                }else{
-                    SGui.showMessage('','Debe ingresar el número de días del renglón anterior','info');
+                } else {
+                    SGui.showMessage('', 'Debe ingresar el número de días del renglón anterior', 'info');
                     return false;
                 }
-            }else{
+            } else {
                 return true;
             }
         },
 
-        checkDayAfter(index){
+        checkDayAfter(index) {
             this.years[index].days = Math.floor(Math.abs(this.years[index].days));
-            if(this.years[index].days > 50){
+            if (this.years[index].days > 50) {
                 this.years[index].days = 50;
             }
-            if(this.years[index + 1] != undefined){
-                if(this.years[index + 1].days != ''){
-                    if(parseInt(this.copyYears[index + 1].days) >= parseInt(this.years[index].days)){
+            if (this.years[index + 1] != undefined) {
+                if (this.years[index + 1].days != '') {
+                    if (parseInt(this.copyYears[index + 1].days) >= parseInt(this.years[index].days)) {
                         return true;
-                    }else{
-                        SGui.showMessage('','No se puede insertar numero de dias mayor al año siguiente','info');
+                    } else {
+                        SGui.showMessage('', 'No se puede insertar numero de días mayor al año siguiente', 'info');
                         return false;
                     }
-                }else{
+                } else {
                     return true;
                 }
-            }else{
+            } else {
                 return true;
             }
         },
 
-        checkDataBeforeSave(){
-            for(var i = 0; i < this.years.length; i++){
-                if(i > 0){
-                    if(parseInt(this.years[i].year) <= parseInt(this.years[i - 1].year)){
+        checkDataBeforeSave() {
+            for (var i = 0; i < this.years.length; i++) {
+                if (i > 0) {
+                    if (parseInt(this.years[i].year) <= parseInt(this.years[i - 1].year)) {
                         return false;
                     }
-                    if(parseInt(this.years[i].days) < parseInt(this.years[i - 1].days)){
+                    if (parseInt(this.years[i].days) < parseInt(this.years[i - 1].days)) {
                         return false;
                     }
                 }
@@ -201,77 +201,77 @@ var app = new Vue({
             return true;
         },
 
-        checkDays(index){
-            if(this.checkDayBefore(index) && this.checkDayAfter(index)){
+        checkDays(index) {
+            if (this.checkDayBefore(index) && this.checkDayAfter(index)) {
                 this.copyYears = JSON.parse(JSON.stringify(this.years));
-            }else{
+            } else {
                 this.years = JSON.parse(JSON.stringify(this.copyYears));
             }
         },
 
-        saveVacationPlan(){
+        saveVacationPlan() {
             this.disabledSave = true;
-            if(this.idVacPlan == null){
+            if (this.idVacPlan == null) {
                 var route = this.oData.saveRoute;
-            }else{
+            } else {
                 var route = this.oData.updateRoute;
             }
-            if(this.name == null){
+            if (this.name == null) {
                 SGui.showMessage('', 'Debe ingresar un nombre de plan de vacaciones', 'warning');
                 this.disabledSave = false;
                 return;
             }
-            if(this.start_date == null){
+            if (this.start_date == null) {
                 SGui.showMessage('', 'Debe ingresar una fecha de inicio de plan de vacaciones', 'warning');
                 this.disabledSave = false;
                 return;
             }
-            for(let year of this.years){
-                if(year.year == '' || year.year == null){
+            for (let year of this.years) {
+                if (year.year == '' || year.year == null) {
                     SGui.showMessage('', 'Debe llenar todos los campos de año', 'warning');
                     this.disabledSave = false;
                     return;
                 }
-                if(year.days == '' || year.days == null){
+                if (year.days == '' || year.days == null) {
                     SGui.showMessage('', 'Debe llenar todos los campos de días', 'warning');
                     this.disabledSave = false;
                     return;
                 }
             }
             SGui.showWaiting(15000);
-            if(this.checkDataBeforeSave()){
+            if (this.checkDataBeforeSave()) {
                 axios.post(route, {
-                    'idVacPlan': this.idVacPlan,
-                    'years': this.years,
-                    'name': this.name,
-                    'payment_frec': this.payment_frec,
-                    'unionized': this.unionized,
-                    'start_date': this.start_date
-                })
-                .then(response => {
-                    this.disabledSave = false;
-                    var data = response.data;
-                    if(data.success){
-                        $('#modal_vacation_plan').modal('hide');
-                        SGui.showMessage('', data.message, data.icon);
-                        this.reDrawVacPlanTable(data);
-                        // this.lVacationPlans = data.lVacationPlans;
-                    }else{
-                        SGui.showMessage('', data.message, data.icon);
-                    }
-                })
-                .catch(function(error) {
-                    console.log(error);
-                    SGui.showError(error);
-                    this.disabledSave = false;
-                });
+                        'idVacPlan': this.idVacPlan,
+                        'years': this.years,
+                        'name': this.name,
+                        'payment_frec': this.payment_frec,
+                        'unionized': this.unionized,
+                        'start_date': this.start_date
+                    })
+                    .then(response => {
+                        this.disabledSave = false;
+                        var data = response.data;
+                        if (data.success) {
+                            $('#modal_vacation_plan').modal('hide');
+                            SGui.showMessage('', data.message, data.icon);
+                            this.reDrawVacPlanTable(data);
+                            // this.lVacationPlans = data.lVacationPlans;
+                        } else {
+                            SGui.showMessage('', data.message, data.icon);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                        SGui.showError(error);
+                        this.disabledSave = false;
+                    });
             }
             this.disabledSave = false;
         },
 
-        reDrawVacPlanTable(data){
+        reDrawVacPlanTable(data) {
             var dataPlan = [];
-            for(let vac of data.lVacationPlans){
+            for (let vac of data.lVacationPlans) {
                 dataPlan.push(
                     [
                         vac.id_vacation_plan,
@@ -288,40 +288,38 @@ var app = new Vue({
             table['table_vacationsPlans'].rows.add(dataPlan).draw();
         },
 
-        showInfo(){
-            Swal.fire(
-                {
-                    title: '',
-                    text: 'Si años consecutivos tienen el mismo número de dias, ' + 
-                            'no es necesario insertarlos todos, ' +
-                            'solo debes insertar el año de inicio con el número de días ' +
-                            'y el año final, por ejemplo: si el año 2 al 6 tienen 12 días de vacaciones ' +
-                            'solo debes introducir el renglon del año 2 con sus 12 dias correspondientes ' +
-                            'y el siguiente renglon con el año 6 con sus días correspondientes.',
-                }
-            );
-        },
-
-        deleteVacationPlan(id){
-            axios.post(this.oData.deleteVacationRoute, {
-                'vacation_plan_id': id,
-            })
-            .then(response => {
-                var data = response.data;
-                if(data.success){
-                    SGui.showMessage('', data.message, data.icon);
-                    this.reDrawVacPlanTable(data);
-                }else{
-                    SGui.showMessage('', data.message, data.icon);
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-                SGui.showError(error);
+        showInfo() {
+            Swal.fire({
+                title: '',
+                text: 'Si años consecutivos tienen el mismo número de días, ' +
+                    'no es necesario insertarlos todos, ' +
+                    'solo debes insertar el año de inicio con el número de días ' +
+                    'y el año final, por ejemplo: si el año 2 al 6 tienen 12 días de vacaciones ' +
+                    'solo debes introducir el renglon del año 2 con sus 12 días correspondientes ' +
+                    'y el siguiente renglon con el año 6 con sus días correspondientes.',
             });
         },
 
-        deleteRegistry(data){
+        deleteVacationPlan(id) {
+            axios.post(this.oData.deleteVacationRoute, {
+                    'vacation_plan_id': id,
+                })
+                .then(response => {
+                    var data = response.data;
+                    if (data.success) {
+                        SGui.showMessage('', data.message, data.icon);
+                        this.reDrawVacPlanTable(data);
+                    } else {
+                        SGui.showMessage('', data.message, data.icon);
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
+        },
+
+        deleteRegistry(data) {
             Swal.fire({
                 title: '¿Desea eliminar el registro?',
                 html: data[this.indexes.vacation_plan_name],
@@ -337,7 +335,7 @@ var app = new Vue({
             })
         },
 
-        showAssignModal(data){
+        showAssignModal(data) {
             this.lUsers = [];
             this.lUsersAssigned = [];
             this.vacation_plan_name = data[this.indexes.vacation_plan_name];
@@ -350,32 +348,32 @@ var app = new Vue({
             $('#modal_assign').modal('show');
         },
 
-        getAssignedUsers(vacation_plan_id){
+        getAssignedUsers(vacation_plan_id) {
             SGui.showWaiting(15000);
             axios.post(this.oData.getUsersAssignedRoute, {
-                'vacation_plan_id': vacation_plan_id
-            })
-            .then( response => {
-                var data = response.data;
-                if(data.success){
-                    this.lUsers = data.lUsers;
-                    this.lUsersAssigned = data.lUsersAssigned;
-                    this.reDrawUsersTable(this.lUsers);
-                    this.reDrawUsersAssignTable(this.lUsersAssigned);
-                    SGui.showOk();
-                }else{
-                    SGui.showMessage('', data.message, data.icon);
-                }
-            })
-            .catch(function(error) {
-                console.log(error);
-                SGui.showError(error);
-            })
+                    'vacation_plan_id': vacation_plan_id
+                })
+                .then(response => {
+                    var data = response.data;
+                    if (data.success) {
+                        this.lUsers = data.lUsers;
+                        this.lUsersAssigned = data.lUsersAssigned;
+                        this.reDrawUsersTable(this.lUsers);
+                        this.reDrawUsersAssignTable(this.lUsersAssigned);
+                        SGui.showOk();
+                    } else {
+                        SGui.showMessage('', data.message, data.icon);
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                })
         },
 
-        reDrawUsersTable(lUsers){
+        reDrawUsersTable(lUsers) {
             var dataUsers = [];
-            for(let user of lUsers){
+            for (let user of lUsers) {
                 dataUsers.push(
                     [
                         user.id,
@@ -387,9 +385,9 @@ var app = new Vue({
             table['table_users'].rows.add(dataUsers).draw();
         },
 
-        reDrawUsersAssignTable(lUsersAssigned){
+        reDrawUsersAssignTable(lUsersAssigned) {
             var dataUsersAssign = [];
-            for(let user of lUsersAssigned){
+            for (let user of lUsersAssigned) {
                 dataUsersAssign.push(
                     [
                         user.id,
@@ -401,14 +399,14 @@ var app = new Vue({
             table['table_users_assigned'].rows.add(dataUsersAssign).draw();
         },
 
-        passTolUsers(){
+        passTolUsers() {
             if (table['table_users_assigned'].row('.selected').data() == undefined) {
                 SGui.showError("Debe seleccionar un renglón");
                 return;
             }
             var data = table['table_users_assigned'].row('.selected').data();
 
-            this.lUsers.push({'id': data[this.indexesUsersAssign.id], 'full_name_ui': data[this.indexesUsersAssign.full_name_ui]});
+            this.lUsers.push({ 'id': data[this.indexesUsersAssign.id], 'full_name_ui': data[this.indexesUsersAssign.full_name_ui] });
             const index = this.lUsersAssigned.findIndex(({ id }) => id == data[this.indexesUsersAssign.id]);
             this.lUsersAssigned.splice(index, 1);
             this.lUsers.sort((a, b) => {
@@ -428,14 +426,14 @@ var app = new Vue({
             this.reDrawUsersTable(this.lUsers);
         },
 
-        passTolUsersAssign(){
+        passTolUsersAssign() {
             if (table['table_users'].row('.selected').data() == undefined) {
                 SGui.showError("Debe seleccionar un renglón");
                 return;
             }
             var data = table['table_users'].row('.selected').data();
 
-            this.lUsersAssigned.push({'id': data[this.indexesUsers.id], 'full_name_ui': data[this.indexesUsers.full_name_ui]});
+            this.lUsersAssigned.push({ 'id': data[this.indexesUsers.id], 'full_name_ui': data[this.indexesUsers.full_name_ui] });
             const index = this.lUsers.findIndex(({ id }) => id == data[this.indexesUsers.id]);
             this.lUsers.splice(index, 1);
             this.lUsersAssigned.sort((a, b) => {
@@ -455,25 +453,25 @@ var app = new Vue({
             this.reDrawUsersTable(this.lUsers);
         },
 
-        saveAssignVacationPlan(){
+        saveAssignVacationPlan() {
             SGui.showWaiting(15000);
             axios.post(this.oData.saveAssignVacationPlanRoute, {
-                'lUsersAssigned': this.lUsersAssigned,
-                'vacation_plan_id': this.vacation_plan_id
-            })
-            .then( response => {
-                var data = response.data;
-                if(data.success){
-                    SGui.showOk();
-                    $('#modal_assign').modal('hide');
-                }else{
-                    SGui.showMessage('',data.message,data.icon);
-                }
-            })
-            .catch(function(error){
-                console.log(error);
-                SGui.showError(error);
-            });
+                    'lUsersAssigned': this.lUsersAssigned,
+                    'vacation_plan_id': this.vacation_plan_id
+                })
+                .then(response => {
+                    var data = response.data;
+                    if (data.success) {
+                        SGui.showOk();
+                        $('#modal_assign').modal('hide');
+                    } else {
+                        SGui.showMessage('', data.message, data.icon);
+                    }
+                })
+                .catch(function(error) {
+                    console.log(error);
+                    SGui.showError(error);
+                });
         }
     },
 })

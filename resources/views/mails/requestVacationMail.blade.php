@@ -32,7 +32,7 @@
             <div class="card-body">
                 <div>
                     <h3>El colaborador: {{$employee->full_name}}</h3>
-                    <h4>ha solicitado periodo de vacaciones.</h4>
+                    <h4>ha solicitado período de vacaciones.</h4>
                 </div>
                 <br>
                 <div>

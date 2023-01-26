@@ -117,7 +117,7 @@
                     <br>
                     <table class="table table-bordered" id="vacationsTable" style="width: 100%;">
                         <thead class="thead-light">
-                            <th class="no-sort">Periodo</th>
+                            <th class="no-sort">Período</th>
                             <th>Aniversario</th>
                             <th class="no-sort">Vac. ganadas</th>
                             <th class="no-sort">Vac. gozadas</th>
