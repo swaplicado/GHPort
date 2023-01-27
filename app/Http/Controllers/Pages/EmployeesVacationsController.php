@@ -48,7 +48,7 @@ class EmployeesVacationsController extends Controller
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
 
         foreach($lEmployees as $key => $emp){
-            $from = Carbon::parse($emp->last_admission_date);
+            $from = Carbon::parse($emp->benefits_date);
             $to = Carbon::today()->locale('es');
             $human = $to->diffForHumans($from, true, false, 6);
             $emp->antiquity = $human;
@@ -60,7 +60,7 @@ class EmployeesVacationsController extends Controller
             }else{
                 $lEmployees[$key]->is_head_user = false;
             }
-            $from = Carbon::parse($lEmployees[$key]->last_admission_date);
+            $from = Carbon::parse($lEmployees[$key]->benefits_date);
             $to = Carbon::today()->locale('es');
     
             $human = $to->diffForHumans($from, true, false, 6);
@@ -80,7 +80,7 @@ class EmployeesVacationsController extends Controller
         foreach($lEmployees as $key => $emp){
             $orgJob = orgChartUtils::getDirectChildsOrgChartJob($emp->org_chart_job_id);
             $lEmployees[$key] = EmployeeVacationUtils::getEmployeeVacationsData($emp->id);
-            $from = Carbon::parse($emp->last_admission_date);
+            $from = Carbon::parse($emp->benefits_date);
             $to = Carbon::today()->locale('es');
             $human = $to->diffForHumans($from, true, false, 6);
             $lEmployees[$key]->antiquity = $human;

@@ -18,12 +18,16 @@ class VacationsController extends Controller
 {
     public function saveVacFromJSON($lSiieVacs)
     {
+        $arr_ids = [];
         try {
             \DB::table('vacation_allocations')->delete();
             \DB::table('programed_aux')->delete();
             \DB::statement("ALTER TABLE vacation_allocations AUTO_INCREMENT =  1");
             \DB::statement("ALTER TABLE programed_aux AUTO_INCREMENT =  1");
-            foreach($lSiieVacs as $rVac){
+        } catch (\Throwable $th) {
+        }
+        foreach($lSiieVacs as $rVac){
+            try {
                 $user = User::where('external_id_n', $rVac->employee_id)->first();
                 if(!is_null($user)){
                     foreach($rVac->rows as $vac){
@@ -60,8 +64,8 @@ class VacationsController extends Controller
                     }
                     EmployeeVacationUtils::syncVacConsumed($user->id);
                 }
+            } catch (\Throwable $th) {
             }
-        } catch (\Throwable $th) {
         }
     }
 

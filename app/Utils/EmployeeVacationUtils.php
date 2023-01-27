@@ -654,7 +654,7 @@ class EmployeeVacationUtils {
     public static function getEmployeeDataForMyVacation($employee_id){
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
             
-        $from = Carbon::parse($user->last_admission_date);
+        $from = Carbon::parse($user->benefits_date);
         $to = Carbon::today()->locale('es');
 
         $human = $to->diffForHumans($from, true, false, 6);

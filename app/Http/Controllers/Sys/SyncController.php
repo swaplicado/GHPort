@@ -25,7 +25,7 @@ class SyncController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
         $photos = SyncController::SyncPhotos();
-        $synchronized = true;
+        // $synchronized = true;
 
         $newDate = Carbon::now();
         $newDate->subMinutes(10);

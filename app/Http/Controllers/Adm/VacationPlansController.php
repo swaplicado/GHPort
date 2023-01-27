@@ -253,7 +253,9 @@ class VacationPlansController extends Controller
     public function generateVacationUser($user_id, $vacation_plan_id){
         $vacation_plan = VacationPlan::findOrFail($vacation_plan_id);
 
-        $vacation_plan_day = VacationPlanDay::where('vacations_plan_id', $vacation_plan_id)->get();
+        $vacation_plan_day = VacationPlanDay::where('vacations_plan_id', $vacation_plan_id)->get()->toArray();
+        $vacation_plan_day = json_encode($vacation_plan_day);
+        $vacation_plan_day = collect(json_decode($vacation_plan_day));
 
         $vacationUser = VacationUser::where('user_id', $user_id)
                                     ->where('is_deleted', 0)
