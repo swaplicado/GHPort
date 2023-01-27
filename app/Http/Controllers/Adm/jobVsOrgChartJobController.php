@@ -36,8 +36,15 @@ class jobVsOrgChartJobController extends Controller
         try {
             \DB::beginTransaction();
             $ojobVsOrgChartJob = jobVsOrgChartJob::find($request->jobVsOrgChartJob_id);
-            $ojobVsOrgChartJob->org_chart_job_id_n = $request->orgChart_id;
-            $ojobVsOrgChartJob->update();
+            if(is_null($ojobVsOrgChartJob)){
+                $ojobVsOrgChartJob = new jobVsOrgChartJob();
+                $ojobVsOrgChartJob->ext_job_id = $request->job_id; 
+                $ojobVsOrgChartJob->org_chart_job_id_n = $request->orgChart_id;
+                $ojobVsOrgChartJob->save();
+            }else{
+                $ojobVsOrgChartJob->org_chart_job_id_n = $request->orgChart_id;
+                $ojobVsOrgChartJob->update();
+            }
 
             $oOrgChartJob = OrgChartJob::find($request->orgChart_id);
             $oOrgChartJob->positions = $request->positions;
