@@ -56,14 +56,21 @@ class EmployeeVacationUtils {
      */
     public static function getEmployeeVacations($id, $years, $getYears = null, $startYear = null){
         $config = \App\Utils\Configuration::getConfigurations();
+        $lastAniversary = \DB::table('vacation_users')
+                            ->where('user_id', $id)
+                            ->where('date_end', '<=', Carbon::now()->toDateString())
+                            ->max('date_end');
+
+        $dEnd = Carbon::now()->addYears($years)->toDateString();
+        $dtStart = Carbon::parse($lastAniversary)->subYears($getYears)->toDateString();
 
         $oVacation = \DB::table('vacation_users as vu')
                         ->where('vu.is_deleted', 0)
                         ->where('vu.user_id', $id)
-                        ->where('vu.date_end', '<', Carbon::now()->addYears($years));
+                        ->where('vu.date_end', '<', $dEnd);
 
         if(!is_null($getYears)){
-            $oVacation = $oVacation->where('vu.date_start', '>=', Carbon::now()->subYears($getYears));
+            $oVacation = $oVacation->where('vu.date_end', '>=', $dtStart);
         }
 
         if(!is_null($startYear)){
@@ -233,11 +240,8 @@ class EmployeeVacationUtils {
                     )
                     ->first();
 
-        if($isAllHistory){
-            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
-        }else{
-            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years, $config->getVacations->years);
-        }
+        $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+        
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;
         $user->prop_vac_days = 0;
@@ -331,6 +335,9 @@ class EmployeeVacationUtils {
             $user->tot_vacation_request = 0;
         }
         $user->applications = EmployeeVacationUtils::getApplications($id, Carbon::now()->year);
+        if(!$isAllHistory && count($user->vacation) > 3){
+            $user->vacation = $user->vacation->slice(0, ((-1 * count($user->vacation) + 3)));
+        }
         return $user;
     }
 

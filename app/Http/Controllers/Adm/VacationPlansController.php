@@ -268,7 +268,7 @@ class VacationPlansController extends Controller
 
         $date = Carbon::parse($oUser->benefits_date);
         if(sizeof($vacationUser) > 0){
-            $vacationUser = $vacationUser->where('date_start', '>', $vacation_plan->start_date_n);
+            $vacationUser = $vacationUser->where('date_end', '>', $vacation_plan->start_date_n);
             foreach($vacationUser as $vac){
                 $oDays = $vacation_plan_day->where('until_year', $vac->id_anniversary)->first();
                 if(is_null($oDays)){
