@@ -137,6 +137,9 @@
 @endsection
 
 @section('scripts')
+<script>
+    moment.locale('es');
+</script>
     @foreach($lEmployees as $emp)
         @include('layouts.table_jsControll', [
                                             'table_id' => 'table_info_employee_'.$emp->employee_num,

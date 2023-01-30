@@ -141,6 +141,9 @@
 @endsection
 
 @section('scripts')
+<script>
+    moment.locale('es');
+</script>
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_all_emp_vacations.js') }}"></script>
     <script type="text/javascript">
