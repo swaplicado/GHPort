@@ -18,6 +18,12 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
+                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
+                                                ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
+                    ],
                 ];
                 break;
 
@@ -35,10 +41,17 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                     (object) ['type' => $element, 'route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-sm', 'name' => 'Temporadas especiales'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
+                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
+                                                ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
+                    ],
                     !Session::get('is_delegation') ? 
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
                 ];
+                    
                 break;
 
             //GH
@@ -56,6 +69,12 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
+                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
+                                                ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
+                    ],
                 ];
                 break;
 
@@ -77,6 +96,12 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('vacationPlans'), 'icon' => 'bx bxs-notepad bx-sm', 'name' => 'Plan vacaciones'],
                     (object) ['type' => $element, 'route' => route('bitacoras'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Bitacoras'],
                     (object) ['type' => $element, 'route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-sm', 'name' => 'Temporadas especiales'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
+                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
+                                                ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
+                    ],
                     !Session::get('is_delegation') ?
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',

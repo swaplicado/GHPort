@@ -10,4 +10,9 @@ class TutorialController extends Controller
     {
         return view('tutorial.index');
     }
+
+    public function lideres()
+    {
+        return view('tutorial.lideres');
+    }
 }

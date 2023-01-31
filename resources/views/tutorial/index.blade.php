@@ -10,9 +10,11 @@
             </a>
         </h3>
     </div>
-    <video width="940" height="560" controls>
-        <source src="videos/usuarios.mp4" type="video/mp4">
-        Tu navegador no soporta HTML5 video.
-    </video>
+    <div class="card-body">
+        <video width="940" height="560" controls>
+            <source src="videos/usuarios.mp4" type="video/mp4">
+            Tu navegador no soporta HTML5 video.
+        </video>
+    </div>
 </div>   
 @endsection

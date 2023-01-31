@@ -115,5 +115,6 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('jobVsOrgChartJob', 'Adm\jobVsOrgChartJobController@index')->name('jobVsOrgChartJob');
     Route::post('jobVsOrgChartJob/update', 'Adm\jobVsOrgChartJobController@update')->name('jobVsOrgChartJob_update');
 
-    Route::get('tutorial', 'TutorialController@index')->name('tutorial');
+    Route::get('tutorial', 'TutorialController@index')->name('tutorialUsuarios');
+    Route::get('lideres', 'TutorialController@lideres')->name('tutorialLideres');
 });
