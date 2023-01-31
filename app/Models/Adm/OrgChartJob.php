@@ -71,4 +71,40 @@ class OrgChartJob extends Model
             return null;
         }
     }
+
+    public function getArrayParentsBoss(){
+        $arrayParents = [];
+        if(isset($this->parent)){
+            foreach($this->parent as $p){
+                if($p->is_boss){
+                    array_push($arrayParents, [$p->id_org_chart_job]);
+                }
+                array_push($arrayParents, $p->getArrayParents());
+            }
+            $arrayParents = Arr::collapse($arrayParents);
+            return $arrayParents;
+        }else{
+            return null;
+        }
+    }
+
+    public function getChildrensNoBoss(){
+        $child = $this->children()->get();
+        foreach($child as $c){
+            if($c->is_boss == 0){
+                $c->child = $c->getChildrensNoBoss();
+            }
+        }
+        return $child;
+    }
+
+    public function getParentsBoss(){
+        $parent = $this->getParent()->get();
+        foreach($parent as $c){
+            if($c->is_boss == 0){
+                $c->parent = $c->getParentsBoss();
+            }
+        }
+        return $parent;
+    }
 }

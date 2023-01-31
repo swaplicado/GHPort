@@ -314,7 +314,8 @@ class myVacationsController extends Controller
             $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
             $employee = User::find($request->employee_id);
-            $arrOrgJobs = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
+            // $arrOrgJobsAux = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
+            $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
 
             $superviser = \DB::table('users')
                             ->where('is_delete', 0)

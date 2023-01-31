@@ -94,6 +94,19 @@ class EmployeeVacationUtils {
     }
 
     /**
+     * Obtiene el proximo renglon de vacaciones
+     */
+    public static function getProxVacation($employee_id){
+        $nextVac = \DB::table('vacation_users')
+                            ->where('user_id', $employee_id)
+                            ->where('date_end', '>', Carbon::now()->toDateString())
+                            ->orderBy('date_end', 'asc')
+                            ->first();
+
+        return $nextVac;
+    }
+
+    /**
      * Obtiene las vacaciones consumidas por un empleado
      */
     public static function getVacationConsumed($id, $year){
@@ -241,6 +254,7 @@ class EmployeeVacationUtils {
                     ->first();
 
         $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+        $oNextVacation = EmployeeVacationUtils::getProxVacation($id);
         
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;
@@ -249,6 +263,9 @@ class EmployeeVacationUtils {
         foreach($user->vacation as $vac){
             $date_start = Carbon::parse($vac->date_start);
             $date_end = Carbon::parse($vac->date_end);
+
+            $nextDateStart = Carbon::parse($oNextVacation->date_start);
+            $nextDateEnd = Carbon::parse($oNextVacation->date_end);
 
             $oVacConsumed = EmployeeVacationUtils::getVacationConsumed($id, $vac->year);
             $vac_request = EmployeeVacationUtils::getVacationRequested($id, $vac->year);
@@ -297,9 +314,13 @@ class EmployeeVacationUtils {
                 }
             }
 
-            if(Carbon::today()->gt($date_start) && Carbon::today()->lt($date_end)){
-                $user->prox_vac_days = $vac->remaining;
-                $user->prop_vac_days = number_format(((Carbon::today()->diffInDays($date_start) * $user->prox_vac_days) / $date_start->diffInDays($date_end)), 2);
+            if(Carbon::today()->gt($date_start) && Carbon::today()->lt($nextDateEnd) && $date_end->diffInYears(Carbon::today()) < 1){
+                // $user->prox_vac_days = $vac->remaining;
+                $user->prox_vac_days = $oNextVacation->vacation_days;
+                $d = Carbon::today()->diffInDays($date_end);
+                $b = $nextDateStart->diffInDays($nextDateEnd);
+                // $user->prop_vac_days = number_format(((Carbon::today()->diffInDays($date_start) * $user->prox_vac_days) / $date_start->diffInDays($date_end)), 2);
+                $user->prop_vac_days = number_format(((Carbon::today()->diffInDays($date_end) * $user->prox_vac_days) / $nextDateStart->diffInDays($nextDateEnd)), 2);
             }
 
             if($date_start->lt(Carbon::today()) && $date_end->lt(Carbon::today()) && Carbon::today()->diffInYears($date_end) < 1){

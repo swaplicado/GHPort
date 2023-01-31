@@ -89,7 +89,7 @@ var app = new Vue({
                                             +'</tr>'
                                             +'<tr>'
                                                 +'<th>Fecha ingreso:</th>'
-                                                +'<td>'+this.oDateUtils.formatDate(emp.last_admission_date)+'</td>'
+                                                +'<td>'+this.oDateUtils.formatDate(emp.benefits_date)+'</td>'
                                             +'</tr>'
                                             +'<tr>'
                                                 +'<th>Antigüedad:</th>'

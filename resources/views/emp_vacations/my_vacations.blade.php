@@ -91,7 +91,7 @@
                                 </tr>
                                 <tr>
                                     <th>Fecha ingreso:</th>
-                                    <td>@{{oDateUtils.formatDate(oUser.last_admission_date)}}</td>
+                                    <td>@{{oDateUtils.formatDate(oUser.benefits_date)}}</td>
                                 </tr>
                                 <tr>
                                     <th>Antigüedad:</th>

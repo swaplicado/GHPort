@@ -29,7 +29,8 @@ class requestVacationsController extends Controller
             $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         }
 
-        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
+        // $arrOrgJobsAux = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
 
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
 
@@ -108,7 +109,7 @@ class requestVacationsController extends Controller
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
         delegationUtils::getAutorizeRolUser(SysConst::JEFE);
-        delegationUtils::getIsMyEmployeeUser()($request->id_user);
+        delegationUtils::getIsMyEmployeeUser($request->id_user);
         try {
             $application = Application::findOrFail($request->id_application);
 

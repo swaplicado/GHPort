@@ -1,4 +1,4 @@
-<button class="bx bx-question-mark btn3d" onclick="document.getElementById('{{$id}}').style.display == 'none' ? document.getElementById('{{$id}}').style.display = 'block' : document.getElementById('{{$id}}').style.display = 'none';" title="Popover Header">
+<button class="bx bxs-palette btn3d" onclick="document.getElementById('{{$id}}').style.display == 'none' ? document.getElementById('{{$id}}').style.display = 'block' : document.getElementById('{{$id}}').style.display = 'none';" title="Código de colores">
 </button>
 <div class="row">
     <div class="col-xs-12 col-md-8" id="{{$id}}" style="display: none; z-index: 2; position: absolute; background-color: white; border: solid 1px black;">

@@ -65,7 +65,7 @@
                                 </tr>
                                 <tr>
                                     <th>Fecha ingreso:</th>
-                                    <td>@{{oDateUtils.formatDate(emp.last_admission_date)}}</td>
+                                    <td>@{{oDateUtils.formatDate(emp.benefits_date)}}</td>
                                 </tr>
                                 <tr>
                                     <th>Antigüedad:</th>

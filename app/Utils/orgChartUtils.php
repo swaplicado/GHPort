@@ -32,6 +32,26 @@ class OrgChartUtils {
     }
 
     /**
+     * Obtiene todos los org chart jobs inferiores al org chart job que no sean boss
+     */
+    public static function getAllChildsOrgChartJobNoBoss($id){
+        $group = OrgChartJob::find($id);
+        $group->child = $group->getChildrensNoBoss();
+        $arrayAreas = $group->getArrayChilds();
+        return $arrayAreas;
+    }
+
+    /**
+     * Obtiene el org chart jobs directamente superior al org chart job
+     */
+    public static function getDirectFatherBossOrgChartJob($id){
+        $oOrgChart = $group = OrgChartJob::find($id);
+        $oOrgChart->parent = $oOrgChart->getParentsBoss();
+        $arrayAreas = $group->getArrayParentsBoss();
+        return $arrayAreas;
+    }
+
+    /**
      * Obtiene el org chart jobs directamente superior al org chart job
      */
     public static function getDirectFatherOrgChartJob($id){
