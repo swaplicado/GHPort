@@ -44,10 +44,10 @@ var app = new Vue({
                                                 if(emp.company_id == 1){
                                                     head_accord = head_accord
                                                         +'<img src="img/aeth.png" width="50px" height="20px" alt="">';
-                                                }else if(emp.company_id == 2){
+                                                }else if(emp.company_id == 3){
                                                     head_accord = head_accord
                                                         +'<img src="img/tron.png" width="25px" height="20px" alt="">';
-                                                }else if(emp.company_id == 3){
+                                                }else if(emp.company_id == 4){
                                                     head_accord = head_accord
                                                         +'<img src="img/swap_logo_22.png" width="40px" height="20px" alt="">';
                                                 }else if(emp.company_id == 5){

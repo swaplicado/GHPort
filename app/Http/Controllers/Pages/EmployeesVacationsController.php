@@ -24,7 +24,8 @@ class EmployeesVacationsController extends Controller
         // $lEmployees = $this->getDirectEmployees(\Auth::user()->org_chart_job_id);
         $lEmployees = $this->getDirectEmployees(delegationUtils::getOrgChartJobIdUser());
 
-        return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
+        // return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
+        return view('emp_vacations.my_direct_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }
 
     /**

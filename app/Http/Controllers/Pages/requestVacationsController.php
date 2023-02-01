@@ -424,6 +424,10 @@ class requestVacationsController extends Controller
                         ->where('id', $oApplication->user_id)
                         ->first();
 
+        $ext_company_id = \DB::table('ext_company')
+                            ->where('id_company', $employee->company_id)
+                            ->value('external_id');
+
         $appBreakDowns = ApplicationsBreakdown::where('application_id', $oApplication->id_application)->get();
 
         $typeIncident = \DB::table('cat_incidence_tps')
@@ -464,7 +468,7 @@ class requestVacationsController extends Controller
             'application_id' => $oApplication->id_application,
             'folio' => $oApplication->folio_n,
             'employee_id' => $employee->external_id_n,
-            'company_id' => $employee->company_id,
+            'company_id' => $ext_company_id,
             'type_pay_id' => $employee->payment_frec_id,
             'type_incident_id' => $typeIncident->id_incidence_tp,
             'class_incident_id' => $typeIncident->incidence_cl_id,

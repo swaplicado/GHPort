@@ -16,7 +16,7 @@
 <div class="card shadow mb-4" id="allEmpVacationApp">
     <div class="card-header">
         <h3>
-            <b>VACACIONES COLABORADORES</b>
+            <b>VACACIONES TODO MIS COLABORADORES</b>
             <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vaccolaboradores" target="_blank">
                 <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
             </a>
@@ -35,8 +35,8 @@
                                 <td style="width: 30%">@{{emp.employee}}</td>
                                 <td style="width: 10%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
                                     <img v-if="emp.company_id == 1" src="img/aeth.png" width="60px" height="20px" alt="">
-                                    <img v-else-if="emp.company_id == 2" src="img/tron.png" width="25px" height="20px" alt="">
-                                    <img v-else-if="emp.company_id == 3" src="img/swap_logo_22.png" width="50px" height="20px" alt="">
+                                    <img v-else-if="emp.company_id == 3" src="img/tron.png" width="25px" height="20px" alt="">
+                                    <img v-else-if="emp.company_id == 4" src="img/swap_logo_22.png" width="50px" height="20px" alt="">
                                     <img v-else-if="emp.company_id == 5" src="img/ame.png" width="50px" height="20px" alt="">
                                 </td>
                                 <td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días</td>
