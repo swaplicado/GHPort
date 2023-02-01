@@ -32,10 +32,10 @@
                                 <tr>
                                     <td style="width: 30%">@{{emp.employee}}</td>
                                     <td style="width: 10%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
-                                        <img v-if="emp.company_id == 1" src="../img/aeth.png" width="60px" height="20px" alt="">
-                                        <img v-else-if="emp.company_id == 2" src="../img/tron.png" width="25px" height="20px" alt="">
-                                        <img v-else-if="emp.company_id == 3" src="../img/swap_logo_22.png" width="50px" height="20px" alt="">
-                                        <img v-else-if="emp.company_id == 5" src="../img/ame.png" width="50px" height="20px" alt="">
+                                        <img v-if="emp.company_id == 1" src="img/aeth.png" width="60px" height="20px" alt="">
+                                        <img v-else-if="emp.company_id == 2" src="img/tron.png" width="25px" height="20px" alt="">
+                                        <img v-else-if="emp.company_id == 3" src="img/swap_logo_22.png" width="50px" height="20px" alt="">
+                                        <img v-else-if="emp.company_id == 5" src="img/ame.png" width="50px" height="20px" alt="">
                                     </td>
                                     <td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días</td>
                                     <td v-if="emp.is_head_user" style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
