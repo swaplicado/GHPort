@@ -36,24 +36,25 @@
             this.indexesRequest = {
                 'id': 0,
                 'user_id': 1,
-                'benefits_date': 2,
-                'payment_frec_id': 3,
-                'request_status_id': 4,
-                'take_holidays': 5,
-                'take_rest_days': 6,
-                'sup_comments': 7,
-                'user_apr_rej_id': 8,
-                'folio': 9,
-                'user_apr_rej_name': 10,
-                'employee': 11,
-                'created_at': 12,
-                'approved_date': 13,
-                'start_date': 14,
-                'end_date': 15,
-                'return_date': 16,
-                'total_days': 17,
-                'applications_st_name': 18,
-                'comments': 19
+                'birthday': 2,
+                'benefits_date': 3,
+                'payment_frec_id': 4,
+                'request_status_id': 5,
+                'take_holidays': 6,
+                'take_rest_days': 7,
+                'sup_comments': 8,
+                'user_apr_rej_id': 9,
+                'folio': 10,
+                'user_apr_rej_name': 11,
+                'employee': 12,
+                'created_at': 13,
+                'approved_date': 14,
+                'start_date': 15,
+                'end_date': 16,
+                'return_date': 17,
+                'total_days': 18,
+                'applications_st_name': 19,
+                'comments': 20,
             };
 
         //data para la vista my_vacations
@@ -153,6 +154,7 @@
                     <thead class="thead-light">
                         <th>id</th>
                         <th>user_id</th>
+                        <th>birthday</th>
                         <th>benefits_date</th>
                         <th>emp_frecuency_pay</th>
                         <th>request_status_id</th>
@@ -177,6 +179,7 @@
                             <tr v-for="rec in emp.applications">
                                 <td>@{{ rec.id_application }}</td>
                                 <td>@{{ rec.user_id }}</td>
+                                <td>@{{ emp.birthday_n }}</td>
                                 <td>@{{ emp.benefits_date }}</td>
                                 <td>@{{ emp.payment_frec_id }}</td>
                                 <td>@{{ rec.request_status_id }}</td>
@@ -456,8 +459,8 @@ oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
     </script>
     @include('layouts.table_jsControll', [
         'table_id' => 'table_requestVac',
-        'colTargets' => [1, 2, 3, 5, 6, 7, 8],
-        'colTargetsSercheable' => [0, 4],
+        'colTargets' => [1, 2, 3, 4, 6, 7, 8, 9],
+        'colTargetsSercheable' => [0, 5],
         'select' => true,
         'noSort' => true,
         'accept' => true,

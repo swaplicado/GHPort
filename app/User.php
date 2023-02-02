@@ -32,6 +32,7 @@ class User extends Authenticatable
         'vacation_date',
         'last_admission_date',
         'last_dismiss_date_n',
+        'birthday_n',
         'current_hire_log_id',
         'is_unionized',
         'is_active',

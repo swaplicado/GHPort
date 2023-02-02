@@ -93,7 +93,7 @@ class SDateRangePicker {
                             _class = 'aniversary';
                             _tooltip = _tooltip + 'Aniversario. ';
                         }
-                        if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                        if(moment(birthday).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                             _class = 'birthDay';
                             _tooltip = _tooltip + 'Cumpleaños. ';
                         }
@@ -233,7 +233,7 @@ class SDateRangePicker {
                         _class = 'aniversary';
                         _tooltip = _tooltip + 'Aniversario. ';
                     }
-                    if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
+                    if(moment(birthday).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                         _class = 'birthDay';
                         _tooltip = _tooltip + 'Cumpleaños. ';
                     }

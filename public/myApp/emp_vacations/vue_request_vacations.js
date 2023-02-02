@@ -74,6 +74,7 @@ var appRequestVacation = new Vue({
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
+            birthday = data[this.indexes.birthday];
             aniversaryDay = data[this.indexes.benefits_date];
             this.status = data[this.indexes.applications_st_name];
             this.startDate = data[this.indexes.start_date];
@@ -98,6 +99,7 @@ var appRequestVacation = new Vue({
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
+            birthday = data[this.indexes.birthday];
             aniversaryDay = data[this.indexes.benefits_date];
             this.status = data[this.indexes.applications_st_name];
             this.startDate = data[this.indexes.start_date];
@@ -181,6 +183,7 @@ var appRequestVacation = new Vue({
                         [
                             rec.id_application,
                             rec.user_id,
+                            emp.birthday_n,
                             emp.benefits_date,
                             emp.payment_frec_id,
                             rec.request_status_id,

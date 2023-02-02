@@ -181,6 +181,7 @@ var appMyVacations = new Vue({
             this.prop_vac_days = oUser.prop_vac_days;
             this.prox_vac_days = oUser.prox_vac_days;
             aniversaryDay = oUser.benefits_date;
+            birthday = oUser.birthday_n;
         },
 
         /**

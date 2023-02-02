@@ -72,6 +72,7 @@ class UsersController extends Controller
                                 'payment_frec_id' => $jUser->way_pay,
                                 'last_admission_date' => $jUser->admission_date,
                                 'last_dismiss_date_n' => $jUser->leave_date,
+                                'birthday_n' => $jUser->dt_bir,
                                 'job_id' => $this->lJobs[$jUser->siie_job_id],
                                 'vacation_plan_id' => 1,
                                 'is_active' => $jUser->is_active,
@@ -172,6 +173,7 @@ class UsersController extends Controller
         $oUser->vacation_date = $jUser->admission_date;
         $oUser->last_admission_date = $jUser->admission_date;
         $oUser->last_dismiss_date_n = $jUser->leave_date;
+        $oUser->birthday_n = $jUser->dt_bir;
         $oUser->current_hire_log_id = 1;
         $oUser->is_unionized = 0;
         $oUser->company_id = $comp;
