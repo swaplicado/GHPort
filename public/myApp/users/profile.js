@@ -37,6 +37,7 @@ var app = new Vue({
                     this.password = null;
                     this.confirm_password = null;
                     this.changePass = false;
+                    window.location.reload();
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }

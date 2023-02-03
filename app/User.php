@@ -36,6 +36,7 @@ class User extends Authenticatable
         'current_hire_log_id',
         'is_unionized',
         'is_active',
+        'changed_password',
         'external_id_n',
         'is_delete',
         'created_by',

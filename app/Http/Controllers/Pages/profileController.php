@@ -27,6 +27,7 @@ class profileController extends Controller
             $user = User::findOrFail(\Auth::user()->id);
             // $user = User::findOrFail(delegationUtils::getIdUser());
             $user->password = Hash::make($request->password);
+            $user->changed_password = 1;
             $user->update();
             \DB::commit();
         } catch (\Throwable $th) {
