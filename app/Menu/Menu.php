@@ -102,12 +102,7 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
                     ],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('specialType'), 'icon' => 'bx bxs-folder_open bx-sm', 'name' => 'Tipos sol. espe.'],
-                        ['route' => route('SpecialTypeVsOrgChart'), 'icon' => 'bx bxs-folder_open bx-sm', 'name' => 'Asign. tipos sol. espe.'],
-                                                ],
-                                                'icon' => 'bx bxs-folder-open bx-sm', 'name' => 'Administración', 'id' => 'administracion'
-                    ],
+                    
                     !Session::get('is_delegation') ?
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
