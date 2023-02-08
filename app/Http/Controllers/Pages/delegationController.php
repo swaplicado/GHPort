@@ -37,9 +37,12 @@ class delegationController extends Controller
                                 ->leftJoin('users as uB', 'uB.id', '=', 'd.user_delegated_id')
                                 ->where('d.is_deleted', 0)
                                 ->where('d.is_active', 1)
-                                ->whereIn('user_delegated_id', $lEmployees)
-                                // ->orWhere('user_delegated_id', \Auth::user()->id)
-                                ->orWhere('user_delegated_id', delegationUtils::getIdUser())
+                                ->where(function($query) use($lEmployees){
+                                    $query->whereIn('user_delegated_id', $lEmployees)
+                                    // ->orWhere('user_delegated_id', \Auth::user()->id)
+                                    ->orWhere('user_delegated_id', delegationUtils::getIdUser());
+
+                                })
                                 ->select(
                                     'd.*',
                                     'uA.full_name_ui as user_delegation_name',
@@ -63,8 +66,9 @@ class delegationController extends Controller
         }
 
         $lUsers = OrgChartUtils::getAllManagers($arrExcept);
+        $lMyManagers = OrgChartUtils::getMyManagers(\Auth::user()->org_chart_job_id);
 
-        return [$lUsers, $lDelegations_created, $lDelegations_asigned];
+        return [$lUsers, $lDelegations_created, $lDelegations_asigned, $lMyManagers];
     }
 
     public function index(){
@@ -74,7 +78,8 @@ class delegationController extends Controller
 
         return view('delegations.delegations')->with('lUsers', $data[0])
                                             ->with('lDelegations_created', $data[1])
-                                            ->with('lDelegations_asigned', $data[2]);
+                                            ->with('lDelegations_asigned', $data[2])
+                                            ->with('lMyManagers', $data[3]);
     }
 
     public function saveDelegation(Request $request){
