@@ -20,6 +20,7 @@
     <script>
         function GlobalData(){
             this.lUsers = <?php echo json_encode($lUsers); ?>;
+            this.lMyManagers = <?php echo json_encode($lMyManagers); ?>;
             this.lDelegations_created = <?php echo json_encode($lDelegations_created); ?>;
             this.lDelegations_asigned = <?php echo json_encode($lDelegations_asigned); ?>;
             this.saveDelegationRoute = <?php echo json_encode(route('delegation_saveDelegation')); ?>;
