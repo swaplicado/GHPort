@@ -455,8 +455,60 @@ var app = new Vue({
             this.reDrawUsersTable(this.lUsers);
         },
 
+        passAllTolUsersAssign(){
+            var data = table['table_users'].rows().data().toArray();
+            
+            data.forEach(row => {
+                this.lUsersAssigned.push({'id': row[this.indexesUsers.id], 'full_name_ui': row[this.indexesUsers.full_name_ui]});
+                const index = this.lUsers.findIndex(({ id }) => id == row[this.indexesUsers.id]);
+                this.lUsers.splice(index, 1);
+                this.lUsersAssigned.sort((a, b) => {
+                    const nameA = a.full_name_ui.toUpperCase();
+                    const nameB = b.full_name_ui.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            });
+
+            table['table_users'].search('');
+            table['table_users_assigned'].search('');
+            this.reDrawUsersAssignTable(this.lUsersAssigned);
+            this.reDrawUsersTable(this.lUsers);
+        },
+
+        passAllTolUsers(){
+            var data = table['table_users_assigned'].rows().data().toArray();
+
+            data.forEach(row => {
+                this.lUsers.push({'id': row[this.indexesUsersAssign.id], 'full_name_ui': row[this.indexesUsersAssign.full_name_ui]});
+                const index = this.lUsersAssigned.findIndex(({ id }) => id == row[this.indexesUsersAssign.id]);
+                this.lUsersAssigned.splice(index, 1);
+                this.lUsers.sort((a, b) => {
+                    const nameA = a.full_name_ui.toUpperCase();
+                    const nameB = b.full_name_ui.toUpperCase();
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            })
+
+            table['table_users'].search('');
+            table['table_users_assigned'].search('');
+            this.reDrawUsersAssignTable(this.lUsersAssigned);
+            this.reDrawUsersTable(this.lUsers);
+        },
+
         saveAssignVacationPlan(){
-            SGui.showWaiting(15000);
+            SGui.showWaiting(60000);
             axios.post(this.oData.saveAssignVacationPlanRoute, {
                 'lUsersAssigned': this.lUsersAssigned,
                 'vacation_plan_id': this.vacation_plan_id
