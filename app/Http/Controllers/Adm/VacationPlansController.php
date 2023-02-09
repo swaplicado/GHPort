@@ -225,24 +225,34 @@ class VacationPlansController extends Controller
                                     ->whereNotIn('id', $lUserAssigned_id)
                                     ->get();
 
-            \DB::beginTransaction();
             foreach($lUsersUnsigned as $userUns){
-                $this->saveVacationUserLog($userUns);
-                $userUns->vacation_plan_id = 1;
-                $userUns->update();
-                $this->generateVacationUser($userUns->id, 1);
+                try {
+                    \DB::beginTransaction();
+                    $this->saveVacationUserLog($userUns);
+                    $userUns->vacation_plan_id = 1;
+                    $userUns->update();
+                    $this->generateVacationUser($userUns->id, 1);
+                    \DB::commit();
+                } catch (\Throwable $th) {
+                    \DB::rollback();
+                }
             }
     
             $lUsers = User::whereIn('id', $lUserAssigned_id)->get();
     
             foreach($lUsers as $user){
-                $this->saveVacationUserLog($user);
-                $user->vacation_plan_id = $request->vacation_plan_id;
-                $user->update();
-                $this->generateVacationUser($user->id, $request->vacation_plan_id);
+                try {
+                    \DB::beginTransaction();
+                    $this->saveVacationUserLog($user);
+                    $user->vacation_plan_id = $request->vacation_plan_id;
+                    $user->update();
+                    $this->generateVacationUser($user->id, $request->vacation_plan_id);
+                    \DB::commit();
+                } catch (\Throwable $th) {
+                    \DB::rollback();
+                }
             }
 
-            \DB::commit();
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
         }
