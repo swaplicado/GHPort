@@ -8,8 +8,10 @@ class vacationUtils{
         var totCalendarDays = (moment(endDate, 'YYYY-MM-DD').diff(moment(startDate, 'YYYY-MM-DD'), 'days') + 1);
         var diffDays = moment(endDate).diff(moment(startDate), 'days');
         var oDate = moment(startDate);
+        var obDate = moment(startDate);
         var returnDate = moment(endDate).add('1', 'days');
         var lDays = [];
+        var lNoBussinesDay = [];
         let oDateUtils = new SDateUtils();
         for(var i = 0; i < 31; i++){
             switch (returnDate.weekday()) {
@@ -41,6 +43,8 @@ class vacationUtils{
                 ){
                     takedDays = takedDays + 1;
                     lDays.push( oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY') );
+                }else{
+                    lNoBussinesDay.push(oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY'));
                 }
                 oDate.add('1', 'days');
             }else{
@@ -50,13 +54,13 @@ class vacationUtils{
                 ){
                     takedDays = takedDays + 1;
                     lDays.push( oDateUtils.formatDate(oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY') );
+                }else{
+                    lNoBussinesDay.push(oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY'));
                 }
                 oDate.add('1', 'days');
             }
-
-
         }
 
-        return [returnDate, takedDays, lDays, totCalendarDays];
+        return [returnDate, takedDays, lDays, totCalendarDays, lNoBussinesDay];
     }
 }

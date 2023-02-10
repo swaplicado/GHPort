@@ -33,6 +33,10 @@ var appMyVacations = new Vue({
         renderTableMyVacations: false,
         renderTableMyRequest: false,
         initialCalendarDate: null,
+        takedNoBussinesDay: false,
+        originalDaysTaked: 0,
+        lNoBussinesDay: [],
+        noBussinesDayIndex: 0,
     },
     mounted(){
         
@@ -214,6 +218,10 @@ var appMyVacations = new Vue({
             this.prox_vac_days = null;
             this.renderTableMyVacations = false;
             this.renderTableMyRequest = false;
+            this.takedNoBussinesDay = false;
+            this.originalDaysTaked = 0;
+            this.lNoBussinesDay = [];
+            this.noBussinesDayIndex = 0;
         },
 
         /**
@@ -419,6 +427,11 @@ var appMyVacations = new Vue({
                 $('#date-range200-myRequest').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
 			    $('#date-range201-myRequest').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
                 this.isNewApplication = true;
+                this.returnDate = data[this.indexes.return_date];
+                this.takedDays = data[this.indexes.taked_days];
+                this.noBussinesDayIndex = 0;
+                this.reMaplDays();
+                // this.lDays = result[2];
             }else{
                 if(this.HasRequestCreated()){
                     SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
@@ -437,6 +450,7 @@ var appMyVacations = new Vue({
                 this.take_rest_days = false;
                 this.take_holidays = false;
                 this.valid = true;
+                this.noBussinesDayIndex = 0;
                 dateRangePickerValid = this.valid;
                 $('#clear').trigger('click');
                 $('#two-inputs-myRequest').data('dateRangePicker').redraw();
@@ -457,8 +471,62 @@ var appMyVacations = new Vue({
 
             this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
             this.takedDays = result[1];
+            this.originalDaysTaked = result[1];
             this.lDays = result[2];
+            this.startDate = this.lDays[0];
             this.totCalendarDays = result[3];
+            this.lNoBussinesDay = result[4];
+            this.noBussinesDayIndex = 0;
+            if(this.takedDays < this.totCalendarDays){
+                this.takedNoBussinesDay = true;
+            }else{
+                this.takedNoBussinesDay = false;
+            }
+        },
+
+        reMaplDays(){
+            for(let i = 0; i < (parseInt(this.takedDays) - this.originalDaysTaked); i++){
+                this.lDays.push(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.noBussinesDayIndex++;
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+            this.startDate = this.lDays[0];
+        },
+
+        addDayToEfectiveDays(){
+            if(this.takedDays == this.originalDaysTaked){
+                SGui.showMessage('', 'Se tomarán días inhabiles como vacaciones', 'info');
+            }
+            if(this.takedDays < this.totCalendarDays){
+                this.takedDays++;
+                this.lDays.push(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.noBussinesDayIndex++;
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+            this.startDate = this.lDays[0];
+        },
+
+        minusDayToEfectiveDays(){
+            if(this.takedDays > this.originalDaysTaked){
+                this.takedDays--;
+                this.noBussinesDayIndex--;
+                let index = this.lDays.indexOf(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.lDays.splice(index, 1);
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+            this.startDate = this.lDays[0];
         },
 
         formatDate(sDate){

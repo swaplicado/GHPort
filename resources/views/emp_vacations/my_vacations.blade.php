@@ -369,6 +369,10 @@
 
     function dateRangePickerClearValue(){
         app.returnDate = null;
+        app.takedNoBussinesDay = false;
+        app.originalDaysTaked = 0;
+        app.lNoBussinesDay = [];
+        app.noBussinesDayIndex = 0;
     }
 </script>
 @endsection

@@ -141,7 +141,7 @@ class requestVacationsController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            $data = json_decode($this->sendRequestVacation($application));
+            $data = json_decode($this->sendRequestVacation($application, $request->lDaysConventionalFormat));
 
             if($data->code == 500 || $data->code == 550){
                 \DB::rollBack();
@@ -414,7 +414,7 @@ class requestVacationsController extends Controller
         return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
     }
 
-    public function sendRequestVacation($oApplication){
+    public function sendRequestVacation($oApplication, $lDays){
         $lHolidays = \DB::table('holidays')
                         ->where('is_deleted', 0)
                         ->pluck('fecha')
@@ -440,13 +440,15 @@ class requestVacationsController extends Controller
                             ->get();
 
         $rows = [];
-        $start_date = $this->checkDate(Carbon::parse($oApplication->start_date), $lHolidays, $employee);
+        // $start_date = $this->checkDate(Carbon::parse($oApplication->start_date), $lHolidays, $employee);
+        $start_date = Carbon::parse($oApplication->start_date);
         $count = 0;
         foreach($appBreakDowns as $br){
             $year = $userVacation->where('year', $br->application_year)->first();
             $end_date = clone $start_date;
             for ($i=0; $i<($br->days_effective - 1); $i++) { 
-                $end_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
+                // $end_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
+                $end_date = Carbon::parse($lDays[$br->days_effective - 1]);
             }
             $count++;
             $row = [

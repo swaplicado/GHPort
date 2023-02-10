@@ -70,6 +70,12 @@
                         <div>
                             <label class="form-label" for="efectiveDays" style="display: inline;">Dias efectivos:</label>
                             <input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
+                            <button v-if="takedNoBussinesDay" class="btn btn-secondary inline" style="transform: scale(.8);" v-on:click="addDayToEfectiveDays()">
+                                <span class="bx bx-plus"></span>
+                            </button>
+                            <button v-if="takedNoBussinesDay" class="btn btn-secondary inline" style="transform: scale(.8);" v-on:click="minusDayToEfectiveDays()">
+                                <span class="bx bx-minus"></span>
+                            </button>
                         </div>
                         <br>
                         <div>

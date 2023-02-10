@@ -15,6 +15,7 @@ var appRequestVacation = new Vue({
         status: null,
         takedDays: 0,
         lDays: [],
+        lDaysConventionalFormat: [],
         startDate: null,
         endDate: null,
         returnDate: null,
@@ -25,6 +26,9 @@ var appRequestVacation = new Vue({
         vacationUtils: new vacationUtils(),
         applicationsEA: [],
         totCalendarDays: 0,
+        originalDaysTaked: 0,
+        lNoBussinesDay: [],
+        noBussinesDayIndex: 0,
     },
     mounted(){
         var self = this;
@@ -63,6 +67,9 @@ var appRequestVacation = new Vue({
             this.takedDays = result[1];
             this.lDays = result[2];
             this.totCalendarDays = result[3];
+            this.lNoBussinesDay = result[4];
+            this.noBussinesDayIndex = 0;
+            this.originalDaysTaked = result[1];
         },
 
         async showAcceptRegistry(data){
@@ -86,7 +93,10 @@ var appRequestVacation = new Vue({
             $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.getReturnDate(data);
-
+            this.returnDate = data[this.indexes.return_date];
+            this.takedDays = data[this.indexes.total_days];
+            this.noBussinesDayIndex = 0;
+            this.reMaplDays();
             $('#modal_solicitud').modal('show');
         },
 
@@ -111,12 +121,34 @@ var appRequestVacation = new Vue({
             $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.getReturnDate(data);
-
+            this.returnDate = data[this.indexes.return_date];
+            this.takedDays = data[this.indexes.total_days];
+            this.noBussinesDayIndex = 0;
+            this.reMaplDays();
             $('#modal_solicitud').modal('show');
+        },
+
+        reMaplDays(){
+            for(let i = 0; i < (parseInt(this.takedDays) - this.originalDaysTaked); i++){
+                this.lDays.push(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.noBussinesDayIndex++;
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+        },
+
+        reMaplDaysConventionalFormat(){
+            for (let i = 0; i < this.lDays.length; i++) {
+                this.lDaysConventionalFormat.push(moment(this.lDays[i], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'));
+            }
         },
 
         acceptRequest(){
             SGui.showWaiting(10000);
+            this.reMaplDaysConventionalFormat();
             var route = this.oData.acceptRequestRoute;
             axios.post(route, {
                 'id_application': this.idRequest,
@@ -124,6 +156,7 @@ var appRequestVacation = new Vue({
                 'comments': this.comments,
                 'year': this.year,
                 'lDays': this.lDays,
+                'lDaysConventionalFormat': this.lDaysConventionalFormat,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
             })
