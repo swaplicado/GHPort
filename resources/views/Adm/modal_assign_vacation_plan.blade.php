@@ -29,14 +29,28 @@
                             <tbody>
                                 <tr>
                                     <td style="border: none">
-                                        <button class="btn btn-secondary" v-on:click="passTolUsersAssign();">
+                                        <button class="btn btn-secondary" v-on:click="passTolUsersAssign();" title="Pasar uno a la derecha">
+                                            <span class='bx bxs-chevron-right'></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none">
+                                        <button class="btn btn-secondary" v-on:click="passTolUsers();" title="Pasar uno a la izquierda">
+                                            <span class='bx bxs-chevron-left'></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none">
+                                        <button class="btn" style="background-color: #81D4FA;" v-on:click="passAllTolUsersAssign();" title="Pasar todos a la derecha">
                                             <span class='bx bxs-chevrons-right'></span>
                                         </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="border: none">
-                                        <button class="btn btn-secondary" v-on:click="passTolUsers();">
+                                        <button class="btn" style="background-color: #81D4FA;" v-on:click="passAllTolUsers();" title="Pasar todos a la derecha">
                                             <span class='bx bxs-chevrons-left'></span>
                                         </button>
                                     </td>

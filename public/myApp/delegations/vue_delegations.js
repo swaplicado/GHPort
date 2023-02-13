@@ -6,6 +6,7 @@ var app = new Vue({
         lDelegations_created: oServerData.lDelegations_created,
         lDelegations_asigned: oServerData.lDelegations_asigned,
         lUsers: oServerData.lUsers,
+        lMyManagers: oServerData.lMyManagers,
         start_date: null,
         end_date: null,
         user_delegated: null,
@@ -20,13 +21,18 @@ var app = new Vue({
             datalUser.push({id: this.lUsers[i].id, text: this.lUsers[i].full_name_ui});
         }
 
+        var datalMyManagers = [{id: '', text: ''}];
+        for(var i = 0; i<this.lMyManagers.length; i++){
+            datalMyManagers.push({id: this.lMyManagers[i].id, text: this.lMyManagers[i].full_name_ui});
+        }
+
         $('#user_delegated')
             .select2({
                 placeholder: 'selecciona',
-                data: datalUser,
+                data: datalMyManagers,
             });
 
-        $('#user_delegation')
+        $('#user_delegation_d')
             .select2({
                 placeholder: 'selecciona',
                 data: datalUser,
@@ -41,7 +47,7 @@ var app = new Vue({
     methods: {
         showModal(data = null){
             this.myDelegation = true;
-            $('#user_delegation').val('').trigger('change');
+            $('#user_delegation_d').val('').trigger('change');
             if(data != null){
                 this.delegation_id = data[this.indexes.id_delegation];
                 this.start_date = data[this.indexes.start_date];
@@ -83,7 +89,7 @@ var app = new Vue({
 
             this.user_delegated = $('#user_delegated').val();
             if(this.myDelegation){
-                this.user_delegation = $('#user_delegation').val();
+                this.user_delegation = $('#user_delegation_d').val();
             }else{
                 this.user_delegation = $('#user_delegation_n').val();
             }

@@ -3,7 +3,12 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delegaciones</h5>
+                <h5 class="modal-title" id="exampleModalLabel">
+                    <b>Delegaciones</b>
+                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:logindelegacion" target="_blank">
+                        <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+                    </a>
+                </h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>

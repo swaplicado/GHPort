@@ -20,6 +20,7 @@
     <script>
         function GlobalData(){
             this.lUsers = <?php echo json_encode($lUsers); ?>;
+            this.lMyManagers = <?php echo json_encode($lMyManagers); ?>;
             this.lDelegations_created = <?php echo json_encode($lDelegations_created); ?>;
             this.lDelegations_asigned = <?php echo json_encode($lDelegations_asigned); ?>;
             this.saveDelegationRoute = <?php echo json_encode(route('delegation_saveDelegation')); ?>;
@@ -52,7 +53,10 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    Delegaciones creadas
+                    <b>Delegaciones creadas</b>
+                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:delegaciones" target="_blank">
+                        <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
+                    </a>
                 </h3>
             </div>
             <div class="card-body">

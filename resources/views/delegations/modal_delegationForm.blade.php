@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nueva delegación</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Nueva delegación para colaborador</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -73,7 +73,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="delegation">Usuario encargado:</label>
-                                <select class="select2-class-myDelegation" name="" id="user_delegation" style="width: 100%"></select>
+                                <select class="select2-class-myDelegation" name="" id="user_delegation_d" style="width: 100%"></select>
                             </div>
                         </div>
                     </div>
