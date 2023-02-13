@@ -214,32 +214,34 @@
                             <th>sup coment.</th>
                         </thead>
                         <tbody>
-                            <tr v-for="rec in oUser.applications">
-                                <td>@{{rec.id_application}}</td>
-                                <td>@{{rec.request_status_id}}</td>
-                                <td>@{{rec.take_holidays}}</td>
-                                <td>@{{rec.take_rest_days}}</td>
-                                <td>@{{rec.emp_comments_n}}</td>
-                                <td>@{{rec.user_apr_rej_id}}</td>
-                                <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{rec.folio_n}}</td>
-                                <td>@{{rec.user_apr_rej_name}}</td>
-                                <td>
-                                    @{{
-                                        (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
-                                            oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
-                                            ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
-                                                oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
-                                                '')
-                                    }}
-                                </td>
-                                <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{rec.total_days}}</td>
-                                <td>@{{rec.applications_st_name}}</td>
-                                <td>@{{rec.sup_comments_n}}</td>
-                            </tr>
+                            <template v-for="rec in oUser.applications">
+                                <tr :style="{ background: (rec.request_status_id == 3 ? '#E8F5E9' : (rec.request_status_id == 4 ? '#FCE4EC' : '')) }">
+                                    <td>@{{rec.id_application}}</td>
+                                    <td>@{{rec.request_status_id}}</td>
+                                    <td>@{{rec.take_holidays}}</td>
+                                    <td>@{{rec.take_rest_days}}</td>
+                                    <td>@{{rec.emp_comments_n}}</td>
+                                    <td>@{{rec.user_apr_rej_id}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{rec.folio_n}}</td>
+                                    <td>@{{rec.user_apr_rej_name}}</td>
+                                    <td>
+                                        @{{
+                                            (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
+                                                oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
+                                                ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
+                                                    oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
+                                                    '')
+                                        }}
+                                    </td>
+                                    <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{rec.total_days}}</td>
+                                    <td>@{{rec.applications_st_name}}</td>
+                                    <td>@{{rec.sup_comments_n}}</td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
