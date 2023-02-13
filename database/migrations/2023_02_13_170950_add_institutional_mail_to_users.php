@@ -14,7 +14,7 @@ class AddInstitutionalMailToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->date('institutional_mail')->nullable()->after('email');
+            $table->string('institutional_mail')->nullable()->after('email');
         });
     }
 
