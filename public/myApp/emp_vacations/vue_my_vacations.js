@@ -533,10 +533,22 @@ var appMyVacations = new Vue({
             return moment(sDate).format('ddd DD-MM-YYYY');
         },
 
-        requestVac(){
+        async requestVac(){
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
                 SGui.showMessage('', 'Debe ingresar las fecha de inicio y fin de vacaciones', 'warning');
                 return;
+            }
+
+            if(this.takedDays > this.oUser.tot_vacation_remaining && this.takedDays <= (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days)))){
+                if(!(await SGui.showConfirm('Se utilizarán días proporcionales para la solicitud', '¿Desea continua?', 'warning'))){
+                    return;
+                }
+            }
+
+            if(this.takedDays > (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days))) && this.takedDays <= (this.oUser.tot_vacation_remaining + parseInt(this.oUser.prox_vac_days))){
+                if(!(await SGui.showConfirm('Se utilizarán más días de los proporcionales para la solicitud', '¿Desea continua?', 'warning'))){
+                    return;
+                }
             }
 
             if(this.idRequest == null){
@@ -567,6 +579,7 @@ var appMyVacations = new Vue({
                 if(data.success){
                     this.actual_vac_days = data.oUser.actual_vac_days;
                     this.prox_vac_days = data.oUser.prox_vac_days;
+                    this.prop_vac_days = data.oUser.prop_vac_days;
                     $('#modal_Mysolicitud').modal('hide');
                     SGui.showOk();
                     this.oCopyUser = data.oUser;

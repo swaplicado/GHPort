@@ -108,6 +108,33 @@ class EmployeeVacationUtils {
     }
 
     /**
+     * Obtiene el proximo renglon de vacaciones junto con los datos de las applications a ese año
+     */
+    public static function getProxVacationWithApplications($employee_id){
+        $nextVac = \DB::table('vacation_users')
+                            ->where('user_id', $employee_id)
+                            ->where('date_end', '>', Carbon::now()->toDateString())
+                            ->orderBy('date_end', 'asc')
+                            ->first();
+
+        $appBrk = \DB::table('applications as a')
+                    ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
+                    ->where('a.user_id', $employee_id)
+                    ->where('a.is_deleted', 0)
+                    ->whereIn('a.request_status_id', [SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_ENVIADO])
+                    ->where('ab.application_year', $nextVac->year)
+                    ->sum('ab.days_effective');
+
+        // $appBrk = \DB::table('applications_breakdowns')
+        //             ->where('application_year', $nextVac->year)
+        //             ->sum('days_effective');
+
+        $nextVac->vacation_days = $nextVac->vacation_days - $appBrk;
+
+        return $nextVac;
+    }
+
+    /**
      * Obtiene las vacaciones consumidas por un empleado
      */
     public static function getVacationConsumed($id, $year){
@@ -140,7 +167,7 @@ class EmployeeVacationUtils {
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', [
-                                                            SysConst::APPLICATION_CREADO,
+                                                            // SysConst::APPLICATION_CREADO,
                                                             SysConst::APPLICATION_ENVIADO,
                                                             SysConst::APPLICATION_APROBADO,
                                                         ]
@@ -216,7 +243,7 @@ class EmployeeVacationUtils {
      *  vencidas,
      *  solicitadas
      */
-    public static function getEmployeeVacationsData($id, $isAllHistory = false){
+    public static function getEmployeeVacationsData($id, $isAllHistory = false, $customYear = null){
         $config = \App\Utils\Configuration::getConfigurations();
 
         $user = \DB::table('users as u')
@@ -255,8 +282,13 @@ class EmployeeVacationUtils {
                     )
                     ->first();
 
-        $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
-        $oNextVacation = EmployeeVacationUtils::getProxVacation($id);
+        if(is_null($customYear)){
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+        }else{
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear);
+        }
+        // $oNextVacation = EmployeeVacationUtils::getProxVacation($id);
+        $oNextVacation = EmployeeVacationUtils::getProxVacationWithApplications($id);
         
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;

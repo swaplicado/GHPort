@@ -85,7 +85,7 @@ class myVacationsController extends Controller
                 }
             }
 
-            if($user->tot_vacation_remaining < $takedDays){
+            if(($user->tot_vacation_remaining + $user->prox_vac_days) < $takedDays){
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
             }
 
@@ -188,9 +188,9 @@ class myVacationsController extends Controller
             $application->update();
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
-    
-            if($user->tot_vacation_remaining < $takedDays){
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, false, 1);
+
+            if(($user->tot_vacation_remaining + $user->prox_vac_days) < $takedDays){
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
             }
     
