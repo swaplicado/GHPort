@@ -27,10 +27,12 @@ class SyncController extends Controller
         $photos = SyncController::SyncPhotos();
         // $synchronized = true;
 
-        $newDate = Carbon::now();
-        $newDate->subMinutes(10);
-
-        \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        if($synchronized){
+            $newDate = Carbon::now();
+            $newDate->subMinutes(10);
+    
+            \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        }
 
         return $synchronized;
     }
@@ -77,15 +79,16 @@ class SyncController extends Controller
     public static function SyncPhotos(){
       $lUsersPhotos = UsersPhotos::where('photo_base64_n', null)
                                   ->where('is_deleted', 0)
-                                  ->pluck('id');
+                                  ->pluck('user_id');
                                   
       if(count($lUsersPhotos) > 0){
           $lUsers = User::whereIn('id', $lUsersPhotos)
                       ->where('is_delete', 0)
                       ->where('is_active', 1)
-                      ->pluck('external_id_n');
+                      ->pluck('external_id_n')
+                      ->toArray();
 
-
+                      $lUsers = json_encode($lUsers);
           try {
               $client = new Client([
                   'base_uri' => '192.168.1.233:9001',
