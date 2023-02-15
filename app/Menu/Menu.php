@@ -97,6 +97,12 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('bitacoras'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Bitacoras'],
                     (object) ['type' => $element, 'route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-sm', 'name' => 'Temporadas especiales'],
                     (object) ['type' => $list, 'list' => [
+                        ['route' => route('specialType'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Tipos solic.'],
+                        ['route' => route('SpecialTypeVsOrgChart'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Asignación solic.']
+                                                ],
+                                                'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solic. Esp.', 'id' => 'solic_esp'
+                    ],
+                    (object) ['type' => $list, 'list' => [
                         ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
                         ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
                                                 ],
@@ -118,7 +124,7 @@ class Menu {
 
         if(!$oUser->changed_password){
             $lMenus = [
-                (object) ['type' => $element, 'route' => route('profile'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Cambiar contraseña']
+                (object) ['type' => $element, 'route' => route('profile'), 'icon' => 'bx bxs-key bx-sm', 'name' => 'Cambiar contraseña']
             ];
         }
         
