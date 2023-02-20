@@ -55,9 +55,9 @@ class MailsLogscontroller extends Controller
                             ->first();
             
             if($mailLog->type_mail_id == SysConst::MAIL_SOLICITUD_VACACIONES){
-                $this->sendMailRequestVac($user->email, $application);
+                $this->sendMailRequestVac($user->institutional_mail, $application);
             }else if($mailLog->type_mail_id == SysConst::MAIL_ACEPT_RECH_SOLICITUD){
-                $this->sendMailAuthVac($user->email, $application, $user->id);
+                $this->sendMailAuthVac($user->institutional_mail, $application, $user->id);
             }
             
         } catch (\Throwable $th) {
