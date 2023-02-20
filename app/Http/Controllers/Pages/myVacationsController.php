@@ -345,7 +345,7 @@ class myVacationsController extends Controller
             $mypool = Pool::create();
             $mypool[] = async(function () use ($application, $request, $superviser, $mailLog){
                 try {
-                    Mail::to($superviser->email)->send(new requestVacationMail(
+                    Mail::to($superviser->institutional_mail)->send(new requestVacationMail(
                                                             $application->id_application,
                                                             $request->employee_id,
                                                             $request->lDays,
