@@ -186,7 +186,7 @@ class requestVacationsController extends Controller
         $mypool = Pool::create();
         $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
             try {
-                Mail::to($employee->email)->send(new authorizeVacationMail(
+                Mail::to($employee->institutional_mail)->send(new authorizeVacationMail(
                                                         $application->id_application,
                                                         $employee->id,
                                                         $request->lDays,
@@ -287,7 +287,7 @@ class requestVacationsController extends Controller
         $mypool = Pool::create();
         $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
             try {
-                Mail::to($employee->email)->send(new authorizeVacationMail(
+                Mail::to($employee->institutional_mail)->send(new authorizeVacationMail(
                                                         $application->id_application,
                                                         $employee->id,
                                                         $request->lDays,
