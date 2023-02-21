@@ -24,6 +24,16 @@
         -moz-column-count: 3;
         column-count: 3;
     }
+
+    hr { 
+        display: block;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+    }
 </style>
 
 <body>
@@ -31,40 +41,51 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div>
-                    <h3>El colaborador: {{$employee->full_name}}</h3>
-                    <h4>ha solicitado periodo de vacaciones.</h4>
+                    <h3 class="inline">{{$employee->full_name}} solicitó las siguientes vacaciones.</h3>
                 </div>
                 <br>
                 <div>
-                    <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>
-                    <span>{{$application->start_date}}</span>
+                    <table>
+                        <thead>
+                            <th></th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left;">Inicio:</td>
+                                <td style="text-align: left;">{{$application->start_date}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Fin:</td>
+                                <td style="text-align: left;">{{$application->end_date}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Regreso:</td>
+                                <td style="text-align: left;">{{$returnDate}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Días efectivos:</td>
+                                <td style="text-align: left;">{{$application->total_days}}</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left;">Días calendario:</td>
+                                <td style="text-align: left;">{{$application->tot_calendar_days}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <br>
                 <div>
-                    <label class="form-label" for="end_date" style="display: inline;">Fecha fin:</label>
-                    <span>{{$application->end_date}}</span>
-                </div>
-                <div>
-                    <label class="form-label" for="end_date" style="display: inline;">Fecha regreso:</label>
-                    <span>{{$returnDate}}</span>
-                </div>
-                <div>
-                    <label class="form-label" for="totalDays" style="display: inline;">Días efectivos:</label>
-                    <span name="totalDays">{{$application->total_days}}</span>
-                </div>
-                <div>
-                    <label class="form-label" for="totalCalendarDays" style="display: inline;">Días calendario:</label>
-                    <span name="totalCalendarDays">{{$application->tot_calendar_days}}</span>
-                </div>
-                <div>
-                    <label class="form-label" for="listDays">Dias de vacaciones:</label>
-                    <ul name="listDays">
+                    <label for="listDays">Desglose de los días de vacaciones: </label>
+                    <ol name="listDays">
                         @foreach($lDays as $day)
                             <li>{{$day}}</li>
                         @endforeach
-                    </ul>
+                    </ol>
                 </div>
-                <div style="text-align: center">
-                    <label class="form-label">Haga click en el siguiente botón para revisar las solicitudes de tus colaboradores:</label>
+                <br>
+                <div style="text-align: left">
+                    <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
                     <br>
                     <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">
                         <button  class="btn btn-primary">
@@ -74,9 +95,17 @@
                 </div>
                 <div>
                     <p>
-                        Si tiene algún problema al presionar el botón, copia y pega la siguiente dirección <br>
-                        en tu navegador web: <br>
-                        <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">{{route('requestVacations', ['id' => $application->id_application])}}</a>.
+                        Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                        <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">{{route('requestVacations', ['id' => $application->id_application])}}</a>
+                    </p>
+                </div>
+                <hr>
+                <div>
+                    <p style="transform: scale(0.6);">
+                    Favor de no responder este mail, fue generado de forma automática.<br>
+                    PGH 1.0 © Software Aplicado SA de CV<br>
+                    www.swaplicado.com.mx<br>
+                    PGH 1.0 086.0
                     </p>
                 </div>
             </div>
