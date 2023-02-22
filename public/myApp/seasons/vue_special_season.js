@@ -6,10 +6,14 @@ var appSpecialSeason = new Vue({
         lAreas: oServerData.lAreas,
         lEmp: oServerData.lEmp,
         lCompany: oServerData.lCompany,
-        title: 'Departamento',
-        type: 'depto',
-        colorTitle: 'colorDepartamentoTitle',
-        colorBody: 'colorDepartamento',
+        // title: 'Departamento',
+        // type: 'depto',
+        title: 'Puesto',
+        type: 'area',
+        // colorTitle: 'colorDepartamentoTitle',
+        // colorBody: 'colorDepartamento',
+        colorTitle: 'colorAreaTitle',
+        colorBody: 'colorArea',
         display_seasons: false,
         table_class: {},
         lOptions: [],
@@ -33,26 +37,34 @@ var appSpecialSeason = new Vue({
     },
     mounted(){
         let self = this;
-        var datalDeptos = [];
-        for(var i = 0; i<self.lDeptos.length; i++){
-            datalDeptos.push({id: self.lDeptos[i].id_department, text: self.lDeptos[i].department_name_ui});
+        // var datalDeptos = [];
+        // for(var i = 0; i<self.lDeptos.length; i++){
+        //     datalDeptos.push({id: self.lDeptos[i].id_department, text: self.lDeptos[i].department_name_ui});
+        // }
+        var datalAreas = [];
+        for(var i = 0; i<this.lAreas.length; i++){
+            datalAreas.push({id: this.lAreas[i].id_org_chart_job, text: this.lAreas[i].job_name});
         }
 
         $('#selOptions')
             .select2({
                 placeholder: 'selecciona',
-                data: datalDeptos,
+                // data: datalDeptos,
+                data: datalAreas,
             });
 
-        this.btn_SeasonActive('btn_depto', '#38c172');
+        // this.btn_SeasonActive('btn_depto', '#38c172');
+        this.btn_SeasonActive('btn_area', '#6c757d');
     },
     methods: {
         initView(){
-            this.SetDepto();
+            // this.SetDepto();
+            this.SetArea();
         },
 
         btn_SeasonActive(id, color) {
-            const btn_ids = ['btn_depto', 'btn_area', 'btn_emp', 'btn_comp'];
+            // const btn_ids = ['btn_depto', 'btn_area', 'btn_emp', 'btn_comp'];
+            const btn_ids = ['btn_area', 'btn_emp', 'btn_comp'];
             let btn = document.getElementById(id);
             btn.style.backgroundColor = color;
             btn.style.color = '#fff';
@@ -101,7 +113,7 @@ var appSpecialSeason = new Vue({
                     placeholder: 'selecciona',
                     data: datalAreas,
                 });
-            this.title = 'Area funcional';
+            this.title = 'Puesto';
             this.colorTitle = 'colorAreaTitle';
             this.colorBody = 'colorArea';
             this.type = 'area';
@@ -240,31 +252,9 @@ var appSpecialSeason = new Vue({
             let result;
             switch (this.table_class[key][index].priority) {
                 case 0:
-                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 5);
-                    if(result != undefined && result != null){
-                        this.table_class[key][index].priority = 5;
-                        this.table_class[key][index].class = 'priority_5';
-                        this.table_class[key][index].text = result.name;
-                        // this.table_class[key][index].season_id = result.id_special_season;
-                    }else{
-                        this.table_class[key][index].priority = 0;
-                        this.table_class[key][index].class = 'priority_0';
-                        this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
-                    }
-                    break;
-
-                case 1:
-                        this.table_class[key][index].priority = 0;
-                        this.table_class[key][index].class = 'priority_0';
-                        this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
-                    break;
-
-                case 2:
                     result = this.lSpecialSeasonType.find(({ priority }) => priority === 1);
                     if(result != undefined && result != null){
-                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_1';
                         this.table_class[key][index].text = result.name;
                         // this.table_class[key][index].season_id = result.id_special_season;
@@ -276,10 +266,10 @@ var appSpecialSeason = new Vue({
                     }
                     break;
 
-                case 3:
+                case 1:
                     result = this.lSpecialSeasonType.find(({ priority }) => priority === 2);
                     if(result != undefined && result != null){
-                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_2';
                         this.table_class[key][index].text = result.name;
                         // this.table_class[key][index].season_id = result.id_special_season;
@@ -289,12 +279,16 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].text = '';
                         // this.table_class[key][index].season_id = '';
                     }
+                        // this.table_class[key][index].priority = 0;
+                        // this.table_class[key][index].class = 'priority_0';
+                        // this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
                     break;
 
-                case 4:
+                case 2:
                     result = this.lSpecialSeasonType.find(({ priority }) => priority === 3);
                     if(result != undefined && result != null){
-                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_3';
                         this.table_class[key][index].text = result.name;
                         // this.table_class[key][index].season_id = result.id_special_season;
@@ -306,10 +300,10 @@ var appSpecialSeason = new Vue({
                     }
                     break;
 
-                case 5:
+                case 3:
                     result = this.lSpecialSeasonType.find(({ priority }) => priority === 4);
                     if(result != undefined && result != null){
-                        this.table_class[key][index].priority--;
+                        this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_4';
                         this.table_class[key][index].text = result.name;
                         // this.table_class[key][index].season_id = result.id_special_season;
@@ -319,6 +313,40 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].text = '';
                         // this.table_class[key][index].season_id = '';
                     }
+                    break;
+
+                case 4:
+                    result = this.lSpecialSeasonType.find(({ priority }) => priority === 5);
+                    if(result != undefined && result != null){
+                        this.table_class[key][index].priority++;
+                        this.table_class[key][index].class = 'priority_5';
+                        this.table_class[key][index].text = result.name;
+                        // this.table_class[key][index].season_id = result.id_special_season;
+                    }else{
+                        this.table_class[key][index].priority = 0;
+                        this.table_class[key][index].class = 'priority_0';
+                        this.table_class[key][index].text = '';
+                        // this.table_class[key][index].season_id = '';
+                    }
+                    break;
+
+                case 5:
+                    // result = this.lSpecialSeasonType.find(({ priority }) => priority === 5);
+                    // if(result != undefined && result != null){
+                    //     this.table_class[key][index].priority++;
+                    //     this.table_class[key][index].class = 'priority_5';
+                    //     this.table_class[key][index].text = result.name;
+                    //     // this.table_class[key][index].season_id = result.id_special_season;
+                    // }else{
+                    //     this.table_class[key][index].priority = 0;
+                    //     this.table_class[key][index].class = 'priority_0';
+                    //     this.table_class[key][index].text = '';
+                    //     // this.table_class[key][index].season_id = '';
+                    // }
+                    this.table_class[key][index].priority = 0;
+                    this.table_class[key][index].class = 'priority_0';
+                    this.table_class[key][index].text = '';
+                    this.table_class[key][index].season_id = '';
                     break;
             
                 default:

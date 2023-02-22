@@ -14,7 +14,11 @@ class SpecialSeasonsController extends Controller
 {
     public function index(){
         // $OrgChartJob = OrgChartJob::find(\Auth::user()->org_chart_job_id);
-        $OrgChartJob = OrgChartJob::find(delegationUtils::getOrgChartJobIdUser());
+        if(\Auth::user()->rol_id == 4){
+            $OrgChartJob = OrgChartJob::find(2);
+        }else{
+            $OrgChartJob = OrgChartJob::find(delegationUtils::getOrgChartJobIdUser());
+        }
         $OrgChartJob->child = $OrgChartJob->getChildrens();
         $arrayOrgChartJobs = $OrgChartJob->getArrayChilds();
 
@@ -34,7 +38,8 @@ class SpecialSeasonsController extends Controller
                         ->get();
 
         $lEmp = \DB::table('users')
-                    ->whereIn('job_id', $arrJobsId)
+                    // ->whereIn('job_id', $arrJobsId)
+                    ->whereIn('org_chart_job_id', $arrayOrgChartJobs)
                     ->where('is_delete', 0)
                     ->where('is_active', 1)
                     ->select('id', 'full_name_ui')
@@ -42,7 +47,7 @@ class SpecialSeasonsController extends Controller
 
         $lAreas = \DB::table('org_chart_jobs')
                     ->whereIn('id_org_chart_job', $arrayOrgChartJobs)
-                    ->where('positions', '>', 1)
+                    // ->where('positions', '>', 1)
                     ->where('is_deleted', 0)
                     ->select('id_org_chart_job', 'job_name')
                     ->get();

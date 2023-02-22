@@ -59,14 +59,14 @@
         <div class="card-header">
             <h3>
                 <b>TEMPORADAS ESPECIALES</b>
-                <a href="#" target="_blank">
+                <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tempespeciales" target="_blank">
                     <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
                 </a>
             </h3>
         </div>
         <div class="card-body">
-            <a class="btn btn-outline-success" v-on:click="SetDepto();" id="btn_depto">Departamento</a>
-            <a class="btn btn-outline-secondary" v-on:click="SetArea();" id="btn_area">Area funcional</a>
+            <!-- <a class="btn btn-outline-success" v-on:click="SetDepto();" id="btn_depto">Departamento</a> -->
+            <a class="btn btn-outline-secondary" v-on:click="SetArea();" id="btn_area">Puesto</a>
             <a class="btn btn-outline-info" v-on:click="SetEmpleado();" id="btn_emp">Empleado</a>
             <a class="btn btn-outline-warning"v-on:click="SetEmpresa();" id="btn_comp">Empresa</a>
             <div class="card shadow mb-4">
@@ -163,7 +163,7 @@
         <div class="card-header">
             <h3>
                 <b>TIPOS TEMPORADAS ESPECIALES</b>
-                <a href="#" target="_blank">
+                <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tipostempespeciales" target="_blank">
                     <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
                 </a>
             </h3>

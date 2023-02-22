@@ -12,6 +12,7 @@ use App\Utils\EmployeeVacationUtils;
 use App\Models\Vacations\Application;
 use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
+use App\Models\Vacations\ApplicationVsTypes;
 use App\Models\Vacations\MailLog;
 use App\Constants\SysConst;
 use App\Models\Adm\OrgChartJob;
@@ -29,7 +30,8 @@ class myVacationsController extends Controller
         // $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(\Auth::user()->id);
         $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(delegationUtils::getIdUser());
         $now = Carbon::now();
-        $initialCalendarDate = $now->addDays(1)->toDateString();
+        // $initialCalendarDate = $now->addDays(1)->toDateString();
+        $initialCalendarDate = $now->subMonths(1)->toDateString();
 
         $holidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
@@ -45,12 +47,15 @@ class myVacationsController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 
+        $today = Carbon::now()->toDateString();
+
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
                                                 ->with('year', Carbon::now()->year)
                                                 ->with('constants', $constants)
-                                                ->with('config', $config);
+                                                ->with('config', $config)
+                                                ->with('today', $today);
     }
 
     public function setRequestVac(Request $request){
@@ -94,6 +99,7 @@ class myVacationsController extends Controller
             \DB::beginTransaction();
 
             $application = new Application();
+            $application->folio_n = $this->makeFolio(Carbon::now(), $employee_id);
             $application->start_date = $startDate;
             $application->end_date = $endDate;
             $application->take_holidays = $take_holidays;
@@ -107,6 +113,15 @@ class myVacationsController extends Controller
             $application->emp_comments_n = $comments;
             $application->is_deleted = false;
             $application->save();
+
+            $applicationVsType = new ApplicationVsTypes();
+            $applicationVsType->application_id = $application->id_application;
+            $applicationVsType->is_normal = $request->is_normal;
+            $applicationVsType->is_past = $request->is_past;
+            $applicationVsType->is_advanced = $request->is_advanced;
+            $applicationVsType->is_proportional = $request->is_proportional;
+            $applicationVsType->is_season_special = $request->is_season_special;
+            $applicationVsType->save();
 
             foreach($vacations as $vac){
                 if($takedDays > 0){
@@ -212,6 +227,15 @@ class myVacationsController extends Controller
             $application->is_deleted = 0;
             $application->update();
 
+            $applicationVsType = ApplicationVsTypes::where('application_id', $application->id_application)->first();
+            $applicationVsType->application_id = $application->id_application;
+            $applicationVsType->is_normal = $request->is_normal;
+            $applicationVsType->is_past = $request->is_past;
+            $applicationVsType->is_advanced = $request->is_advanced;
+            $applicationVsType->is_proportional = $request->is_proportional;
+            $applicationVsType->is_season_special = $request->is_season_special;
+            $applicationVsType->update();
+
             foreach($vacations as $vac){
                 if($takedDays > 0){
                     $count = 0;
@@ -296,7 +320,7 @@ class myVacationsController extends Controller
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
             $application->date_send_n = $date->toDateString();
-            $application->folio_n = $this->makeFolio($date, $application->user_id);
+            // $application->folio_n = $this->makeFolio($date, $application->user_id);
             $application->update();
 
             $application_log = new ApplicationLog();
@@ -382,13 +406,19 @@ class myVacationsController extends Controller
                         ->where('id', $employee_id)
                         ->value('employee_num');
 
-        if(strlen($employee_num) < 4){
-            for($i = 0; $i < (4 - strlen($employee_num)); $i++ ){
-                $employee_num = '0'.$employee_num;
+        $totApplications = \DB::table('applications')
+                            ->where('user_id', $employee_id)
+                            ->where('is_deleted', 0)
+                            ->count();
+        $ceros = "";
+        if(strlen($employee_num) < 5){
+            for($i = 0; $i < (5 - strlen($employee_num)); $i++ ){
+                $ceros = '0'.$ceros;
             }
+            $employee_num = $ceros.$employee_num;
         }
 
-        $folio = $date->format('Y').$date->format('m').$date->format('d').$employee_num;
+        $folio = $date->format('Y').$employee_num.$totApplications;
 
         return $folio;
     }

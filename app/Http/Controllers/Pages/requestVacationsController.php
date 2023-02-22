@@ -23,6 +23,66 @@ use \App\Utils\delegationUtils;
 
 class requestVacationsController extends Controller
 {
+    public function mergedApplicationsRepeat($lEmployees, $lEmpSpecial, $lFatherEmpSpecial){
+        // Se comentó el bloque de codigo por un error a solucionar al obtener lFatherEmpSpecial
+        // foreach($lEmpSpecial as $emp){
+        //     $oEmpFath = $lFatherEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
+        //     if(!is_null($oEmpFath)){
+        //         foreach($emp->applications as $app){
+        //             $oApp = $oEmpFath->applications->where('id_application', $app->id_application)->first();
+        //             if(!is_null($oApp)){
+        //                 $res = $oEmpFath->applications->where('id_application', $app->id_application)->first();
+        //                 $index = $oEmpFath->applications->search($res);
+        //                 $oEmpFath->applications->forget($index);
+        //             }
+        //         }
+        //         $emp->applications = $emp->applications->merge($oEmpFath->applications);
+        //         $res = $lFatherEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
+        //         $index = $lFatherEmpSpecial->search($res);
+        //         $lFatherEmpSpecial->forget($index);
+        //     }
+        // }
+
+        foreach($lEmployees as $emp){
+            $oEmpSpec = $lEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
+            if(!is_null($oEmpSpec)){
+                foreach($emp->applications as $app){
+                    $oApp = $oEmpSpec->applications->where('id_application', $app->id_application)->first();
+                    if(!is_null($oApp)){
+                        $res = $emp->applications->where('id_application', $oApp->id_application)->first();
+                        $index = $emp->applications->search($res);
+                        $emp->applications->forget($index);
+                    }
+                }
+                $emp->applications = $emp->applications->merge($oEmpSpec->applications);
+                $res = $lEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
+                $index = $lEmpSpecial->search($res);
+                $lEmpSpecial->forget($index);
+            }
+
+            // $oEmpFath = $lFatherEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
+            // if(!is_null($oEmpFath)){
+            //     foreach($emp->applications as $app){
+            //         $oApp = $oEmpFath->applications->where('id_application', $app->id_application)->first();
+            //         if(!is_null($oApp)){
+            //             $res = $emp->applications->where('id_application', $oApp->id_application)->first();
+            //             $index = $emp->applications->search();
+            //             $emp->applications->forget($index);
+            //         }
+            //     }
+            //     $emp->applications = $emp->applications->merge($oEmpFath->applications);
+            //     $res = $lFatherEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
+            //     $index = $lFatherEmpSpecial->search($res);
+            //     $lFatherEmpSpecial->forget($index);
+            // }
+        }
+
+        $merged = $lEmployees->merge($lEmpSpecial);
+        // $merged = $merged->merge($lFatherEmpSpecial);
+
+        return $merged;
+    }
+
     public function getData($year, $org_chart_job_id = null){
         if(is_null($org_chart_job_id)){
             // $org_chart_job_id = \Auth::user()->org_chart_job_id;
@@ -46,11 +106,28 @@ class requestVacationsController extends Controller
             $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
         }
 
+        $lEmpSpecial = EmployeeVacationUtils::getApplicationsTypeSpecial(
+                            $org_chart_job_id,
+                            [   
+                                SysConst::APPLICATION_ENVIADO,
+                                SysConst::APPLICATION_APROBADO,
+                                SysConst::APPLICATION_RECHAZADO
+                            ],
+                            $year
+                        );
+
+        // $lFatherEmpSpecial = EmployeeVacationUtils::getFatherApplicationsTypeSpecial($org_chart_job_id, [SysConst::APPLICATION_ENVIADO], $year);
+        $lFatherEmpSpecial = null;
+        // $merged = $lEmployees->merge($lEmpSpecial);
+        // $merged = $merged->merge($lFatherEmpSpecial);
+
+        $merged = $this->mergedApplicationsRepeat($lEmployees, $lEmpSpecial, $lFatherEmpSpecial);
+
         $holidays = \DB::table('holidays')
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
-        return [$year, $lEmployees, $holidays, $arrOrgJobs];
+        return [$year, $merged, $holidays, $arrOrgJobs];
     }
 
     public function index($idApplication = null){
@@ -325,8 +402,10 @@ class requestVacationsController extends Controller
                 if(is_null($oManager)){
                     return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
                 }
+                $data = $this->getData($request->year, $oManager->org_chart_job_id);
+            }else{
+                $data = $this->getData($request->year, delegationUtils::getOrgChartJobIdUser());
             }
-            $data = $this->getData($request->year, $oManager->org_chart_job_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
         }
@@ -482,9 +561,11 @@ class requestVacationsController extends Controller
         ];
 
         $client = new Client([
-            'base_uri' => '192.168.1.233:9001',
-            'timeout' => 10.0,
+            'base_uri' => '127.0.0.1:9001',
+            'timeout' => 30.0,
         ]);
+
+        $str = json_encode($arrJson);
 
         $response = $client->request('GET', 'postIncidents/' . json_encode($arrJson));
         $jsonString = $response->getBody()->getContents();

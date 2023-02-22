@@ -42,6 +42,10 @@ class requestVacationMail extends Mailable
         $application->end_date = dateUtils::formatDate($application->end_date, 'D/m/Y dddd');
         $this->returnDate = dateUtils::formatDate($this->returnDate, 'D/m/Y dddd');
 
+        for ($i=0; $i < count($this->lDays); $i++) { 
+            $this->lDays[$i] = dateUtils::formatDate($this->lDays[$i], 'D/m/Y dddd');
+        }
+        
         $employee = \DB::table('users')
                         ->where('id', $this->idEmployee)
                         ->first();

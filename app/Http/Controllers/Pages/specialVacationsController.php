@@ -189,7 +189,7 @@ class specialVacationsController extends Controller
             $application->return_date = $returnDate;
             $application->emp_comments_n = $comments;
             $application->is_deleted = 0;
-            $application->folio_n = $this->makeFolio($date, $application->user_id);
+            // $application->folio_n = $this->makeFolio($date, $application->user_id);
             $application->update();
 
             foreach($vacations as $vac){
@@ -326,13 +326,19 @@ class specialVacationsController extends Controller
                         ->where('id', $employee_id)
                         ->value('employee_num');
 
-        if(strlen($employee_num) < 4){
-            for($i = 0; $i < (4 - strlen($employee_num)); $i++ ){
-                $employee_num = '0'.$employee_num;
+        $totApplications = \DB::table('applications')
+                            ->where('user_id', $employee_id)
+                            ->where('is_deleted', 0)
+                            ->count();
+
+        if(strlen($employee_num) < 5){
+            for($i = 0; $i < (5 - strlen($employee_num)); $i++ ){
+                $ceros = '0'.$ceros;
             }
+            $employee_num = $ceros.$employee_num;
         }
 
-        $folio = $date->format('Y').$date->format('m').$date->format('d').$employee_num;
+        $folio = $date->format('Y').$employee_num.$totApplications;
 
         return $folio;
     }

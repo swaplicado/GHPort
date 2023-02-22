@@ -42,6 +42,8 @@ var appRequestVacation = new Vue({
                 placeholder: 'selecciona',
                 data: dataMyManagers,
             });
+
+            // table['table_requestVac'].rows('.noSelectableRow').deselect();
     },
     methods: {
         initView(){
@@ -150,12 +152,16 @@ var appRequestVacation = new Vue({
             SGui.showWaiting(10000);
             this.reMaplDaysConventionalFormat();
             var route = this.oData.acceptRequestRoute;
+            let copylDays = this.lDays;
+            for (let index = 0; index < copylDays.length; index++) {
+                copylDays[index] = moment(copylDays[index], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD');
+            }
             axios.post(route, {
                 'id_application': this.idRequest,
                 'id_user': this.idUser,
                 'comments': this.comments,
                 'year': this.year,
-                'lDays': this.lDays,
+                'lDays': copylDays,
                 'lDaysConventionalFormat': this.lDaysConventionalFormat,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
@@ -181,12 +187,16 @@ var appRequestVacation = new Vue({
         rejectRequest(){
             SGui.showWaiting(10000);
             var route = this.oData.rejectRequestRoute;
+            let copylDays = this.lDays;
+            for (let index = 0; index < copylDays.length; index++) {
+                copylDays[index] = moment(copylDays[index], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD');
+            }
             axios.post(route, {
                 'id_application': this.idRequest,
                 'id_user': this.idUser,
                 'comments': this.comments,
                 'year': this.year,
-                'lDays': this.lDays,
+                'lDays': copylDays,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
             })
@@ -210,6 +220,7 @@ var appRequestVacation = new Vue({
 
         reDrawRequestTable(data){
             var dataReq = [];
+            let dataIsnormal = [];
             for(var emp of data){
                 for(rec of emp.applications){
                     dataReq.push(
@@ -238,13 +249,24 @@ var appRequestVacation = new Vue({
                             this.oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY'),
                             rec.total_days,
                             rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
+                            this.specialType(rec),
                             rec.emp_comments_n
                         ]
                     );
+
+                    dataIsnormal.push(rec.is_normal);
                 }
             }
             table['table_requestVac'].clear().draw();
             table['table_requestVac'].rows.add(dataReq).draw();
+
+
+            for (let i = 0; i < dataIsnormal.length; i++) {
+                let row = table['table_requestVac'].row(i).nodes().to$();
+                if(!dataIsnormal[i]){
+                    $(row).addClass('noSelectableRow');
+                }
+            }
         },
 
         filterYear(){
@@ -382,6 +404,39 @@ var appRequestVacation = new Vue({
                 console.log(error);
                 SGui.showError(error);
             })
-        }
+        },
+
+        checkIsSelectable(row){
+            if(!row.is_normal){
+                return "noSelectableRow";
+            }else{
+                return "";
+            }
+        },
+
+        specialType(data){
+            let type = "";
+            if(data.is_normal && !data.is_past && !data.is_advanced && !data.is_proportional && !data.is_season_special){
+                type = type + "Normal.\n";
+            }
+
+            if(data.is_past){
+                type = type + "Días pasados.\n";
+            }
+
+            if(data.is_advanced){
+                type = type + "Días adelantados.\n";
+            }
+
+            if(data.is_proportional){
+                type = type + "Días proporcionales.\n";
+            }
+
+            if(data.is_season_special){
+                type = type + "Temporada especial.\n";
+            }
+
+            return type;
+        },
     },
 })

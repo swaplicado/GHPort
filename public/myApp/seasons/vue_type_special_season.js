@@ -9,10 +9,10 @@ var appTypeSpecialSeason = new Vue({
         id_special_season_type: null,
         name: null,
         key_code: null,
-        priority: 5,
-        priorityclass: 'priority_5',
-        color: 'priority_5',
-        text_color: 'black',
+        priority: 1,
+        priorityclass: 'priority_1',
+        color: 'priority_1',
+        text_color: 'white',
         description: null,
     },
     mounted(){
@@ -28,13 +28,13 @@ var appTypeSpecialSeason = new Vue({
                 this.id_special_season_type = null;
                 this.name = null;
                 this.key_code = null;
-                this.priority = 5;
-                this.color = 'priority_5';
-                this.text_color = 'black';
+                this.priority = 1;
+                this.color = 'priority_1';
+                this.text_color = 'white';
                 this.description = null;
                 this.checkLastPriority();
                 this.changeColor();
-                if(this.priority == 0){
+                if(this.priority >= 5){
                     SGui.showMessage('Solo puedes agregar 5 tipos de temporada especial', 'Elimina un registro para continuar', 'info')
                     return;
                 }
@@ -197,8 +197,8 @@ var appTypeSpecialSeason = new Vue({
 
         checkLastPriority(){
             for (const st of this.copylSpecialSeasonType) {
-                if(st.priority <= this.priority){
-                    this.priority = st.priority - 1;
+                if(st.priority >= this.priority){
+                    this.priority = st.priority + 1;
                     this.priorityclass = 'priority_' + this.priority;
                 }
             }
