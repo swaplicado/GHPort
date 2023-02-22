@@ -12857,3 +12857,7 @@ body.sidebar-toggled footer.sticky-footer {
 .wrap-flex > * {
     width: 33%;
 }
+
+.noSelectableRow {
+    background-color: #BDBDBD;
+}

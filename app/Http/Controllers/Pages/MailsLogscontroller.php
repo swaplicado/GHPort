@@ -76,9 +76,9 @@ class MailsLogscontroller extends Controller
             }
         }
         sort($lDays, SORT_STRING);
-        foreach($lDays as $key => $d){
-            $lDays[$key] = dateUtils::formatDate($d, 'D/m/Y dddd');
-        }
+        // foreach($lDays as $key => $d){
+        //     $lDays[$key] = dateUtils::formatDate($d, 'D/m/Y dddd');
+        // }
         return $lDays;
     }
 

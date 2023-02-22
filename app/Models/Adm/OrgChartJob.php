@@ -79,7 +79,7 @@ class OrgChartJob extends Model
                 if($p->is_boss){
                     array_push($arrayParents, [$p->id_org_chart_job]);
                 }
-                array_push($arrayParents, $p->getArrayParents());
+                array_push($arrayParents, $p->getArrayParentsBoss());
             }
             $arrayParents = Arr::collapse($arrayParents);
             return $arrayParents;
@@ -104,6 +104,14 @@ class OrgChartJob extends Model
             if($c->is_boss == 0){
                 $c->parent = $c->getParentsBoss();
             }
+        }
+        return $parent;
+    }
+
+    public function getAllParents(){
+        $parent = $this->getParent()->get();
+        foreach($parent as $c){
+            $c->parent = $c->getAllParents();
         }
         return $parent;
     }

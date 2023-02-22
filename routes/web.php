@@ -117,4 +117,14 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('tutorial', 'TutorialController@index')->name('tutorialUsuarios');
     Route::get('lideres', 'TutorialController@lideres')->name('tutorialLideres');
+
+    Route::get('specialType', 'Adm\SpecialTypeController@index')->name('specialType');
+    Route::post('specialType/save', 'Adm\SpecialTypeController@save')->name('specialType_save');
+    Route::post('specialType/update', 'Adm\SpecialTypeController@update')->name('specialType_update');
+    Route::post('specialType/delete', 'Adm\SpecialTypeController@delete')->name('specialType_delete');
+
+    Route::get('SpecialTypeVsOrgChart', 'Adm\SpecialTypeVsOrgChartController@index')->name('SpecialTypeVsOrgChart');
+    Route::post('SpecialTypeVsOrgChart/save', 'Adm\SpecialTypeVsOrgChartController@save')->name('SpecialTypeVsOrgChart_save');
+    Route::post('SpecialTypeVsOrgChart/update', 'Adm\SpecialTypeVsOrgChartController@update')->name('SpecialTypeVsOrgChart_update');
+    Route::post('SpecialTypeVsOrgChart/delete', 'Adm\SpecialTypeVsOrgChartController@delete')->name('SpecialTypeVsOrgChart_delete');
 });

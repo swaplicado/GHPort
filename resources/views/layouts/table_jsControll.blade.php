@@ -105,12 +105,14 @@
             
         @if(isset($select))
             $('#{{$table_id}} tbody').on('click', 'tr', function () {
-                if ($(this).hasClass('selected')) {
-                    $(this).removeClass('selected');
-                }
-                else {
-                    table['{{$table_id}}'].$('tr.selected').removeClass('selected');
-                    $(this).addClass('selected');
+                if(!$(this).hasClass('noSelectableRow')){
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+                        table['{{$table_id}}'].$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
                 }
             });
         @endif

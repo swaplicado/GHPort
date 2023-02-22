@@ -54,7 +54,8 @@
                 'return_date': 17,
                 'total_days': 18,
                 'applications_st_name': 19,
-                'comments': 20,
+                'type': 20,
+                'comments': 21,
             };
 
         //data para la vista my_vacations
@@ -172,39 +173,43 @@
                         <th>Fecha regreso</th>
                         <th>Dias efic.</th>
                         <th>Estatus</th>
+                        <th>Tipo</th>
                         <th>coment.</th>
                     </thead>
                     <tbody>
                         <template v-for="emp in lEmployees">
-                            <tr v-for="rec in emp.applications">
-                                <td>@{{ rec.id_application }}</td>
-                                <td>@{{ rec.user_id }}</td>
-                                <td>@{{ emp.birthday_n }}</td>
-                                <td>@{{ emp.benefits_date }}</td>
-                                <td>@{{ emp.payment_frec_id }}</td>
-                                <td>@{{ rec.request_status_id }}</td>
-                                <td>@{{ rec.take_holidays }}</td>
-                                <td>@{{ rec.take_rest_days }}</td>
-                                <td>@{{ rec.sup_comments_n }}</td>
-                                <td>@{{ rec.user_apr_rej_id }}</td>
-                                <td>@{{ rec.folio_n }}</td>
-                                <td>@{{ rec.user_apr_rej_name }}</td>
-                                <td>@{{ emp.employee }}</td>
-                                <td>@{{ oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY') }}</td>
-                                <td>
-                                    @{{ (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
-oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
-    ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
-        oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
-        '') }}
-                                </td>
-                                <td>@{{ oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY') }}</td>
-                                <td>@{{ oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY') }}</td>
-                                <td>@{{ oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY') }}</td>
-                                <td>@{{ rec.total_days }}</td>
-                                <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name }}</td>
-                                <td>@{{ rec.emp_comments_n }}</td>
-                            </tr>
+                            <template v-for="rec in emp.applications">
+                                <tr v-bind:class="[ checkIsSelectable(rec) ]" :style="{ background: (rec.request_status_id == 3 ? '#E8F5E9' : (rec.request_status_id == 4 ? '#FCE4EC' : '')) }">
+                                    <td>@{{ rec.id_application }}</td>
+                                    <td>@{{ rec.user_id }}</td>
+                                    <td>@{{ emp.birthday_n }}</td>
+                                    <td>@{{ emp.benefits_date }}</td>
+                                    <td>@{{ emp.payment_frec_id }}</td>
+                                    <td>@{{ rec.request_status_id }}</td>
+                                    <td>@{{ rec.take_holidays }}</td>
+                                    <td>@{{ rec.take_rest_days }}</td>
+                                    <td>@{{ rec.sup_comments_n }}</td>
+                                    <td>@{{ rec.user_apr_rej_id }}</td>
+                                    <td>@{{ rec.folio_n }}</td>
+                                    <td>@{{ rec.user_apr_rej_name }}</td>
+                                    <td>@{{ emp.employee }}</td>
+                                    <td>@{{ oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>
+                                        @{{ (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
+    oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
+        ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
+            oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
+            '') }}
+                                    </td>
+                                    <td>@{{ oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>@{{ oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>@{{ oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>@{{ rec.total_days }}</td>
+                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name }}</td>
+                                    <td>@{{ specialType(rec) }}</td>
+                                    <td>@{{ rec.emp_comments_n }}</td>
+                                </tr>
+                            </template>
                         </template>
                     </tbody>
                 </table>

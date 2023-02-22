@@ -28,6 +28,7 @@
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.year = <?php echo json_encode($year); ?>;
+            this.today = <?php echo json_encode($today); ?>;
             this.requestVacRoute = <?php echo json_encode(route('myVacations_setRequestVac')); ?>;
             this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
             this.myVacations_filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;
@@ -47,16 +48,18 @@
                 'take_rest_days':3,
                 'comments':4,
                 'user_apr_rej_id':5,
-                'request_date':6,
-                'folio':7,
-                'user_apr_rej_name':8,
-                'accept_reject_date':9,
-                'start_date':10,
-                'end_date':11,
-                'return_date':12,
-                'taked_days':13,
-                'status':14,
-                'sup_comments':15,
+                'application_vs_type_id':6,
+                'request_date':7,
+                'folio':8,
+                'user_apr_rej_name':9,
+                'accept_reject_date':10,
+                'start_date':11,
+                'end_date':12,
+                'return_date':13,
+                'taked_days':14,
+                'status':15,
+                'type':16,
+                'sup_comments':17,
             };
         }
         var oServerData = new GlobalData();
@@ -202,6 +205,7 @@
                             <th>take_rest_days</th>
                             <th>emp coment.</th>
                             <th>Usuario apr/rec id</th>
+                            <th>application vs type id</th>
                             <th>Fecha solicitud</th>
                             <th>Folio</th>
                             <th>Usuario apr/rec</th>
@@ -211,35 +215,40 @@
                             <th>Fecha regreso</th>
                             <th>Dias efic.</th>
                             <th>Estatus</th>
+                            <th>Tipo</th>
                             <th>sup coment.</th>
                         </thead>
                         <tbody>
-                            <tr v-for="rec in oUser.applications">
-                                <td>@{{rec.id_application}}</td>
-                                <td>@{{rec.request_status_id}}</td>
-                                <td>@{{rec.take_holidays}}</td>
-                                <td>@{{rec.take_rest_days}}</td>
-                                <td>@{{rec.emp_comments_n}}</td>
-                                <td>@{{rec.user_apr_rej_id}}</td>
-                                <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{rec.folio_n}}</td>
-                                <td>@{{rec.user_apr_rej_name}}</td>
-                                <td>
-                                    @{{
-                                        (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
-                                            oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
-                                            ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
-                                                oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
-                                                '')
-                                    }}
-                                </td>
-                                <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
-                                <td>@{{rec.total_days}}</td>
-                                <td>@{{rec.applications_st_name}}</td>
-                                <td>@{{rec.sup_comments_n}}</td>
-                            </tr>
+                            <template v-for="rec in oUser.applications">
+                                <tr :style="{ background: (rec.request_status_id == 3 ? '#E8F5E9' : (rec.request_status_id == 4 ? '#FCE4EC' : '')) }">
+                                    <td>@{{rec.id_application}}</td>
+                                    <td>@{{rec.request_status_id}}</td>
+                                    <td>@{{rec.take_holidays}}</td>
+                                    <td>@{{rec.take_rest_days}}</td>
+                                    <td>@{{rec.emp_comments_n}}</td>
+                                    <td>@{{rec.user_apr_rej_id}}</td>
+                                    <td>@{{rec.id_application_vs_type}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{rec.folio_n}}</td>
+                                    <td>@{{rec.user_apr_rej_name}}</td>
+                                    <td>
+                                        @{{
+                                            (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
+                                                oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
+                                                ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
+                                                    oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
+                                                    '')
+                                        }}
+                                    </td>
+                                    <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{rec.total_days}}</td>
+                                    <td>@{{rec.applications_st_name}}</td>
+                                    <td>@{{specialType(rec)}}</td>
+                                    <td>@{{rec.sup_comments_n}}</td>
+                                </tr>
+                            </template>
                         </tbody>
                     </table>
                 </div>
@@ -304,7 +313,7 @@
 
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_myRequest',
-                                        'colTargets' => [0,2,3,4,5],
+                                        'colTargets' => [0,2,3,4,5,6],
                                         'colTargetsSercheable' => [1],
                                         'select' => true,
                                         'noDom' => true,
@@ -369,6 +378,10 @@
 
     function dateRangePickerClearValue(){
         app.returnDate = null;
+        app.takedNoBussinesDay = false;
+        app.originalDaysTaked = 0;
+        app.lNoBussinesDay = [];
+        app.noBussinesDayIndex = 0;
     }
 </script>
 @endsection

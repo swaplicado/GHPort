@@ -40,6 +40,7 @@ class EmployeeVacationUtils {
                             'u.org_chart_job_id',
                             'u.payment_frec_id',
                             'u.company_id',
+                            'u.external_id_n',
                             'j.id_job',
                             'j.job_name_ui',
                             'd.id_department',
@@ -108,6 +109,33 @@ class EmployeeVacationUtils {
     }
 
     /**
+     * Obtiene el proximo renglon de vacaciones junto con los datos de las applications a ese año
+     */
+    public static function getProxVacationWithApplications($employee_id){
+        $nextVac = \DB::table('vacation_users')
+                            ->where('user_id', $employee_id)
+                            ->where('date_end', '>', Carbon::now()->toDateString())
+                            ->orderBy('date_end', 'asc')
+                            ->first();
+
+        $appBrk = \DB::table('applications as a')
+                    ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
+                    ->where('a.user_id', $employee_id)
+                    ->where('a.is_deleted', 0)
+                    ->whereIn('a.request_status_id', [SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_ENVIADO])
+                    ->where('ab.application_year', $nextVac->year)
+                    ->sum('ab.days_effective');
+
+        // $appBrk = \DB::table('applications_breakdowns')
+        //             ->where('application_year', $nextVac->year)
+        //             ->sum('days_effective');
+
+        $nextVac->vacation_days = $nextVac->vacation_days - $appBrk;
+
+        return $nextVac;
+    }
+
+    /**
      * Obtiene las vacaciones consumidas por un empleado
      */
     public static function getVacationConsumed($id, $year){
@@ -140,7 +168,7 @@ class EmployeeVacationUtils {
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', [
-                                                            SysConst::APPLICATION_CREADO,
+                                                            // SysConst::APPLICATION_CREADO,
                                                             SysConst::APPLICATION_ENVIADO,
                                                             SysConst::APPLICATION_APROBADO,
                                                         ]
@@ -184,6 +212,7 @@ class EmployeeVacationUtils {
         $oRequested = \DB::table('applications as a')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->leftJoin('users as u', 'u.id', '=', 'a.user_apr_rej_id')
+                        ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', $status)
                         ->where('a.is_deleted', 0)
@@ -198,6 +227,7 @@ class EmployeeVacationUtils {
                         })
                         ->select(
                             'a.*',
+                            'at.*',
                             'as.applications_st_name',
                             'as.applications_st_code',
                             'u.full_name_ui as user_apr_rej_name',
@@ -216,7 +246,7 @@ class EmployeeVacationUtils {
      *  vencidas,
      *  solicitadas
      */
-    public static function getEmployeeVacationsData($id, $isAllHistory = false){
+    public static function getEmployeeVacationsData($id, $isAllHistory = false, $customYear = null){
         $config = \App\Utils\Configuration::getConfigurations();
 
         $user = \DB::table('users as u')
@@ -255,8 +285,13 @@ class EmployeeVacationUtils {
                     )
                     ->first();
 
-        $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
-        $oNextVacation = EmployeeVacationUtils::getProxVacation($id);
+        if(is_null($customYear)){
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+        }else{
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear);
+        }
+        // $oNextVacation = EmployeeVacationUtils::getProxVacation($id);
+        $oNextVacation = EmployeeVacationUtils::getProxVacationWithApplications($id);
         
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;
@@ -694,5 +729,219 @@ class EmployeeVacationUtils {
         $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
         return $user;
+    }
+
+    /**
+     * Metodo para obtener las application de categoria especial asignadas al org_chart del usuario
+     */
+    public static function getApplicationsTypeSpecial($org_chart_id, $lStatus, $year){
+        $lSpecial_vs_orgChart = \DB::table('cat_special_vs_org_chart as so')
+                                    ->leftJoin('cat_special_type as st', 'st.id_special_type', '=', 'so.cat_special_id')
+                                    ->where('so.revisor_id', $org_chart_id)
+                                    ->where('so.is_deleted', 0)
+                                    ->select(
+                                        'so.*',
+                                        'st.name',
+                                        'st.situation'
+                                    )
+                                    ->get();
+
+        $oSpecialVsOrg = clone $lSpecial_vs_orgChart;
+        $lSituation = collect($oSpecialVsOrg)->unique('situation')->pluck('situation');
+
+        $arrUsers = [];
+        $arrOrgChart = [];
+        $arrCompanies = [];
+        foreach($lSpecial_vs_orgChart as $so){
+            if(!is_null($so->user_id_n)){
+                array_push($arrUsers, $so->user_id_n);
+            }
+
+            if(!is_null($so->org_chart_job_id_n)){
+                array_push($arrOrgChart, $so->org_chart_job_id_n);
+            }
+
+            if(!is_null($so->company_id_n)){
+                array_push($arrCompanies, $so->company_id_n);
+            }
+        }
+
+        $lUsers = \DB::table('users')
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->whereIn('id', $arrUsers)
+                    ->orWhere(function($query) use($arrOrgChart){
+                        $query->whereIn('org_chart_job_id', $arrOrgChart);
+                    })
+                    ->orWhere(function($query) use($arrCompanies){
+                        $query->whereIn('company_id', $arrCompanies);
+                    })
+                    ->get();
+                    
+        $arrUsers = clone $lUsers;
+        $arrUsers = $arrUsers->pluck('id');
+
+        $config = \App\Utils\Configuration::getConfigurations();
+        $conflSituation = $config->lSituation;
+
+        $lApplications = \DB::table('applications as ap')
+                            ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'ap.id_application')
+                            ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
+                            ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'ap.request_status_id')
+                            ->whereIn('ap.user_id', $arrUsers)
+                            ->where('ap.is_deleted', 0)
+                            ->whereYear('ap.updated_at', $year)
+                            ->whereIn('ap.request_status_id', $lStatus)
+                            ->where(function($query) use($conflSituation, $lSituation){
+                                foreach($lSituation as $s){
+                                    $index = array_search($s, array_column($conflSituation, 'id'));
+                                    $query = $query->orWhere($conflSituation[$index]->type, 1);
+                                }
+                            })
+                            ->select(
+                                'ap.*',
+                                'at.*',
+                                'as.applications_st_name',
+                                'as.applications_st_code',
+                                'u.full_name_ui as user_apr_rej_name',
+                            );
+
+        $lApplications = $lApplications->get();
+
+        foreach($lApplications as $app){
+            $app->is_normal = 1;
+        }
+
+        foreach($lUsers as $u){
+            $u->employee = $u->full_name_ui;
+            $u->applications = $lApplications->where('user_id', $u->id);
+        }
+
+        return $lUsers;
+    }
+
+    /**
+     * Metodo que obtiene las applications especiales de los nodos superiores del organigrama
+     */
+    public static function getFatherApplicationsTypeSpecial($org_chart_id, $lStatus, $year){
+        $lAllFatherBoss = orgChartUtils::getAllFatherBossOrgChartJob($org_chart_id);
+        $lAllMyChilds = orgChartUtils::getAllChildsOrgChartJob($org_chart_id);
+        $lMyUsers = \DB::table('users')
+                        ->where('is_active', 1)
+                        ->where('is_delete', 0)
+                        ->whereIn('org_chart_job_id', $lAllMyChilds)
+                        ->get();
+
+        $lSpecial_vs_orgChart = \DB::table('cat_special_vs_org_chart as so')
+                                    ->leftJoin('cat_special_type as st', 'st.id_special_type', '=', 'so.cat_special_id')
+                                    ->whereIn('so.revisor_id', $lAllFatherBoss)
+                                    ->where(function($query) use($lMyUsers, $lAllMyChilds){
+                                        $query->whereIn('so.user_id_n', $lMyUsers)
+                                            ->orWhereIn('so.org_chart_job_id_n', $lAllMyChilds);
+                                    })
+                                    ->where('so.is_deleted', 0)
+                                    ->select(
+                                        'so.*',
+                                        'st.name',
+                                        'st.situation'
+                                    )
+                                    ->get();
+
+
+        /**---------------------------------------------------------------------------------------- */
+
+        $lSpecial_vs_orgChart = \DB::table('cat_special_vs_org_chart as so')
+                                    ->leftJoin('cat_special_type as st', 'st.id_special_type', '=', 'so.cat_special_id')
+                                    ->whereIn('so.revisor_id', $lAllFatherBoss)
+                                    ->where('so.is_deleted', 0)
+                                    ->select(
+                                        'so.*',
+                                        'st.name',
+                                        'st.situation'
+                                    )
+                                    ->get();
+
+        $oSpecialVsOrg = clone $lSpecial_vs_orgChart;
+        $lSituation = collect($oSpecialVsOrg)->unique('situation')->pluck('situation');
+
+        $arrUsers = [];
+        $arrOrgChart = [];
+        $arrCompanies = [];
+        foreach($lSpecial_vs_orgChart as $so){
+            if(!is_null($so->user_id_n)){
+                array_push($arrUsers, $so->user_id_n);
+            }
+
+            if(!is_null($so->org_chart_job_id_n)){
+                array_push($arrOrgChart, $so->org_chart_job_id_n);
+            }
+
+            if(!is_null($so->company_id_n)){
+                array_push($arrCompanies, $so->company_id_n);
+            }
+        }
+
+        $lFathersUsers = \DB::table('users')
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->whereIn('id', $arrUsers)
+                    ->orWhere(function($query) use($arrOrgChart){
+                        $query->whereIn('org_chart_job_id', $arrOrgChart);
+                    })
+                    ->orWhere(function($query) use($arrCompanies){
+                        $query->whereIn('company_id', $arrCompanies);
+                    })
+                    ->get();
+
+        $arrUsers = clone $lFathersUsers;
+        $arrUsers = $arrUsers->pluck('id');
+
+        $lMyChilds = orgChartUtils::getAllChildsOrgChartJob($org_chart_id);
+        $lMyDirectChilds = orgChartUtils::getDirectChildsOrgChartJob($org_chart_id);
+
+        $lMyUsers = \DB::table('users')
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->whereIn('org_chart_job_id', $lMyChilds)
+                    ->whereNotIn('org_chart_job_id', $lMyDirectChilds)
+                    ->whereIn('id', $arrUsers)
+                    ->get();
+
+        $arrMyUser = clone $lMyUsers;
+        $arrMyUser = $arrMyUser->pluck('id');
+
+        $config = \App\Utils\Configuration::getConfigurations();
+        $conflSituation = $config->lSituation;
+
+        $lApplications = \DB::table('applications as ap')
+                            ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'ap.id_application')
+                            ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
+                            ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'ap.request_status_id')
+                            ->whereIn('ap.user_id', $arrMyUser)
+                            ->where('ap.is_deleted', 0)
+                            ->whereYear('ap.updated_at', $year)
+                            ->whereIn('ap.request_status_id', $lStatus)
+                            ->where(function($query) use($conflSituation, $lSituation){
+                                foreach($lSituation as $s){
+                                    $index = array_search($s, array_column($conflSituation, 'id'));
+                                    $query = $query->orWhere($conflSituation[$index]->type, 1);
+                                }
+                            })
+                            ->select(
+                                'ap.*',
+                                'at.*',
+                                'as.applications_st_name',
+                                'as.applications_st_code',
+                                'u.full_name_ui as user_apr_rej_name',
+                            );
+
+        $lApplications = $lApplications->get();
+
+        foreach($lMyUsers as $u){
+            $u->employee = $u->full_name_ui;
+            $u->applications = $lApplications->where('user_id', $u->id);
+        }
+
+        return $lMyUsers;
     }
 }

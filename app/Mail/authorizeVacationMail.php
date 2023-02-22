@@ -36,9 +36,16 @@ class authorizeVacationMail extends Mailable
                             ->where('id_application', $this->id_application)
                             ->first();
 
-        $application->start_date = dateUtils::formatDate($application->start_date, 'ddd D-M-Y');
-        $application->end_date = dateUtils::formatDate($application->end_date, 'ddd D-M-Y');
-        $this->returnDate = dateUtils::formatDate($this->returnDate, 'ddd D-M-Y');
+        // $application->start_date = dateUtils::formatDate($application->start_date, 'ddd D-M-Y');
+        // $application->end_date = dateUtils::formatDate($application->end_date, 'ddd D-M-Y');
+        // $this->returnDate = dateUtils::formatDate($this->returnDate, 'ddd D-M-Y');
+        $application->start_date = dateUtils::formatDate($application->start_date, 'D/m/Y dddd');
+        $application->end_date = dateUtils::formatDate($application->end_date, 'D/m/Y dddd');
+        $this->returnDate = dateUtils::formatDate($this->returnDate, 'D/m/Y dddd');
+        for ($i=0; $i < count($this->lDays); $i++) { 
+            $this->lDays[$i] = dateUtils::formatDate($this->lDays[$i], 'D/m/Y dddd');
+        }
+
 
         $employee = \DB::table('users')
                         ->where('id', $this->employee_id)
@@ -46,7 +53,7 @@ class authorizeVacationMail extends Mailable
 
         $email = env('MAIL_FROM_ADDRESS');
         return $this->from($email)
-                        ->subject('Solicitud de vacaciones')
+                        ->subject('[PGH] Solicitud vacaciones '.$employee->short_name)
                         ->view('mails.authorizedVacationMail')
                         ->with('application', $application)
                         ->with('employee', $employee)

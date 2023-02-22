@@ -33,6 +33,16 @@ var appMyVacations = new Vue({
         renderTableMyVacations: false,
         renderTableMyRequest: false,
         initialCalendarDate: null,
+        takedNoBussinesDay: false,
+        originalDaysTaked: 0,
+        lNoBussinesDay: [],
+        noBussinesDayIndex: 0,
+        today: oServerData.today,
+        is_normal: true,
+        is_past: false,
+        is_advanced: false,
+        is_proportional: false,
+        is_season_special: false,
     },
     mounted(){
         
@@ -214,6 +224,10 @@ var appMyVacations = new Vue({
             this.prox_vac_days = null;
             this.renderTableMyVacations = false;
             this.renderTableMyRequest = false;
+            this.takedNoBussinesDay = false;
+            this.originalDaysTaked = 0;
+            this.lNoBussinesDay = [];
+            this.noBussinesDayIndex = 0;
         },
 
         /**
@@ -419,6 +433,11 @@ var appMyVacations = new Vue({
                 $('#date-range200-myRequest').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
 			    $('#date-range201-myRequest').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
                 this.isNewApplication = true;
+                this.returnDate = data[this.indexes.return_date];
+                this.takedDays = data[this.indexes.taked_days];
+                this.noBussinesDayIndex = 0;
+                this.reMaplDays();
+                // this.lDays = result[2];
             }else{
                 if(this.HasRequestCreated()){
                     SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
@@ -437,6 +456,7 @@ var appMyVacations = new Vue({
                 this.take_rest_days = false;
                 this.take_holidays = false;
                 this.valid = true;
+                this.noBussinesDayIndex = 0;
                 dateRangePickerValid = this.valid;
                 $('#clear').trigger('click');
                 $('#two-inputs-myRequest').data('dateRangePicker').redraw();
@@ -457,18 +477,147 @@ var appMyVacations = new Vue({
 
             this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
             this.takedDays = result[1];
+            this.originalDaysTaked = result[1];
             this.lDays = result[2];
+            this.startDate = this.lDays[0];
             this.totCalendarDays = result[3];
+            this.lNoBussinesDay = result[4];
+            this.noBussinesDayIndex = 0;
+            if(this.takedDays < this.totCalendarDays){
+                this.takedNoBussinesDay = true;
+            }else{
+                this.takedNoBussinesDay = false;
+            }
+        },
+
+        reMaplDays(){
+            for(let i = 0; i < (parseInt(this.takedDays) - this.originalDaysTaked); i++){
+                this.lDays.push(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.noBussinesDayIndex++;
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+            this.startDate = this.lDays[0];
+        },
+
+        addDayToEfectiveDays(){
+            if(this.takedDays == this.originalDaysTaked){
+                SGui.showMessage('', 'Se tomarán días inhabiles como vacaciones', 'info');
+            }
+            if(this.takedDays < this.totCalendarDays){
+                this.takedDays++;
+                this.lDays.push(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.noBussinesDayIndex++;
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+            this.startDate = this.lDays[0];
+        },
+
+        minusDayToEfectiveDays(){
+            if(this.takedDays > this.originalDaysTaked){
+                this.takedDays--;
+                this.noBussinesDayIndex--;
+                let index = this.lDays.indexOf(this.lNoBussinesDay[this.noBussinesDayIndex]);
+                this.lDays.splice(index, 1);
+                this.lDays.sort(function(a, b) {
+                    const dateA = new Date(a);
+                    const dateB = new Date(b);
+                    return dateA - dateB;
+                });
+            }
+            this.startDate = this.lDays[0];
         },
 
         formatDate(sDate){
             return moment(sDate).format('ddd DD-MM-YYYY');
         },
 
-        requestVac(){
+        checkSpecial(){
+            let message = "";
+            let is_special = false;
+            this.is_normal = true;
+            this.is_past = false;
+            this.is_advanced = false;
+            this.is_proportional = false;
+            this.is_season_special = false;
+
+            if(this.takedDays > this.oUser.tot_vacation_remaining && this.takedDays <= (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days)))){
+                message = message + "Se utilizarán días proporcionales para la solicitud.\n";
+                is_special = true;
+                this.is_normal = false;
+                this.is_proportional = true;
+            }
+
+            if(this.takedDays > (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days))) && this.takedDays <= (this.oUser.tot_vacation_remaining + parseInt(this.oUser.prox_vac_days))){
+                message = message + "Se utilizarán más días de los proporcionales para la solicitud.\n";
+                is_special = true;
+                this.is_normal = false;
+                this.is_advanced = true;
+            }
+
+            if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
+                message = message + "Se tomarán días pasados.\n";
+                is_special = true;
+                this.is_normal = false;
+                this.is_past = true;
+            }
+
+            for(let oSeason of dateRangePickerArraySpecialSeasons){
+                if(moment(oSeason.date, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                    message = message + 'El dia: ' + this.oDateUtils.formatDate(oSeason.date, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name + "\n";
+                    is_special = true;
+                    this.is_normal = false;
+                    this.is_season_special = true;
+                    break;
+                }
+            }
+
+            return [is_special, message];
+        },
+
+        specialType(data){
+            let type = "";
+            if(data.is_normal){
+                type = type + "Normal.\n";
+            }
+
+            if(data.is_past){
+                type = type + "Días pasados.\n";
+            }
+
+            if(data.is_advanced){
+                type = type + "Días adelantados.\n";
+            }
+
+            if(data.is_proportional){
+                type = type + "Días proporcionales.\n";
+            }
+
+            if(data.is_season_special){
+                type = type + "Temporada especial.\n";
+            }
+
+            return type;
+        },
+
+        async requestVac(){
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
                 SGui.showMessage('', 'Debe ingresar las fecha de inicio y fin de vacaciones', 'warning');
                 return;
+            }
+
+            let check = this.checkSpecial();
+            if(check[0]){
+                if(!(await SGui.showConfirm(check[1], '¿Desea continua?', 'warning'))){
+                    return;
+                }
             }
 
             if(this.idRequest == null){
@@ -493,12 +642,18 @@ var appMyVacations = new Vue({
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'tot_calendar_days': this.totCalendarDays,
                 'employee_id': this.oUser.id,
+                'is_normal': this.is_normal,
+                'is_past': this.is_past,
+                'is_advanced': this.is_advanced,
+                'is_proportional': this.is_proportional,
+                'is_season_special': this.is_season_special,
             })
             .then(response => {
                 var data = response.data;
                 if(data.success){
                     this.actual_vac_days = data.oUser.actual_vac_days;
                     this.prox_vac_days = data.oUser.prox_vac_days;
+                    this.prop_vac_days = data.oUser.prop_vac_days;
                     $('#modal_Mysolicitud').modal('hide');
                     SGui.showOk();
                     this.oCopyUser = data.oUser;
@@ -573,6 +728,7 @@ var appMyVacations = new Vue({
                         rec.take_rest_days,
                         rec.emp_comments_n,
                         rec.user_apr_rej_id,
+                        rec.id_application_vs_type,
                         this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.folio_n,
                         rec.user_apr_rej_name,
@@ -586,6 +742,7 @@ var appMyVacations = new Vue({
                         this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                         rec.total_days,
                         rec.applications_st_name,
+                        this.specialType(rec),
                         rec.sup_comments_n,
                     ]
                 );
@@ -686,11 +843,15 @@ var appMyVacations = new Vue({
 
         sendRequest(request_id){
             SGui.showWaiting(15000);
+            let copylDays = this.lDays;
+            for (let index = 0; index < copylDays.length; index++) {
+                copylDays[index] = moment(copylDays[index], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD');
+            }
             axios.post(this.oData.sendRequestRoute, {
                 'id_application': request_id,
                 'year': this.year,
-                'lDays': this.lDays,
-                'returnDate': this.returnDate,
+                'lDays': copylDays,
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'employee_id': this.oUser.id,
             })
             .then(response => {
@@ -793,12 +954,12 @@ var appMyVacations = new Vue({
                         break;
                     }
                 }
-                for(let oSeason of dateRangePickerArraySpecialSeasons){
-                    if(moment(oSeason.date, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
-                        SGui.showMessage('', 'El dia: \n' + this.oDateUtils.formatDate(oSeason.date, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name, 'info');
-                        break;
-                    }
-                }
+                // for(let oSeason of dateRangePickerArraySpecialSeasons){
+                //     if(moment(oSeason.date, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                //         SGui.showMessage('', 'El dia: \n' + this.oDateUtils.formatDate(oSeason.date, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name, 'info');
+                //         break;
+                //     }
+                // }
             }
         },
 

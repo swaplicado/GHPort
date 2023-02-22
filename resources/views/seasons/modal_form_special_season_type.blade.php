@@ -38,6 +38,15 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
+                        <label for="priority" class="form-label">Color:</label>
+                    </div>
+                    <div class="col-md-8 class-xs-12">
+                        <input type="color" class="form-control" id="color-picker">
+                    </div>
+                </div>
+                <br>
+                <div class="row justify-content-center">
+                    <div class="col-md-2 col-xs-12">
                         <label for="description">Descripción:</label>
                     </div>
                     <div class="col-md-8 col-xs-12">
