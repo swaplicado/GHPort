@@ -830,12 +830,15 @@ var appMyVacations = new Vue({
                 confirmButtonText: 'Aceptar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.startDate = moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY');
-                    this.endDate = moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY');
+                    this.startDate = data[this.indexes.start_date];
+                    this.endDate = data[this.indexes.end_date];
                     this.comments = data[this.indexes.comments];
                     this.idRequest = data[this.indexes.id];
                     this.status = data[this.indexes.status];
+                    this.noBussinesDayIndex = 0;
                     this.getDataDays();
+                    this.takedDays = data[this.indexes.taked_days];
+                    this.reMaplDays();
                     this.sendRequest(data[this.indexes.id]);
                 }
             })
