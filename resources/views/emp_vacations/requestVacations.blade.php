@@ -71,22 +71,24 @@
             this.getAllEmployeesRoute = <?php echo json_encode(route('vacationManagement_getAllEmployees')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
-                'id': 0,
-                'request_status_id': 1,
-                'take_holidays': 2,
-                'take_rest_days': 3,
-                'comments': 4,
-                'user_apr_rej_id': 5,
-                'request_date': 6,
-                'folio': 7,
-                'user_apr_rej_name': 8,
-                'accept_reject_date': 9,
-                'start_date': 10,
-                'end_date': 11,
-                'return_date': 12,
-                'taked_days': 13,
-                'status': 14,
-                'sup_comments': 15,
+                'id':0,
+                'request_status_id':1,
+                'take_holidays':2,
+                'take_rest_days':3,
+                'comments':4,
+                'user_apr_rej_id':5,
+                'application_vs_type_id':6,
+                'request_date':7,
+                'folio':8,
+                'user_apr_rej_name':9,
+                'accept_reject_date':10,
+                'start_date':11,
+                'end_date':12,
+                'return_date':13,
+                'taked_days':14,
+                'status':15,
+                'type':16,
+                'sup_comments':17,
             };
         }
         var oServerData = new GlobalData();
@@ -380,22 +382,24 @@
                             <table class="table table-bordered" ref="table_myRequest" id="table_myRequest"
                                 style="width: 100%;">
                                 <thead class="thead-light">
-                                    <th>id</th>
-                                    <th>request_status_id</th>
-                                    <th>take_holidays</th>
-                                    <th>take_rest_days</th>
-                                    <th>emp coment.</th>
-                                    <th>Usuario apr/rec id</th>
-                                    <th>Fecha solicitud</th>
-                                    <th>Folio</th>
-                                    <th>Usuario apr/rec</th>
-                                    <th style="max-width: 20%;">Fecha apr/rec</th>
-                                    <th>Fecha incio</th>
-                                    <th>Fecha fin</th>
-                                    <th>Fecha regreso</th>
-                                    <th>Dias efic.</th>
-                                    <th>Estatus</th>
-                                    <th>sup coment.</th>
+                                <th>id</th>
+                                <th>request_status_id</th>
+                                <th>take_holidays</th>
+                                <th>take_rest_days</th>
+                                <th>emp coment.</th>
+                                <th>Usuario apr/rec id</th>
+                                <th>application vs type id</th>
+                                <th>Fecha solicitud</th>
+                                <th>Folio</th>
+                                <th>Usuario apr/rec</th>
+                                <th style="max-width: 20%;">Fecha apr/rec</th>
+                                <th>Fecha incio</th>
+                                <th>Fecha fin</th>
+                                <th>Fecha regreso</th>
+                                <th>Dias efic.</th>
+                                <th>Estatus</th>
+                                <th>Tipo</th>
+                                <th>sup coment.</th>
                                 </thead>
                             </table>
                         </div>
