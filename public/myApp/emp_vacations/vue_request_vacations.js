@@ -408,7 +408,8 @@ var appRequestVacation = new Vue({
 
         checkIsSelectable(row){
             if(!row.is_normal){
-                return "noSelectableRow";
+                // return "noSelectableRow";
+                return "";
             }else{
                 return "";
             }
