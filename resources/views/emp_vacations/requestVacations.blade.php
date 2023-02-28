@@ -31,6 +31,7 @@
             this.checkMailRoute = <?php echo json_encode(route('requestVacations_checkMail')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('requestVacations_getEmpApplicationsEA')); ?>;
             this.getDataManagerRoute = <?php echo json_encode(route('requestVacations_getDataManager')); ?>;
+            this.getRequestlDaysRoute = <?php echo json_encode(route('requestVacations_getlDays')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesRequest = {
@@ -69,6 +70,7 @@
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.getDirectEmployeesRoute = <?php echo json_encode(route('vacationManagement_getDirectEmployees')); ?>;
             this.getAllEmployeesRoute = <?php echo json_encode(route('vacationManagement_getAllEmployees')); ?>;
+            this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
                 'id':0,

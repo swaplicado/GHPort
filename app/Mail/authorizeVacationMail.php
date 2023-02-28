@@ -41,9 +41,10 @@ class authorizeVacationMail extends Mailable
         // $this->returnDate = dateUtils::formatDate($this->returnDate, 'ddd D-M-Y');
         $application->start_date = dateUtils::formatDate($application->start_date, 'D/m/Y dddd');
         $application->end_date = dateUtils::formatDate($application->end_date, 'D/m/Y dddd');
-        $this->returnDate = dateUtils::formatDate($this->returnDate, 'D/m/Y dddd');
-        for ($i=0; $i < count($this->lDays); $i++) { 
-            $this->lDays[$i] = dateUtils::formatDate($this->lDays[$i], 'D/m/Y dddd');
+        $application->return_date = dateUtils::formatDate($application->return_date, 'D/m/Y dddd');
+        $lDays = json_decode($application->ldays);
+        for ($i=0; $i < count($lDays); $i++) { 
+            $lDays[$i]->date = dateUtils::formatDate($lDays[$i]->date, 'D/m/Y dddd');
         }
 
 
@@ -57,7 +58,7 @@ class authorizeVacationMail extends Mailable
                         ->view('mails.authorizedVacationMail')
                         ->with('application', $application)
                         ->with('employee', $employee)
-                        ->with('lDays', $this->lDays)
-                        ->with('returnDate', $this->returnDate);
+                        ->with('lDays', $lDays)
+                        ->with('returnDate', $application->return_date);
     }
 }

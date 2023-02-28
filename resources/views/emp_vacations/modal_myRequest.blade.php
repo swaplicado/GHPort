@@ -70,12 +70,12 @@
                         <div>
                             <label class="form-label" for="efectiveDays" style="display: inline;">Dias efectivos:</label>
                             <input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
-                            <button v-if="takedNoBussinesDay" class="btn btn-secondary inline" style="transform: scale(.8);" v-on:click="addDayToEfectiveDays()">
+                            <!-- <button v-if="takedNoBussinesDay" class="btn btn-secondary inline" style="transform: scale(.8);" v-on:click="addDayToEfectiveDays()">
                                 <span class="bx bx-plus"></span>
                             </button>
                             <button v-if="takedNoBussinesDay" class="btn btn-secondary inline" style="transform: scale(.8);" v-on:click="minusDayToEfectiveDays()">
                                 <span class="bx bx-minus"></span>
-                            </button>
+                            </button> -->
                         </div>
                         <br>
                         <div>
@@ -85,9 +85,14 @@
                         <br>
                         <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
-                            <ul class="ulColumns3" name="listDays">
-                                <li v-for="day in lDays">@{{day}}</li>
-                            </ul>
+                            <ol class="ulColumns3" name="listDays">
+                                <template v-for="(day, index) in lDays">
+                                    <li v-bind:style="{'color': day.taked ? 'green' : 'red'}">
+                                        <label class="" :for="'exampleCheck'+index">@{{day.date}}</label>
+                                        <input v-if="!day.bussinesDay" type="checkbox" class="" :id="'exampleCheck'+index" v-on:click="setTakedDay(index, 'exampleCheck'+index);" :checked="day.taked">
+                                    </li>
+                                </template>
+                            </ol>
                         </div>
                         <div>
                             <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>

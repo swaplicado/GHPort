@@ -58,6 +58,15 @@ class myVacationsController extends Controller
                                                 ->with('today', $today);
     }
 
+    public function getlDays(Request $request){
+        try {
+            $oApp = Application::find($request->id_application);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener la lista de días efectivos', 'error']);
+        }
+        return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
+    }
+
     public function setRequestVac(Request $request){
         $startDate = $request->startDate;
         $endDate = $request->endDate;
@@ -65,7 +74,7 @@ class myVacationsController extends Controller
         $takedDays = $request->takedDays;
         $returnDate = $request->returnDate;
         $tot_calendar_days = $request->tot_calendar_days;
-        // $lDays = $request->lDays;
+        $lDays = $request->lDays;
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
         $employee_id = $request->employee_id;
@@ -107,6 +116,7 @@ class myVacationsController extends Controller
             $application->total_days = $takedDays;
             $application->tot_calendar_days = $tot_calendar_days;
             $application->return_date = $returnDate;
+            $application->ldays = json_encode($lDays);
             $application->user_id = $employee_id;
             $application->request_status_id = SysConst::APPLICATION_CREADO;
             $application->type_incident_id = SysConst::TYPE_VACACIONES;
@@ -164,7 +174,7 @@ class myVacationsController extends Controller
 
         // $user = $this->getUserVacationsData();
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
-        $user->applications = EmployeeVacationUtils::getTakedDays($user);
+        // $user->applications = EmployeeVacationUtils::getTakedDays($user);
 
         return json_encode(['success' => true, 'message' => 'Solicitud guardada con éxito', 'oUser' => $user]);
     }
@@ -180,6 +190,7 @@ class myVacationsController extends Controller
         $take_holidays = $request->take_holidays;
         $take_rest_days = $request->take_rest_days;
         $employee_id = $request->employee_id;
+        $lDays = $request->lDays;
 
         try {
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
@@ -223,6 +234,7 @@ class myVacationsController extends Controller
             $application->total_days = $takedDays;
             $application->tot_calendar_days = $tot_calendar_days;
             $application->return_date = $returnDate;
+            $application->ldays = $lDays;
             $application->emp_comments_n = $comments;
             $application->is_deleted = 0;
             $application->update();
@@ -372,7 +384,7 @@ class myVacationsController extends Controller
                     Mail::to($superviser->institutional_mail)->send(new requestVacationMail(
                                                             $application->id_application,
                                                             $request->employee_id,
-                                                            $request->lDays,
+                                                            $application->ldays,
                                                             $request->returnDate
                                                         )
                                                     );

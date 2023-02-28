@@ -42,10 +42,16 @@ class vacationUtils{
                     (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
                 ){
                     takedDays = takedDays + 1;
-                    lDays.push( oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY') );
-                }else{
-                    lNoBussinesDay.push(oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY'));
                 }
+                lDays.push( 
+                    {
+                        date: oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY'),
+                        bussinesDay: (oDate.weekday() != 5 && oDate.weekday() != 6 && !lHolidays.includes(oDate.format('YYYY-MM-DD'))),
+                        taked: (oDate.weekday() != 5 && oDate.weekday() != 6 && !lHolidays.includes(oDate.format('YYYY-MM-DD'))),
+                        isOptional: (oDate.weekday() == 5 || oDate.weekday() == 6 || lHolidays.includes(oDate.format('YYYY-MM-DD'))),
+                    }
+                );
+
                 oDate.add('1', 'days');
             }else{
                 if(
@@ -53,10 +59,15 @@ class vacationUtils{
                     (!take_holidays ? (!lHolidays.includes(oDate.format('YYYY-MM-DD'))) : true)
                 ){
                     takedDays = takedDays + 1;
-                    lDays.push( oDateUtils.formatDate(oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY') );
-                }else{
-                    lNoBussinesDay.push(oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY'));
                 }
+                lDays.push( 
+                    {
+                        date: oDateUtils.formatDate( oDate.format('YYYY-MM-DD'), 'ddd DD-MMM-YYYY'),
+                        bussinesDay: (oDate.weekday() != 6 && !lHolidays.includes(oDate.format('YYYY-MM-DD'))),
+                        taked: (oDate.weekday() != 6 && !lHolidays.includes(oDate.format('YYYY-MM-DD'))),
+                        isOptional: (oDate.weekday() == 6 || lHolidays.includes(oDate.format('YYYY-MM-DD'))),
+                    }
+                );
                 oDate.add('1', 'days');
             }
         }

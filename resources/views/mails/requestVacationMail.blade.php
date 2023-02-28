@@ -79,7 +79,9 @@
                     <label for="listDays">Desglose de los días de vacaciones: </label>
                     <ol name="listDays">
                         @foreach($lDays as $day)
-                            <li>{{$day}}</li>
+                            @if($day->taked)
+                                <li>{{$day->date}}</li>
+                            @endif
                         @endforeach
                     </ol>
                 </div>

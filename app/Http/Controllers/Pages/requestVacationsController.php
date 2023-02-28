@@ -621,4 +621,13 @@ class requestVacationsController extends Controller
 
         return json_encode(['success' => true, 'arrAplications' => $data, 'arrSpecialSeasons' => $lSpecialSeason]);
     }
+
+    public function getlDays(Request $request){
+        try {
+            $oApp = Application::find($request->id_application);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener la lista de días efectivos', 'error']);
+        }
+        return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
+    }
 }

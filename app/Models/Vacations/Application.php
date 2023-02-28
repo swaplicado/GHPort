@@ -16,6 +16,7 @@ class Application extends Model
         'total_days',
         'tot_calendar_days',
         'return_date',
+        'ldays',
         'user_id',
         'request_status_id',
         'type_incident_id',

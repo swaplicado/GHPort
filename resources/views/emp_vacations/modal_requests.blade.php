@@ -57,9 +57,13 @@
                         <br>
                         <div>
                             <label class="form-label" for="listDays">Dias de vacaciones:</label>
-                            <ul class="ulColumns3" name="listDays">
-                                <li v-for="day in lDays">@{{day}}</li>
-                            </ul>
+                            <ol class="ulColumns3" name="listDays">
+                                <template v-for="(day, index) in lDays">
+                                    <li v-bind:style="{'color': day.taked ? 'green' : 'red'}">
+                                        <label class="" :for="'exampleCheck'+index">@{{day.date}}</label>
+                                    </li>
+                                </template>
+                            </ol>
                         </div>
                         <div>
                             <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>

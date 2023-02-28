@@ -80,6 +80,7 @@ var appRequestVacation = new Vue({
                 return;
             }
             await this.getEmpApplicationsEA(data[this.indexes.user_id]);
+            await this.getlDays(data[this.indexes.id]);
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
@@ -94,11 +95,12 @@ var appRequestVacation = new Vue({
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
             $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
-            this.getReturnDate(data);
+            // this.getReturnDate(data);
             this.returnDate = data[this.indexes.return_date];
             this.takedDays = data[this.indexes.total_days];
             this.noBussinesDayIndex = 0;
-            this.reMaplDays();
+            this.totCalendarDays = (moment(moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD').diff(moment(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD'), 'days') + 1);
+            // this.reMaplDays();
             $('#modal_solicitud').modal('show');
         },
 
@@ -108,6 +110,7 @@ var appRequestVacation = new Vue({
                 return;
             }
             await this.getEmpApplicationsEA(data[this.indexes.user_id]);
+            await this.getlDays(data[this.indexes.id]);
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
@@ -122,12 +125,42 @@ var appRequestVacation = new Vue({
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
             $('#date-range200').val(moment(data[this.indexes.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             $('#date-range201').val(moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
-            this.getReturnDate(data);
+            // this.getReturnDate(data);
             this.returnDate = data[this.indexes.return_date];
             this.takedDays = data[this.indexes.total_days];
             this.noBussinesDayIndex = 0;
-            this.reMaplDays();
+            this.totCalendarDays = (moment(moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD').diff(moment(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD'), 'days') + 1);
+            // this.reMaplDays();
             $('#modal_solicitud').modal('show');
+        },
+
+        getlDays(id){
+            SGui.showWaiting(3000);
+            return new Promise((resolve) => 
+            axios.post(this.oData.getRequestlDaysRoute, {
+                'id_application': id,
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    let oDates = JSON.parse(data.lDays);
+                    for(let i = 0; i < oDates.length; i++){
+                        oDates[i].date = this.oDateUtils.formatDate(oDates[i].date, 'ddd DD-MMM-YYYY');
+                    }
+                    this.lDays = oDates;
+                    swal.close();
+                    resolve(data.lDays);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                    swal.close();
+                    resolve(null);
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close();
+                resolve(error);
+            }));
         },
 
         reMaplDays(){
@@ -152,17 +185,11 @@ var appRequestVacation = new Vue({
             SGui.showWaiting(10000);
             this.reMaplDaysConventionalFormat();
             var route = this.oData.acceptRequestRoute;
-            let copylDays = this.lDays;
-            for (let index = 0; index < copylDays.length; index++) {
-                copylDays[index] = moment(copylDays[index], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD');
-            }
             axios.post(route, {
                 'id_application': this.idRequest,
                 'id_user': this.idUser,
                 'comments': this.comments,
                 'year': this.year,
-                'lDays': copylDays,
-                'lDaysConventionalFormat': this.lDaysConventionalFormat,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
             })
@@ -187,16 +214,11 @@ var appRequestVacation = new Vue({
         rejectRequest(){
             SGui.showWaiting(10000);
             var route = this.oData.rejectRequestRoute;
-            let copylDays = this.lDays;
-            for (let index = 0; index < copylDays.length; index++) {
-                copylDays[index] = moment(copylDays[index], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD');
-            }
             axios.post(route, {
                 'id_application': this.idRequest,
                 'id_user': this.idUser,
                 'comments': this.comments,
                 'year': this.year,
-                'lDays': copylDays,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
             })

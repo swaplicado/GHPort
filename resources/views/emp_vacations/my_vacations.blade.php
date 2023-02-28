@@ -36,6 +36,7 @@
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
+            this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
             this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
@@ -382,6 +383,8 @@
         app.originalDaysTaked = 0;
         app.lNoBussinesDay = [];
         app.noBussinesDayIndex = 0;
+        app.lDays = [];
+        app.newData = true;
     }
 </script>
 @endsection
