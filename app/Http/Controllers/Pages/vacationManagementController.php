@@ -16,7 +16,8 @@ class vacationManagementController extends Controller
             $user = EmployeeVacationUtils::getEmployeeDataForMyVacation($request->employee_id);
 
             $now = Carbon::now();
-            $initialCalendarDate = $now->addDays(1)->toDateString();
+            // $initialCalendarDate = $now->addDays(1)->toDateString();
+            $initialCalendarDate = $now->subMonths(1)->toDateString();
 
             $year = $now->year;
 
