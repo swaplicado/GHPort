@@ -91,7 +91,7 @@ class myVacationsController extends Controller
             }
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, false, 1);
 
             foreach($user->applications as $ap){
                 if($ap->request_status_id == 1){

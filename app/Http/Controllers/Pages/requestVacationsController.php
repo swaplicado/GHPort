@@ -218,7 +218,7 @@ class requestVacationsController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            $data = json_decode($this->sendRequestVacation($application, $request->lDaysConventionalFormat));
+            $data = json_decode($this->sendRequestVacation($application, json_decode($application->ldays)));
 
             if($data->code == 500 || $data->code == 550){
                 \DB::rollBack();
@@ -445,7 +445,7 @@ class requestVacationsController extends Controller
 
         foreach($lApplications as $app){
             $takedDays = $app->total_days;
-            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, false, 1);
 
             if($user->tot_vacation_remaining < $takedDays){
                 return json_encode(['success' => false, 'message' => 'El colaborador no cuenta con dias disponibles', 'icon' => 'warning']);
@@ -519,17 +519,31 @@ class requestVacationsController extends Controller
                             ->get();
 
         $rows = [];
-        // $start_date = $this->checkDate(Carbon::parse($oApplication->start_date), $lHolidays, $employee);
         $start_date = Carbon::parse($oApplication->start_date);
         $count = 0;
-        foreach($appBreakDowns as $br){
+        foreach($appBreakDowns as $index => $br){
+            if($index != 0){
+                for($i=$br->days_effective; $i < count($lDays); $i++){
+                    if($lDays[$i]->taked){
+                        $start_date = Carbon::parse($lDays[$i]->date);
+                        break;
+                    }
+                }
+            }
             $year = $userVacation->where('year', $br->application_year)->first();
             $end_date = clone $start_date;
-            for ($i=0; $i<($br->days_effective - 1); $i++) { 
-                // $end_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
-                $end_date = Carbon::parse($lDays[$br->days_effective - 1]);
+            $count = 0;
+            $index != 0 ? $i=$br->days_effective : $i = 0;
+
+            for($i; $i < count($lDays); $i++){
+                if($lDays[$i]->taked){
+                    $end_date = Carbon::parse($lDays[$i]->date);
+                    $count++;
+                }
+                if($count >= $br->days_effective){
+                    break;
+                }
             }
-            $count++;
             $row = [
                 'breakdown_id' => $br->id_application_breakdown,
                 'folio' => $oApplication->folio_n.'-'.$count,
@@ -541,8 +555,6 @@ class requestVacationsController extends Controller
             ];
 
             array_push($rows, $row); 
-
-            $start_date = $this->checkDate($end_date->add(1, 'days'), $lHolidays, $employee);
         }
 
         $arrJson = [
