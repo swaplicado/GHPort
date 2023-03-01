@@ -583,6 +583,11 @@ var appMyVacations = new Vue({
                 return;
             }
 
+            if(this.takedDays < 1){
+                SGui.showMessage('', 'No se puede crear una solicitud con cero días efectivos de vacaciones', 'warning');
+                return;
+            }
+
             let check = this.checkSpecial();
             if(check[0]){
                 if(!(await SGui.showConfirm(check[1], '¿Desea continua?', 'warning'))){
