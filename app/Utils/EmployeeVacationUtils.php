@@ -276,6 +276,7 @@ class EmployeeVacationUtils {
                         'u.org_chart_job_id',
                         'u.payment_frec_id',
                         'u.company_id',
+                        'u.job_id',
                         'j.id_job',
                         'j.job_name_ui',
                         'd.id_department',
@@ -943,5 +944,34 @@ class EmployeeVacationUtils {
         }
 
         return $lMyUsers;
+    }
+
+    public static function getEmployeeTempSpecial($org_chart_job_id, $user_id, $job_id){
+        $lTemp_special = \DB::table('special_season as ss')
+                            ->leftJoin('special_season_types as sst', 'sst.id_special_season_type', '=', 'ss.special_season_type_id')
+                            ->where(function($query) use($org_chart_job_id, $user_id, $job_id){
+                                $query->where('org_chart_job_id', $org_chart_job_id)->orWhere('user_id', $user_id)->orWhere('job_id', $job_id);
+                            })
+                            ->where('ss.is_deleted', 0)
+                            ->select(
+                                'ss.start_date',
+                                'ss.end_date',
+                                'sst.priority',
+                                'sst.name',
+                                'sst.color',
+                            )
+                            ->get();
+
+        foreach ($lTemp_special as $temp) {
+            $lTemp = [];
+            $oDate = Carbon::parse($temp->start_date);
+            for($i = 0; $i < (Carbon::parse($temp->start_date)->diff(Carbon::parse($temp->end_date))->days + 1); $i++){
+                array_push($lTemp, $oDate->toDateString());
+                $oDate->addDay();
+            }
+            $temp->lDates = $lTemp;
+        }
+
+        return $lTemp_special;
     }
 }

@@ -4,11 +4,15 @@ var app = new Vue({
         oData: oServerData,
         indexSpecialType: oServerData.indexSpecialType,
         lSpecialType: oServerData.lSpecialType,
+        lSpecialTypeOldOrder: structuredClone(oServerData.lSpecialType),
+        lSpecialTypeNewOrder: structuredClone(oServerData.lSpecialType),
         lSituation: oServerData.lSituation,
         situation_id: 1,
         name: null,
         code: null,
         id_specialType: null,
+        priority: 0,
+        lPrioritys: [],
     },
     mounted(){
         var self = this;
@@ -19,22 +23,52 @@ var app = new Vue({
         .on('select2:select', function (e){
             self.situation_id = e.params.data.id;
         });
+
+        $( "#sortable" ).sortable({
+            update: function(event, ui) {
+                self.lPrioritys = [];
+                $('#sortable li').each(function(i, elem) {
+                    self.lPrioritys.push({id:$(elem).data('id'), text: $(elem).text()});
+                });
+                console.log(self.lPrioritys);
+                // console.log('update: '+ ui.item.index() + ' - ' + ui.item.data('id'))
+            },
+        });
     },
     methods: {
         showModal(data = null){
+            this.lSpecialTypeNewOrder = structuredClone(this.lSpecialTypeOldOrder);
             if(data != null){
                 this.id_specialType = data[this.indexSpecialType.id];
                 this.name = data[this.indexSpecialType.name];
                 this.code = data[this.indexSpecialType.code];
                 this.situation_id = data[this.indexSpecialType.situation_id];
+                this.priority = data[this.indexSpecialType.priority];
                 $('#sel_situation').val(this.situation_id).trigger('change');
             }else{
                 this.id_specialType = null;
                 this.name = null;
                 this.code = null;
                 this.situation_id = 1;
+                this.priority = 0;
             }
             $('#modal_special_type').modal('show');
+        },
+
+        addToList(){
+            this.lSpecialTypeNewOrder = structuredClone(this.lSpecialTypeOldOrder);
+            this.lPrioritys = [];
+            $('#sortable li').each(function(i, elem) {
+                self.lPrioritys.push({id:$(elem).data('id'), text: $(elem).text()});
+            });
+            console.log(this.lPrioritys);
+            if(this.name == "" || this.name == null){
+                // SGui.showMessage('', 'Debe ingresar el nombre de la solicitud');
+                return;
+            }
+            this.lSpecialTypeNewOrder.push({id_special_type: 0, name: this.name});
+            
+            console.log(this.lSpecialTypeNewOrder);
         },
 
         save(){
@@ -61,12 +95,14 @@ var app = new Vue({
                 'situation_id': this.situation_id,
                 'name': this.name,
                 'code': this.code,
+                'lOrder': this.lPrioritys,
             })
             .then( result => {
                 let data = result.data;
                 if(data.success){
                     $('#modal_special_type').modal('hide');
                     SGui.showOk();
+                    this.lSpecialTypeOldOrder = data.lSpecialType;
                     this.reDrawTableSpecialType(data.lSpecialType);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -88,6 +124,7 @@ var app = new Vue({
                         special.name,
                         special.code,
                         special.situation_name,
+                        special.priority,
                     ]
                 );
             }

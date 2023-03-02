@@ -38,6 +38,8 @@ class myVacationsController extends Controller
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
+        $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($user->org_chart_job_id, $user->id, $user->job_id);
+
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -55,7 +57,8 @@ class myVacationsController extends Controller
                                                 ->with('year', Carbon::now()->year)
                                                 ->with('constants', $constants)
                                                 ->with('config', $config)
-                                                ->with('today', $today);
+                                                ->with('today', $today)
+                                                ->with('lTemp', $lTemp_special);
     }
 
     public function getlDays(Request $request){

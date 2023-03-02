@@ -41,7 +41,7 @@
                         <label for="priority" class="form-label">Color:</label>
                     </div>
                     <div class="col-md-8 class-xs-12">
-                        <input type="color" class="form-control" id="color-picker">
+                        <input type="color" class="form-control" id="color-picker" v-model="hexColor">
                     </div>
                 </div>
                 <br>

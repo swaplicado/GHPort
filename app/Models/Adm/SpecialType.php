@@ -12,6 +12,7 @@ class SpecialType extends Model
         'name',
         'code',
         'situation',
+        'priority',
         'is_deleted',
         'created_by',
         'updated_by'

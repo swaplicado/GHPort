@@ -132,12 +132,16 @@ class requestVacationsController extends Controller
 
     public function index($idApplication = null){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
-        delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
         $config = \App\Utils\Configuration::getConfigurations();
         $year = Carbon::now()->year;
         $data = $this->getData($year);
         // $myManagers = orgChartUtils::getMyManagers(\Auth::user()->org_chart_job_id);
-        $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
+        if(\Auth::user()->rol_id == SysConst::ADMINISTRADOR){
+            $myManagers = orgChartUtils::getMyManagers(2);
+        }else{
+            $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
+        }
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -627,11 +631,13 @@ class requestVacationsController extends Controller
         try {
             $data = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
             $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
+            $user = \DB::table('users')->where('is_delete', 0)->where('is_active', 1)->where('id', $request->user_id)->first();
+            $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($user->org_chart_job_id, $user->id, $user->job_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
         }
 
-        return json_encode(['success' => true, 'arrAplications' => $data, 'arrSpecialSeasons' => $lSpecialSeason]);
+        return json_encode(['success' => true, 'arrAplications' => $data, 'arrSpecialSeasons' => $lSpecialSeason, 'lTemp' => $lTemp_special]);
     }
 
     public function getlDays(Request $request){

@@ -32,7 +32,8 @@ class SpecialSeasonTypesController extends Controller
                 $oSeasonType->name = $request->name;
                 $oSeasonType->key_code = $request->key_code;
                 $oSeasonType->priority = $request->priority;
-                $oSeasonType->color = $request->color;
+                // $oSeasonType->color = $request->color;
+                $oSeasonType->color = $request->hexColor;
                 $oSeasonType->description = $request->description;
                 // $oSeasonType->created_by = \Auth::user()->id;
                 // $oSeasonType->updated_by = \Auth::user()->id;
@@ -62,7 +63,8 @@ class SpecialSeasonTypesController extends Controller
                 $oSeasonType->name = $request->name;
                 $oSeasonType->key_code = $request->key_code;
                 $oSeasonType->priority = $request->priority;
-                $oSeasonType->color = $request->color;
+                // $oSeasonType->color = $request->color;
+                $oSeasonType->color = $request->hexColor;
                 $oSeasonType->description = $request->description;
                 // $oSeasonType->updated_by = \Auth::user()->id;
                 $oSeasonType->updated_by = delegationUtils::getIdUser();

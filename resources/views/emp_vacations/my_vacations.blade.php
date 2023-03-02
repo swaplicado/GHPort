@@ -27,6 +27,7 @@
             this.oUser = <?php echo json_encode($user); ?>;
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
+            this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.year = <?php echo json_encode($year); ?>;
             this.today = <?php echo json_encode($today); ?>;
             this.requestVacRoute = <?php echo json_encode(route('myVacations_setRequestVac')); ?>;
@@ -344,8 +345,13 @@
 <script>
     var oDateRangePickerForMyRequest  = new SDateRangePicker();
     var dateRangePickerArrayApplications = [];
-    var dateRangePickerArraySpecialSeasons = [];
+    // var dateRangePickerArraySpecialSeasons = [];
     var dateRangePickerValid = true;
+    // var selfDatePicker = oDateRangePickerForMyRequest
+    // for (let index = 0; index < oServerData.lTemp.length; index++) {
+    //     oDateRangePickerForMyRequest.createClass(oServerData.lTemp[index].priority, oServerData.lTemp[index].color);
+    // }
+
     oDateRangePickerForMyRequest.setDateRangePicker(
         'two-inputs-myRequest',
         oServerData.initialCalendarDate,

@@ -28,6 +28,7 @@
     <script src="{{ asset('principal/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Core plugin JavaScript-->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="{{ asset('principal/jquery-easing/jquery.easing.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('vue/vue.js') }}"></script>
     <script src="{{ asset('moment/moment.js')}}"></script>

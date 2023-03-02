@@ -29,6 +29,7 @@ var appRequestVacation = new Vue({
         originalDaysTaked: 0,
         lNoBussinesDay: [],
         noBussinesDayIndex: 0,
+        lTemp: [],
     },
     mounted(){
         var self = this;
@@ -81,6 +82,7 @@ var appRequestVacation = new Vue({
             }
             await this.getEmpApplicationsEA(data[this.indexes.user_id]);
             await this.getlDays(data[this.indexes.id]);
+            this.vacationUtils.createClass(this.lTemp);
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
@@ -111,6 +113,7 @@ var appRequestVacation = new Vue({
             }
             await this.getEmpApplicationsEA(data[this.indexes.user_id]);
             await this.getlDays(data[this.indexes.id]);
+            this.vacationUtils.createClass(this.lTemp);
             this.comments = data[this.indexes.sup_comments];
             this.idRequest = data[this.indexes.id];
             this.idUser = data[this.indexes.user_id];
@@ -358,17 +361,18 @@ var appRequestVacation = new Vue({
                         this.applicationsEA = data.arrAplications;
                         dateRangePickerArrayApplications = data.arrAplications;
                         dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
-                        swal.close()
+                        this.lTemp = data.lTemp;
+                        swal.close();
                         resolve(dateRangePickerArrayApplications);
                     }else{
                         SGui.showMessage('', data.message, data.icon);
-                        swal.close()
+                        swal.close();
                         resolve(null);
                     }
                 })
                 .catch( function (error){
                     console.log(error);
-                    swal.close()
+                    swal.close();
                     resolve(error);
                 })
             );

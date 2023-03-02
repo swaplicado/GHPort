@@ -124,18 +124,18 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td v-bind:class="[ table_class[opt.text]['Enero'].class ]" v-on:click="setSpecialSeason(opt.text, 'Enero')">@{{table_class[opt.text]['Enero'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Febrero'].class ]" v-on:click="setSpecialSeason(opt.text, 'Febrero')">@{{table_class[opt.text]['Febrero'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Marzo'].class ]" v-on:click="setSpecialSeason(opt.text, 'Marzo')">@{{table_class[opt.text]['Marzo'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Abril'].class ]" v-on:click="setSpecialSeason(opt.text, 'Abril')">@{{table_class[opt.text]['Abril'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Mayo'].class ]" v-on:click="setSpecialSeason(opt.text, 'Mayo')">@{{table_class[opt.text]['Mayo'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Junio'].class ]" v-on:click="setSpecialSeason(opt.text, 'Junio')">@{{table_class[opt.text]['Junio'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Julio'].class ]" v-on:click="setSpecialSeason(opt.text, 'Julio')">@{{table_class[opt.text]['Julio'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Agosto'].class ]" v-on:click="setSpecialSeason(opt.text, 'Agosto')">@{{table_class[opt.text]['Agosto'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Septiembre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Septiembre')">@{{table_class[opt.text]['Septiembre'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Octubre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Octubre')">@{{table_class[opt.text]['Octubre'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Noviembre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Noviembre')">@{{table_class[opt.text]['Noviembre'].text}}</td>
-                                    <td v-bind:class="[ table_class[opt.text]['Diciembre'].class ]" v-on:click="setSpecialSeason(opt.text, 'Diciembre')">@{{table_class[opt.text]['Diciembre'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Enero'].color, 'color': table_class[opt.text]['Enero'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Enero')">@{{table_class[opt.text]['Enero'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Febrero'].color, 'color': table_class[opt.text]['Febrero'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Febrero')">@{{table_class[opt.text]['Febrero'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Marzo'].color, 'color': table_class[opt.text]['Marzo'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Marzo')">@{{table_class[opt.text]['Marzo'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Abril'].color, 'color': table_class[opt.text]['Abril'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Abril')">@{{table_class[opt.text]['Abril'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Mayo'].color, 'color': table_class[opt.text]['Mayo'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Mayo')">@{{table_class[opt.text]['Mayo'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Junio'].color, 'color': table_class[opt.text]['Junio'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Junio')">@{{table_class[opt.text]['Junio'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Julio'].color, 'color': table_class[opt.text]['Julio'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Julio')">@{{table_class[opt.text]['Julio'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Agosto'].color, 'color': table_class[opt.text]['Agosto'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Agosto')">@{{table_class[opt.text]['Agosto'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Septiembre'].color, 'color': table_class[opt.text]['Septiembre'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Septiembre')">@{{table_class[opt.text]['Septiembre'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Octubre'].color, 'color': table_class[opt.text]['Octubre'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Octubre')">@{{table_class[opt.text]['Octubre'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Noviembre'].color, 'color': table_class[opt.text]['Noviembre'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Noviembre')">@{{table_class[opt.text]['Noviembre'].text}}</td>
+                                    <td v-bind:style="{ 'background-color': table_class[opt.text]['Diciembre'].color, 'color': table_class[opt.text]['Diciembre'].textColor }" v-on:click="setSpecialSeason(opt.text, 'Diciembre')">@{{table_class[opt.text]['Diciembre'].text}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -196,7 +196,7 @@
                         <td>@{{oType.color}}</td>
                         <td>@{{oType.name}}</td>
                         <td>@{{oType.key_code}}</td>
-                        <td v-bind:class="[ oType.color ]">@{{oType.priority}}</td>
+                        <td v-bind:style="{ 'background-color': oType.color }">@{{oType.priority}}</td>
                         <td>@{{oType.description}}</td>
                         <td>@{{oDateUtils.formatDate(oType.created_at)}}</td>
                         <td>@{{oType.full_name_ui}}</td>
@@ -220,6 +220,7 @@
                                         'edit_modal' => true,
                                         // 'delete' => true,
                                     ])
+    <script type="text/javascript" src="{{ asset('myApp/Utils/SColorSelector.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/seasons/vue_special_season.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/seasons/vue_type_special_season.js') }}"></script>
     <script>

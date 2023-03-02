@@ -21,11 +21,13 @@ class vacationManagementController extends Controller
 
             $year = $now->year;
 
+            $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($user->org_chart_job_id, $user->id, $user->job_id);
+
         } catch (\Throwable $th) {
             return json_encode(['succeess' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'oUser' => $user, 'initialCalendarDate' => $initialCalendarDate, 'year' => $year]);
+        return json_encode(['success' => true, 'oUser' => $user, 'initialCalendarDate' => $initialCalendarDate, 'year' => $year, 'lTemp' => $lTemp_special]);
     }
 
     public function getDirectEmployees(){

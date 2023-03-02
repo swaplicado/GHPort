@@ -14,6 +14,7 @@ var appTypeSpecialSeason = new Vue({
         color: 'priority_1',
         text_color: 'white',
         description: null,
+        hexColor: '#000000',
     },
     mounted(){
 
@@ -31,9 +32,10 @@ var appTypeSpecialSeason = new Vue({
                 this.priority = 1;
                 this.color = 'priority_1';
                 this.text_color = 'white';
+                this.hexColor = '#000000';
                 this.description = null;
                 this.checkLastPriority();
-                this.changeColor();
+                // this.changeColor();
                 if(this.priority >= 5){
                     SGui.showMessage('Solo puedes agregar 5 tipos de temporada especial', 'Elimina un registro para continuar', 'info')
                     return;
@@ -43,7 +45,8 @@ var appTypeSpecialSeason = new Vue({
                 this.name = data[this.indexes['name']];
                 this.key_code = data[this.indexes['key_code']];
                 this.priority = data[this.indexes['priority']];
-                this.color = data[this.indexes['color']];
+                // this.color = data[this.indexes['color']];
+                this.hexColor = data[this.indexes['color']];
                 this.text_color = data[this.indexes['priority']] > 3 ? 'white' : 'black';
                 this.description = data[this.indexes['description']];
                 this.priorityclass = 'priority_' + this.priority;
@@ -60,7 +63,7 @@ var appTypeSpecialSeason = new Vue({
                 var route =  this.oData.SeasonTypeUpdateRoute;
             }
 
-            this.changeColor();
+            // this.changeColor();
 
             axios.post(route, {
                 'id_special_season_type': this.id_special_season_type,
@@ -69,6 +72,7 @@ var appTypeSpecialSeason = new Vue({
                 'priority': this.priority,
                 'description': this.description,
                 'color': this.color,
+                'hexColor': this.hexColor,
             })
             .then(result => {
                 let data = result.data;
@@ -143,26 +147,7 @@ var appTypeSpecialSeason = new Vue({
 
             for (let i = 0; i < dataSeasonType.length; i++) {
                 let cell = table['table_special_season_types'].cell(i, this.indexes['priority']).node();
-                switch (dataSeasonType[i][this.indexes['priority']]) {
-                    case 1:
-                        $( cell ).addClass( 'priority_1' );
-                        break;
-                    case 2:
-                        $( cell ).addClass( 'priority_2' );
-                        break;
-                    case 3:
-                        $( cell ).addClass( 'priority_3' );
-                        break;
-                    case 4:
-                        $( cell ).addClass( 'priority_4' );
-                        break;
-                    case 5:
-                        $( cell ).addClass( 'priority_5' );
-                        break;
-                
-                    default:
-                        break;
-                }
+                $(cell).css('background-color', dataSeasonType[i][1]);
             }
 
         },

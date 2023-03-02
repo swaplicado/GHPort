@@ -10,7 +10,7 @@ use App\Models\Adm\SpecialType;
 class SpecialTypeController extends Controller
 {
     public function index(){
-        $lSpecialType = SpecialType::where('is_deleted', 0)->get();
+        $lSpecialType = SpecialType::where('is_deleted', 0)->orderBy('priority')->get();
         $config = \App\Utils\Configuration::getConfigurations();
         $lSituation = $config->lSituation;
         foreach($lSpecialType as $st){
@@ -30,11 +30,20 @@ class SpecialTypeController extends Controller
             $oSpecialType->name = $request->name;
             $oSpecialType->code = $request->code;
             $oSpecialType->situation = $request->situation_id;
+            $oSpecialType->priority = array_search('0', array_column($request->lOrder, 'id'));
             $oSpecialType->created_by = \Auth::user()->id;
             $oSpecialType->updated_by = \Auth::user()->id;
             $oSpecialType->save();
 
-            $lSpecialType = SpecialType::where('is_deleted', 0)->get();
+            foreach($request->lOrder as $index => $item){
+                if($item['id'] != 0){
+                    $oSpecialType = SpecialType::findOrFail($item['id']);
+                    $oSpecialType->priority = $index + 1;
+                    $oSpecialType->update();
+                }
+            }
+
+            $lSpecialType = SpecialType::where('is_deleted', 0)->orderBy('priority')->get();
             $config = \App\Utils\Configuration::getConfigurations();
             $lSituation = $config->lSituation;
             foreach($lSpecialType as $st){
@@ -59,7 +68,7 @@ class SpecialTypeController extends Controller
             $oSpecialType->situation = $request->situation_id;
             $oSpecialType->update();
 
-            $lSpecialType = SpecialType::where('is_deleted', 0)->get();
+            $lSpecialType = SpecialType::where('is_deleted', 0)->orderBy('priority')->get();
             $config = \App\Utils\Configuration::getConfigurations();
             $lSituation = $config->lSituation;
             foreach($lSpecialType as $st){
@@ -67,6 +76,13 @@ class SpecialTypeController extends Controller
                 $text = $lSituation[$index]->text;
                 $st->situation_name = $text;
             }
+
+            foreach($request->lOrder as $index => $item){
+                $oSpecialType = SpecialType::findOrFail($item['id']);
+                $oSpecialType->priority = $index + 1;
+                $oSpecialType->update();
+            }
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();

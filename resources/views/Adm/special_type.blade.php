@@ -2,6 +2,11 @@
 
 @section('headStyles')
 <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
+<style>
+    #sortable { list-style-type: none; margin: 0; padding: 0; }
+    #sortable li { margin: 0 3px 3px 3px; padding-left: 1.5em; font-size: 1.4em; background-color: #C4C4C4; }
+    #sortable li span { position: absolute; margin-left: -1.3em; }
+</style>
 @endsection
 
 @section('headJs')
@@ -26,6 +31,7 @@
                 'name': 2,
                 'code': 3,
                 'situation': 4,
+                'priority': 5,
             }
         }
         var oServerData = new GlobalData();
@@ -47,23 +53,44 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <label for="" class="form-label">Nombre de la solicitud especial: </label>
-                            <input type="text" class="form-control" name="name_special" v-model="name">
+                            <input type="text" class="form-control" name="name_special" v-model="name" v-on:change="addToList();">
                         </div>
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <label for="" class="form-label">Situación de la solicitud especial: </label>
                             <select class="select2-class" name="" id="sel_situation" style="width: 100%;"></select>
                         </div>
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <label for="" class="form-label">Clave de la solicitud especial: </label>
                             <input type="text" class="form-control" name="code_special" v-model="code">
+                        </div>
+                    </div>
+                    <!-- <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="" class="inline">Agregar a orden de prioridad:</label>
+                            <button type="button" class="btn btn-primary" v-on:click="addToList();"><span class="bx bx-plus"></span></button>
+                        </div>
+                    </div> -->
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="">Orden de prioridad:</label>
+                            <ul id="sortable">
+                                <template v-for="special in lSpecialTypeNewOrder">
+                                    <li class="ui-state-default" :data-id="special.id_special_type" title="Arrastre y suelte para reordenar">
+                                    <span class="bx bx-move-vertical" style="margin-top: 3px;"></span>    
+                                        @{{special.name}}
+                                    </li>
+                                </template>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -96,6 +123,7 @@
                         <th>Nombre</th>
                         <th>Clave</th>
                         <th>Situación</th>
+                        <th>Prioridad</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,6 +133,7 @@
                         <td>@{{special.name}}</td>
                         <td>@{{special.code}}</td>
                         <td>@{{special.situation_name}}</td>
+                        <td>@{{special.priority}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -122,6 +151,7 @@
                                             'crear_modal' => true,
                                             'edit_modal' => true,
                                             'delete' => true,
+                                            'noSort' => true,
                                         ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_special_type.js') }}"></script>
 @endsection

@@ -34,6 +34,7 @@ var appSpecialSeason = new Vue({
                 'Noviembre',
                 'Diciembre'
             ],
+        SColorSelector: new SColorSelector(),
     },
     mounted(){
         let self = this;
@@ -197,6 +198,8 @@ var appSpecialSeason = new Vue({
                             if(oSpecialSeason != undefined && oSpecialSeason != null){
                                 for (const oSeason of oSpecialSeason) {
                                     seasons[oSeason.month] = {
+                                                        textColor: this.SColorSelector.invertColor(oSeason.color, true),
+                                                        color: oSeason.color,
                                                         class: oSeason.color,
                                                         priority: oSeason.priority,
                                                         text: oSeason.name,
@@ -209,7 +212,10 @@ var appSpecialSeason = new Vue({
                                 for (let i = 0; i < this.months.length; i++) {
                                     let res = keys.find(element => element == this.months[i]);
                                     if(res == undefined){
-                                        seasons[this.months[i]] = { class: 'priority_0',
+                                        seasons[this.months[i]] = { 
+                                                                    textColor: 'black',
+                                                                    color: 'white',
+                                                                    class: 'priority_0',
                                                                     priority: 0,
                                                                     text: '',
                                                                     season_id: null,
@@ -220,7 +226,10 @@ var appSpecialSeason = new Vue({
                                 }
                             }else{
                                 for (let i = 0; i < this.months.length; i++) {
-                                    seasons[this.months[i]] = { class: 'priority_0',
+                                    seasons[this.months[i]] = { 
+                                                                textColor: 'black',
+                                                                color: 'white',
+                                                                class: 'priority_0',
                                                                 priority: 0,
                                                                 text: '',
                                                                 season_id: null,
@@ -257,12 +266,14 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_1';
                         this.table_class[key][index].text = result.name;
-                        // this.table_class[key][index].season_id = result.id_special_season;
+                        this.table_class[key][index].color = result.color;
+                        this.table_class[key][index].textColor = this.SColorSelector.invertColor(result.color, true);
                     }else{
                         this.table_class[key][index].priority = 0;
                         this.table_class[key][index].class = 'priority_0';
                         this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
+                        this.table_class[key][index].color = 'white';
+                        this.table_class[key][index].textColor = 'black';
                     }
                     break;
 
@@ -272,17 +283,15 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_2';
                         this.table_class[key][index].text = result.name;
-                        // this.table_class[key][index].season_id = result.id_special_season;
+                        this.table_class[key][index].color = result.color;
+                        this.table_class[key][index].textColor = this.SColorSelector.invertColor(result.color, true);
                     }else{
                         this.table_class[key][index].priority = 0;
                         this.table_class[key][index].class = 'priority_0';
                         this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
+                        this.table_class[key][index].color = 'white';
+                        this.table_class[key][index].textColor = 'black';
                     }
-                        // this.table_class[key][index].priority = 0;
-                        // this.table_class[key][index].class = 'priority_0';
-                        // this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
                     break;
 
                 case 2:
@@ -291,12 +300,14 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_3';
                         this.table_class[key][index].text = result.name;
-                        // this.table_class[key][index].season_id = result.id_special_season;
+                        this.table_class[key][index].color = result.color;
+                        this.table_class[key][index].textColor = this.SColorSelector.invertColor(result.color, true);
                     }else{
                         this.table_class[key][index].priority = 0;
                         this.table_class[key][index].class = 'priority_0';
                         this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
+                        this.table_class[key][index].color = 'white';
+                        this.table_class[key][index].textColor = 'black';
                     }
                     break;
 
@@ -306,12 +317,14 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_4';
                         this.table_class[key][index].text = result.name;
-                        // this.table_class[key][index].season_id = result.id_special_season;
+                        this.table_class[key][index].color = result.color;
+                        this.table_class[key][index].textColor = this.SColorSelector.invertColor(result.color, true);
                     }else{
                         this.table_class[key][index].priority = 0;
                         this.table_class[key][index].class = 'priority_0';
                         this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
+                        this.table_class[key][index].color = 'white';
+                        this.table_class[key][index].textColor = 'black';
                     }
                     break;
 
@@ -321,39 +334,32 @@ var appSpecialSeason = new Vue({
                         this.table_class[key][index].priority++;
                         this.table_class[key][index].class = 'priority_5';
                         this.table_class[key][index].text = result.name;
-                        // this.table_class[key][index].season_id = result.id_special_season;
+                        this.table_class[key][index].color = result.color;
+                        this.table_class[key][index].textColor = this.SColorSelector.invertColor(result.color, true);
                     }else{
                         this.table_class[key][index].priority = 0;
                         this.table_class[key][index].class = 'priority_0';
                         this.table_class[key][index].text = '';
-                        // this.table_class[key][index].season_id = '';
+                        this.table_class[key][index].color = 'white';
+                        this.table_class[key][index].textColor = 'black';
                     }
                     break;
 
                 case 5:
-                    // result = this.lSpecialSeasonType.find(({ priority }) => priority === 5);
-                    // if(result != undefined && result != null){
-                    //     this.table_class[key][index].priority++;
-                    //     this.table_class[key][index].class = 'priority_5';
-                    //     this.table_class[key][index].text = result.name;
-                    //     // this.table_class[key][index].season_id = result.id_special_season;
-                    // }else{
-                    //     this.table_class[key][index].priority = 0;
-                    //     this.table_class[key][index].class = 'priority_0';
-                    //     this.table_class[key][index].text = '';
-                    //     // this.table_class[key][index].season_id = '';
-                    // }
                     this.table_class[key][index].priority = 0;
                     this.table_class[key][index].class = 'priority_0';
                     this.table_class[key][index].text = '';
                     this.table_class[key][index].season_id = '';
+                    this.table_class[key][index].color = 'white';
+                    this.table_class[key][index].textColor = 'black';
                     break;
             
                 default:
                     this.table_class[key][index].priority = 0;
                     this.table_class[key][index].class = 'priority_0';
                     this.table_class[key][index].text = '';
-                    // this.table_class[key][index].season_id = '';
+                    this.table_class[key][index].color = 'white';
+                    this.table_class[key][index].textColor = 'black';
                     break;
             }
             this.$forceUpdate();

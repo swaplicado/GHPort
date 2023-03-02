@@ -9,6 +9,7 @@ var appMyVacations = new Vue({
         oCopyUser: null,
         lEmployees: [],
         lHolidays: oServerData.lHolidays,
+        lTemp: oServerData.lTemp,
         startDate: null,
         endDate: null,
         returnDate: null,
@@ -111,6 +112,7 @@ var appMyVacations = new Vue({
             .then(result => {
                 let data = result.data;
                 if(data.success){
+                    this.lTemp = data.lTemp;
                     this.tempData = data;
                     this.year = data.year;
                     this.initialCalendarDate = data.initialCalendarDate;
@@ -422,6 +424,7 @@ var appMyVacations = new Vue({
         async showModal(data = null){
             $('#clear').trigger('click');
             await this.getEmpApplicationsEA(this.oUser.id);
+            this.vacationUtils.createClass(this.lTemp);
             if(data != null){
                 this.newData = false;
                 await this.getlDays(data[this.indexes.id]);
@@ -539,13 +542,16 @@ var appMyVacations = new Vue({
                 this.is_past = true;
             }
 
-            for(let oSeason of dateRangePickerArraySpecialSeasons){
-                if(moment(oSeason.date, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
-                    message = message + 'El dia: ' + this.oDateUtils.formatDate(oSeason.date, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name + "\n";
-                    is_special = true;
-                    this.is_normal = false;
-                    this.is_season_special = true;
-                    break;
+            for(let oSeason of this.lTemp){
+                for(let day of oSeason.lDates){
+                    if(moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                        // message = message + 'El dia: ' + this.oDateUtils.formatDate(day, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name + "\n";
+                        message = message + 'Estas tomando días en temporada especial ' + oSeason.name + "\n";
+                        is_special = true;
+                        this.is_normal = false;
+                        this.is_season_special = true;
+                        break;
+                    }
                 }
             }
 
@@ -907,7 +913,7 @@ var appMyVacations = new Vue({
                 let data = response.data;
                 if(data.success){
                     dateRangePickerArrayApplications = data.arrAplications;
-                    dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
+                    // dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
                     this.applicationsEA = data.arrAplications;
                     swal.close();
                     resolve(dateRangePickerArrayApplications);

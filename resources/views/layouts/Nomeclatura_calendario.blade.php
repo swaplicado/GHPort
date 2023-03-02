@@ -14,51 +14,35 @@
             <tbody>
                 <tr>
                     <td style="background-color: #49e"></td>
-                    <td>(Solicitud de vacaciones actual)</td>
+                    <td>&nbsp (Solicitud de vacaciones actual)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #e0e0e0b1"></td>
-                    <td>(Día inhábil)</td>
+                    <td>&nbsp (Día inhábil)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #9f55d4"></td>
-                    <td>(Día festivo)</td>
+                    <td>&nbsp (Día festivo)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #f590eb"></td>
-                    <td>(Solicitud de vacaciones)</td>
+                    <td>&nbsp (Solicitud de vacaciones)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #ffe684"></td>
-                    <td>(Día actual)</td>
+                    <td>&nbsp (Día actual)</td>
                 </tr>
                 <tr>
                     <td><img src="{{asset('img/confetti.png')}}" width="30px" height="30px"></td>
-                    <td>(Aniversario)</td>
+                    <td>&nbsp (Aniversario)</td>
                 </tr>
                 <tr>
                     <td><img src="{{asset('img/birthday-cake.png')}}" width="30px" height="30px"></td>
-                    <td>(Cumpleaños)</td>
+                    <td>&nbsp (Cumpleaños)</td>
                 </tr>
-                <tr>
-                    <td style="background-color: #66FF66"></td>
-                    <td>(Temporada 5)</td>
-                </tr>
-                <tr>
-                    <td style="background-color: #00FF00"></td>
-                    <td>(Temporada 4)</td>
-                </tr>
-                <tr>
-                    <td style="background-color: #00CC00"></td>
-                    <td>(Temporada 3)</td>
-                </tr>
-                <tr>
-                    <td style="background-color: #009900"></td>
-                    <td>(Temporada 2)</td>
-                </tr>
-                <tr>
-                    <td style="background-color: #006600"></td>
-                    <td>(Temporada 1)</td>
+                <tr v-for="temp in lTemp">
+                    <td v-bind:style="{backgroundColor: temp.color}"></td>
+                    <td>&nbsp @{{temp.name}}</td>
                 </tr>
             </tbody>
         </table>

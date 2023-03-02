@@ -12686,7 +12686,7 @@ body.sidebar-toggled footer.sticky-footer {
     text-decoration: black;
 }
 
-.priority_0 {
+/* .priority_0 {
     background-color: white;
     color: black;
 }
@@ -12707,7 +12707,7 @@ body.sidebar-toggled footer.sticky-footer {
 }
 .priority_5 {
     background-color: #66FF66;
-}
+} */
 
 [data-page]{
     /* position:fixed; or absolute if the content exceeds the height of the page

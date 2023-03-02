@@ -72,10 +72,10 @@ class SDateRangePicker {
                 var _tooltip = '';
                 if(table[table_id].row('.selected').data() != undefined){
                     if(table[table_id].row('.selected').data()[payment_frec_index] == const_QUINCENA){
-                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
-                        if(result != undefined){
-                            _class = result.color;
-                            _tooltip = _tooltip + result.name + ' ';
+                        let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                        if(index > -1){
+                            _class = 'priority_' + app.lTemp[index].priority;
+                            _tooltip = _tooltip + app.lTemp[index].name + '. ';
                         }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
@@ -98,10 +98,10 @@ class SDateRangePicker {
                             _tooltip = _tooltip + 'Cumpleaños. ';
                         }
                     } else {
-                        let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
-                        if(result != undefined){
-                            _class = result.color;
-                            _tooltip = _tooltip + result.name + ' ';
+                        let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                        if(index > -1){
+                            _class = 'priority_' + app.lTemp[index].priority;
+                            _tooltip = _tooltip + app.lTemp[index].name + '. ';
                         }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
@@ -212,10 +212,10 @@ class SDateRangePicker {
                 var _class = '';
                 var _tooltip = '';
                 if(user_payment_frec_id == const_QUINCENA){
-                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));    
-                    if(result != undefined){
-                        _class = result.color;
-                        _tooltip = _tooltip + result.name + ' ';
+                    let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                    if(index > -1){
+                        _class = 'priority_' + app.lTemp[index].priority;
+                        _tooltip = _tooltip + app.lTemp[index].name + '. ';
                     }
                     if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
@@ -238,10 +238,10 @@ class SDateRangePicker {
                         _tooltip = _tooltip + 'Cumpleaños. ';
                     }
                 } else {
-                    let result = dateRangePickerArraySpecialSeasons.find(({ date }) => date == moment(t.getTime()).format('YYYY-MM-DD'));
-                    if(result != undefined){
-                        _class = result.color;
-                        _tooltip = _tooltip + result.name + ' ';
+                    let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                    if(index > -1){
+                        _class = 'priority_' + app.lTemp[index].priority;
+                        _tooltip = _tooltip + app.lTemp[index].name + '. ';
                     }
                     if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
@@ -289,4 +289,11 @@ class SDateRangePicker {
             dateRangePickerClearValue();
         });
     }
+
+    // createClass(priority, color){
+    //     var style = document.createElement('style');
+    //     style.type = 'text/css';
+    //     style.innerHTML = '.priority_' + priority + '{ background-color: ' + color + ';' + '}';
+    //     document.getElementsByTagName('head')[0].appendChild(style);
+    // }
 }
