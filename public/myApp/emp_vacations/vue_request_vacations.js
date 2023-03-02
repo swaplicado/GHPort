@@ -283,12 +283,12 @@ var appRequestVacation = new Vue({
             table['table_requestVac'].rows.add(dataReq).draw();
 
 
-            for (let i = 0; i < dataIsnormal.length; i++) {
-                let row = table['table_requestVac'].row(i).nodes().to$();
-                if(!dataIsnormal[i]){
-                    $(row).addClass('noSelectableRow');
-                }
-            }
+            // for (let i = 0; i < dataIsnormal.length; i++) {
+            //     let row = table['table_requestVac'].row(i).nodes().to$();
+            //     if(!dataIsnormal[i]){
+            //         $(row).addClass('noSelectableRow');
+            //     }
+            // }
         },
 
         filterYear(){
