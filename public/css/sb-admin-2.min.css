@@ -11555,7 +11555,8 @@ a:focus {
     position: absolute;
     left: calc(6.5rem + 1.5rem / 2);
     z-index: 1;
-    top: 2px
+    top: 2px;
+    background-color: #4e73df;
 }
 
 .sidebar .nav-item .collapse .collapse-inner {
