@@ -292,7 +292,11 @@ class EmployeeVacationUtils {
             $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear);
         }
         // $oNextVacation = EmployeeVacationUtils::getProxVacation($id);
-        $oNextVacation = EmployeeVacationUtils::getProxVacationWithApplications($id);
+        if(count($user->vacation) > 0){
+            $oNextVacation = EmployeeVacationUtils::getProxVacationWithApplications($id);
+        }else{
+            $oNextVacation = null;
+        }
         
         $user->actual_vac_days = 0;
         $user->prox_vac_days = 0;
