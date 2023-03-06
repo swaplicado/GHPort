@@ -22,7 +22,7 @@ class Authenticate extends Middleware
         $uri = preg_split("/\//", $uri);
         
         if (! $request->expectsJson()) {
-            if(count($uri) > 1){
+            if(count($uri) > 3){
                 $ruta = route('login', ['idRoute' => $uri[2], 'idApp' => $uri[3]]);
             }else{
                 $ruta = route('login', ['idRoute' => $uri[2]]);
