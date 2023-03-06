@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Http\Controllers\Sys\SyncController;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -106,6 +107,35 @@ class LoginController extends Controller
         }
         session()->put('lDelegations', $lDelegations);
 
-        return redirect(route('home'));
+        // return redirect(route('home'));
+        return null;
+    }
+
+    public function login(Request $request, $idRoute = null, $idApp = null){
+        $request->validate([
+            "username" => "required",
+            "password" => "required"
+        ]);
+
+        $userCredentials = $request->only('username', 'password');
+
+        if (Auth::attempt($userCredentials)) {
+            $this->authenticated($request, Auth::user());
+            $sync = new SyncController();
+            $sync->toSynchronize(false);
+            if(!is_null($idRoute) && $idRoute != ""){
+                return redirect("/$idRoute/$idApp");
+            }else{
+                return redirect()->route('home');
+            }
+        }
+        else {
+            return back()->with('error', 'Whoops! invalid username or password.');
+        }
+    }
+
+    public function showLoginForm($route = null, $idApp = null){
+        return view('auth.login')->with('idRoute', $route)
+                                ->with('idApp', $idApp);
     }
 }

@@ -14,8 +14,20 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
+        $uri = $request->getRequestUri();
+        $check = "/";
+        if ($uri[0] == $check) {
+            $uri = substr_replace($uri, "", 0, 1);
+        }
+        $uri = preg_split("/\//", $uri);
+        
         if (! $request->expectsJson()) {
-            return route('login');
+            if(count($uri) > 1){
+                $ruta = route('login', ['idRoute' => $uri[0], 'idApp' => $uri[1]]);
+            }else{
+                $ruta = route('login', ['idRoute' => $uri[0]]);
+            }
+            return $ruta;
         }
     }
 }

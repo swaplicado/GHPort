@@ -8,7 +8,7 @@
                 <div class="card-header text-white" style="background-color: #4e73df;" >Acceso</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login', ['idRoute' => $idRoute, 'idApp' => $idApp]) }}">
                         @csrf
 
                         <div class="form-group row">

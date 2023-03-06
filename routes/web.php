@@ -23,6 +23,9 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('passw
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 
+Route::get('login/{idRoute?}/{idApp?}', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login/{idRoute?}/{idApp?}', 'Auth\LoginController@login')->name('login');
+
 Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('/logout', 'Auth\LoginController@logout');
     Route::get('home', 'Pages\HomeController@index')->name('home');
