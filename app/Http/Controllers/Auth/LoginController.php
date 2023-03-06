@@ -130,7 +130,7 @@ class LoginController extends Controller
             }
         }
         else {
-            return back()->with('error', 'Whoops! invalid username or password.');
+            return back()->with('message', 'usuario o contraseña invalido');
         }
     }
 
