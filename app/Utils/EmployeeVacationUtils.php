@@ -14,6 +14,7 @@ class EmployeeVacationUtils {
      */
     public static function getlEmployees($arrOrgJobs){
         $lEmployees = \DB::table('users as u')
+                        ->leftJoin('users_vs_photos as up', 'up.user_id', '=', 'u.id')
                         ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
                         ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id')
                         ->leftJoin('cat_vacation_plans as vp', 'vp.id_vacation_plan', '=', 'u.vacation_plan_id')
@@ -47,6 +48,7 @@ class EmployeeVacationUtils {
                             'd.department_name_ui',
                             'vp.id_vacation_plan',
                             'vp.vacation_plan_name',
+                            'up.photo_base64_n as photo64',
                         )
                         ->get();
 
@@ -227,10 +229,17 @@ class EmployeeVacationUtils {
                         })
                         ->select(
                             'a.*',
-                            'at.*',
+                            'at.id_application_vs_type',
+                            'at.id_application_vs_type',
+                            'at.application_id',
+                            'at.is_normal',
+                            'at.is_past',
+                            'at.is_advanced',
+                            'at.is_proportional',
+                            'at.is_season_special',
+                            'u.full_name_ui as user_apr_rej_name',
                             'as.applications_st_name',
                             'as.applications_st_code',
-                            'u.full_name_ui as user_apr_rej_name',
                         )
                         ->get();
 
@@ -250,6 +259,7 @@ class EmployeeVacationUtils {
         $config = \App\Utils\Configuration::getConfigurations();
 
         $user = \DB::table('users as u')
+                    ->leftJoin('users_vs_photos as up', 'up.user_id', '=', 'u.id')
                     ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
                     ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id')
                     ->leftJoin('cat_vacation_plans as vp', 'vp.id_vacation_plan', '=', 'u.vacation_plan_id')
@@ -283,6 +293,7 @@ class EmployeeVacationUtils {
                         'd.department_name_ui',
                         'vp.id_vacation_plan',
                         'vp.vacation_plan_name',
+                        'up.photo_base64_n as photo64',
                     )
                     ->first();
 
@@ -819,7 +830,11 @@ class EmployeeVacationUtils {
 
         foreach($lUsers as $u){
             $u->employee = $u->full_name_ui;
-            $u->applications = $lApplications->where('user_id', $u->id);
+            $arr = [];
+            foreach($lApplications->where('user_id', $u->id) as $app){
+                $arr[] = $app;
+            }
+            $u->applications = $arr; 
         }
 
         return $lUsers;

@@ -3,6 +3,8 @@ var appRequestVacation = new Vue({
     data: {
         oData: oServerData,
         oDateUtils: new SDateUtils(),
+        oUsersUtils: new SUsersUtils(),
+        oUser: null,
         indexes: oServerData.indexesRequest,
         myManagers: oServerData.myManagers,
         selectedmanager: null,
@@ -30,6 +32,7 @@ var appRequestVacation = new Vue({
         lNoBussinesDay: [],
         noBussinesDayIndex: 0,
         lTemp: [],
+        emp_comments: null,
     },
     mounted(){
         var self = this;
@@ -76,6 +79,7 @@ var appRequestVacation = new Vue({
         },
 
         async showAcceptRegistry(data){
+            $('#two-inputs').data('dateRangePicker').clear();
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
                 return;
@@ -92,6 +96,7 @@ var appRequestVacation = new Vue({
             this.startDate = data[this.indexes.start_date];
             this.endDate = data[this.indexes.end_date];
             this.takedDays = data[this.indexes.total_days];
+            this.emp_comments = data[this.indexes.comments];
             this.isApprove = true;
             this.take_holidays = parseInt(data[this.indexes.take_holidays]);
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
@@ -107,10 +112,13 @@ var appRequestVacation = new Vue({
         },
 
         async showRejectRegistry(data){
+            SGui.showWaiting(10000);
+            $('#two-inputs').data('dateRangePicker').clear();
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas', 'warning');
                 return;
             }
+            this.oUser = await this.oUsersUtils.getUserData(this.oData.getUserDataRoute, data[this.indexes.user_id]);
             await this.getEmpApplicationsEA(data[this.indexes.user_id]);
             await this.getlDays(data[this.indexes.id]);
             this.vacationUtils.createClass(this.lTemp);
@@ -123,6 +131,7 @@ var appRequestVacation = new Vue({
             this.startDate = data[this.indexes.start_date];
             this.endDate = data[this.indexes.end_date];
             this.takedDays = data[this.indexes.total_days];
+            this.emp_comments = data[this.indexes.comments];
             this.isApprove = false;
             this.take_holidays = parseInt(data[this.indexes.take_holidays]);
             this.take_rest_days = parseInt(data[this.indexes.take_rest_days]);
@@ -135,10 +144,10 @@ var appRequestVacation = new Vue({
             this.totCalendarDays = (moment(moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD').diff(moment(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD'), 'days') + 1);
             // this.reMaplDays();
             $('#modal_solicitud').modal('show');
+            Swal.close();
         },
 
         getlDays(id){
-            SGui.showWaiting(3000);
             return new Promise((resolve) => 
             axios.post(this.oData.getRequestlDaysRoute, {
                 'id_application': id,
@@ -151,17 +160,14 @@ var appRequestVacation = new Vue({
                         oDates[i].date = this.oDateUtils.formatDate(oDates[i].date, 'ddd DD-MMM-YYYY');
                     }
                     this.lDays = oDates;
-                    swal.close();
                     resolve(data.lDays);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
-                    swal.close();
                     resolve(null);
                 }
             })
             .catch( function (error){
                 console.log(error);
-                swal.close();
                 resolve(error);
             }));
         },
@@ -260,10 +266,10 @@ var appRequestVacation = new Vue({
                             rec.take_rest_days,
                             rec.sup_comments_n,
                             rec.user_apr_rej_id,
-                            rec.folio_n,
-                            rec.user_apr_rej_name,
                             emp.employee,
+                            rec.folio_n,
                             this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
+                            rec.user_apr_rej_name,
                             ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
                                 this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
@@ -271,10 +277,10 @@ var appRequestVacation = new Vue({
                                     '')),
                             this.oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY'),
                             this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),
-                            this.oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY'),
+                            this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                             rec.total_days,
-                            rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
                             this.specialType(rec),
+                            rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
                             rec.emp_comments_n
                         ]
                     );
@@ -350,7 +356,6 @@ var appRequestVacation = new Vue({
         },
 
         getEmpApplicationsEA(user_id){
-            SGui.showWaiting(3000);
             return new Promise((resolve) => 
                 axios.post(this.oData.applicationsEARoute, {
                     'user_id':  user_id
@@ -362,17 +367,14 @@ var appRequestVacation = new Vue({
                         dateRangePickerArrayApplications = data.arrAplications;
                         dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
                         this.lTemp = data.lTemp;
-                        swal.close();
                         resolve(dateRangePickerArrayApplications);
                     }else{
                         SGui.showMessage('', data.message, data.icon);
-                        swal.close();
                         resolve(null);
                     }
                 })
                 .catch( function (error){
                     console.log(error);
-                    swal.close();
                     resolve(error);
                 })
             );
@@ -444,23 +446,23 @@ var appRequestVacation = new Vue({
         specialType(data){
             let type = "";
             if(data.is_normal && !data.is_past && !data.is_advanced && !data.is_proportional && !data.is_season_special){
-                type = type + "Normal.\n";
+                type = type + "Normal\n";
             }
 
             if(data.is_past){
-                type = type + "Días pasados.\n";
+                type = type + "Días pasados\n";
             }
 
             if(data.is_advanced){
-                type = type + "Días adelantados.\n";
+                type = type + "Días adelantados\n";
             }
 
             if(data.is_proportional){
-                type = type + "Días proporcionales.\n";
+                type = type + "Días proporcionales\n";
             }
 
             if(data.is_season_special){
-                type = type + "Temporada especial.\n";
+                type = type + "Temporada especial\n";
             }
 
             return type;

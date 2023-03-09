@@ -343,7 +343,7 @@ var appMyVacations = new Vue({
                 "order": [1, 'desc'],
                 "columnDefs": [
                     {
-                        "targets": [0,2,3,4,5,6],
+                        "targets": [0,2,3,4,5,6,17],
                         "visible": false,
                         "searchable": false,
                         "orderable": false,
@@ -561,11 +561,11 @@ var appMyVacations = new Vue({
         specialType(data){
             let type = "";
             if(data.is_normal){
-                type = type + "Normal.\n";
+                type = type + "Normal\n";
             }
 
             if(data.is_past){
-                type = type + "Días pasados.\n";
+                type = type + "Días pasados\n";
             }
 
             if(data.is_advanced){
@@ -573,11 +573,11 @@ var appMyVacations = new Vue({
             }
 
             if(data.is_proportional){
-                type = type + "Días proporcionales.\n";
+                type = type + "Días proporcionales\n";
             }
 
             if(data.is_season_special){
-                type = type + "Temporada especial.\n";
+                type = type + "Temporada especial\n";
             }
 
             return type;
@@ -716,8 +716,8 @@ var appMyVacations = new Vue({
                         rec.emp_comments_n,
                         rec.user_apr_rej_id,
                         rec.id_application_vs_type,
-                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.folio_n,
+                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.user_apr_rej_name,
                         ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
                             this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
@@ -728,8 +728,8 @@ var appMyVacations = new Vue({
                         this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),
                         this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                         rec.total_days,
-                        rec.applications_st_name,
                         this.specialType(rec),
+                        rec.applications_st_name,
                         rec.sup_comments_n,
                     ]
                 );

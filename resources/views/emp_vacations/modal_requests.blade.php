@@ -11,6 +11,31 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
+                        <div v-if="oUser != null" style="border-bottom: solid 1px rgba(0,0,0,.125);">
+                            <br>
+                            <table class="table">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Colaborador:</b>&nbsp</td>
+                                        <td>@{{oUser.full_name}}</td>
+                                        <td rowspan="3" style="text-align: center; vertical-align:middle;">
+                                            <img class="rounded-circle" :src="'data:image/jpg;base64,'+oUser.photo64" style="width:100px;height:100px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fecha de ingreso:</b>&nbsp</td>
+                                        <td>@{{oUser.benefits_date}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Antigüedad:</b>&nbsp</td>
+                                        <td>@{{oUser.antiquity}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
                         @include('layouts.Nomeclatura_calendario', ['id' => 'nomeclaturaRequest'])
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
@@ -41,22 +66,38 @@
                 <div class="card">
                     <div class="card-body">
                         <div>
-                            <label class="form-label" for="comments">Comentarios:</label>
-                            <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
+                            <table>
+                                <thead>
+                                    <th></th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Inicio:</b></td>
+                                        <td><input class="form-control" v-model="startDate" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Fin:</b></td>
+                                        <td><input class="form-control" v-model="endDate" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Regreso:</b></td>
+                                        <td><input class="form-control" v-model="returnDate" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Días efectivos:</b></td>
+                                        <td><input class="form-control" name="takedDays" type="number" v-model="takedDays" readonly></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Días calendario:</b></td>
+                                        <td><input class="form-control" name="totCalendarDays" type="number" v-model="totCalendarDays" readonly></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="takedDays" style="display: inline;">Dias efectivos:</label>
-                            <input class="form-control" name="takedDays" type="number" v-model="takedDays" readonly style="width: 10%; display: inline;">
-                        </div>
-                        <br>
-                        <div>
-                            <label class="form-label" for="totCalendarDays" style="display: inline;">Dias calendario:</label>
-                            <input class="form-control" name="totCalendarDays" type="number" v-model="totCalendarDays" readonly style="width: 10%; display: inline;">
-                        </div>
-                        <br>
-                        <div>
-                            <label class="form-label" for="listDays">Dias de vacaciones:</label>
+                            <label class="form-label" for="listDays"><b>Desglose de los días de vacaciones:</b></label>
                             <ol class="ulColumns3" name="listDays">
                                 <template v-for="(day, index) in lDays">
                                     <li v-bind:style="{'color': day.taked ? 'green' : 'red'}">
@@ -65,15 +106,15 @@
                                 </template>
                             </ol>
                         </div>
+                        <br>
                         <div>
-                            <label class="form-label" for="start_date" style="display: inline;">Fecha inicio:</label>
-                            <input class="form-control" v-model="startDate" readonly style="width: 20%; display: inline;">
-                            &nbsp;
-                            <label class="form-label" for="end_date" style="display: inline;">Fecha fin:</label>
-                            <input class="form-control" v-model="endDate" readonly style="width: 20%; display: inline;">
-                            &nbsp;
-                            <label class="form-label" for="return_date" style="display: inline;">Fecha regreso:</label>
-                            <input class="form-control" v-model="returnDate" readonly style="width: 20%; display: inline;">
+                            <label for="comentarios_emp"><b>Comentarios del colaborador:</b></label>
+                            <p>@{{emp_comments}}</p>
+                        </div>
+                        <br>
+                        <div>
+                            <label class="form-label" for="comments"><b>Comentarios:</b></label>
+                            <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
                         </div>
                     </div>
                 </div>

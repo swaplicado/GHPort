@@ -132,4 +132,6 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('SpecialTypeVsOrgChart/save', 'Adm\SpecialTypeVsOrgChartController@save')->name('SpecialTypeVsOrgChart_save');
     Route::post('SpecialTypeVsOrgChart/update', 'Adm\SpecialTypeVsOrgChartController@update')->name('SpecialTypeVsOrgChart_update');
     Route::post('SpecialTypeVsOrgChart/delete', 'Adm\SpecialTypeVsOrgChartController@delete')->name('SpecialTypeVsOrgChart_delete');
+
+    Route::post('getUserData', 'Utils\usersUtils@getUserData')->name('getUserData');
 });

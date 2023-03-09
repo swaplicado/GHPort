@@ -20,6 +20,7 @@ use Spatie\Async\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use \App\Utils\delegationUtils;
+use \App\Utils\folioUtils;
 
 class requestVacationsController extends Controller
 {
@@ -103,7 +104,7 @@ class requestVacationsController extends Controller
                                                                 SysConst::APPLICATION_RECHAZADO
                                                             ]
                                                         );
-            $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
+            // $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
         }
 
         $lEmpSpecial = EmployeeVacationUtils::getApplicationsTypeSpecial(
@@ -222,12 +223,12 @@ class requestVacationsController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            $data = json_decode($this->sendRequestVacation($application, json_decode($application->ldays)));
+            // $data = json_decode($this->sendRequestVacation($application, json_decode($application->ldays)));
 
-            if($data->code == 500 || $data->code == 550){
-                \DB::rollBack();
-                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            }
+            // if($data->code == 500 || $data->code == 550){
+            //     \DB::rollBack();
+            //     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            // }
 
             $employee = \DB::table('users')
                                 ->where('id', $request->id_user)

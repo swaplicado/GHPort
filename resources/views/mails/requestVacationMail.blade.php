@@ -41,7 +41,7 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div>
-                    <h3 class="inline">{{$employee->full_name}} solicitó las siguientes vacaciones.</h3>
+                    <h3 class="inline">{{$employee->full_name}} solicitó las siguientes vacaciones:</h3>
                 </div>
                 <br>
                 <div>
@@ -86,6 +86,15 @@
                     </ol>
                 </div>
                 <br>
+                <div>
+                    <label for="">Comentarios:</label>
+                        @if($emp_comments_n != null)
+                            <p>{{$emp_comments_n}}</p>
+                        @else
+                            <p>(Sin comentarios)</p>
+                        @endif
+                    </div>
+                    <br>
                 <div style="text-align: left">
                     <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
                     <br>

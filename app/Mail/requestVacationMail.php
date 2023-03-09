@@ -57,6 +57,7 @@ class requestVacationMail extends Mailable
                         ->with('application', $application)
                         ->with('employee', $employee)
                         ->with('lDays', $lDays)
-                        ->with('returnDate', $application->return_date);
+                        ->with('returnDate', $application->return_date)
+                        ->with('emp_comments_n', $application->emp_comments_n);
     }
 }

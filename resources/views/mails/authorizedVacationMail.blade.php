@@ -43,11 +43,11 @@
                 <div>
                     <h3>{{$employee->full_name}}
                         @if ($application->request_status_id == 3)
-                            su solicitud ha sido aprobada
+                            <span style="color: green">su solicitud ha sido aprobada:</span>
                         @elseif($application->request_status_id == 4)
-                            su solicitud ha sido rechazada
+                            <span style="color: red">su solicitud ha sido rechazada:</span>
                         @else
-                            comprobar el estatus de su solicitud presionando el botón "Ver mis solicitudes"
+                            comprobar el estatus de su solicitud presionando el botón "Ver mis solicitudes":
                         @endif
                     </h3>
                 </div>
@@ -94,6 +94,15 @@
                     </ol>
                 </div>
                 <br>
+                    <div>
+                        <label for="">Comentarios:</label>
+                        @if($sup_comments_n != null)
+                            <p>{{$sup_comments_n}}</p>
+                        @else
+                            <p>(Sin comentarios)</p>
+                        @endif
+                    </div>
+                    <br>
                 <div style="text-align: left">
                     <label class="form-label">Haz clic en la siguiente liga para revisar tus solicitudes:</label>
                     <br>
