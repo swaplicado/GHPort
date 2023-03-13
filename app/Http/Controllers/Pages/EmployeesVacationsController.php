@@ -97,6 +97,9 @@ class EmployeesVacationsController extends Controller
         return $lEmployees;
     }
 
+    /**
+     * Reporte todas las vacaciones
+     */
     public function allVacationsIndex(){
         $lEmployees = \DB::table('users')
                         ->where('is_delete', 0)
@@ -113,6 +116,9 @@ class EmployeesVacationsController extends Controller
                                                 ->with('year', $year);
     }
 
+    /**
+     * Reporte todas las vacaciones a partir de año
+     */
     public function allVacations(Request $request){
         try {
             $lEmployees = \DB::table('users')

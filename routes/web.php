@@ -134,4 +134,9 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('SpecialTypeVsOrgChart/delete', 'Adm\SpecialTypeVsOrgChartController@delete')->name('SpecialTypeVsOrgChart_delete');
 
     Route::post('getUserData', 'Utils\usersUtils@getUserData')->name('getUserData');
+
+    Route::get('report/myEmpVacations', 'Pages\ReportMyEmpVacations@index')->name('report_myEmpVacations');
+    Route::post('report/myEmpVacations_getLevelDown', 'Pages\ReportMyEmpVacations@getLevelDown')->name('report_getLevelDown');
+    Route::post('report/myEmpVacations_getLevelUp', 'Pages\ReportMyEmpVacations@getLevelUp')->name('report_getLevelUp');
+    Route::post('report/myEmpVacations_myEmpVacationsFilterYear', 'Pages\ReportMyEmpVacations@myEmpVacationsFilterYear')->name('report_myEmpVacationsFilterYear');
 });
