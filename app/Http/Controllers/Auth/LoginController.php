@@ -112,6 +112,10 @@ class LoginController extends Controller
     }
 
     public function login(Request $request, $idRoute = null, $idApp = null){
+        if (session()->has('key')) {
+            return redirect()->route('home');
+         }
+         
         $request->validate([
             "username" => "required",
             "password" => "required"
@@ -130,8 +134,16 @@ class LoginController extends Controller
             }
         }
         else {
-            return back()->with('message', 'usuario o contraseña invalido');
+            // return back()->with('message', 'usuario o contraseña invalido');
+            return $this->sendFailedLoginResponse($request);
         }
+    }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        throw ValidationException::withMessages([
+            $this->username() => [trans('auth.failed')],
+        ]);
     }
 
     public function showLoginForm($route = null, $idApp = null){

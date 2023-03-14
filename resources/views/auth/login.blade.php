@@ -8,7 +8,7 @@
                 <div class="card-header text-white" style="background-color: #4e73df;" >Acceso</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login', ['idRoute' => $idRoute, 'idApp' => $idApp]) }}">
+                    <form id="login_form" method="POST" action="{{ route('login', ['idRoute' => $idRoute, 'idApp' => $idApp]) }}">
                         @csrf
 
                         <div class="form-group row">
@@ -17,7 +17,7 @@
                             <div class="col-md-6">
                                 <input id="username" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
 
-                                @error('email')
+                                @error('username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -59,4 +59,24 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    function disableSubmitButton(form) {
+        form.addEventListener('submit', function() {
+            // Disable the submit button to prevent multiple submissions
+            var submitButton = form.querySelector('[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        var form = document.getElementById('login_form');
+        disableSubmitButton(form);
+    });
+</script>
+
 @endsection
