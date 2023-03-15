@@ -12,12 +12,12 @@ var app = new Vue({
     },
     methods: {
         sendRegistry(data){
+            let message = '¿Desea enviar el e-mail?';
             if(data[this.indexes.sys_mail_st_id] == this.constants.MAIL_ENVIADO){
-                SGui.showMessage('','Solo se pueden enviar e-mails con estatus NO ENVIADO y EN PROCESO', 'warning');
-                return
+                message = 'El correo ya ha sido enviado, ¿desea reenviarlo?';
             }
             Swal.fire({
-                title: '¿Desea enviar el e-mail?',
+                title: message,
                 html: data[this.indexes.Type_mail] + '<br>' + '<b>Fecha:</b> ' +  data[this.indexes.date_mail],
                 icon: 'warning',
                 showCancelButton: true,

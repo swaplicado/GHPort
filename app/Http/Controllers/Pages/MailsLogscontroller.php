@@ -16,15 +16,25 @@ use App\Utils\dateUtils;
 class MailsLogscontroller extends Controller
 {
     public function index(){
-        $lMails = \DB::table('mail_logs as ml')
-                    ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
-                    ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
-                    ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    // ->where('ml.created_by', \Auth::user()->id)
-                    ->where('ml.created_by', delegationUtils::getIdUser())
-                    ->where('ml.is_deleted', 0)
-                    ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
-                    ->get();
+        if(\Auth::user()->rol_id == 4){
+            $lMails = \DB::table('mail_logs as ml')
+                        ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                        ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                        ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                        ->where('ml.is_deleted', 0)
+                        ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                        ->get();
+        }else{
+            $lMails = \DB::table('mail_logs as ml')
+                        ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                        ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                        ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                        // ->where('ml.created_by', \Auth::user()->id)
+                        ->where('ml.created_by', delegationUtils::getIdUser())
+                        ->where('ml.is_deleted', 0)
+                        ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                        ->get();
+        }
 
         $constants = [
             'MAIL_EN_PROCESO' => SysConst::MAIL_EN_PROCESO,
@@ -111,15 +121,25 @@ class MailsLogscontroller extends Controller
         $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
         $mailLog->update();
 
-        $lMails = \DB::table('mail_logs as ml')
-                    ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
-                    ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
-                    ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    // ->where('ml.created_by', \Auth::user()->id)
-                    ->where('ml.created_by', delegationUtils::getIdUser())
-                    ->where('ml.is_deleted', 0)
-                    ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
-                    ->get();
+        if(\Auth::user()->rol_id == 4){
+            $lMails = \DB::table('mail_logs as ml')
+                        ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                        ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                        ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                        ->where('ml.is_deleted', 0)
+                        ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                        ->get();
+        }else{
+            $lMails = \DB::table('mail_logs as ml')
+                        ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                        ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                        ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                        // ->where('ml.created_by', \Auth::user()->id)
+                        ->where('ml.created_by', delegationUtils::getIdUser())
+                        ->where('ml.is_deleted', 0)
+                        ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                        ->get();
+        }
 
         return json_encode(['success' => true, 'message' => 'E-mail enviado con exito', 'icon' => 'success', 'lMails'=> $lMails]);
     }
@@ -127,8 +147,7 @@ class MailsLogscontroller extends Controller
     public function sendMailRequestVac($email, $application, $lDays){
         Mail::to($email)->send(new requestVacationMail(
                 $application->id_application,
-                // \Auth::user()->id,
-                delegationUtils::getIdUser(),
+                $application->user_id,
                 $lDays,
                 $application->return_date
             )
@@ -154,15 +173,25 @@ class MailsLogscontroller extends Controller
             return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => false]);
         }
 
-        $lMails = \DB::table('mail_logs as ml')
-                    ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
-                    ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
-                    ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    // ->where('ml.created_by', \Auth::user()->id)
-                    ->where('ml.created_by', delegationUtils::getIdUser())
-                    ->where('ml.is_deleted', 0)
-                    ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
-                    ->get();
+        if(\Auth::user()->rol_id == 4){
+            $lMails = \DB::table('mail_logs as ml')
+                        ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                        ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                        ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                        ->where('ml.is_deleted', 0)
+                        ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                        ->get();
+        }else{
+            $lMails = \DB::table('mail_logs as ml')
+                        ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                        ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                        ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                        // ->where('ml.created_by', \Auth::user()->id)
+                        ->where('ml.created_by', delegationUtils::getIdUser())
+                        ->where('ml.is_deleted', 0)
+                        ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                        ->get();
+        }
 
         return json_encode(['success' => true, 'message' => 'Registro eliminado con éxito', 'icon' => 'success', 'lMails' => $lMails]);
     }
@@ -173,16 +202,28 @@ class MailsLogscontroller extends Controller
             $startOfYear = Carbon::parse($date)->startOfYear()->toDateString();
             $endOfYear   = Carbon::parse($date)->endOfYear()->toDateString();
 
-            $lMails = \DB::table('mail_logs as ml')
-                    ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
-                    ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
-                    ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
-                    // ->where('ml.created_by', \Auth::user()->id)
-                    ->where('ml.created_by', delegationUtils::getIdUser())
-                    ->where('ml.is_deleted', 0)
-                    ->whereBetween('ml.date_log', [$startOfYear, $endOfYear])
-                    ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
-                    ->get();
+            if(\Auth::user()->rol_id == 4){
+                $lMails = \DB::table('mail_logs as ml')
+                            ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                            ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                            ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                            ->where('ml.is_deleted', 0)
+                            ->whereBetween('ml.date_log', [$startOfYear, $endOfYear])
+                            ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                            ->get();
+            }else{
+                $lMails = \DB::table('mail_logs as ml')
+                            ->Join('sys_mails_sts as ms', 'ml.sys_mails_st_id',  '=', 'ms.id_mail_st')
+                            ->Join('cat_mails_tps as mt', 'mt.id_mail_tp', '=', 'ml.type_mail_id')
+                            ->Join('users as u', 'u.id', '=', 'ml.to_user_id')
+                            // ->where('ml.created_by', \Auth::user()->id)
+                            ->where('ml.created_by', delegationUtils::getIdUser())
+                            ->where('ml.is_deleted', 0)
+                            ->whereBetween('ml.date_log', [$startOfYear, $endOfYear])
+                            ->select('ml.*', 'ms.mail_st_name', 'mt.mail_tp_name', 'u.full_name_ui')
+                            ->get();
+            }
+            
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
         }
