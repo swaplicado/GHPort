@@ -178,7 +178,7 @@
                         <th>Fecha inicio</th>
                         <th>Fecha fin</th>
                         <th>Fecha regreso</th>
-                        <th>Dias efictivos</th>
+                        <th>Dias efectivos</th>
                         <th>Tipo</th>
                         <th>Estatus</th>
                         <th>coment.</th>
@@ -403,7 +403,7 @@
                                 <th>Fecha incio</th>
                                 <th>Fecha fin</th>
                                 <th>Fecha regreso</th>
-                                <th>Dias efictivos</th>
+                                <th>Dias efectivos</th>
                                 <th>Tipo</th>
                                 <th>Estatus</th>
                                 <th>sup coment.</th>

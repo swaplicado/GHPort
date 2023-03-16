@@ -12,7 +12,6 @@
                 <div class="card">
                     <div class="card-body">
                         <div v-if="oUser != null" style="border-bottom: solid 1px rgba(0,0,0,.125);">
-                            <br>
                             <table class="table">
                                 <thead>
                                 </thead>
@@ -70,27 +69,31 @@
                                 <thead>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td><b>Inicio:</b></td>
+                                        <td><b>Fecha inicio:</b></td>
                                         <td><input class="form-control" v-model="startDate" readonly></td>
+                                        <td><p>&nbsp &nbsp</p></td>
+                                        <td><b>Días calendario:</b></td>
+                                        <td><input class="form-control" name="totCalendarDays" type="number" v-model="totCalendarDays" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Fin:</b></td>
+                                        <td><b>Fecha fin:</b></td>
                                         <td><input class="form-control" v-model="endDate" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td><b>Regreso:</b></td>
-                                        <td><input class="form-control" v-model="returnDate" readonly></td>
-                                    </tr>
-                                    <tr>
+                                        <td><p>&nbsp &nbsp</p></td>
                                         <td><b>Días efectivos:</b></td>
                                         <td><input class="form-control" name="takedDays" type="number" v-model="takedDays" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Días calendario:</b></td>
-                                        <td><input class="form-control" name="totCalendarDays" type="number" v-model="totCalendarDays" readonly></td>
+                                        <td><b>Fecha regreso:</b></td>
+                                        <td><input class="form-control" v-model="returnDate" readonly></td>
+                                        <td><p>&nbsp &nbsp</p></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -106,12 +109,11 @@
                                 </template>
                             </ol>
                         </div>
-                        <br>
                         <div>
                             <label for="comentarios_emp"><b>Comentarios del colaborador:</b></label>
-                            <p>@{{emp_comments}}</p>
+                            <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
+                            <p v-else>(Sin comentarios)</p>
                         </div>
-                        <br>
                         <div>
                             <label class="form-label" for="comments"><b>Comentarios:</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>

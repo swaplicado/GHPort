@@ -67,34 +67,38 @@
                                 <thead>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Inicio:</td>
+                                        <td><b>Fecha inicio:</b></td>
                                         <td><input class="form-control" v-model="startDate" readonly></td>
+                                        <td><p>&nbsp &nbsp</p></td>
+                                        <td><b>Dias calendario:</b></td>
+                                        <td><input class="form-control" name="calendarDays" type="number" v-model="totCalendarDays" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td>Fin:</td>
+                                        <td><b>Fecha fin:</b></td>
                                         <td><input class="form-control" v-model="endDate" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Regreso:</td>
-                                        <td><input class="form-control" v-model="returnDate" readonly></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Dias efectivos:</td>
+                                        <td><p>&nbsp &nbsp</p></td>
+                                        <td><b>Dias efectivos:</b></td>
                                         <td><input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td>Dias calendario:</td>
-                                        <td><input class="form-control" name="calendarDays" type="number" v-model="totCalendarDays" readonly></td>
+                                        <td><b>Fecha regreso:</b></td>
+                                        <td><input class="form-control" v-model="returnDate" readonly></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         <br>
                         <div>
-                            <label class="form-label" for="listDays">Desglose de los días de vacaciones:</label>
+                            <label class="form-label" for="listDays"><b>Desglose de los días de vacaciones:</b></label>
                             <ol class="ulColumns3" name="listDays">
                                 <template v-for="(day, index) in lDays">
                                     <li v-bind:style="{'color': day.taked ? 'green' : 'red'}">
@@ -104,9 +108,8 @@
                                 </template>
                             </ol>
                         </div>
-                        <br>
                         <div>
-                            <label class="form-label" for="comments">Comentarios:</label>
+                            <label class="form-label" for="comments"><b>Comentarios:</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
                         </div>
                     </div>

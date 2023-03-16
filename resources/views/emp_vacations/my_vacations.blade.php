@@ -215,7 +215,7 @@
                             <th>Fecha incio</th>
                             <th>Fecha fin</th>
                             <th>Fecha regreso</th>
-                            <th>Días efictivos</th>
+                            <th>Días efectivos</th>
                             <th>Tipo</th>
                             <th>Estatus</th>
                             <th>sup coment.</th>
