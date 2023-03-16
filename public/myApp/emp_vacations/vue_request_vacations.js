@@ -84,6 +84,7 @@ var appRequestVacation = new Vue({
                 SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
                 return;
             }
+            this.oUser = await this.oUsersUtils.getUserData(this.oData.getUserDataRoute, data[this.indexes.user_id]);
             await this.getEmpApplicationsEA(data[this.indexes.user_id]);
             await this.getlDays(data[this.indexes.id]);
             this.vacationUtils.createClass(this.lTemp);
