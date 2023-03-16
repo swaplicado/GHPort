@@ -656,6 +656,7 @@ class requestVacationsController extends Controller
 
             \DB::beginTransaction();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
+            $application->date_send_n = Carbon::now()->toDateString();
             $application->update();
             \DB::commit();
         } catch (\Throwable $th) {
