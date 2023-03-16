@@ -343,7 +343,7 @@ var appMyVacations = new Vue({
                 "order": [1, 'desc'],
                 "columnDefs": [
                     {
-                        "targets": [0,2,3,4,5,6],
+                        "targets": [0,2,3,4,5,6,17],
                         "visible": false,
                         "searchable": false,
                         "orderable": false,
@@ -561,11 +561,11 @@ var appMyVacations = new Vue({
         specialType(data){
             let type = "";
             if(data.is_normal){
-                type = type + "Normal.\n";
+                type = type + "Normal\n";
             }
 
             if(data.is_past){
-                type = type + "Días pasados.\n";
+                type = type + "Días pasados\n";
             }
 
             if(data.is_advanced){
@@ -573,11 +573,11 @@ var appMyVacations = new Vue({
             }
 
             if(data.is_proportional){
-                type = type + "Días proporcionales.\n";
+                type = type + "Días proporcionales\n";
             }
 
             if(data.is_season_special){
-                type = type + "Temporada especial.\n";
+                type = type + "Temporada especial\n";
             }
 
             return type;
@@ -716,8 +716,8 @@ var appMyVacations = new Vue({
                         rec.emp_comments_n,
                         rec.user_apr_rej_id,
                         rec.id_application_vs_type,
-                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.folio_n,
+                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.user_apr_rej_name,
                         ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
                             this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
@@ -728,8 +728,8 @@ var appMyVacations = new Vue({
                         this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),
                         this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                         rec.total_days,
-                        rec.applications_st_name,
                         this.specialType(rec),
+                        rec.applications_st_name,
                         rec.sup_comments_n,
                     ]
                 );
@@ -1011,6 +1011,80 @@ var appMyVacations = new Vue({
                 console.log(error);
                 swal.close();   
             });
+        },
+
+        sendAprove(data){
+            Swal.fire({
+                title: '¿Desea enviar la solicitud para las fechas?',
+                html: '<b>Inicio:</b> ' +
+                        data[this.indexes.start_date] +
+                        '<br>' +
+                        '<b>Fin:</b> ' +
+                        data[this.indexes.end_date] +
+                        '<br>' +
+                        '<br>' +
+                        '<h4><b>La solicitud se aprobará automáticamente</b></h4>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SGui.showWaiting(15000);
+                    axios.post(this.oData.quickSendRoute, {
+                        'id_application': data[this.indexes.id],
+                    })
+                    .then( result => {
+                        let res = result.data;
+                        if(res.success){
+                            axios.post(this.oData.acceptRequestRoute, {
+                                'id_application': data[this.indexes.id],
+                                'id_user': this.oUser.id,
+                                'comments': this.comments,
+                                'year': this.year,
+                                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+                                'manager_id': this.selectedmanager,
+                            })
+                            .then(response => {
+                                let data = response.data;
+                                if(data.success){
+                                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
+                                    axios.post(this.oData.quickDataRoute, {
+                                        'user_id': this.oUser.id,
+                                        'year': this.year,
+                                    })
+                                    .then( result => {
+                                        data = result.data;
+                                        if(data.success){
+                                            this.reDrawVacationsTable(data);
+                                            this.reDrawRequestTable(data.oUser);
+                                            SGui.showOk();
+                                        }else{
+                                            SGui.showMessage('', data.message, data.icon);
+                                        }
+                                    })
+                                    .catch( function(error){
+                                        console.log(error);
+                                        SGui.showError(error);
+                                    });
+                                }else{
+                                    SGui.showMessage('', data.message, data.icon);
+                                }
+                            })
+                            .catch(function(error) {
+                                console.log(error);
+                                SGui.showError(error);
+                            });
+                        }else{
+                            SGui.showMessage('', res.message, res.icon);
+                        }
+                    })
+                    .catch( function(error){
+
+                    });
+                }
+            })
         }
     },
 })

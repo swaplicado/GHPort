@@ -517,11 +517,7 @@
     background: url('../img/birthday-cake.png');
     background-repeat:no-repeat;
     background-size: 80% 90%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    /* width: 20px;
-    height: 20px; */
+    background-position: center;
 }
 
 .date-picker-wrapper .month-wrapper table .day.requestedVac {
@@ -533,7 +529,5 @@
     background: url('../img/confetti.png');
     background-repeat:no-repeat;
     background-size: 90% 90%;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    background-position: center;
 }

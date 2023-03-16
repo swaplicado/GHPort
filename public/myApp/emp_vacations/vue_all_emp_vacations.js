@@ -39,34 +39,47 @@ var app = new Vue({
                                 +'<table style="width: 100%">'
                                     +'<tbody>'
                                         +'<tr>'
-                                            +'<td style="width: 30%">'+emp.employee+'</td>'
+                                            +'<td style="width: 20%">'+emp.employee+'</td>'
                                             +'<td style="width: 10%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">'
                                                 if(emp.company_id == 1){
                                                     head_accord = head_accord
-                                                        +'<img src="img/aeth.png" width="50px" height="20px" alt="">';
+                                                        +'<img src="img/aeth.png" width="80vmax" height="25vmax" alt="">';
                                                 }else if(emp.company_id == 3){
                                                     head_accord = head_accord
-                                                        +'<img src="img/tron.png" width="25px" height="20px" alt="">';
+                                                        +'<img src="img/tron.png" width="40vmax" height="35vmax" alt="">';
                                                 }else if(emp.company_id == 4){
                                                     head_accord = head_accord
-                                                        +'<img src="img/swap_logo_22.png" width="40px" height="20px" alt="">';
+                                                        +'<img src="img/swap_logo_22.png" width="50vmax" height="20vmax" alt="">';
                                                 }else if(emp.company_id == 5){
                                                     head_accord = head_accord
-                                                        +'<img src="img/ame.png" width="50px" height="20px" alt="">';
+                                                        +'<img src="img/ame.png" width="70vmax" height="30vmax" alt="">';
                                                 }
                                             head_accord = head_accord
                                             +'</td>'
-                                            +'<td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes:'+emp.tot_vacation_remaining+' días</td>';
+                                            +'<td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes:'+emp.tot_vacation_remaining+' días</td>';
                                             if(emp.is_head_user){
                                                 head_accord = head_accord
-                                                +'<td style="width: 30%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">'
+                                                +'<td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">'
                                                     +'Encargado de area'
                                                     +'<span class="bx bxs-group"></span>'
                                                 +'</td>';
                                             }else{
                                                 head_accord = head_accord
-                                                +'<td style="width: 30%;"></td>'
+                                                +'<td style="width: 20%;"></td>'
                                             }
+
+                                            if(emp.photo64 != null){
+                                                head_accord = head_accord
+                                                +'<td>'
+                                                    +'<img class="rounded-circle" src="data:image/jpg;base64,'+emp.photo64+'" style="width:5vmax;height:5vmax;"></img>'
+                                                +'</td>'
+                                            }else{
+                                                head_accord = head_accord
+                                                +'<td>'
+                                                    +'<img class="rounded-circle" src="img/avatar/profile2.png" style="width:5vmax;height:5vmax;"></img>'
+                                                +'</td>'
+                                            }
+
                                             head_accord = head_accord
                                         +'</tr>'
                                     +'</tbody>'

@@ -6,6 +6,7 @@ var app = new Vue({
         oCopyUser: oServerData.oUser,
         initialCalendarDate: oServerData.initialCalendarDate,
         lHolidays: oServerData.lHolidays,
+        lTemp: oServerData.lTemp,
         year: oServerData.year,
         startDate: null,
         endDate: null,
@@ -83,6 +84,12 @@ var app = new Vue({
                 $('#two-inputs-myRequest').data('dateRangePicker').redraw();
             }
             $('#modal_specialVac').modal('show');
+        },
+
+        setTakedDay(index, checkbox_id){
+            let checked = $('#' + checkbox_id).is(":checked");
+            this.lDays[index].taked = checked;
+            checked ? this.takedDays++ : this.takedDays--;
         },
 
         getDataDays(){
@@ -163,8 +170,8 @@ var app = new Vue({
                         rec.take_rest_days,
                         rec.emp_comments_n,
                         rec.user_apr_rej_id,
-                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.folio_n,
+                        this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.user_apr_rej_name,
                         ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
                             this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :

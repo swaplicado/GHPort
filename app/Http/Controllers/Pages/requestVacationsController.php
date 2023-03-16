@@ -20,6 +20,7 @@ use Spatie\Async\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use \App\Utils\delegationUtils;
+use \App\Utils\folioUtils;
 
 class requestVacationsController extends Controller
 {
@@ -103,7 +104,7 @@ class requestVacationsController extends Controller
                                                                 SysConst::APPLICATION_RECHAZADO
                                                             ]
                                                         );
-            $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
+            // $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
         }
 
         $lEmpSpecial = EmployeeVacationUtils::getApplicationsTypeSpecial(
@@ -647,5 +648,34 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de días efectivos', 'error']);
         }
         return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
+    }
+
+    public function quickSend(Request $request){
+        try {
+            $application = Application::findOrFail($request->id_application);
+
+            \DB::beginTransaction();
+            $application->request_status_id = SysConst::APPLICATION_ENVIADO;
+            $application->date_send_n = Carbon::now()->toDateString();
+            $application->update();
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollback();
+            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true]);
+    }
+
+    public function quickData(Request $request){
+        try {
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
+            $user->applications = EmployeeVacationUtils::getApplications($request->user_id, $request->year);
+            $user->applications = EmployeeVacationUtils::getTakedDays($user);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener los datos el colaborador', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'oUser' => $user]);
     }
 }

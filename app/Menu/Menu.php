@@ -24,6 +24,7 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
                     ],
+                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                 ];
                 break;
 
@@ -50,6 +51,7 @@ class Menu {
                     !Session::get('is_delegation') ? 
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
+                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                 ];
                     
                 break;
@@ -75,6 +77,7 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
                     ],
+                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                 ];
                 break;
 
@@ -114,6 +117,7 @@ class Menu {
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
                     (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General'],
+                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                 ];
                 break;
             

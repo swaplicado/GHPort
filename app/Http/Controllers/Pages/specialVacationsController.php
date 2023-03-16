@@ -11,6 +11,7 @@ use App\Models\Vacations\ApplicationsBreakdown;
 use App\Models\Vacations\ApplicationLog;
 use GuzzleHttp\Client;
 use \Carbon\Carbon;
+use \App\Utils\folioUtils;
 
 class specialVacationsController extends Controller
 {
@@ -34,12 +35,15 @@ class specialVacationsController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 
+        $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($user->org_chart_job_id, $user->id, $user->job_id);
+
         return view('special_vacations.special_vacation')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
                                                 ->with('year', Carbon::now()->year)
                                                 ->with('constants', $constants)
-                                                ->with('config', $config);
+                                                ->with('config', $config)
+                                                ->with('lTemp', $lTemp_special);
     }
 
     public function setRequestVac(Request $request){
@@ -89,7 +93,7 @@ class specialVacationsController extends Controller
             $application->type_incident_id = SysConst::TYPE_VACACIONES;
             $application->emp_comments_n = $comments;
             $application->is_deleted = false;
-            $application->folio_n = $this->makeFolio($date, $application->user_id);
+            $application->folio_n = folioUtils::makeFolio($date, $application->user_id);
             $application->save();
 
             foreach($vacations as $vac){
@@ -319,28 +323,6 @@ class specialVacationsController extends Controller
         }
 
         return json_encode(['success' => true, 'message' => 'Registro enviado y aprobado con éxito', 'icon' => 'success', 'oUser' => $user]);
-    }
-
-    public function makeFolio($date, $employee_id){
-        $employee_num = \DB::table('users')
-                        ->where('id', $employee_id)
-                        ->value('employee_num');
-
-        $totApplications = \DB::table('applications')
-                            ->where('user_id', $employee_id)
-                            ->where('is_deleted', 0)
-                            ->count();
-
-        if(strlen($employee_num) < 5){
-            for($i = 0; $i < (5 - strlen($employee_num)); $i++ ){
-                $ceros = '0'.$ceros;
-            }
-            $employee_num = $ceros.$employee_num;
-        }
-
-        $folio = $date->format('Y').$employee_num.$totApplications;
-
-        return $folio;
     }
 
     public function sendRequestVacation($oApplication){

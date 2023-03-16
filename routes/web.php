@@ -67,6 +67,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestVacations/getEmpApplicationsEA', 'Pages\requestVacationsController@getEmpApplicationsEA')->name('requestVacations_getEmpApplicationsEA');
     Route::post('requestVacations/getDataManager', 'Pages\requestVacationsController@getDataManager')->name('requestVacations_getDataManager');
     Route::post('requestVacations/getlDays', 'Pages\requestVacationsController@getlDays')->name('requestVacations_getlDays');
+    Route::post('requestVacations/quickSend', 'Pages\requestVacationsController@quickSend')->name('requestVacations_quickSend');
+    Route::post('requestVacations/quickData', 'Pages\requestVacationsController@quickData')->name('requestVacations_quickData');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');
@@ -132,4 +134,11 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('SpecialTypeVsOrgChart/save', 'Adm\SpecialTypeVsOrgChartController@save')->name('SpecialTypeVsOrgChart_save');
     Route::post('SpecialTypeVsOrgChart/update', 'Adm\SpecialTypeVsOrgChartController@update')->name('SpecialTypeVsOrgChart_update');
     Route::post('SpecialTypeVsOrgChart/delete', 'Adm\SpecialTypeVsOrgChartController@delete')->name('SpecialTypeVsOrgChart_delete');
+
+    Route::post('getUserData', 'Utils\usersUtils@getUserData')->name('getUserData');
+
+    Route::get('report/myEmpVacations', 'Pages\ReportMyEmpVacations@index')->name('report_myEmpVacations');
+    Route::post('report/myEmpVacations_getLevelDown', 'Pages\ReportMyEmpVacations@getLevelDown')->name('report_getLevelDown');
+    Route::post('report/myEmpVacations_getLevelUp', 'Pages\ReportMyEmpVacations@getLevelUp')->name('report_getLevelUp');
+    Route::post('report/myEmpVacations_myEmpVacationsFilterYear', 'Pages\ReportMyEmpVacations@myEmpVacationsFilterYear')->name('report_myEmpVacationsFilterYear');
 });

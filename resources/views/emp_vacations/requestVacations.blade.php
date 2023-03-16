@@ -21,6 +21,7 @@
             this.year = <?php echo json_encode($year); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.const = <?php echo json_encode($constants); ?>;
+            this.getUserDataRoute = <?php echo json_encode(route('getUserData')); ?>;
 
         //data para la vista requestVacations
             this.myManagers = <?php echo json_encode($myManagers); ?>;
@@ -45,17 +46,17 @@
                 'take_rest_days': 7,
                 'sup_comments': 8,
                 'user_apr_rej_id': 9,
-                'folio': 10,
-                'user_apr_rej_name': 11,
-                'employee': 12,
-                'created_at': 13,
+                'employee': 10,
+                'folio': 11,
+                'created_at': 12,
+                'user_apr_rej_name': 13,
                 'approved_date': 14,
                 'start_date': 15,
                 'end_date': 16,
                 'return_date': 17,
                 'total_days': 18,
-                'applications_st_name': 19,
-                'type': 20,
+                'type': 19,
+                'applications_st_name': 20,
                 'comments': 21,
             };
 
@@ -71,6 +72,8 @@
             this.getDirectEmployeesRoute = <?php echo json_encode(route('vacationManagement_getDirectEmployees')); ?>;
             this.getAllEmployeesRoute = <?php echo json_encode(route('vacationManagement_getAllEmployees')); ?>;
             this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
+            this.quickSendRoute = <?php echo json_encode(route('requestVacations_quickSend')); ?>;
+            this.quickDataRoute = <?php echo json_encode(route('requestVacations_quickData')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
                 'id':0,
@@ -80,16 +83,16 @@
                 'comments':4,
                 'user_apr_rej_id':5,
                 'application_vs_type_id':6,
-                'request_date':7,
-                'folio':8,
+                'folio':7,
+                'request_date':8,
                 'user_apr_rej_name':9,
                 'accept_reject_date':10,
                 'start_date':11,
                 'end_date':12,
                 'return_date':13,
                 'taked_days':14,
-                'status':15,
-                'type':16,
+                'type':15,
+                'status':16,
                 'sup_comments':17,
             };
         }
@@ -167,17 +170,17 @@
                         <th>take_rest_days</th>
                         <th>sup comments</th>
                         <th>Usuario apr/rec id</th>
-                        <th>Folio</th>
-                        <th>Usuario apr/rec</th>
                         <th>Empleado</th>
+                        <th>Folio</th>
                         <th>Fecha solicitud</th>
-                        <th style="max-width: 15%;">Fecha apr/rec</th>
+                        <th>Revisor</th>
+                        <th style="max-width: 15%;">Fecha Revisión</th>
                         <th>Fecha inicio</th>
                         <th>Fecha fin</th>
                         <th>Fecha regreso</th>
-                        <th>Dias efic.</th>
-                        <th>Estatus</th>
+                        <th>Dias efictivos</th>
                         <th>Tipo</th>
+                        <th>Estatus</th>
                         <th>coment.</th>
                     </thead>
                     <tbody>
@@ -194,10 +197,10 @@
                                     <td>@{{ rec.take_rest_days }}</td>
                                     <td>@{{ rec.sup_comments_n }}</td>
                                     <td>@{{ rec.user_apr_rej_id }}</td>
-                                    <td>@{{ rec.folio_n }}</td>
-                                    <td>@{{ rec.user_apr_rej_name }}</td>
                                     <td>@{{ emp.employee }}</td>
+                                    <td>@{{ rec.folio_n }}</td>
                                     <td>@{{ oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>@{{ rec.user_apr_rej_name }}</td>
                                     <td>
                                         @{{ (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
     oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
@@ -207,10 +210,10 @@
                                     </td>
                                     <td>@{{ oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY') }}</td>
-                                    <td>@{{ oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>@{{ oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.total_days }}</td>
-                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name }}</td>
                                     <td>@{{ specialType(rec) }}</td>
+                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name }}</td>
                                     <td>@{{ rec.emp_comments_n }}</td>
                                 </tr>
                             </template>
@@ -354,8 +357,10 @@
                                 'crear' => true,
                                 'editar' => true,
                                 'delete' => true,
-                                'send' => true,
                             ])
+                            <button id="btn_sendAprov" onclick="mySendAprove();" type="button" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
+                                <span class="bx bxs-send"></span>
+                            </button>
                             <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                                 <label for="myRqStatus">Filtrar por estatus: </label>
                                 <select class="form-control inline" v-on:change="filterMyVacationTable();" name="myRqStatus" id="myRqStatus" style="width: 30%;">
@@ -391,16 +396,16 @@
                                 <th>emp coment.</th>
                                 <th>Usuario apr/rec id</th>
                                 <th>application vs type id</th>
-                                <th>Fecha solicitud</th>
                                 <th>Folio</th>
-                                <th>Usuario apr/rec</th>
-                                <th style="max-width: 20%;">Fecha apr/rec</th>
+                                <th>Fecha solicitud</th>
+                                <th>Revisor</th>
+                                <th style="max-width: 20%;">Fecha revisión</th>
                                 <th>Fecha incio</th>
                                 <th>Fecha fin</th>
                                 <th>Fecha regreso</th>
-                                <th>Dias efic.</th>
-                                <th>Estatus</th>
+                                <th>Dias efictivos</th>
                                 <th>Tipo</th>
+                                <th>Estatus</th>
                                 <th>sup coment.</th>
                                 </thead>
                             </table>
@@ -474,7 +479,7 @@
     </script>
     @include('layouts.table_jsControll', [
         'table_id' => 'table_requestVac',
-        'colTargets' => [1, 2, 3, 4, 6, 7, 8, 9],
+        'colTargets' => [1, 2, 3, 4, 6, 7, 8, 9, 21],
         'colTargetsSercheable' => [0, 5],
         'select' => true,
         'noSort' => true,
@@ -508,10 +513,10 @@
                 table['table_requestVac'].columns(0).search("", true, true);
                 search[0].value = app.idApplication;
             }
-
         });
     </script>
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('myApp/Utils/SUsersUtils.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_request_vacations.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
@@ -614,6 +619,15 @@
 
         function dateRangePickerClearValue(){
             app.returnDate = null;
+        }
+
+        function mySendAprove(){
+            if (table['table_myRequest'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            }
+    
+            app.sendAprove(table['table_myRequest'].row('.selected').data());
         }
     </script>
 @endsection

@@ -19,6 +19,7 @@ use App\Models\Adm\OrgChartJob;
 use App\Utils\orgChartUtils;
 use Spatie\Async\Pool;
 use \App\Utils\delegationUtils;
+use \App\Utils\folioUtils;
 
 class myVacationsController extends Controller
 {
@@ -111,7 +112,7 @@ class myVacationsController extends Controller
             \DB::beginTransaction();
 
             $application = new Application();
-            $application->folio_n = $this->makeFolio(Carbon::now(), $employee_id);
+            $application->folio_n = folioUtils::makeFolio(Carbon::now(), $employee_id);
             $application->start_date = $startDate;
             $application->end_date = $endDate;
             $application->take_holidays = $take_holidays;
@@ -354,13 +355,14 @@ class myVacationsController extends Controller
 
             $employee = User::find($request->employee_id);
             // $arrOrgJobsAux = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
-            $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
+            // $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
+            $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($employee->org_chart_job_id);
 
-            $superviser = \DB::table('users')
-                            ->where('is_delete', 0)
-                            ->where('is_active', 1)
-                            ->whereIn('org_chart_job_id', $arrOrgJobs)
-                            ->first();
+            // $superviser = \DB::table('users')
+            //                 ->where('is_delete', 0)
+            //                 ->where('is_active', 1)
+            //                 ->whereIn('org_chart_job_id', $arrOrgJobs)
+            //                 ->first();
 
             $mailLog = new MailLog();
             $mailLog->date_log = Carbon::now()->toDateString();
@@ -414,28 +416,6 @@ class myVacationsController extends Controller
         $mailLog = MailLog::find($request->mail_log_id);
 
         return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
-    }
-
-    public function makeFolio($date, $employee_id){
-        $employee_num = \DB::table('users')
-                        ->where('id', $employee_id)
-                        ->value('employee_num');
-
-        $totApplications = \DB::table('applications')
-                            ->where('user_id', $employee_id)
-                            ->where('is_deleted', 0)
-                            ->count();
-        $ceros = "";
-        if(strlen($employee_num) < 5){
-            for($i = 0; $i < (5 - strlen($employee_num)); $i++ ){
-                $ceros = '0'.$ceros;
-            }
-            $employee_num = $ceros.$employee_num;
-        }
-
-        $folio = $date->format('Y').$employee_num.$totApplications;
-
-        return $folio;
     }
 
     public function getEmpApplicationsEA(Request $request){

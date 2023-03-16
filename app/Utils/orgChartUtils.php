@@ -72,6 +72,30 @@ class OrgChartUtils {
     }
 
     /**
+     * Obtiene el supervisor directamente superior existente al org chart job recibido
+     */
+    public static function getExistDirectSuperviserOrgChartJob($id){
+        $arrOrgJobs = orgChartUtils::getAllFatherBossOrgChartJob($id);
+
+        $org_chart_id = $id;
+        for($i = 0; $i < count($arrOrgJobs); $i++){
+            $dirOrgJobs = orgChartUtils::getDirectFatherOrgChartJob($org_chart_id);
+            $superviser = \DB::table('users')
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->whereIn('org_chart_job_id', $dirOrgJobs)
+                                ->first();
+                                
+            if(!is_null($superviser)){
+                break;
+            }
+            $org_chart_id = $dirOrgJobs[0];
+        }
+
+        return $superviser;
+    }
+
+    /**
      * Obtiene todos los org chart jobs superiores al org chart job
      */
     public static function getAllFathersOrgChartJob($id){

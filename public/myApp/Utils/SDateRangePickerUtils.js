@@ -82,12 +82,27 @@ class SDateRangePicker {
                             _tooltip = _tooltip + 'Festivo. ';
                         }
                         if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            _class = 'requestedVac';
-                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                            if(app.startDate && app.endDate){
+                                if(!moment(t.getTime()).isBetween(moment(app.startDate, 'ddd DD-MMM-YYYY'), moment(app.endDate, 'ddd DD-MMM-YYYY'))){
+                                    _class = 'requestedVac';
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                                }
+                            }else{
+                                _class = 'requestedVac';
+                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                            }
                         }
+                        let indexlDays = app.lDays.findIndex(({ date }) => moment(date, 'ddd DD-MMM-YYYY').isSame(moment(t.getTime())));
                         if(t.getDay() == 0 || t.getDay() == 6){
-                            _class = 'restDay';
-                            _tooltip = _tooltip + 'Inhabil. ';
+                            if(indexlDays > -1){
+                                if(!app.lDays[indexlDays].taked){
+                                    _class = 'restDay';
+                                    _tooltip = _tooltip + 'Inhabil. ';
+                                }
+                            }else{
+                                _class = 'restDay';
+                                _tooltip = _tooltip + 'Inhabil. ';
+                            }
                         }
                         if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                             _class = 'aniversary';
