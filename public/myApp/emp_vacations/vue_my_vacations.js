@@ -1011,6 +1011,80 @@ var appMyVacations = new Vue({
                 console.log(error);
                 swal.close();   
             });
+        },
+
+        sendAprove(data){
+            Swal.fire({
+                title: '¿Desea enviar la solicitud para las fechas?',
+                html: '<b>Inicio:</b> ' +
+                        data[this.indexes.start_date] +
+                        '<br>' +
+                        '<b>Fin:</b> ' +
+                        data[this.indexes.end_date] +
+                        '<br>' +
+                        '<br>' +
+                        '<h4><b>La solicitud se aprobará automáticamente</b></h4>',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    SGui.showWaiting(15000);
+                    axios.post(this.oData.quickSendRoute, {
+                        'id_application': data[this.indexes.id],
+                    })
+                    .then( result => {
+                        let res = result.data;
+                        if(res.success){
+                            axios.post(this.oData.acceptRequestRoute, {
+                                'id_application': data[this.indexes.id],
+                                'id_user': this.oUser.id,
+                                'comments': this.comments,
+                                'year': this.year,
+                                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+                                'manager_id': this.selectedmanager,
+                            })
+                            .then(response => {
+                                let data = response.data;
+                                if(data.success){
+                                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
+                                    axios.post(this.oData.quickDataRoute, {
+                                        'user_id': this.oUser.id,
+                                        'year': this.year,
+                                    })
+                                    .then( result => {
+                                        data = result.data;
+                                        if(data.success){
+                                            this.reDrawVacationsTable(data);
+                                            this.reDrawRequestTable(data.oUser);
+                                            SGui.showOk();
+                                        }else{
+                                            SGui.showMessage('', data.message, data.icon);
+                                        }
+                                    })
+                                    .catch( function(error){
+                                        console.log(error);
+                                        SGui.showError(error);
+                                    });
+                                }else{
+                                    SGui.showMessage('', data.message, data.icon);
+                                }
+                            })
+                            .catch(function(error) {
+                                console.log(error);
+                                SGui.showError(error);
+                            });
+                        }else{
+                            SGui.showMessage('', res.message, res.icon);
+                        }
+                    })
+                    .catch( function(error){
+
+                    });
+                }
+            })
         }
     },
 })

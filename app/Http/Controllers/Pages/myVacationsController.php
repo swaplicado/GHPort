@@ -355,13 +355,14 @@ class myVacationsController extends Controller
 
             $employee = User::find($request->employee_id);
             // $arrOrgJobsAux = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
-            $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
+            // $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
+            $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($employee->org_chart_job_id);
 
-            $superviser = \DB::table('users')
-                            ->where('is_delete', 0)
-                            ->where('is_active', 1)
-                            ->whereIn('org_chart_job_id', $arrOrgJobs)
-                            ->first();
+            // $superviser = \DB::table('users')
+            //                 ->where('is_delete', 0)
+            //                 ->where('is_active', 1)
+            //                 ->whereIn('org_chart_job_id', $arrOrgJobs)
+            //                 ->first();
 
             $mailLog = new MailLog();
             $mailLog->date_log = Carbon::now()->toDateString();

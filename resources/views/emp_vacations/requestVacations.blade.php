@@ -72,6 +72,8 @@
             this.getDirectEmployeesRoute = <?php echo json_encode(route('vacationManagement_getDirectEmployees')); ?>;
             this.getAllEmployeesRoute = <?php echo json_encode(route('vacationManagement_getAllEmployees')); ?>;
             this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
+            this.quickSendRoute = <?php echo json_encode(route('requestVacations_quickSend')); ?>;
+            this.quickDataRoute = <?php echo json_encode(route('requestVacations_quickData')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
                 'id':0,
@@ -355,8 +357,10 @@
                                 'crear' => true,
                                 'editar' => true,
                                 'delete' => true,
-                                'send' => true,
                             ])
+                            <button id="btn_sendAprov" onclick="mySendAprove();" type="button" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
+                                <span class="bx bxs-send"></span>
+                            </button>
                             <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                                 <label for="myRqStatus">Filtrar por estatus: </label>
                                 <select class="form-control inline" v-on:change="filterMyVacationTable();" name="myRqStatus" id="myRqStatus" style="width: 30%;">
@@ -509,7 +513,6 @@
                 table['table_requestVac'].columns(0).search("", true, true);
                 search[0].value = app.idApplication;
             }
-
         });
     </script>
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
@@ -616,6 +619,15 @@
 
         function dateRangePickerClearValue(){
             app.returnDate = null;
+        }
+
+        function mySendAprove(){
+            if (table['table_myRequest'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            }
+    
+            app.sendAprove(table['table_myRequest'].row('.selected').data());
         }
     </script>
 @endsection

@@ -21,7 +21,7 @@ class requestVacationMail extends Mailable
     {
         $this->idApplication = $idApplication;
         $this->idEmployee = $idEmployee;
-        $this->lDays = $lDays;
+        $this->lDays = $lDays; //Obsoleto ya no se usa
         $this->returnDate = $returnDate;
     }
 

@@ -223,12 +223,12 @@ class requestVacationsController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            // $data = json_decode($this->sendRequestVacation($application, json_decode($application->ldays)));
+            $data = json_decode($this->sendRequestVacation($application, json_decode($application->ldays)));
 
-            // if($data->code == 500 || $data->code == 550){
-            //     \DB::rollBack();
-            //     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            // }
+            if($data->code == 500 || $data->code == 550){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
 
             $employee = \DB::table('users')
                                 ->where('id', $request->id_user)
@@ -648,5 +648,33 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de días efectivos', 'error']);
         }
         return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
+    }
+
+    public function quickSend(Request $request){
+        try {
+            $application = Application::findOrFail($request->id_application);
+
+            \DB::beginTransaction();
+            $application->request_status_id = SysConst::APPLICATION_ENVIADO;
+            $application->update();
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollback();
+            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true]);
+    }
+
+    public function quickData(Request $request){
+        try {
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
+            $user->applications = EmployeeVacationUtils::getApplications($request->user_id, $request->year);
+            $user->applications = EmployeeVacationUtils::getTakedDays($user);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener los datos el colaborador', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'oUser' => $user]);
     }
 }

@@ -67,6 +67,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestVacations/getEmpApplicationsEA', 'Pages\requestVacationsController@getEmpApplicationsEA')->name('requestVacations_getEmpApplicationsEA');
     Route::post('requestVacations/getDataManager', 'Pages\requestVacationsController@getDataManager')->name('requestVacations_getDataManager');
     Route::post('requestVacations/getlDays', 'Pages\requestVacationsController@getlDays')->name('requestVacations_getlDays');
+    Route::post('requestVacations/quickSend', 'Pages\requestVacationsController@quickSend')->name('requestVacations_quickSend');
+    Route::post('requestVacations/quickData', 'Pages\requestVacationsController@quickData')->name('requestVacations_quickData');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');
