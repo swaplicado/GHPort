@@ -24,7 +24,7 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
                     ],
-                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
+                    // (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                 ];
                 break;
 
@@ -77,7 +77,7 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
                     ],
-                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
+                    // (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                 ];
                 break;
 
