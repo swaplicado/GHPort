@@ -217,9 +217,13 @@ class EmployeeVacationUtils {
                         ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', $status)
-                        ->where('a.is_deleted', 0)
-                        ->whereYear('a.updated_at', $year)
-                        ->where(function($query){
+                        ->where('a.is_deleted', 0);
+
+        if(!is_null($year)){
+            $oRequested = $oRequested->whereYear('a.updated_at', $year);
+        }
+
+        $oRequested = $oRequested->where(function($query){
                             $query->where('as.is_deleted', 0)
                                 ->orWhere('as.is_deleted', null);
                         })
@@ -805,9 +809,13 @@ class EmployeeVacationUtils {
                             ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
                             ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'ap.request_status_id')
                             ->whereIn('ap.user_id', $arrUsers)
-                            ->where('ap.is_deleted', 0)
-                            ->whereYear('ap.updated_at', $year)
-                            ->whereIn('ap.request_status_id', $lStatus)
+                            ->where('ap.is_deleted', 0);
+        
+        if(!is_null($year)){
+            $lApplications = $lApplications->whereYear('ap.updated_at', $year);
+        }
+
+        $lApplications = $lApplications->whereIn('ap.request_status_id', $lStatus)
                             ->where(function($query) use($conflSituation, $lSituation){
                                 foreach($lSituation as $s){
                                     $index = array_search($s, array_column($conflSituation, 'id'));

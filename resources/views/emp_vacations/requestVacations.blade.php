@@ -138,23 +138,25 @@
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
                     &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
-                    <select class="form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
+                    <select class="form-control inline" name="rqStatus" id="rqStatus" v-model="rqStatus" style="width: 30%;">
                         <option value="0" selected>Nuevos</option>
                         <option value="1">Aprobados</option>
                         <option value="2">Rechazados</option>
                     </select>&nbsp;&nbsp;
-                    <label>Filtrar por año:</label>
-                    <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style="display: inline;">
-                        <span class="bx bx-minus"></span>
-                    </button>
-                    <input type="number" class="form-control" v-model="year" readonly
-                        style="width: 10ch; display: inline;">
-                    <button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style="display: inline;">
-                        <span class="bx bx-plus"></span>
-                    </button>
-                    <button type="button" class="btn btn-primary" v-on:click="filterYear();">
-                        <span class="bx bx-search"></span>
-                    </button>
+                    <template v-if="rqStatus != 0">
+                        <label>Filtrar por año:</label>
+                        <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style="display: inline;">
+                            <span class="bx bx-minus"></span>
+                        </button>
+                        <input type="number" class="form-control" v-model="year" readonly
+                            style="width: 10ch; display: inline;">
+                        <button v-on:click="year = year + 1;" class="btn btn-secondary" type="button" style="display: inline;">
+                            <span class="bx bx-plus"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary" v-on:click="filterYear();">
+                            <span class="bx bx-search"></span>
+                        </button>
+                    </template>
                 </div>
                 <br>
                 <br>

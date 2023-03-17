@@ -33,6 +33,7 @@ var appRequestVacation = new Vue({
         noBussinesDayIndex: 0,
         lTemp: [],
         emp_comments: null,
+        rqStatus: 0
     },
     mounted(){
         var self = this;
