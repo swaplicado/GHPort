@@ -34,6 +34,7 @@
             this.getDataManagerRoute = <?php echo json_encode(route('requestVacations_getDataManager')); ?>;
             this.getRequestlDaysRoute = <?php echo json_encode(route('requestVacations_getlDays')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
+            this.oApplication = <?php echo json_encode($oApplication); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesRequest = {
                 'id': 0,
@@ -510,11 +511,12 @@
             });
 
             var search = document.querySelectorAll('input[type=search]');
-            if (app.idApplication != null) {
-                table['table_requestVac'].columns(0).search("(^" + app.idApplication + "$)", true, false).draw();
-                table['table_requestVac'].columns(0).search("", true, true);
-                search[0].value = app.idApplication;
-            }
+            // if (app.oApplication != null) {
+            //     app.showModal();
+            //     // table['table_requestVac'].columns(0).search("(^" + app.idApplication + "$)", true, false).draw();
+            //     // table['table_requestVac'].columns(0).search("", true, true);
+            //     // search[0].value = app.idApplication;
+            // }
         });
     </script>
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
@@ -631,5 +633,12 @@
     
             app.sendAprove(table['table_myRequest'].row('.selected').data());
         }
+    </script>
+    <script>
+        $(document).ready(function(){
+            if (app.oApplication != null) {
+                app.showModal();
+            }
+        });
     </script>
 @endsection
