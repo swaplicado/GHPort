@@ -33,6 +33,9 @@ var appRequestVacation = new Vue({
         noBussinesDayIndex: 0,
         lTemp: [],
         emp_comments: null,
+        rqStatus: 0,
+        oApplication: oServerData.oApplication,
+        isFromMail: false,
     },
     mounted(){
         var self = this;
@@ -79,6 +82,8 @@ var appRequestVacation = new Vue({
         },
 
         async showAcceptRegistry(data){
+            SGui.showWaiting(15000);
+            this.oApplication = null;
             $('#two-inputs').data('dateRangePicker').clear();
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
@@ -110,10 +115,12 @@ var appRequestVacation = new Vue({
             this.totCalendarDays = (moment(moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD').diff(moment(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), 'YYYY-MM-DD'), 'days') + 1);
             // this.reMaplDays();
             $('#modal_solicitud').modal('show');
+            Swal.close();
         },
 
         async showRejectRegistry(data){
-            SGui.showWaiting(10000);
+            SGui.showWaiting(15000);
+            this.oApplication = null;
             $('#two-inputs').data('dateRangePicker').clear();
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
                 SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas', 'warning');
@@ -146,6 +153,67 @@ var appRequestVacation = new Vue({
             // this.reMaplDays();
             $('#modal_solicitud').modal('show');
             Swal.close();
+        },
+
+        async showModal(){
+            SGui.showWaitingBlock(15000);
+            $('#two-inputs').data('dateRangePicker').clear();
+            this.oUser = await this.oUsersUtils.getUserData(this.oData.getUserDataRoute, this.oApplication.user_id);
+            await this.getEmpApplicationsEA(this.oApplication.user_id);
+            await this.getlDays(this.oApplication.id_application);
+            this.vacationUtils.createClass(this.lTemp);
+            this.comments = this.oApplication.sup_comments_n;
+            this.idRequest = this.oApplication.id_application;
+            this.idUser = this.oApplication.user_id;
+            birthday = this.oApplication.birthday_n;
+            aniversaryDay = this.oDateUtils.formatDate(this.oApplication.benefits_date, 'ddd DD-MMM-YYYY');
+            this.status = this.oApplication.applications_st_name;
+            this.startDate = this.oDateUtils.formatDate(this.oApplication.start_date, 'ddd DD-MMM-YYYY');
+            this.endDate = this.oDateUtils.formatDate(this.oApplication.end_date, 'ddd DD-MMM-YYYY');
+            this.takedDays = this.oApplication.total_days;
+            this.emp_comments = this.oApplication.emp_comments_n;
+            this.isApprove = false;
+            $('#date-range200').val(this.oApplication.start_date).trigger('change');
+            $('#date-range201').val(this.oApplication.end_date).trigger('change');
+            this.returnDate = this.oDateUtils.formatDate(this.oApplication.return_date, 'ddd DD-MMM-YYYY');
+            this.takedDays = this.oApplication.total_days;
+            this.noBussinesDayIndex = 0;
+            this.totCalendarDays = (moment(this.oApplication.endDate).diff(moment(this.oApplication.startDate), 'days') + 1);
+            this.isFromMail = true;
+            $('#modal_solicitud').modal('show');
+            Swal.close();
+            if(this.oApplication.request_status_id == this.oData.const.APPLICATION_APROBADO){
+                SGui.showMessage('', "Esta solicitud ya ha sido aprobada por " +
+                                    "\n" +
+                                    this.oApplication.revisor +
+                                    " el " +
+                                    this.oDateUtils.formatDate(this.oApplication.approved_date_n, 'ddd DD-MMM-YYYY')
+                                );
+
+                Swal.fire({
+                    title: '',
+                    html: 'Esta solicitud ya ha sido aprobada por: ' +
+                            '<br>' +
+                            this.oApplication.revisor +
+                            '<br>' +
+                            'Con fecha: ' +
+                            '<br>' +
+                            this.oDateUtils.formatDate(this.oApplication.approved_date_n, 'ddd DD-MMM-YYYY'),
+                    icon: 'info',
+                });
+            }else if(this.oApplication.request_status_id == this.oData.const.APPLICATION_RECHAZADO){
+                Swal.fire({
+                    title: '',
+                    html: 'Esta solicitud ya ha sido rechazada por: ' +
+                            '<br>' +
+                            this.oApplication.revisor +
+                            '<br>' +
+                            'Con fecha: ' +
+                            '<br>' +
+                            this.oDateUtils.formatDate(this.oApplication.rejected_date_n, 'ddd DD-MMM-YYYY'),
+                    icon: 'info',
+                });
+            }
         },
 
         getlDays(id){

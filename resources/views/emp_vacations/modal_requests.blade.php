@@ -25,7 +25,7 @@
                                     </tr>
                                     <tr>
                                         <td><b>Fecha de ingreso:</b>&nbsp</td>
-                                        <td>@{{oUser.benefits_date}}</td>
+                                        <td>@{{ oDateUtils.formatDate(oUser.benefits_date, 'ddd DD-MMM-YYYY')}}</td>
                                     </tr>
                                     <tr>
                                         <td><b>Antigüedad:</b>&nbsp</td>
@@ -114,17 +114,30 @@
                             <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
                             <p v-else>(Sin comentarios)</p>
                         </div>
-                        <div>
+                        <template v-if="isFromMail">
+                            <div v-if="oApplication.request_status_id == 2">
+                                <label class="form-label" for="comments"><b>Comentarios:</b></label>
+                                <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
+                            </div>
+                        </template>
+                        <template v-else>
                             <label class="form-label" for="comments"><b>Comentarios:</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
-                        </div>
+                        </template>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <button v-if="isApprove" type="button" class="btn btn-success" v-on:click="acceptRequest()">Aprobar</a>
-                <button v-else type="button" class="btn btn-danger" v-on:click="rejectRequest">Rechazar</a>
+                <template v-if="isFromMail">
+                    <button v-if="oApplication.request_status_id == 2" type="button" class="btn btn-success" v-on:click="acceptRequest()"><span class="bx bxs-like"></span>&nbsp Aprobar</a>
+                    <button v-if="oApplication.request_status_id == 2" type="button" class="btn btn-danger" v-on:click="rejectRequest"><span class="bx bxs-dislike"></span>&nbsp Rechazar</a>
+                </template>
+                <template v-else>
+                    <button v-if="isApprove" type="button" class="btn btn-success" v-on:click="acceptRequest()">Aprobar</a>
+                    <button v-else type="button" class="btn btn-danger" v-on:click="rejectRequest">Rechazar</a>
+                </template>
+
             </div>
         </div>
     </div>

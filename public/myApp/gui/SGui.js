@@ -12,6 +12,18 @@ class SGui {
         });
     }
 
+    static showWaitingBlock(iTimer) {
+        Swal.fire({
+            title: 'Espera...',
+            timer: iTimer,
+            timerProgressBar: true,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
+
     static showOk() {
         Swal.fire({
             title: '¡Realizado!',
