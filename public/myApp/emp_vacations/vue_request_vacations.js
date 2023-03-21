@@ -183,13 +183,6 @@ var appRequestVacation = new Vue({
             $('#modal_solicitud').modal('show');
             Swal.close();
             if(this.oApplication.request_status_id == this.oData.const.APPLICATION_APROBADO){
-                SGui.showMessage('', "Esta solicitud ya ha sido aprobada por " +
-                                    "\n" +
-                                    this.oApplication.revisor +
-                                    " el " +
-                                    this.oDateUtils.formatDate(this.oApplication.approved_date_n, 'ddd DD-MMM-YYYY')
-                                );
-
                 Swal.fire({
                     title: '',
                     html: 'Esta solicitud ya ha sido aprobada por: ' +
