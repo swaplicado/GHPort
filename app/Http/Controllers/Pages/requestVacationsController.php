@@ -182,6 +182,12 @@ class requestVacationsController extends Controller
                                     'u_rev.full_name_ui as revisor',
                                 )
                                 ->first();
+
+            $myEmp = $data[1]->where('id', $oApplication->user_id);
+
+            if(count($myEmp) == 0){
+                $oApplication = null;
+            }
         }else{
             $oApplication = null;
         }
