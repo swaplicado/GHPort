@@ -131,6 +131,30 @@ class requestVacationsController extends Controller
         return [$year, $merged, $holidays, $arrOrgJobs];
     }
 
+    public function getApplication(Request $request){
+        try {
+            $oApplication = \DB::table('applications as a')
+                                ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
+                                ->leftJoin('sys_applications_sts as ap_st', 'ap_st.id_applications_st', '=', 'a.request_status_id')
+                                ->leftJoin('users as u_rev', 'u_rev.id', '=', 'a.user_apr_rej_id')
+                                ->where('a.id_application', $request->application_id)
+                                ->where('a.is_deleted', 0)
+                                ->select(
+                                    'a.*',
+                                    'u.birthday_n',
+                                    'u.benefits_date',
+                                    'u.payment_frec_id',
+                                    'ap_st.applications_st_name',
+                                    'u_rev.full_name_ui as revisor',
+                                )
+                                ->first();
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Ocurrio un error al obtener la solicilitud', 'icon' => 'error']);
+        }
+        
+        return json_encode(['success' => true, 'oApplication' => $oApplication]);
+    }
+
     public function index($idApplication = null){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);

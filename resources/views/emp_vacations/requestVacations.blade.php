@@ -35,6 +35,7 @@
             this.getRequestlDaysRoute = <?php echo json_encode(route('requestVacations_getlDays')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             this.oApplication = <?php echo json_encode($oApplication); ?>;
+            this.getApplicationRoute = <?php echo json_encode(route('requestVacations_getApplication')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesRequest = {
                 'id': 0,
@@ -135,7 +136,9 @@
                     </div>
                 </div>
                 <br>
-                @include('layouts.table_buttons', ['accept' => true, 'reject' => true])
+                <button id="btn_getApp" v-on:click="getApplication()" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 5px" title="Ver solicitud">
+                    <span class="bx bx-show-alt"></span>
+                </button>
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
                     &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
@@ -480,8 +483,8 @@
     </script>
     @include('layouts.table_jsControll', [
         'table_id' => 'table_requestVac',
-        'colTargets' => [1, 2, 3, 4, 6, 7, 8, 9, 21],
-        'colTargetsSercheable' => [0, 5],
+        'colTargets' => [0, 1, 2, 3, 4, 6, 7, 8, 9, 21],
+        'colTargetsSercheable' => [5],
         'select' => true,
         'noSort' => true,
         'accept' => true,

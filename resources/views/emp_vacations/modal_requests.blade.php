@@ -128,7 +128,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <template v-if="isFromMail">
                     <button v-if="oApplication.request_status_id == 2" type="button" class="btn btn-success" v-on:click="acceptRequest()"><span class="bx bxs-like"></span>&nbsp Aprobar</a>
                     <button v-if="oApplication.request_status_id == 2" type="button" class="btn btn-danger" v-on:click="rejectRequest"><span class="bx bxs-dislike"></span>&nbsp Rechazar</a>
@@ -137,7 +136,7 @@
                     <button v-if="isApprove" type="button" class="btn btn-success" v-on:click="acceptRequest()">Aprobar</a>
                     <button v-else type="button" class="btn btn-danger" v-on:click="rejectRequest">Rechazar</a>
                 </template>
-
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
