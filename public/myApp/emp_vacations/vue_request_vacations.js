@@ -155,6 +155,32 @@ var appRequestVacation = new Vue({
             Swal.close();
         },
 
+        getApplication(){
+            if (table['table_requestVac'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            }
+
+            let data = table['table_requestVac'].row('.selected').data();
+
+            axios.post(this.oData.getApplicationRoute, {
+                'application_id': data[this.indexes.id],
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oApplication = data.oApplication;
+                    this.showModal();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
         async showModal(){
             SGui.showWaitingBlock(15000);
             $('#two-inputs').data('dateRangePicker').clear();
@@ -178,7 +204,7 @@ var appRequestVacation = new Vue({
             this.returnDate = this.oDateUtils.formatDate(this.oApplication.return_date, 'ddd DD-MMM-YYYY');
             this.takedDays = this.oApplication.total_days;
             this.noBussinesDayIndex = 0;
-            this.totCalendarDays = (moment(this.oApplication.endDate).diff(moment(this.oApplication.startDate), 'days') + 1);
+            this.totCalendarDays = (moment(this.oApplication.end_date).diff(moment(this.oApplication.start_date), 'days') + 1);
             this.isFromMail = true;
             $('#modal_solicitud').modal('show');
             Swal.close();
