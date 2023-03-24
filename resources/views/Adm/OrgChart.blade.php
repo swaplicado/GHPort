@@ -38,14 +38,15 @@
 @section('scripts')
     <script>
         function GlobalData(){
-            this.lAreas = <?php echo json_encode($lAreas); ?>;
+            this.lAreas = <?php echo json_encode($lAreas) ?>;
+            this.getUsersRoute = <?php echo json_encode(route('orgChart_getUsers')) ?>;
         }
         var oServerData = new GlobalData();
     </script>
     <script src="{{asset('myApp/Adm/vue_OrgChart.js')}}"></script>
     <script>
-        function showModal(id, name, area, jobs){
-            app.showModal(id, name, area, jobs);
+        function showModal(id, name, area, jobs, countUsers){
+            app.showModal(id, name, area, jobs, countUsers);
         }
     </script>
     <script>
@@ -69,7 +70,7 @@
             return `
             <div style="padding-top:30px;background-color:none;margin-left:1px;height:${
               d.height
-            }px;border-radius:2px;overflow:visible" onclick="showModal('${d.data.id}', '${d.data.name}', '${d.data.positionName}', '${d.data.jobs}' )">
+            }px;border-radius:2px;overflow:visible" onclick="showModal('${d.data.id}', '${d.data.name}', '${d.data.positionName}', '${d.data.jobs}', '${d.data.countUsers}' )">
               <div style="height:${
                 d.height - 32
               }px;padding-top:0px;background-color:white;border:1px solid lightgray;">

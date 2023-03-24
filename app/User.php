@@ -35,6 +35,7 @@ class User extends Authenticatable
         'birthday_n',
         'current_hire_log_id',
         'is_unionized',
+        'org_chart_job_id',
         'is_active',
         'changed_password',
         'external_id_n',

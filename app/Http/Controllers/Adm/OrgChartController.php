@@ -42,6 +42,7 @@ class OrgChartController extends Controller
                     'id' => $ar->id_org_chart_job,
                     'parentId' => $ar->top_org_chart_job_id_n,
                     'jobs' => count($ar->users).'/'.$ar->positions,
+                    'countUsers' => count($ar->users),
                 ];
             }else{
                 $lAreas[] = [
@@ -51,6 +52,7 @@ class OrgChartController extends Controller
                     'id' => $ar->id_org_chart_job,
                     'parentId' => $ar->top_org_chart_job_id_n,
                     'jobs' => count($ar->users).'/'.$ar->positions,
+                    'countUsers' => 2,
                 ];
             }
         }
@@ -125,5 +127,20 @@ class OrgChartController extends Controller
         }
 
         return json_encode(['success' => true, 'message' => 'Registro actualizadó con exitó', 'lAreas' => $areas]);
+    }
+
+    public function getUsers(Request $request){
+        try {
+            $lUser = User::leftJoin('users_vs_photos as up', 'up.user_id', '=', 'users.id')
+                        ->where('org_chart_job_id', $request->orgChart_id)
+                        ->where('is_active', 1)
+                        ->where('is_delete', 0)
+                        ->select('users.*', 'up.photo_base64_n')
+                        ->get();
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener los colaboradores', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lUser' => $lUser]);
     }
 }
