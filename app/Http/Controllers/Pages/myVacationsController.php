@@ -103,7 +103,7 @@ class myVacationsController extends Controller
                 }
             }
 
-            if(($user->tot_vacation_remaining + $user->prox_vac_days) < $takedDays){
+            if($user->tot_vacation_remaining < $takedDays){
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
             }
 
