@@ -8,12 +8,14 @@ var appSpecialSeason = new Vue({
         lCompany: oServerData.lCompany,
         // title: 'Departamento',
         // type: 'depto',
-        title: 'Puesto',
-        type: 'area',
+        // title: 'Puesto',
+        // type: 'area',
+        title: 'Empresa',
+        type: 'comp',
         // colorTitle: 'colorDepartamentoTitle',
         // colorBody: 'colorDepartamento',
-        colorTitle: 'colorAreaTitle',
-        colorBody: 'colorArea',
+        colorTitle: 'colorEmpresaTitle',
+        colorBody: 'colorEmpresa',
         display_seasons: false,
         table_class: {},
         lOptions: [],
@@ -42,25 +44,31 @@ var appSpecialSeason = new Vue({
         // for(var i = 0; i<self.lDeptos.length; i++){
         //     datalDeptos.push({id: self.lDeptos[i].id_department, text: self.lDeptos[i].department_name_ui});
         // }
-        var datalAreas = [];
-        for(var i = 0; i<this.lAreas.length; i++){
-            datalAreas.push({id: this.lAreas[i].id_org_chart_job, text: this.lAreas[i].job_name});
+        // var datalAreas = [];
+        // for(var i = 0; i<this.lAreas.length; i++){
+        //     datalAreas.push({id: this.lAreas[i].id_org_chart_job, text: this.lAreas[i].job_name});
+        // }
+        var datalCompany = [];
+        for(var i = 0; i<this.lCompany.length; i++){
+            datalCompany.push({id: this.lCompany[i].id_company, text: this.lCompany[i].company_name_ui});
         }
 
         $('#selOptions')
             .select2({
                 placeholder: 'selecciona',
                 // data: datalDeptos,
-                data: datalAreas,
+                // data: datalAreas,
+                data: datalCompany,
             });
 
         // this.btn_SeasonActive('btn_depto', '#38c172');
-        this.btn_SeasonActive('btn_area', '#6c757d');
+        // this.btn_SeasonActive('btn_area', '#6c757d');
+        this.btn_SeasonActive('btn_comp', '#ffed4a');
     },
     methods: {
         initView(){
             // this.SetDepto();
-            this.SetArea();
+            this.SetEmpresa();
         },
 
         btn_SeasonActive(id, color) {

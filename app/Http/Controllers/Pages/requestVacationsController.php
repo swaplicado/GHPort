@@ -96,26 +96,40 @@ class requestVacationsController extends Controller
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
 
         foreach($lEmployees as $emp){
-            $emp->applications = EmployeeVacationUtils::getApplications(
+            $applications_enviado = EmployeeVacationUtils::getApplications(
+                                                            $emp->id,
+                                                            null,
+                                                            [ SysConst::APPLICATION_ENVIADO ]
+                                                        );
+
+            $applications_revision = EmployeeVacationUtils::getApplications(
                                                             $emp->id,
                                                             $year,
-                                                            [   SysConst::APPLICATION_ENVIADO,
-                                                                SysConst::APPLICATION_APROBADO,
-                                                                SysConst::APPLICATION_RECHAZADO
+                                                            [ SysConst::APPLICATION_APROBADO,
+                                                              SysConst::APPLICATION_RECHAZADO
                                                             ]
                                                         );
+
+            $emp->applications = $applications_enviado->merge($applications_revision);
+                    
             // $emp->applications = EmployeeVacationUtils::getTakedDays($emp);
         }
 
-        $lEmpSpecial = EmployeeVacationUtils::getApplicationsTypeSpecial(
-                            $org_chart_job_id,
-                            [   
-                                SysConst::APPLICATION_ENVIADO,
-                                SysConst::APPLICATION_APROBADO,
-                                SysConst::APPLICATION_RECHAZADO
-                            ],
-                            $year
-                        );
+        $lEmpSpecial_enviado = EmployeeVacationUtils::getApplicationsTypeSpecial(
+                                    $org_chart_job_id,
+                                    [ SysConst::APPLICATION_ENVIADO ],
+                                    null
+                                );
+
+        $lEmpSpecial_revision = EmployeeVacationUtils::getApplicationsTypeSpecial(
+                                    $org_chart_job_id,
+                                    [   SysConst::APPLICATION_APROBADO,
+                                        SysConst::APPLICATION_RECHAZADO
+                                    ],
+                                    $year
+                                );
+
+        $lEmpSpecial = $lEmpSpecial_enviado->merge($lEmpSpecial_revision);
 
         // $lFatherEmpSpecial = EmployeeVacationUtils::getFatherApplicationsTypeSpecial($org_chart_job_id, [SysConst::APPLICATION_ENVIADO], $year);
         $lFatherEmpSpecial = null;
@@ -192,6 +206,12 @@ class requestVacationsController extends Controller
                                     'u_rev.full_name_ui as revisor',
                                 )
                                 ->first();
+
+            $myEmp = $data[1]->where('id', $oApplication->user_id);
+
+            if(count($myEmp) == 0){
+                $oApplication = null;
+            }
         }else{
             $oApplication = null;
         }

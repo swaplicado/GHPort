@@ -33,6 +33,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     // Route::get('orgChart/altIndex', 'Adm\OrgChartController@altIndex')->name('orgChart_altIndex');
     Route::get('assignArea', 'Adm\OrgChartController@assignArea')->name('assignArea');
     Route::post('updateArea', 'Adm\OrgChartController@updateAssignArea')->name('update_assignArea');
+    Route::post('orgChart/getUsers', 'Adm\OrgChartController@getUsers')->name('orgChart_getUsers');
+
     Route::get('profile', 'Pages\profileController@index')->name('profile');
     Route::post('profile/update', 'Pages\profileController@updatePass')->name('profile_update');
 
@@ -142,4 +144,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('report/myEmpVacations_getLevelDown', 'Pages\ReportMyEmpVacations@getLevelDown')->name('report_getLevelDown');
     Route::post('report/myEmpVacations_getLevelUp', 'Pages\ReportMyEmpVacations@getLevelUp')->name('report_getLevelUp');
     Route::post('report/myEmpVacations_myEmpVacationsFilterYear', 'Pages\ReportMyEmpVacations@myEmpVacationsFilterYear')->name('report_myEmpVacationsFilterYear');
+
+    Route::get('empVSArea', 'Adm\empVSOrgChartController@index')->name('empVSArea_index');
+    Route::post('empVSArea/update', 'Adm\empVSOrgChartController@update')->name('empVSArea_update');
 });

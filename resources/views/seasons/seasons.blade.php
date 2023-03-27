@@ -66,9 +66,9 @@
         </div>
         <div class="card-body">
             <!-- <a class="btn btn-outline-success" v-on:click="SetDepto();" id="btn_depto">Departamento</a> -->
+            <a class="btn btn-outline-warning"v-on:click="SetEmpresa();" id="btn_comp">Empresa</a>
             <a class="btn btn-outline-secondary" v-on:click="SetArea();" id="btn_area">Puesto</a>
             <a class="btn btn-outline-info" v-on:click="SetEmpleado();" id="btn_emp">Empleado</a>
-            <a class="btn btn-outline-warning"v-on:click="SetEmpresa();" id="btn_comp">Empresa</a>
             <div class="card shadow mb-4">
                 <div v-bind:class="['card-header', colorTitle]">
                     <h5>
