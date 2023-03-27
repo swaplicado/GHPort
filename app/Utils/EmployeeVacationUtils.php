@@ -58,7 +58,7 @@ class EmployeeVacationUtils {
     /**
      * Obtiene las vacaciones de un empleado, sin descontar las solicitudes ni las programadas
      */
-    public static function getEmployeeVacations($id, $years, $getYears = null, $startYear = null){
+    public static function getEmployeeVacations($id, $years, $getYears = null, $startYear = null, $disableLastYear = false){
         $config = \App\Utils\Configuration::getConfigurations();
         $lastAniversary = \DB::table('vacation_users')
                             ->where('user_id', $id)
@@ -93,6 +93,12 @@ class EmployeeVacationUtils {
                         )
                         ->orderBy('year', $config->orderVac)
                         ->get();
+
+        if($disableLastYear){
+            if(count($oVacation) > 0){
+                $oVacation[0]->vacation_days = 0;
+            }
+        }
 
         return $oVacation;
     }
@@ -302,7 +308,11 @@ class EmployeeVacationUtils {
                     ->first();
 
         if(is_null($customYear)){
-            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $config->showVacation->years);
+            $checkYear = EmployeeVacationUtils::getLastYearNumberIncident($id);
+            $customYear = $config->showVacation->years;
+            $disableLastYear = $customYear < $checkYear;
+            $customYear = $customYear < $checkYear ? $checkYear : $customYear;
+            $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear, null, null, $disableLastYear);
         }else{
             $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear);
         }
@@ -1000,5 +1010,41 @@ class EmployeeVacationUtils {
         }
 
         return $lTemp_special;
+    }
+
+    public static function getLastYearNumberIncident($user_id){
+        $lastAlloc = \DB::table('vacation_allocations')
+                        ->where('user_id', $user_id)
+                        ->where('is_deleted', 0)
+                        ->max('id_anniversary');
+
+        $lastProg = \DB::table('programed_aux')
+                        ->where('employee_id', $user_id)
+                        ->where('is_deleted', 0)
+                        ->max('year');
+
+        $lastAppBreak = \DB::table('applications as ap')
+                            ->leftJoin('applications_breakdowns as apb', 'apb.application_id', '=', 'ap.id_application')
+                            ->where('ap.user_id', $user_id)
+                            ->where('ap.request_status_id', SysConst::APPLICATION_ENVIADO)
+                            ->where('ap.is_deleted', 0)
+                            ->max('apb.application_year');
+
+        $lastIncidentYear = $lastAlloc;
+        if ($lastProg > $lastIncidentYear) {
+            $lastIncidentYear = $lastProg;
+        }
+        if ($lastAppBreak > $lastIncidentYear) {
+            $lastIncidentYear = $lastAppBreak;
+        }
+
+        $lastAniversary = \DB::table('vacation_users')
+                        ->where('user_id', $user_id)
+                        ->where('date_end', '<=', Carbon::now()->toDateString())
+                        ->max('year');
+
+        $customYear = $lastAniversary < $lastIncidentYear ? $lastIncidentYear - $lastAniversary : null;
+
+        return $customYear;
     }
 }

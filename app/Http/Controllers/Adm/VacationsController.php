@@ -68,7 +68,6 @@ class VacationsController extends Controller
                     EmployeeVacationUtils::syncVacConsumed($user->id);
                 }
             } catch (\Throwable $th) {
-                dd($th);
             }
         }
     }
