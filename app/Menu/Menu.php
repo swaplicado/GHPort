@@ -61,8 +61,8 @@ class Menu {
             case '3':
                 $lMenus = [
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
-                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs areas'],
+                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Áreas funcionales'],
+                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs áreas'],
                     (object) ['type' => $list, 'list' => [
                                                     ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
                                                     ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab.']
@@ -86,9 +86,9 @@ class Menu {
             case '4':
                 $lMenus = [
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Areas funcionales'],
-                    (object) ['type' => $element, 'route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-sm', 'name' => 'Colaboradores vs Areas'],
-                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs areas'],
+                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Áreas funcionales'],
+                    (object) ['type' => $element, 'route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-sm', 'name' => 'Colaboradores vs áreas'],
+                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs áreas'],
                     (object) ['type' => $list, 'list' => [
                                                     ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
                                                     ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab.']

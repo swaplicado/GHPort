@@ -22,10 +22,8 @@
         @include('Adm.modal_OrgChart')
         <div class="card-header">
             <h3>
-                <b>ORGANIGRAMA AETH</b>
-                <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:organigrama" target="_blank">
-                    <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                </a>
+                <b>Organigrama AETH</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -40,6 +38,8 @@
         function GlobalData(){
             this.lAreas = <?php echo json_encode($lAreas) ?>;
             this.getUsersRoute = <?php echo json_encode(route('orgChart_getUsers')) ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:organigrama" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -104,4 +104,5 @@
 
           chart.expandAll();
     </script>
+    @include('layouts.manual_jsControll')
 @endsection

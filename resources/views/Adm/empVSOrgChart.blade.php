@@ -27,6 +27,8 @@
                 'job_name_ui': 4,
                 'job_name_ui_top': 5,
             };
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:colabvsarea" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -47,7 +49,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <label for="selArea">Area:</label>
+                    <label for="selArea">Área:</label>
                     <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
                 </div>
             </div>
@@ -61,16 +63,14 @@
 
     <div class="card-header">
         <h3>
-            <b>Colaboradores vs areas</b>
-            <a href="#" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            <b>Colaboradores vs áreas</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
         <div class="inline">
         @include('layouts.table_buttons', ['editar' => true])
-            <label for="selAreaFilter">Ver por area:</label>
+            <label for="selAreaFilter">Ver por área:</label>
             <select class="select2-class-filter" id="selAreaFilter" name="selAreaFilter" style="width: 40%;"></select>
         </div>
         <br>
@@ -82,8 +82,8 @@
                     <th>orgChart_id</th>
                     <th>orgChartTop_id</th>
                     <th>Colaborador</th>
-                    <th>Area</th>
-                    <th>Area padre</th>
+                    <th>Área</th>
+                    <th>Área padre</th>
                 </thead>
                 <tbody>
                     <tr v-for="user in lUsers">
@@ -110,4 +110,5 @@
                                             'edit_modal' => true
                                         ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_empVsOrgChartJob.js') }}"></script>
+    @include('layouts.manual_jsControll')
 @endsection

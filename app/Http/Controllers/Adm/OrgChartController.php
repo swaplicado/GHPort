@@ -11,6 +11,7 @@ use App\User;
 use App\Models\Adm\OrgChartJob;
 use App\Constants\SysConst;
 use \App\Utils\delegationUtils;
+use \App\Utils\orgChartUtils;
 class OrgChartController extends Controller
 {
     public function index(){
@@ -72,6 +73,11 @@ class OrgChartController extends Controller
         foreach($areas as $area){
             $ar = !is_null($area->top_org_chart_job_id_n) ? $areas->where('id_org_chart_job', $area->top_org_chart_job_id_n)->first() : null;
             $area->top_org_chart_job = !is_null($ar) ? $ar->job_name : null;
+            $childs = orgChartUtils::getDirectChildsOrgChartJob($area->id_org_chart_job);
+            $childs = count($childs);
+
+            $area->childs = $childs;
+            // se puede analizar retirar esta parte del codigo.
             if($area->positions == 1){
                 $head_user = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->first();
                 $area->head_user_id = !is_null($head_user) ? $head_user->id : null;
@@ -80,6 +86,7 @@ class OrgChartController extends Controller
                 $area->head_user_id = null;
                 $area->head_user = null;
             }
+            
         }
 
         $users = \DB::table('users')
@@ -87,7 +94,6 @@ class OrgChartController extends Controller
                     ->where('is_delete', 0)
                     ->select('id', 'full_name as text')
                     ->get();
-
         return view('Adm.assignArea')->with('lAreas', $areas)
                                     ->with('lUsers', $users);
     }
@@ -95,11 +101,20 @@ class OrgChartController extends Controller
     public function updateAssignArea(Request $request){
         // \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
         delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
-        /** FALTA ACTUALIZAR HEAD USER */
+        
         try {
             \DB::beginTransaction();
                 $area = OrgChartJob::findOrFail($request->org_chart_job);
+                $area->job_code = $request->area;
+                $area->job_name = $request->area;
+                $area->job_name_ui = $request->area; 
+                $area->positions = $request->job_num;
+                $area->is_leader_area = $request->leader;
+                $area->is_boss = $request->leader;
+                $area->is_leader_config = $request->config_leader;
                 $area->top_org_chart_job_id_n = $request->top_org_chart_job_id;
+                $area->is_deleted = 0;
+                $area->updated_by = \Auth::user()->id;
                 $area->update();
             \DB::commit();
         } catch (\Throwable $th) {
@@ -142,5 +157,97 @@ class OrgChartController extends Controller
         }
 
         return json_encode(['success' => true, 'lUser' => $lUser]);
+    }
+    public function createAssignArea(Request $request){
+        
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
+        
+        try {
+            \DB::beginTransaction();
+                $area = new OrgChartJob();
+                $area->job_code = $request->area;
+                $area->job_name = $request->area;
+                $area->job_name_ui = $request->area; 
+                $area->positions = $request->job_num;
+                $area->is_leader_area = $request->leader;
+                $area->is_boss = $request->leader;
+                $area->is_leader_config = $request->config_leader;
+                $area->top_org_chart_job_id_n = $request->top_org_chart_job_id;
+                $area->is_deleted = 0;
+                $area->created_by = \Auth::user()->id;
+                $area->updated_by = \Auth::user()->id;
+                $area->save();
+            \DB::commit();
+        } catch (\Throwable $th) {
+            //Log::emergency($th->getMessage());
+            \DB::rollback();
+            return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
+        }
+
+        $areas = \DB::table('org_chart_jobs as ocj')
+                    ->where('ocj.is_deleted', 0)
+                    ->where('ocj.positions', '>', 0)
+                    ->where('ocj.id_org_chart_job', '!=', 1)
+                    ->get();
+
+        foreach($areas as $area){
+            $ar = !is_null($area->top_org_chart_job_id_n) ? $areas->where('id_org_chart_job', $area->top_org_chart_job_id_n)->first() : null;
+            $area->top_org_chart_job = !is_null($ar) ? $ar->job_name : null;
+            $childs = orgChartUtils::getDirectChildsOrgChartJob($area->id_org_chart_job);
+            $childs = count($childs);
+
+            $area->childs = $childs;
+            if($area->positions == 1){
+                $head_user = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->first();
+                $area->head_user_id = !is_null($head_user) ? $head_user->id : null;
+                $area->head_user = !is_null($head_user) ? $head_user->full_name : null;
+            }else{
+                $area->head_user_id = null;
+                $area->head_user = null;
+            }
+        }
+
+        return json_encode(['success' => true, 'message' => 'Registro creado con exitó', 'lAreas' => $areas]);
+    }
+
+    public function deleteAssignArea(Request $request){
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
+        try {
+            \DB::beginTransaction();
+                $area = OrgChartJob::findOrFail($request->org_chart_job);
+                $area->is_deleted = 1;
+                $area->updated_by = \Auth::user()->id;
+                $area->update();;
+                \DB::commit();
+        } catch (\Throwable $th) {
+            //Log::emergency($th->getMessage());
+            \DB::rollback();
+            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro']);
+        }
+
+        $areas = \DB::table('org_chart_jobs as ocj')
+                    ->where('ocj.is_deleted', 0)
+                    ->where('ocj.positions', '>', 0)
+                    ->where('ocj.id_org_chart_job', '!=', 1)
+                    ->get();
+
+        foreach($areas as $area){
+            $ar = !is_null($area->top_org_chart_job_id_n) ? $areas->where('id_org_chart_job', $area->top_org_chart_job_id_n)->first() : null;
+            $area->top_org_chart_job = !is_null($ar) ? $ar->job_name : null;
+            $childs = orgChartUtils::getDirectChildsOrgChartJob($area->id_org_chart_job);
+            $childs = count($childs);
+
+            $area->childs = $childs;
+            if($area->positions == 1){
+                $head_user = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->first();
+                $area->head_user_id = !is_null($head_user) ? $head_user->id : null;
+                $area->head_user = !is_null($head_user) ? $head_user->full_name : null;
+            }else{
+                $area->head_user_id = null;
+                $area->head_user = null;
+            }
+        }
+
+        return json_encode(['success' => true, 'message' => 'Registro eliminado con exitó', 'lAreas' => $areas]);
     }
 }

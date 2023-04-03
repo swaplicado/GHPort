@@ -21,6 +21,8 @@
             'Type_mail':4,
             'to_user':5
         };
+        this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:emaillogs" ); ?>;
     }
     var oServerData = new GlobalData();
 </script>
@@ -30,10 +32,8 @@
 <div class="card shadow mb-4" id="mailLogs">
     <div class="card-header">
         <h3>
-            <b>REGISTROS E-Mails</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:emaillogs" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            <b>Registros E-Mails</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -122,4 +122,5 @@ $(document).ready(function (){
 });
 </script>
 <script type="text/javascript" src="{{ asset('myApp/mails/vue_mailLog.js') }}"></script>
+@include('layouts.manual_jsControll')
 @endsection

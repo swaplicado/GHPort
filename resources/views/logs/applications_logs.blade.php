@@ -14,6 +14,8 @@
                 'effective_days': 5,
                 'return_date': 6,
             };
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_solicitudes_vacaciones" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -24,10 +26,8 @@
     @include('logs.modal_applications_logs')
     <div class="card-header">
         <h3>
-            <b>BITACORA SOLICITUDES VACACIONES</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_solicitudes_vacaciones" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            <b>Bitácora solicitudes vacaciones</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -70,4 +70,5 @@
                                         'show' => true,
                                     ])
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_application_log.js') }}"></script>
+    @include('layouts.manual_jsControll')
 @endsection

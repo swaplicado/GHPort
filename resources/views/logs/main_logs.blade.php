@@ -4,6 +4,8 @@
     <script>
         function GlobalData(){
             this.lLogs = <?php echo json_encode($lLogs); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -13,10 +15,8 @@
 <div class="card shadow mb-4" id="logs">
     <div class="card-header">
         <h3>
-            <b>BITÁCORAS</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            <b>Bitácoras</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -41,4 +41,5 @@
 
 @section('scripts')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_logs.js') }}"></script>
+    @include('layouts.manual_jsControll')
 @endsection
