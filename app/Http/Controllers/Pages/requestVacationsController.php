@@ -641,9 +641,9 @@ class requestVacationsController extends Controller
             'total_days' => $oApplication->total_days,
             'rows' => $rows,
         ];
-
+        $config = \App\Utils\Configuration::getConfigurations();
         $client = new Client([
-            'base_uri' => '192.168.1.233:9001',
+            'base_uri' => $config->urlSync,
             'timeout' => 30.0,
         ]);
 

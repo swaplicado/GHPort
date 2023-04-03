@@ -74,7 +74,7 @@ class SGui {
         })
     }
 
-    static showConfirm(title, sMessage, icon){
+    static showConfirm(title, sMessage, icon) {
         return new Promise(function(resolve) {
             swal.fire({
                 title: title,

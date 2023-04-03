@@ -7,6 +7,8 @@
             this.getlEmployees_route = <?php echo json_encode(route('getlEmployees', ":OrgjobId")); ?>;
             this.getVacationHistoryRoute = <?php echo json_encode(route('allEmplVacations_getVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('allEmplVacations_hiddeHistory')); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vaccolaboradores" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -17,9 +19,7 @@
     <div class="card-header">
         <h3>
             <b>VACACIONES TODOS MIS COLABORADORES</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vaccolaboradores" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -41,7 +41,7 @@
                                 </td>
                                 <td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); border-right: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días</td>
                                 <td v-if="emp.is_head_user" style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
-                                    Encargado de area
+                                    Encargado de área
                                     <span class="bx bxs-group"></span>
                                 </td>
                                 <td v-else style="width: 20%;"></td>
@@ -194,6 +194,7 @@
                                             'order' => [[1, 'desc']],
                                             ])
     @endforeach
+    @include('layouts.manual_jsControll')
     <script id="jsDatatable">
         function load(id){
             table[id] = $('#'+id).DataTable({

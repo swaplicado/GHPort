@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2023-01-24 21:04:22",
+    "lastSyncDateTime": "2023-04-03 12:57:29",
     "expiration_vacations": {
         "years": 100,
         "months": 0,
@@ -24,5 +24,6 @@
     "special_vacations_access": [
         114,
         94
-    ]
+    ],
+    "urlSync": "192.168.1.233:9001"
 }

@@ -6,6 +6,8 @@
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
             this.getVacationHistoryRoute = <?php echo json_encode(route('myEmplVacations_getVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myEmplVacations_hiddeHistory')); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vacmiscolaboradores" ); ?>;
         }
 
         var oServerData = new GlobalData();
@@ -17,9 +19,7 @@
     <div class="card-header">
         <h3>
             <b>VACACIONES MIS COLABORADORES DIRECTOS</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vacmiscolaboradores" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -175,7 +175,7 @@
                                             'order' => [[1, $config->orderVac]],
                                             ])
     @endforeach
-
+    @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_emp_vacations.js') }}"></script>
 @endsection

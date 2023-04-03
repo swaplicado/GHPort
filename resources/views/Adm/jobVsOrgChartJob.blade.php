@@ -27,6 +27,8 @@
                 'orgChart': 4,
                 'positions': 5,
             };
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -48,7 +50,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="selArea">Area asignada:</label>
+                        <label for="selArea">Área asignada:</label>
                         <select class="select2-class" class="form-control" id="selArea" name="selArea" style="width: 90%;"></select>
                     </div>
                 </div>
@@ -71,9 +73,7 @@
     <div class="card-header">
         <h3>
             <b>Puestos vs Areas</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -116,5 +116,6 @@
                                             'select' => true,
                                             'edit_modal' => true
                                         ] )
+    @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_jobVsOrgChartJob.js') }}"></script>
 @endsection

@@ -39,8 +39,9 @@ class SyncController extends Controller
 
     public static function synchronizeWithERP($lastSyncDate = "")
     {
+        $config = \App\Utils\Configuration::getConfigurations();
         $client = new Client([
-            'base_uri' => '192.168.1.233:9001',
+            'base_uri' => $config->urlSync,
             'timeout' => 30.0,
         ]);
 
@@ -77,6 +78,7 @@ class SyncController extends Controller
     }
 
     public static function SyncPhotos(){
+      $config = \App\Utils\Configuration::getConfigurations();
       $lUsersPhotos = UsersPhotos::where('photo_base64_n', null)
                                   ->where('is_deleted', 0)
                                   ->pluck('user_id');
@@ -91,7 +93,7 @@ class SyncController extends Controller
                       $lUsers = json_encode($lUsers);
           try {
               $client = new Client([
-                  'base_uri' => '192.168.1.233:9001',
+                  'base_uri' => $config->urlSync,
                   'timeout' => 30.0,
               ]);
       

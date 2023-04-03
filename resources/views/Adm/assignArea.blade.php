@@ -11,6 +11,10 @@
             $('.select2-class').select2({
                 dropdownParent: $('#editModal')
             });
+
+            $('.select2-class-create').select2({
+                dropdownParent: $('#createModal')
+            });
         })
     </script>
     <script>
@@ -18,6 +22,10 @@
             this.lAreas = <?php echo json_encode($lAreas); ?>;
             this.lUsers = <?php echo json_encode($lUsers); ?>;
             this.updateRoute = <?php echo json_encode( route('update_assignArea') ); ?>;
+            this.createRoute = <?php echo json_encode( route('create_assignArea') ); ?>;
+            this.deleteRoute = <?php echo json_encode( route('delete_assignArea') ); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -26,21 +34,68 @@
 @section('content') 
 <div class="card shadow mb-4" id="assignArea">
 
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Area: @{{area}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Crear áreas funcionales</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                {{--<label for="selUser" hidden>Usuario encargado:</label>
-                <select class="select2-class" id="selUser" name="selUser" style="width: 90%;"></select>--}}
+                <label for="selArea">Nombre área:</label>
+                <input type="text" id="nomAreaC" name="nomAreaC" style="width: 90%;" v-model="area">
+                <label for="selArea">Puestos área:</label>
+                <input type="number" id="numAreaC" min="1" name="numAreaC" style="width: 90%;" v-model="job_num">
+                <label for="selArea">Área superior:</label>
+                <select class="select2-class-create" id="selAreaC" name="selAreaC" style="width: 90%;"></select>
+                <br><br>
+
+                <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
+                <label for="selArea">Es líder de área</label>
+                
+                <br>
+                
+                <input type="checkbox" id="config_leaderC" name="config_leaderC" value="config_leader" v-model="config_leader">
+                <label for="selArea">Realizará configuraciones</label>
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" v-on:click="save();">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Área: @{{area}}</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label for="selArea">Nombre área:</label>
+                <input type="text" id="nomArea" name="nomArea" style="width: 90%;" v-model="area">
+                <label for="selArea">Puestos área:</label>
+                <input type="number" id="numArea" min="1" name="numArea" style="width: 90%;" v-model="job_num">
                 <label for="selArea">Area superior:</label>
                 <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
+                <br><br>
+
+                <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
+                <label for="selArea">Es líder de área</label>
+                
+                <br>
+                
+                <input type="checkbox" id="config_leaderC" name="config_leaderC" value="config_leader" v-model="config_leader">
+                <label for="selArea">Realizará configuraciones</label>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
@@ -51,14 +106,12 @@
 </div>
     <div class="card-header">
         <h3>
-            <b>AREAS FUNCIONALES</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            <b>Áreas funcionales</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
-        @include('layouts.table_buttons', ['editar' => true])
+        @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true ])
         <br>
         <br>
         <div class="table-responsive">
@@ -68,9 +121,16 @@
                         <th>Area_id</th>
                         <th>father_area_id</th>
                         <th>user_id</th>
-                        <th>Area</th>
+                        <th>Área</th>
                         <th>Responsable area</th>
-                        <th>Area superior</th>
+                        <th>Área superior</th>
+                        <th>Posiciones</th>
+                        <th>is_leader_area</th>
+                        <th>is_leader_config</th>
+                        <th>Nodos hijos</th>
+                        <th>es líder de area</th>
+                        <th>hace configuraciones</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -81,6 +141,14 @@
                         <td>@{{area.job_name}}</td>
                         <td>@{{area.head_user}}</td>
                         <td>@{{area.top_org_chart_job}}</td>
+                        <td>@{{area.positions}}</td>
+                        <td>@{{area.is_boss}}</td>
+                        <td>@{{area.is_leader_config}}</td>
+                        <td>@{{area.childs}}</td>
+                        <td v-if="area.is_boss == 0">No</td>
+                        <td v-else="area.is_boss == 1">Sí</td>
+                        <td v-if="area.is_leader_config == 0">No</td>
+                        <td v-else="area.is_leader_config == 1">Sí</td>
                     </tr>
                 </tbody>
             </table>
@@ -92,10 +160,13 @@
 @section('scripts')
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_areas',
-                                            'colTargets' => [0,1,2],
+                                            'colTargets' => [0,1,2,4,7,8],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
-                                            'edit_modal' => true
+                                            'crear_modal' => true,
+                                            'edit_modal' => true,
+                                            'delete' => true,
                                         ] )
+    @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vueAssignArea.js') }}"></script>
 @endsection

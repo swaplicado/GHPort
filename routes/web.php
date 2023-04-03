@@ -32,9 +32,11 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('orgChart', 'Adm\OrgChartController@index')->name('orgChart');
     // Route::get('orgChart/altIndex', 'Adm\OrgChartController@altIndex')->name('orgChart_altIndex');
     Route::get('assignArea', 'Adm\OrgChartController@assignArea')->name('assignArea');
+    Route::post('createArea', 'Adm\OrgChartController@createAssignArea')->name('create_assignArea');
     Route::post('updateArea', 'Adm\OrgChartController@updateAssignArea')->name('update_assignArea');
     Route::post('orgChart/getUsers', 'Adm\OrgChartController@getUsers')->name('orgChart_getUsers');
 
+    Route::post('deleteArea', 'Adm\OrgChartController@deleteAssignArea')->name('delete_assignArea');
     Route::get('profile', 'Pages\profileController@index')->name('profile');
     Route::post('profile/update', 'Pages\profileController@updatePass')->name('profile_update');
 

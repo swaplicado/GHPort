@@ -41,6 +41,9 @@
             this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
 
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
@@ -76,9 +79,7 @@
             <div class="card-header">
                 <h3>
                     <b>MIS VACACIONES</b>
-                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" target="_blank">
-                        <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                    </a>
+                    @include('layouts.manual_button')
                 </h3>
             </div>
             <div>
@@ -169,9 +170,7 @@
             <div class="card-header">
                 <h3>
                     <b>MIS SOLICITUDES VACACIONES</b>
-                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" target="_blank">
-                        <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                    </a>
+                    @include('layouts.manual_button')
                 </h3>
             </div>
             <div>
@@ -325,6 +324,7 @@
                                         'delete' => true,
                                         'send' => true
                                     ] )
+@include('layouts.manual_jsControll')
 <script>
     $(document).ready(function (){
         $('#rqStatus').change( function() {

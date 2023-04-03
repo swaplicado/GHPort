@@ -22,6 +22,10 @@
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.getUserDataRoute = <?php echo json_encode(route('getUserData')); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:solicitudesvacaciones" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:gestionvacaciones" ); ?>;
+            this.manualRoute[2] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
 
         //data para la vista requestVacations
             this.myManagers = <?php echo json_encode($myManagers); ?>;
@@ -114,10 +118,7 @@
             <div class="card-header">
                 <h3>
                     <b>SOLICITUDES VACACIONES</b>
-                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:solicitudesvacaciones" target="_blank">
-                        <span class="bx bx-question-mark btn3d"
-                            style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                    </a>
+                    @include('layouts.manual_button')
                 </h3>
             </div>
             <div class="card-body">
@@ -236,10 +237,7 @@
             <div class="card-header">
                 <h3>
                     <b>Gestión de vacaciones mis colaboradores</b>
-                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:gestionvacaciones" target="_blank">
-                        <span class="bx bx-question-mark btn3d"
-                            style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                    </a>
+                    @include('layouts.manual_button')
                 </h3>
             </div>
             <div class="card-body">
@@ -351,11 +349,7 @@
                         <div class="card-header">
                             <h3>
                                 SOLICITUDES VACACIONES: @{{ oUser.employee }}
-                                <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones"
-                                    target="_blank">
-                                    <span class="bx bx-question-mark btn3d"
-                                        style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                                </a>
+                                @include('layouts.manual_button')
                             </h3>
                         </div>
                         <div class="card-body">
@@ -506,7 +500,7 @@
         'order' => [[1, $config->orderVac]],
         'ordering' => true,
     ])
-
+    @include('layouts.manual_jsControll')
     <script>
         $(document).ready(function() {
             $('#rqStatus').change(function() {
