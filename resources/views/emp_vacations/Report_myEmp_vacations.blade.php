@@ -18,6 +18,8 @@
                 'tot_vacation_request': 5,
                 'tot_vacation_remaining': 6,
             };
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:todasvacaciones" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -27,10 +29,8 @@
 <div class="card shadow mb-4" id="myEmpVacations">
     <div class="card-header">
         <h3>
-            <b>REPORTE VACACIONES MIS COLABORADORES</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:todasvacaciones" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            <b>Reporte vacaciones de mis colaboradores</b>
+            @include('layouts.manual_button')
             <div style="float: right;">
                 <h4>Periodo: @{{period}}</h4>
             </div>
@@ -109,4 +109,5 @@
                                         // 'noSort' => true
                                     ] )
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_report_myEmpVacations.js') }}"></script>
+@include('layouts.manual_jsControll')
 @endsection

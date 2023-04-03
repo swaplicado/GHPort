@@ -22,6 +22,9 @@
             /*Ambas vistas*/
             this.lSpecialSeasonType = <?php echo json_encode($lSpecialSeasonType); ?>;
             this.year = <?php echo json_encode($year); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tempespeciales" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tipostempespeciales" ); ?>;
 
             /*Datos para la vista temporadas especiales*/
             this.lDeptos = <?php echo json_encode($lDeptos); ?>;
@@ -46,9 +49,11 @@
                 'created_at': 6,
                 'updated_by': 7,
             };
+            
         }
         var oServerData = new GlobalData();
     </script>
+    
 @endsection
 
 @section('content')
@@ -58,10 +63,8 @@
     <div class="card shadow mb-4" id="specialSeason">
         <div class="card-header">
             <h3>
-                <b>TEMPORADAS ESPECIALES</b>
-                <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tempespeciales" target="_blank">
-                    <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                </a>
+                <b>Temporadas especiales</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -162,10 +165,8 @@
         @include('seasons.modal_form_special_season_type')
         <div class="card-header">
             <h3>
-                <b>TIPOS TEMPORADAS ESPECIALES</b>
-                <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tipostempespeciales" target="_blank">
-                    <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-                </a>
+                <b>Tipos temporadas especiales</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -278,4 +279,5 @@
             }
         })();
     </script>
+    @include('layouts.manual_jsControll')  
 @endsection

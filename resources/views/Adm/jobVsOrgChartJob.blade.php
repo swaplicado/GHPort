@@ -28,7 +28,7 @@
                 'positions': 5,
             };
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:puestovsarea" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -88,8 +88,8 @@
                         <th>OrgChartJob_id</th>
                         <th>Job_id</th>
                         <th>Puesto</th>
-                        <th>Area</th>
-                        <th>Num. Colab.</th>
+                        <th>Área</th>
+                        <th>Núm. Colab.</th>
                     </tr>
                 </thead>
                 <tbody>
