@@ -15,6 +15,7 @@ class ApplicationVsTypes extends Model
         'is_advanced',
         'is_proportional',
         'is_season_special',
+        'is_recover_vacation',
         'created_at',
         'updated_at'
     ];

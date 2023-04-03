@@ -580,6 +580,10 @@ var appMyVacations = new Vue({
                 type = type + "Temporada especial\n";
             }
 
+            if(data.is_recover_vacation){
+                type = type + "Con días vencidos\n";
+            }
+
             return type;
         },
 

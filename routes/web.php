@@ -147,4 +147,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('empVSArea', 'Adm\empVSOrgChartController@index')->name('empVSArea_index');
     Route::post('empVSArea/update', 'Adm\empVSOrgChartController@update')->name('empVSArea_update');
+
+    Route::get('recoveredVacations', 'Pages\recoveredVacationsController@index')->name('recoveredVacations');
+    Route::post('recoveredVacations/save', 'Pages\recoveredVacationsController@save')->name('recoveredVacations_save');
 });

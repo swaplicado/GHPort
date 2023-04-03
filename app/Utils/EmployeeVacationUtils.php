@@ -82,6 +82,7 @@ class EmployeeVacationUtils {
         }
 
          $oVacation = $oVacation->select(
+                            'vu.id_vacation_user',
                             'vu.user_admission_log_id',
                             'vu.id_anniversary',
                             'vu.year',
@@ -247,6 +248,7 @@ class EmployeeVacationUtils {
                             'at.is_advanced',
                             'at.is_proportional',
                             'at.is_season_special',
+                            'at.is_recover_vacation',
                             'u.full_name_ui as user_apr_rej_name',
                             'as.applications_st_name',
                             'as.applications_st_code',
@@ -395,11 +397,30 @@ class EmployeeVacationUtils {
             }
 
             $date_expiration = Carbon::parse($date_end->addDays(1))->addYears($config->expiration_vacations->years)->addMonths($config->expiration_vacations->months);
-            
+            $vac->is_recovered = 0;
             if(Carbon::now()->greaterThan($date_expiration)){
                 if($vac->remaining > 0){
-                    $vac->expired = $vac->remaining;
-                    $vac->remaining = 0;
+                    $now_date = Carbon::now()->toDateString();
+                    $oVacRecover = \DB::table('recovered_vacations')
+                                        ->where('user_id', $user->id)
+                                        ->where('vacation_user_id', $vac->id_vacation_user)
+                                        ->where(function($query) use($now_date){
+                                            $query->where('end_date', '>=', $now_date)
+                                                ->orWhere('is_used', 1);
+                                        })
+                                        ->where('is_deleted', 0)
+                                        ->first();
+
+                    if(is_null($oVacRecover)){
+                        $vac->expired = $vac->remaining;
+                        $vac->remaining = 0;
+                    }else{
+                        $vac->expired = $vac->remaining;
+                        // $vac->expired = $vac->remaining - $oVacRecover->recovered_days;
+                        // $vac->expired = $vac->remaining - ($oVacRecover->recovered_days - $oVacRecover->consumed_days_n);
+                        $vac->remaining = $oVacRecover->recovered_days - $vac->request;
+                        $vac->is_recovered = 1;
+                    }
                 }else{
                     $vac->expired = 0;
                 }

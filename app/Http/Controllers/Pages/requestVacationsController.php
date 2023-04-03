@@ -21,6 +21,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use \App\Utils\delegationUtils;
 use \App\Utils\folioUtils;
+use App\Utils\recoveredVacationsUtils;
 
 class requestVacationsController extends Controller
 {
@@ -264,14 +265,23 @@ class requestVacationsController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
             }
 
-            \DB::beginTransaction();
+            $oType = \DB::table('applications_vs_types')
+                        ->where('application_id', $application->id_application)
+                        ->first();
 
-            $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, [
-                                                                                                SysConst::APPLICATION_CREADO,
-                                                                                                SysConst::APPLICATION_ENVIADO
-                                                                                            ],
-                                                                                        true);
-            
+            \DB::beginTransaction();
+            if($oType->is_recover_vacation){
+                recoveredVacationsUtils::resetUsedDays($application);
+            }
+
+            if(!$oType->is_recover_vacation){
+                $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, [
+                                                                                                    SysConst::APPLICATION_CREADO,
+                                                                                                    SysConst::APPLICATION_ENVIADO
+                                                                                                ],
+                                                                                            true);
+            }
+
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
@@ -377,8 +387,18 @@ class requestVacationsController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas', 'icon' => 'warning']);
             }
             
+            $oType = \DB::table('applications_vs_types')
+                        ->where('application_id', $application->id_application)
+                        ->first();
+
             \DB::beginTransaction();
-            $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
+            if($oType->is_recover_vacation){
+                recoveredVacationsUtils::resetUsedDays($application);
+            }
+
+            if(!$oType->is_recover_vacation){
+                $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
+            }
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
@@ -515,7 +535,7 @@ class requestVacationsController extends Controller
 
         foreach($lApplications as $app){
             $takedDays = $app->total_days;
-            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, false, 1);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, true, 1);
 
             if($user->tot_vacation_remaining < $takedDays){
                 return json_encode(['success' => false, 'message' => 'El colaborador no cuenta con dias disponibles', 'icon' => 'warning']);

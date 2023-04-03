@@ -20,6 +20,7 @@ use App\Utils\orgChartUtils;
 use Spatie\Async\Pool;
 use \App\Utils\delegationUtils;
 use \App\Utils\folioUtils;
+use App\Utils\recoveredVacationsUtils;
 
 class myVacationsController extends Controller
 {
@@ -95,7 +96,7 @@ class myVacationsController extends Controller
             }
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, false, 1);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, true, 1);
 
             foreach($user->applications as $ap){
                 if($ap->request_status_id == 1){
@@ -130,12 +131,11 @@ class myVacationsController extends Controller
 
             $applicationVsType = new ApplicationVsTypes();
             $applicationVsType->application_id = $application->id_application;
-            $applicationVsType->is_normal = $request->is_normal;
             $applicationVsType->is_past = $request->is_past;
             $applicationVsType->is_advanced = $request->is_advanced;
             $applicationVsType->is_proportional = $request->is_proportional;
             $applicationVsType->is_season_special = $request->is_season_special;
-            $applicationVsType->save();
+            $applicationVsType->is_recover_vacation = 0;
 
             foreach($vacations as $vac){
                 if($takedDays > 0){
@@ -148,6 +148,10 @@ class myVacationsController extends Controller
                                 break;
                             }
                         }
+                        if($vac->is_recovered){
+                            $applicationVsType->is_recover_vacation = $vac->is_recovered;
+                        }
+
                         $vac->remaining = $vac->remaining - $count;
                         $appBreakdown = new ApplicationsBreakdown();
                         $appBreakdown->application_id = $application->id_application;
@@ -160,6 +164,14 @@ class myVacationsController extends Controller
                     break;
                 }
             }
+
+            $applicationVsType->is_normal = !($request->is_past ||
+                                                $request->is_advanced ||
+                                                $request->is_proportional ||
+                                                $request->is_season_special ||
+                                                $applicationVsType->is_recover_vacation
+                                            );
+            $applicationVsType->save();
 
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
@@ -218,7 +230,7 @@ class myVacationsController extends Controller
             $application->update();
 
             // $user = $this->getUserVacationsData();
-            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, false, 1);
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, true, 1);
 
             if(($user->tot_vacation_remaining + $user->prox_vac_days) < $takedDays){
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
@@ -245,12 +257,11 @@ class myVacationsController extends Controller
 
             $applicationVsType = ApplicationVsTypes::where('application_id', $application->id_application)->first();
             $applicationVsType->application_id = $application->id_application;
-            $applicationVsType->is_normal = $request->is_normal;
             $applicationVsType->is_past = $request->is_past;
             $applicationVsType->is_advanced = $request->is_advanced;
             $applicationVsType->is_proportional = $request->is_proportional;
             $applicationVsType->is_season_special = $request->is_season_special;
-            $applicationVsType->update();
+            $applicationVsType->is_recover_vacation = 0;
 
             foreach($vacations as $vac){
                 if($takedDays > 0){
@@ -263,6 +274,11 @@ class myVacationsController extends Controller
                                 break;
                             }
                         }
+
+                        if($vac->is_recovered){
+                            $applicationVsType->is_recover_vacation = $vac->is_recovered;
+                        }
+
                         $vac->remaining = $vac->remaining - $count;
                         $appBreakdown = new ApplicationsBreakdown();
                         $appBreakdown->application_id = $application->id_application;
@@ -275,6 +291,13 @@ class myVacationsController extends Controller
                     break;
                 }
             }
+            $applicationVsType->is_normal = !($request->is_past ||
+                                                $request->is_advanced ||
+                                                $request->is_proportional ||
+                                                $request->is_season_special ||
+                                                $applicationVsType->is_recover_vacation
+                                            );
+            $applicationVsType->update();
 
             \DB::commit();
         } catch (\Throwable $th) {
@@ -332,7 +355,14 @@ class myVacationsController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
             }
 
+            $oType = \DB::table('applications_vs_types')
+                        ->where('application_id', $application->id_application)
+                        ->first();
+
             \DB::beginTransaction();
+            if($oType->is_recover_vacation){
+                recoveredVacationsUtils::insertUsedDays($application);
+            }
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
             $application->date_send_n = $date->toDateString();
