@@ -1,12 +1,12 @@
 {
-    "lastSyncDateTime": "2023-04-03 12:57:29",
+    "lastSyncDateTime": "2023-04-03 14:37:34",
     "expiration_vacations": {
         "years": 100,
         "months": 0,
         "days": 0
     },
     "showVacation": {
-        "years": 1,
+        "years": 0,
         "months": 0,
         "days": 0
     },
@@ -25,5 +25,32 @@
         114,
         94
     ],
-    "urlSync": "192.168.1.233:9001"
+    "urlSync": "192.168.1.233:9001",
+    "lSituation": [
+        {
+            "id": 1,
+            "text": "Normal",
+            "type": "is_normal"
+        },
+        {
+            "id": 2,
+            "text": "Du00edas pasados",
+            "type": "is_past"
+        },
+        {
+            "id": 3,
+            "text": "Du00edas mayor a los actuales",
+            "type": "is_advanced"
+        },
+        {
+            "id": 4,
+            "text": "Du00edas proporcionales",
+            "type": "is_proportional"
+        },
+        {
+            "id": 5,
+            "text": "Temporada especial",
+            "type": "is_season_special"
+        }
+    ]
 }
