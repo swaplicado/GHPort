@@ -85,7 +85,7 @@
                 <input type="text" id="nomArea" name="nomArea" style="width: 90%;" v-model="area">
                 <label for="selArea">Puestos área:</label>
                 <input type="number" id="numArea" min="1" name="numArea" style="width: 90%;" v-model="job_num">
-                <label for="selArea">Area superior:</label>
+                <label for="selArea">Área superior:</label>
                 <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
                 <br><br>
 
