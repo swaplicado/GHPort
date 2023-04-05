@@ -37,6 +37,7 @@ var appSpecialSeason = new Vue({
                 'Diciembre'
             ],
         SColorSelector: new SColorSelector(),
+        initialized: false,
     },
     mounted(){
         let self = this;
@@ -89,6 +90,7 @@ var appSpecialSeason = new Vue({
         },
 
         SetDepto(){
+            this.reinit();
             this.btn_SeasonActive('btn_depto', '#38c172');
             this.cleanOptions();
             $('#selOptions').empty().trigger("change");
@@ -109,6 +111,7 @@ var appSpecialSeason = new Vue({
         },
 
         SetArea(){
+            this.reinit();
             this.btn_SeasonActive('btn_area', '#6c757d');
             this.cleanOptions();
             $('#selOptions').empty().trigger("change");
@@ -129,6 +132,7 @@ var appSpecialSeason = new Vue({
         },
 
         SetEmpleado(){
+            this.reinit();
             this.btn_SeasonActive('btn_emp', '#6cb2eb');
             this.cleanOptions();
             $('#selOptions').empty().trigger("change");
@@ -149,6 +153,7 @@ var appSpecialSeason = new Vue({
         },
 
         SetEmpresa(){
+            this.reinit();
             this.btn_SeasonActive('btn_comp', '#ffed4a');
             this.cleanOptions();
             $('#selOptions').empty().trigger("change");
@@ -251,6 +256,7 @@ var appSpecialSeason = new Vue({
                         this.display_seasons = true;
                         this.$forceUpdate();
                         swal.close();
+                        this.initialized = true;
                     }else{
                         SGui.showMessage('', data.message, data.icon);
                     }
@@ -263,6 +269,12 @@ var appSpecialSeason = new Vue({
                 SGui.showMessage('', 'Debe seleccionar al menos una de las opciones', 'info');
                 this.cleanOptions();
             }
+        },
+
+        reinit(){
+            this.initialized = false;
+            this.display_seasons = false;
+            this.lOptions = [];
         },
 
         setSpecialSeason(key, index){

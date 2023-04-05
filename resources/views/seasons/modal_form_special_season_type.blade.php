@@ -20,15 +20,6 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="key_code" class="form-label">Clave:</label>
-                    </div>
-                    <div class="col-md-8 col-xs-12">
-                        <input name="key_code" id="key_code" v-model="key_code" class="form-control">
-                    </div>
-                </div>
-                <br>
-                <div class="row justify-content-center">
-                    <div class="col-md-2 col-xs-12">
                         <label for="priority" class="form-label">prioridad:</label>
                     </div>
                     <div class="col-md-8 class-xs-12">

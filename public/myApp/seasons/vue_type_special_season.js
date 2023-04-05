@@ -134,7 +134,6 @@ var appTypeSpecialSeason = new Vue({
                     season.id_special_season_type,
                     season.color,
                     season.name,
-                    season.key_code,
                     season.priority,
                     season.description,
                     this.oDateUtils.formatDate(season.updated_at),

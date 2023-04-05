@@ -43,11 +43,10 @@
                 'id_special_season_type': 0,
                 'color': 1,
                 'name': 2,
-                'key_code': 3,
-                'priority': 4,
-                'description': 5,
-                'created_at': 6,
-                'updated_by': 7,
+                'priority': 3,
+                'description': 4,
+                'created_at': 5,
+                'updated_by': 6,
             };
             
         }
@@ -84,13 +83,16 @@
                           <label for="selOptions" class="col-form-label">@{{title}}:</label>
                         </div>
                         <div class="col-md-4">
-                            <select class="select2-class" name="selOptions[]" multiple="multiple" id="selOptions" style="width: 100%"></select>
+                            <select class="select2-class" name="selOptions[]" multiple="multiple" id="selOptions" style="width: 100%" :disabled="initialized"></select>
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-primary" v-on:click="init();">Iniciar</button>
+                            <button class="btn btn-primary" v-on:click="init();" :disabled="initialized">Iniciar</button>
+                        </div>
+                        <div class="col-auto" v-if="initialized">
+                            <button class="btn btn-primary" v-on:click="reinit();">Reiniciar</button>
                         </div>
                     </div>
-                    <div class="wrap-flex">
+                    <div class="wrap-flex" v-if="initialized">
                         <label style="max-width: 6rem;">Filtrar por año:</label>
                         &nbsp;
                         <button v-on:click="year = year - 1; cleanOptions();" class="btn btn-secondary form-control" type="button" style = "width: 3rem;">
@@ -185,7 +187,6 @@
                     <th>id_special_season_type</th>
                     <th>Color</th>
                     <th>Nombre</th>
-                    <th>Clave</th>
                     <th>Prioridad</th>
                     <th>Descripción</th>
                     <th>Fecha creación</th>
@@ -196,7 +197,6 @@
                         <td>@{{oType.id_special_season_type}}</td>
                         <td>@{{oType.color}}</td>
                         <td>@{{oType.name}}</td>
-                        <td>@{{oType.key_code}}</td>
                         <td v-bind:style="{ 'background-color': oType.color }">@{{oType.priority}}</td>
                         <td>@{{oType.description}}</td>
                         <td>@{{oDateUtils.formatDate(oType.created_at)}}</td>
