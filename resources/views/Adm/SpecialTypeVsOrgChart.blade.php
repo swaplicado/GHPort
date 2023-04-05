@@ -35,7 +35,9 @@
                 'org_chart_name': 8,
                 'company_name': 9,
                 'revisor_name': 10,
-            }
+            },
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:asignartiposolicitudesespeciales" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -75,9 +77,7 @@
     <div class="card-header">
         <h3>
             <b>Asignar tipos de solicitudes especiales</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -133,4 +133,5 @@
                                             'delete' => true,
                                         ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_special_type_vs_org_chart.js') }}"></script>
+    @include('layouts.manual_jsControll')
 @endsection
