@@ -30,7 +30,7 @@ class SpecialTypeController extends Controller
             $oSpecialType->name = $request->name;
             $oSpecialType->code = $request->code;
             $oSpecialType->situation = $request->situation_id;
-            $oSpecialType->priority = array_search('0', array_column($request->lOrder, 'id'));
+            $oSpecialType->priority = (array_search('0', array_column($request->lOrder, 'id')) + 1);
             $oSpecialType->created_by = \Auth::user()->id;
             $oSpecialType->updated_by = \Auth::user()->id;
             $oSpecialType->save();
@@ -68,6 +68,12 @@ class SpecialTypeController extends Controller
             $oSpecialType->situation = $request->situation_id;
             $oSpecialType->update();
 
+            foreach($request->lOrder as $index => $item){
+                $oSpecialType = SpecialType::findOrFail($item['id']);
+                $oSpecialType->priority = $index + 1;
+                $oSpecialType->update();
+            }
+
             $lSpecialType = SpecialType::where('is_deleted', 0)->orderBy('priority')->get();
             $config = \App\Utils\Configuration::getConfigurations();
             $lSituation = $config->lSituation;
@@ -75,12 +81,6 @@ class SpecialTypeController extends Controller
                 $index = array_search($st->situation, array_column($lSituation, 'id'));
                 $text = $lSituation[$index]->text;
                 $st->situation_name = $text;
-            }
-
-            foreach($request->lOrder as $index => $item){
-                $oSpecialType = SpecialType::findOrFail($item['id']);
-                $oSpecialType->priority = $index + 1;
-                $oSpecialType->update();
             }
 
             \DB::commit();

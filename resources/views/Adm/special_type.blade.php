@@ -32,7 +32,9 @@
                 'code': 3,
                 'situation': 4,
                 'priority': 5,
-            }
+            },
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tiposolicitudesespeciales" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -55,7 +57,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label for="" class="form-label">Nombre de la solicitud especial: </label>
-                            <input type="text" class="form-control" name="name_special" v-model="name" v-on:change="addToList();">
+                            <input type="text" class="form-control" name="name_special" v-model="name" :disabled="is_edit">
                         </div>
                     </div>
                     <br>
@@ -85,7 +87,9 @@
                             <label for="">Orden de prioridad:</label>
                             <ul id="sortable">
                                 <template v-for="special in lSpecialTypeNewOrder">
-                                    <li class="ui-state-default" :data-id="special.id_special_type" title="Arrastre y suelte para reordenar">
+                                    <li class="ui-state-default" :data-id="special.id_special_type"
+                                        :data-text="special.name"
+                                        title="Arrastre y suelte para reordenar">
                                     <span class="bx bx-move-vertical" style="margin-top: 3px;"></span>    
                                         @{{special.name}}
                                     </li>
@@ -105,9 +109,7 @@
     <div class="card-header">
         <h3>
             <b>Tipos de solicitudes especiales</b>
-            <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" target="_blank">
-                <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
-            </a>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -153,5 +155,10 @@
                                             'delete' => true,
                                             'noSort' => true,
                                         ] )
+    
+    <script>
+        var self;
+    </script>
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_special_type.js') }}"></script>
+    @include('layouts.manual_jsControll')
 @endsection

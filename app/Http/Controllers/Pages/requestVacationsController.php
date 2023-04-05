@@ -49,7 +49,8 @@ class requestVacationsController extends Controller
             $oEmpSpec = $lEmpSpecial->where('external_id_n', $emp->external_id_n)->first();
             if(!is_null($oEmpSpec)){
                 foreach($emp->applications as $app){
-                    $oApp = $oEmpSpec->applications->where('id_application', $app->id_application)->first();
+                    $oSpecApp = collect($oEmpSpec->applications);
+                    $oApp = $oSpecApp->where('id_application', $app->id_application)->first();
                     if(!is_null($oApp)){
                         $res = $emp->applications->where('id_application', $oApp->id_application)->first();
                         $index = $emp->applications->search($res);

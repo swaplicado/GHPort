@@ -13,9 +13,17 @@ var app = new Vue({
         id_specialType: null,
         priority: 0,
         lPrioritys: [],
+        is_edit: false,
+    },
+    watch:{
+        name:function(val){
+            if(!this.is_edit){
+                this.addToList();
+            }
+        }
     },
     mounted(){
-        var self = this;
+        self = this;
         $('#sel_situation').select2({
             placeholdere: 'selecciona',
             data: self.lSituation
@@ -24,13 +32,19 @@ var app = new Vue({
             self.situation_id = e.params.data.id;
         });
 
+        this.lPrioritys = [];
+        console.log(this.lSpecialTypeNewOrder);
+        for (const special of this.lSpecialTypeNewOrder) {
+            this.lPrioritys.push({id: special.id_special_type, text: special.name});
+        }
+
         $( "#sortable" ).sortable({
             update: function(event, ui) {
                 self.lPrioritys = [];
                 $('#sortable li').each(function(i, elem) {
                     self.lPrioritys.push({id:$(elem).data('id'), text: $(elem).text()});
                 });
-                console.log(self.lPrioritys);
+                // console.log(self.lPrioritys);
                 // console.log('update: '+ ui.item.index() + ' - ' + ui.item.data('id'))
             },
         });
@@ -39,6 +53,7 @@ var app = new Vue({
         showModal(data = null){
             this.lSpecialTypeNewOrder = structuredClone(this.lSpecialTypeOldOrder);
             if(data != null){
+                this.is_edit = true;
                 this.id_specialType = data[this.indexSpecialType.id];
                 this.name = data[this.indexSpecialType.name];
                 this.code = data[this.indexSpecialType.code];
@@ -46,6 +61,7 @@ var app = new Vue({
                 this.priority = data[this.indexSpecialType.priority];
                 $('#sel_situation').val(this.situation_id).trigger('change');
             }else{
+                this.is_edit = false;
                 this.id_specialType = null;
                 this.name = null;
                 this.code = null;
@@ -58,17 +74,23 @@ var app = new Vue({
         addToList(){
             this.lSpecialTypeNewOrder = structuredClone(this.lSpecialTypeOldOrder);
             this.lPrioritys = [];
-            $('#sortable li').each(function(i, elem) {
-                self.lPrioritys.push({id:$(elem).data('id'), text: $(elem).text()});
-            });
-            console.log(this.lPrioritys);
+            // console.log(self.lPrioritys);
             if(this.name == "" || this.name == null){
                 // SGui.showMessage('', 'Debe ingresar el nombre de la solicitud');
                 return;
             }
             this.lSpecialTypeNewOrder.push({id_special_type: 0, name: this.name});
             
-            console.log(this.lSpecialTypeNewOrder);
+            for (const special of this.lSpecialTypeNewOrder) {
+                this.lPrioritys.push({id: special.id_special_type, text: special.name});
+            }
+
+            // $('#sortable li').each(function(i, elem) {
+            //     self.lPrioritys.push({id:$(elem).data('id'), text: $(elem).data('text')});
+            // });
+            console.log(this.lPrioritys);
+
+            // console.log(this.lSpecialTypeNewOrder);
         },
 
         save(){
@@ -103,6 +125,11 @@ var app = new Vue({
                     $('#modal_special_type').modal('hide');
                     SGui.showOk();
                     this.lSpecialTypeOldOrder = data.lSpecialType;
+                    this.lSpecialTypeNewOrder = data.lSpecialType;
+                    this.lPrioritys = [];
+                    for (const special of this.lSpecialTypeOldOrder) {
+                        this.lPrioritys.push({id: special.id_special_type, text: special.name});
+                    }
                     this.reDrawTableSpecialType(data.lSpecialType);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -158,6 +185,12 @@ var app = new Vue({
                 let data = result.data;
                 if(data.success){
                     this.reDrawTableSpecialType(data.lSpecialType);
+                    this.lSpecialTypeOldOrder = data.lSpecialType;
+                    this.lSpecialTypeNewOrder = data.lSpecialType;
+                    this.lPrioritys = [];
+                    for (const special of this.lSpecialTypeOldOrder) {
+                        this.lPrioritys.push({id: special.id_special_type, text: special.name});
+                    }
                     SGui.showOk();
                 }else{
                     SGui.showMessage('', data.message, data.icon);
