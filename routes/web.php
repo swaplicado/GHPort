@@ -152,4 +152,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('recoveredVacations', 'Pages\recoveredVacationsController@index')->name('recoveredVacations');
     Route::post('recoveredVacations/save', 'Pages\recoveredVacationsController@save')->name('recoveredVacations_save');
+
+    Route::post('notifications/clean', 'Utils\notificationsController@cleanNotificationsToSee')->name('notifications_clean');
+    
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\Sys\SyncController;
+use App\Utils\notificationsUtils;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -127,6 +128,10 @@ class LoginController extends Controller
             $this->authenticated($request, Auth::user());
             $sync = new SyncController();
             $sync->toSynchronize(false);
+
+            $oNotify = new notificationsUtils();
+            $oNotify->initNotifications();
+            $oNotify->notifyVacationToExpire();
             if(!is_null($idRoute) && $idRoute != ""){
                 return redirect("/$idRoute/$idApp");
             }else{

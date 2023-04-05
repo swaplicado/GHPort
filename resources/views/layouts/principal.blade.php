@@ -41,6 +41,15 @@
     <script src="{{ asset('datatables/dataTables.js')}}"></script>
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('myApp/Utils/SDateUtils.js') }}"></script>
+    <script>
+        function GlobalDataNotification(){
+            this.lNotifications = <?php echo json_encode(session()->get('lNotifications')) ?>;
+            this.numberOfNotifications = <?php echo json_encode(session()->get('notificationsToSee')) ?>;
+            this.notifications_cleanRoute = <?php echo json_encode(route('notifications_clean')) ?>;
+        }
+
+        var oGlobalDataNotification = new GlobalDataNotification();
+    </script>
     @yield('headJs')
 
 </head>
@@ -115,6 +124,7 @@
             SGui.showWaiting(120000);
         }
     </script>
+    <script type="text/javascript" src="{{ asset('myApp/notifications/vue_notifications.js') }}"></script>
     @yield('scripts')
 
 </body>
