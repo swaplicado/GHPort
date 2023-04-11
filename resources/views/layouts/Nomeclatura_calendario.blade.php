@@ -14,7 +14,11 @@
             <tbody>
                 <tr>
                     <td style="background-color: #49e"></td>
-                    <td>&nbsp (Solicitud de vacaciones actual)</td>
+                    <td>&nbsp (Día de vacaciones de esta solicitud)</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #f590eb"></td>
+                    <td>&nbsp (Día de vacaciones de otras solicitudes)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #e0e0e0b1"></td>
@@ -25,20 +29,16 @@
                     <td>&nbsp (Día festivo)</td>
                 </tr>
                 <tr>
-                    <td style="background-color: #f590eb"></td>
-                    <td>&nbsp (Solicitud de vacaciones)</td>
-                </tr>
-                <tr>
                     <td style="background-color: #ffe684"></td>
                     <td>&nbsp (Día actual)</td>
                 </tr>
                 <tr>
                     <td><img src="{{asset('img/confetti.png')}}" width="30px" height="30px"></td>
-                    <td>&nbsp (Aniversario)</td>
+                    <td>&nbsp (Aniversario del colaborador)</td>
                 </tr>
                 <tr>
                     <td><img src="{{asset('img/birthday-cake.png')}}" width="30px" height="30px"></td>
-                    <td>&nbsp (Cumpleaños)</td>
+                    <td>&nbsp (Cumpleaños del colaborador)</td>
                 </tr>
                 <tr v-for="temp in lTemp">
                     <td v-bind:style="{backgroundColor: temp.color}"></td>
