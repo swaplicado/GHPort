@@ -88,7 +88,22 @@
                                     </tr>
                                     <tr>
                                         <td><b>Fecha regreso:</b></td>
-                                        <td><input class="form-control" v-model="returnDate" readonly></td>
+                                        <td>
+                                            <table :hidden="showDatePickerSimple">
+                                                <thead></thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <input class="form-control" v-model="returnDate" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-secondary" v-on:click="editMyReturnDate()"><span class="bx bx-pencil"></span></button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <input type="text" name="datepicker" :hidden="!showDatePickerSimple">
+                                        </td>
                                         <td></td>
                                         <td></td>
                                         <td></td>

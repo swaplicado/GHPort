@@ -6,7 +6,8 @@ class SDateUtils {
             "iso_date_time": "YYYY-MM-DDTHH:MM:SS",
             "iso_date_time_utc": "YYYY-MM-DDTHH:MM:SSZ",
             "primaryFormat": "DD-MMM-YYYY",
-            "secondFormat": "ddd DD-MMM-YYYY"
+            "secondFormat": "ddd DD-MMM-YYYY",
+            "thirdFormat": "DD-MM-YYYY"
         }
         
         for (var prop in dateFormats) {

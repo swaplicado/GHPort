@@ -1,6 +1,14 @@
 @extends('layouts.principal')
 @section('headStyles')
 <link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
+<!-- Standalone -->
+<link href="myApp/Utils/SDatePicker/css/datepicker.min.css" rel="stylesheet" />
+<!-- For Bootstrap 4 -->
+<link href="myApp/Utils/SDatePicker/css/datepicker-bs4.min.css" rel="stylesheet" />
+<!-- For Bulma -->
+<link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
+<!-- For Foundation -->
+<link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
 <style>
     /* ul {
         -webkit-column-count: 3;
@@ -243,7 +251,7 @@
                                     </td>
                                     <td>@{{oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY')}}</td>
                                     <td>@{{oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY')}}</td>
-                                    <td>@{{oDateUtils.formatDate(rec.returnDate, 'ddd DD-MMM-YYYY')}}</td>
+                                    <td>@{{oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY')}}</td>
                                     <td>@{{rec.total_days}}</td>
                                     <td>@{{specialType(rec)}}</td>
                                     <td>@{{rec.applications_st_name}}</td>
@@ -335,6 +343,7 @@
 <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
+<script src="myApp/Utils/SDatePicker/js/datepicker-full.min.js"></script>
 <script>
     var aniversaryDay = '';
     var birthday = '';
@@ -343,6 +352,17 @@
 </script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerUtils.js') }}"></script>
 <script>
+    var elem = document.querySelector('input[name="datepicker"]');
+    var datepicker = new Datepicker(elem, {
+        language: 'es',
+        format: 'dd/mm/yyyy',
+        // minDate: null,
+    });
+
+    elem.addEventListener('changeDate', function (e, details) { 
+        app.setMyReturnDate();
+    });
+
     var oDateRangePickerForMyRequest  = new SDateRangePicker();
     var dateRangePickerArrayApplications = [];
     // var dateRangePickerArraySpecialSeasons = [];

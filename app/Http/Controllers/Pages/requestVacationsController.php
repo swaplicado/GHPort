@@ -288,6 +288,7 @@ class requestVacationsController extends Controller
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
+            $application->return_date = $request->returnDate;
             $application->update();
 
             $application_log = new ApplicationLog();
@@ -406,6 +407,7 @@ class requestVacationsController extends Controller
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->rejected_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $request->comments;
+            $application->return_date = $request->returnDate;
             $application->update();
 
             $application_log = new ApplicationLog();

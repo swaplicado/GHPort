@@ -45,6 +45,8 @@ var appMyVacations = new Vue({
         is_proportional: false,
         is_season_special: false,
         newData: false,
+        MyReturnDate: null,
+        showDatePickerSimple: false,
     },
     watch: {
         startDate:function(val) {
@@ -421,6 +423,22 @@ var appMyVacations = new Vue({
             this.renderTableMyRequest = true;
         },
 
+        setMyReturnDate(){
+            this.MyReturnDate = datepicker.getDate('dd-mm-yyyy');
+            this.returnDate = this.oDateUtils.formatDate(this.MyReturnDate, 'ddd DD-MMM-YYYY');
+            this.showDatePickerSimple  = false;
+        },
+
+        editMyReturnDate(){
+            datepicker.setDate({ clear: !0 });
+            if(this.endDate != null || this.endDate != undefined || this.endDate != ''){
+                datepicker.setOptions({minDate: moment(this.endDate, 'ddd DD-MMM-YYYY').add(1, 'days').format("DD-MM-YYYY")});
+            }else{
+                datepicker.setOptions({minDate: null});
+            }
+            this.showDatePickerSimple  = true;
+        },
+
         async showModal(data = null){
             $('#clear').trigger('click');
             await this.getEmpApplicationsEA(this.oUser.id);
@@ -451,6 +469,8 @@ var appMyVacations = new Vue({
                 this.takedDays = data[this.indexes.taked_days];
                 this.noBussinesDayIndex = 0;
                 this.totCalendarDays = this.lDays.length;
+                this.showDatePickerSimple = false;
+                datepicker.setDate(moment(this.returnDate, 'ddd DD-MMM-YYYY').format("DD-MM-YYYY"));
                 // this.reMaplDays();
                 // this.lDays = result[2];
             }else{
@@ -474,6 +494,8 @@ var appMyVacations = new Vue({
                 this.valid = true;
                 this.noBussinesDayIndex = 0;
                 dateRangePickerValid = this.valid;
+                this.showDatePickerSimple = false;
+                datepicker.setDate({ clear: !0 });
                 // $('#clear').trigger('click');
                 $('#two-inputs-myRequest').data('dateRangePicker').redraw();
             }
