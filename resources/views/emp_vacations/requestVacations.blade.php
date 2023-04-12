@@ -4,13 +4,13 @@
     <link href={{ asset('select2js/css/select2.min.css') }} rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('daterangepicker/daterangepicker.min.css') }}">
     <!-- Standalone -->
-    <link href="myApp/Utils/SDatePicker/css/datepicker.min.css" rel="stylesheet" />
+    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker.min.css')}} rel="stylesheet" />
     <!-- For Bootstrap 4 -->
-    <link href="myApp/Utils/SDatePicker/css/datepicker-bs4.min.css" rel="stylesheet" />
+    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker-bs4.min.css')}} rel="stylesheet" />
     <!-- For Bulma -->
-    <link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
+    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker-bulma.min.css')}} rel="stylesheet" />
     <!-- For Foundation -->
-    <link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
+    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker-foundation.min.css')}} rel="stylesheet" />
 @endsection
 
 @section('headJs')
@@ -586,7 +586,7 @@
             }
         })();
     </script>
-    <script src="myApp/Utils/SDatePicker/js/datepicker-full.min.js"></script>
+    <script src={{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}></script>
     <script>
         var elem = document.querySelector('input[name="datepicker"]');
         var datepicker = new Datepicker(elem, {
