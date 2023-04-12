@@ -184,17 +184,17 @@ var appRequestVacation = new Vue({
         },
 
         setMyReturnDate(){
-            this.MyReturnDate = datepicker.getDate('dd-mm-yyyy');
+            this.MyReturnDate = ReqDatepicker.getDate('dd-mm-yyyy');
             this.returnDate = this.oDateUtils.formatDate(this.MyReturnDate, 'ddd DD-MMM-YYYY');
             this.showDatePickerSimple  = false;
         },
 
         editMyReturnDate(){
-            datepicker.setDate({ clear: !0 });
+            ReqDatepicker.setDate({ clear: !0 });
             if(this.endDate != null || this.endDate != undefined || this.endDate != ''){
-                datepicker.setOptions({minDate: moment(this.endDate, 'ddd DD-MMM-YYYY').add(1, 'days').format("DD-MM-YYYY")});
+                ReqDatepicker.setOptions({minDate: moment(this.endDate, 'ddd DD-MMM-YYYY').add(1, 'days').format("DD-MM-YYYY")});
             }else{
-                datepicker.setOptions({minDate: null});
+                ReqDatepicker.setOptions({minDate: null});
             }
             this.showDatePickerSimple  = true;
         },
@@ -221,7 +221,7 @@ var appRequestVacation = new Vue({
             $('#date-range201').val(this.oApplication.end_date).trigger('change');
             this.returnDate = this.oDateUtils.formatDate(this.oApplication.return_date, 'ddd DD-MMM-YYYY');
             this.showDatePickerSimple = false;
-            datepicker.setDate(moment(this.returnDate, 'ddd DD-MMM-YYYY').format("DD-MM-YYYY"));
+            ReqDatepicker.setDate(moment(this.returnDate, 'ddd DD-MMM-YYYY').format("DD-MM-YYYY"));
             this.takedDays = this.oApplication.total_days;
             this.noBussinesDayIndex = 0;
             this.totCalendarDays = (moment(this.oApplication.end_date).diff(moment(this.oApplication.start_date), 'days') + 1);

@@ -104,7 +104,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <input type="text" name="datepicker" :hidden="!showDatePickerSimple">
+                                            <input type="text" name="reqDatepicker" :hidden="!showDatePickerSimple">
                                         </td>
                                         <td><p>&nbsp &nbsp</p></td>
                                         <td></td>

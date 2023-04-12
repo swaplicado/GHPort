@@ -4,13 +4,13 @@
     <link href={{ asset('select2js/css/select2.min.css') }} rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('daterangepicker/daterangepicker.min.css') }}">
     <!-- Standalone -->
-    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker.min.css')}} rel="stylesheet" />
+    <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker.min.css')}}" rel="stylesheet" />
     <!-- For Bootstrap 4 -->
-    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker-bs4.min.css')}} rel="stylesheet" />
+    <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bs4.min.css')}}" rel="stylesheet" />
     <!-- For Bulma -->
-    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker-bulma.min.css')}} rel="stylesheet" />
+    <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bulma.min.css')}}" rel="stylesheet" />
     <!-- For Foundation -->
-    <link href={{ asset('myApp/Utils/SDatePicker/css/datepicker-foundation.min.css')}} rel="stylesheet" />
+    <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-foundation.min.css')}}" rel="stylesheet" />
 @endsection
 
 @section('headJs')
@@ -529,6 +529,7 @@
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_request_vacations.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>
+    <script src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
     <script src="{{ asset('myApp/Utils/SDateRangePickerUtils.js') }}"></script>
     <script>
         const btn_ids = ['requestVac', 'gestionVac'];
@@ -586,16 +587,18 @@
             }
         })();
     </script>
-    <script src={{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}></script>
     <script>
-        var elem = document.querySelector('input[name="datepicker"]');
-        var datepicker = new Datepicker(elem, {
+        var elem = null;
+        var datepicker = null;
+
+        var ReqElem = document.querySelector('input[name="reqDatepicker"]');
+        var ReqDatepicker = new Datepicker(ReqElem, {
             language: 'es',
             format: 'dd/mm/yyyy',
             // minDate: null,
         });
 
-        elem.addEventListener('changeDate', function (e, details) { 
+        ReqElem.addEventListener('changeDate', function (e, details) { 
             app.setMyReturnDate();
         });
 

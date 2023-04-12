@@ -47,6 +47,7 @@ var appMyVacations = new Vue({
         newData: false,
         MyReturnDate: null,
         showDatePickerSimple: false,
+        isGestionVac: false,
     },
     watch: {
         startDate:function(val) {
@@ -68,6 +69,19 @@ var appMyVacations = new Vue({
             if(typeof self.$refs.table_myRequest != 'undefined' && !self.renderTableMyRequest){
                 this.createMyRequestTable(this.tempData);
                 this.initDatePicker();
+            }
+            if(typeof self.$refs.datepicker != 'undefined' && self.isGestionVac){
+                elem = document.querySelector('input[name="datepicker"]');
+                datepicker = new Datepicker(elem, {
+                    language: 'es',
+                    format: 'dd/mm/yyyy',
+                    // minDate: null,
+                });
+
+                elem.addEventListener('changeDate', function (e, details) { 
+                    self.setMyReturnDate();
+                });
+                self.isGestionVac = false;
             }
         })
     },
@@ -118,6 +132,7 @@ var appMyVacations = new Vue({
                     this.tempData = data;
                     this.year = data.year;
                     this.initialCalendarDate = data.initialCalendarDate;
+                    this.isGestionVac = true;
                     this.initValuesForUser(data.oUser);
                     // this.initDatePicker();
                     SGui.showOk();
@@ -424,14 +439,16 @@ var appMyVacations = new Vue({
         },
 
         setMyReturnDate(){
-            this.MyReturnDate = datepicker.getDate('dd-mm-yyyy');
-            this.returnDate = this.oDateUtils.formatDate(this.MyReturnDate, 'ddd DD-MMM-YYYY');
+            if(this.endDate != null && this.endDate != undefined && this.endDate != ''){
+                this.MyReturnDate = datepicker.getDate('dd-mm-yyyy');
+                this.returnDate = this.oDateUtils.formatDate(this.MyReturnDate, 'ddd DD-MMM-YYYY');
+            }
             this.showDatePickerSimple  = false;
         },
 
         editMyReturnDate(){
             datepicker.setDate({ clear: !0 });
-            if(this.endDate != null || this.endDate != undefined || this.endDate != ''){
+            if(this.endDate != null && this.endDate != undefined && this.endDate != ''){
                 datepicker.setOptions({minDate: moment(this.endDate, 'ddd DD-MMM-YYYY').add(1, 'days').format("DD-MM-YYYY")});
             }else{
                 datepicker.setOptions({minDate: null});

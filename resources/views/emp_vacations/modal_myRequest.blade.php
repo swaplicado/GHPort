@@ -102,7 +102,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <input type="text" name="datepicker" :hidden="!showDatePickerSimple">
+                                            <input type="text" ref="datepicker" name="datepicker" :hidden="!showDatePickerSimple">
                                         </td>
                                         <td></td>
                                         <td></td>
