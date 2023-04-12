@@ -12,7 +12,7 @@ class folioUtils {
                             ->count();
 
         $stTotApp = (string)$totApplications;
-        for($i = 3; $i > $totApplications; $i--){
+        for($i = 4; $i > strlen($totApplications); $i--){
             $stTotApp = '0'.$stTotApp;
         }
 
