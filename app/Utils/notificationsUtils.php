@@ -29,6 +29,7 @@ class notificationsUtils {
             session()->put('notificationsToSee', $notificationsToSee);
         }else{
             $lNotify = session('lNotifications')->get();
+            $lNotify = [];
             array_push($lNotify, [
                                     'icon' => 'bx bx-bug',
                                     'text' => "Ha ocurrido un fallo al obtener las vacaciones por vencer",
