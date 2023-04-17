@@ -48,13 +48,37 @@ var appMyVacations = new Vue({
         MyReturnDate: null,
         showDatePickerSimple: false,
         isGestionVac: false,
+        lTypes: [],
+    },
+    computed: {
+        propertyAAndPropertyB() {
+            return `${this.endDate}|${this.takedDays}`;
+        },
     },
     watch: {
         startDate:function(val) {
             this.newData = true;
         },
-        endDate:function(val) {
+        // endDate:function(val) {
+        //     this.newData = true;
+        //     this.lTypes = [];
+        //     if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
+        //         let res = this.checkSpecial();
+        //         if(res[0]){
+        //             SGui.showMessage('', res[1], 'warning');
+        //         }
+        //     }
+        // },
+        propertyAAndPropertyB(newVal, oldVal) {
             this.newData = true;
+            let oldlTypes = structuredClone(this.lTypes);
+            this.lTypes = [];
+            if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
+                let res = this.checkSpecial();
+                if(res[0] && !this.arraysEqual(this.lTypes, oldlTypes)){
+                    SGui.showMessage('', res[1], 'warning');
+                }
+            }
         },
     },
     mounted(){
@@ -86,6 +110,13 @@ var appMyVacations = new Vue({
         })
     },
     methods: {
+        arraysEqual(a, b) {
+            if (a.length !== b.length) {
+                return false;
+            }
+            return a.every(element => b.includes(element));
+        },
+          
         /**
          * Metodo para inicialisar la vista cuando se usa en gestión de vacaciones
          */
@@ -565,33 +596,40 @@ var appMyVacations = new Vue({
                 is_special = true;
                 this.is_normal = false;
                 this.is_proportional = true;
+                this.lTypes.push('Con días proporcionales');
             }
 
-            if(this.takedDays > (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days))) && this.takedDays <= (this.oUser.tot_vacation_remaining + parseInt(this.oUser.prox_vac_days))){
+            if(this.takedDays > (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days)))){
                 message = message + "Se utilizarán más días de los proporcionales para la solicitud.\n";
                 is_special = true;
                 this.is_normal = false;
                 this.is_advanced = true;
+                this.lTypes.push('Con más días de los proporcionales');
             }
 
-            if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
+            if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
                 message = message + "Se tomarán días pasados.\n";
                 is_special = true;
                 this.is_normal = false;
                 this.is_past = true;
+                this.lTypes.push('Con días pasados');
             }
 
             for(let oSeason of this.lTemp){
                 for(let day of oSeason.lDates){
                     if(moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
-                        // message = message + 'El dia: ' + this.oDateUtils.formatDate(day, 'ddd DD-MMM-YYYY') + ' es temporada especial ' + oSeason.name + "\n";
                         message = message + 'Estas tomando días en temporada especial ' + oSeason.name + "\n";
                         is_special = true;
                         this.is_normal = false;
                         this.is_season_special = true;
+                        this.lTypes.push('Con días en temporada especial');
                         break;
                     }
                 }
+            }
+
+            if(this.is_normal){
+                this.lTypes.push('Normal');
             }
 
             return [is_special, message];
@@ -637,12 +675,12 @@ var appMyVacations = new Vue({
                 return;
             }
 
-            let check = this.checkSpecial();
-            if(check[0]){
-                if(!(await SGui.showConfirm(check[1], '¿Desea continua?', 'warning'))){
-                    return;
-                }
-            }
+            // let check = this.checkSpecial();
+            // if(check[0]){
+            //     if(!(await SGui.showConfirm(check[1], '¿Desea continua?', 'warning'))){
+            //         return;
+            //     }
+            // }
 
             if(this.idRequest == null){
                 var route = this.oData.requestVacRoute;

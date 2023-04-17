@@ -27,7 +27,6 @@
                 </table>
                 <div class="card">
                     <div class="card-body">
-                        @include('layouts.Nomeclatura_calendario', ['id' => 'nomeclaturaMyRequest'])
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">
@@ -47,48 +46,50 @@
                                 <span hidden>
                                     <input id="date-range200-myRequest" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201-myRequest" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
                                 </span>
-                                <input class="form-control" v-model="startDate" style="width: 30%; display: inline" readonly> a <input class="form-control" v-model="endDate" style="width: 30%; display: inline" readonly>
-                                <br>
+                                <table style="width: 100%;">
+                                    <thead></thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                @include('layouts.Nomeclatura_calendario', ['id' => 'nomeclaturaMyRequest'])
+                                            </td>
+                                            <td>
+                                                <input class="form-control" v-model="startDate" style="width: 40%; display: inline" readonly> a <input class="form-control" v-model="endDate" style="width: 40%; display: inline" readonly>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary inline" id="clear" :disabled="!valid">Limpiar</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                                 <br>
                             </span>
-                            <br>
-                            <br>
-                            <div>
-                                <button type="button" class="btn btn-primary" id="clear" :disabled="!valid">Limpiar</button>
-                            </div>
                         </div>
                     </div>
                 </div>
-                <br>
                 <div class="card">
                     <div class="card-body">
                         <div>
                             <table>
-                                <thead>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </thead>
+                                <thead></thead>
                                 <tbody>
                                     <tr>
-                                        <td><b>Fecha inicio:</b></td>
-                                        <td><input class="form-control" v-model="startDate" readonly></td>
-                                        <td><p>&nbsp &nbsp</p></td>
-                                        <td><b>Dias calendario:</b></td>
-                                        <td><input class="form-control" name="calendarDays" type="number" v-model="totCalendarDays" readonly></td>
+                                        <td style="vertical-align: top;"><b>Fecha inicio:</b></td>
+                                        <td style="vertical-align: top;"><input class="form-control" v-model="startDate" readonly></td>
+                                        <td style="vertical-align: top;"><p>&nbsp &nbsp</p></td>
+                                        <td style="vertical-align: top;"><b>Dias calendario:</b></td>
+                                        <td style="vertical-align: top;"><input class="form-control" name="calendarDays" type="number" v-model="totCalendarDays" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Fecha fin:</b></td>
-                                        <td><input class="form-control" v-model="endDate" readonly></td>
-                                        <td><p>&nbsp &nbsp</p></td>
-                                        <td><b>Dias efectivos:</b></td>
-                                        <td><input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly></td>
+                                        <td style="vertical-align: top;"><b>Fecha fin:</b></td>
+                                        <td style="vertical-align: top;"><input class="form-control" v-model="endDate" readonly></td>
+                                        <td style="vertical-align: top;"><p>&nbsp &nbsp</p></td>
+                                        <td style="vertical-align: top;"><b>Dias efectivos:</b></td>
+                                        <td style="vertical-align: top;"><input class="form-control" name="efectiveDays" type="number" v-model="takedDays" readonly></td>
                                     </tr>
                                     <tr>
-                                        <td><b>Fecha regreso:</b></td>
-                                        <td>
+                                        <td style="vertical-align: top;"><b>Fecha regreso:</b></td>
+                                        <td style="vertical-align: top;">
                                             <table :hidden="showDatePickerSimple">
                                                 <thead></thead>
                                                 <tbody>
@@ -104,9 +105,17 @@
                                             </table>
                                             <input type="text" ref="datepicker" name="datepicker" :hidden="!showDatePickerSimple">
                                         </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td style="vertical-align: top;"></td>
+                                        <td style="vertical-align: top;">
+                                            <b>Tipo solicitud:</b>
+                                        </td>
+                                        <td style="vertical-align: top;">
+                                            <div style="overflow-y: auto;">
+                                                <ul style="margin: 0; padding: 0; list-style-position: inside;">
+                                                    <li v-for="type in lTypes">@{{type}}</li>
+                                                </ul>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

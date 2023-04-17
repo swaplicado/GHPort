@@ -38,6 +38,25 @@ var appRequestVacation = new Vue({
         isFromMail: false,
         MyReturnDate: null,
         showDatePickerSimple: false,
+        lTypes: [],
+    },
+    computed: {
+        propertyAAndPropertyB() {
+            return `${this.endDate}|${this.takedDays}`;
+        },
+    },
+    watch: {
+        propertyAAndPropertyB(newVal, oldVal) {
+            // this.newData = true;
+            let oldlTypes = structuredClone(this.lTypes);
+            this.lTypes = [];
+            if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
+                let res = this.checkSpecial(this.oApplication);
+                if(res[0] && !this.arraysEqual(this.lTypes, oldlTypes)){
+                    SGui.showMessage('', res[1], 'warning');
+                }
+            }
+        },
     },
     mounted(){
         var self = this;
@@ -55,6 +74,13 @@ var appRequestVacation = new Vue({
             // table['table_requestVac'].rows('.noSelectableRow').deselect();
     },
     methods: {
+        arraysEqual(a, b) {
+            if (a.length !== b.length) {
+                return false;
+            }
+            return a.every(element => b.includes(element));
+        },
+
         initView(){
             
         },
@@ -162,7 +188,7 @@ var appRequestVacation = new Vue({
                 SGui.showError("Debe seleccionar un renglón");
                 return;
             }
-
+            this.endDate = null;
             let data = table['table_requestVac'].row('.selected').data();
 
             axios.post(this.oData.getApplicationRoute, {
@@ -578,6 +604,41 @@ var appRequestVacation = new Vue({
             }
 
             return type;
+        },
+
+        checkSpecial(data){
+            let message = "";
+            let is_special = false;
+
+            if(data.is_proportional){
+                message = message + "Se utilizarán días proporcionales para la solicitud.\n";
+                is_special = true;
+                this.lTypes.push('Con días proporcionales');
+            }
+
+            if(data.is_advanced){
+                message = message + "Se utilizarán más días de los proporcionales para la solicitud.\n";
+                is_special = true;
+                this.lTypes.push('Con más días de los proporcionales');
+            }
+
+            if(data.is_past){
+                message = message + "Se tomarán días pasados.\n";
+                is_special = true;
+                this.lTypes.push('Con días pasados');
+            }
+
+            if(data.is_season_special){
+                message = message + 'Estas tomando días en temporada especial ' + oSeason.name + "\n";
+                is_special = true;
+                this.lTypes.push('Con días en temporada especial');
+            }
+
+            if(data.is_normal){
+                this.lTypes.push('Normal');
+            }
+
+            return [is_special, message];
         },
     },
 })

@@ -153,10 +153,17 @@ class requestVacationsController extends Controller
                                 ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
                                 ->leftJoin('sys_applications_sts as ap_st', 'ap_st.id_applications_st', '=', 'a.request_status_id')
                                 ->leftJoin('users as u_rev', 'u_rev.id', '=', 'a.user_apr_rej_id')
+                                ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
                                 ->where('a.id_application', $request->application_id)
                                 ->where('a.is_deleted', 0)
                                 ->select(
                                     'a.*',
+                                    'at.is_normal',
+                                    'at.is_past',
+                                    'at.is_advanced',
+                                    'at.is_proportional',
+                                    'at.is_season_special',
+                                    'at.is_recover_vacation',
                                     'u.birthday_n',
                                     'u.benefits_date',
                                     'u.payment_frec_id',
@@ -197,10 +204,17 @@ class requestVacationsController extends Controller
                                 ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
                                 ->leftJoin('sys_applications_sts as ap_st', 'ap_st.id_applications_st', '=', 'a.request_status_id')
                                 ->leftJoin('users as u_rev', 'u_rev.id', '=', 'a.user_apr_rej_id')
+                                ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
                                 ->where('a.id_application', $idApplication)
                                 ->where('a.is_deleted', 0)
                                 ->select(
                                     'a.*',
+                                    'at.is_normal',
+                                    'at.is_past',
+                                    'at.is_advanced',
+                                    'at.is_proportional',
+                                    'at.is_season_special',
+                                    'at.is_recover_vacation',
                                     'u.birthday_n',
                                     'u.benefits_date',
                                     'u.payment_frec_id',
