@@ -22,7 +22,7 @@ class CreateTpIncidentsPivotTable extends Migration
             $table->boolean('is_deleted')->default(0);
 
             $table->foreign('tp_incident_id')->references('id_incidence_tp')->on('cat_incidence_tps');
-            $table->foreign('interact_system_id')->references('id_int_sys')->on('interact_systems');
+            $table->foreign('int_sys_id')->references('id_int_sys')->on('interact_systems');
             $table->timestamps();
         });
     }
