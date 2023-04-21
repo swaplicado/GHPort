@@ -154,5 +154,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('recoveredVacations/save', 'Pages\recoveredVacationsController@save')->name('recoveredVacations_save');
 
     Route::post('notifications/clean', 'Utils\notificationsController@cleanNotificationsToSee')->name('notifications_clean');
-    
+   
+    Route::get('incidences', 'Pages\incidencesController@index')->name('incidences_index');
+    Route::post('incidences/create', 'Pages\incidencesController@createIncidence')->name('incidences_create');
+    Route::post('incidences/getIncidence', 'Pages\incidencesController@getApplication')->name('incidences_getIncidence');
+    Route::post('incidences/update', 'Pages\incidencesController@updateIncidence')->name('incidences_update');
+    Route::post('incidences/delete', 'Pages\incidencesController@deleteIncidence')->name('incidences_delete');
 });

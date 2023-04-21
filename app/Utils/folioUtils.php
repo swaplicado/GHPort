@@ -1,15 +1,24 @@
 <?php namespace App\Utils;
 
+use \App\Constants\SysConst;
+
 class folioUtils {
-    public static function makeFolio($date, $employee_id){
+    public static function makeFolio($date, $employee_id, $type_id = SysConst::TYPE_VACACIONES){
+        $oTypes = SysConst::lTypes;
+        $key = array_search($type_id, $oTypes);
+        $letter = SysConst::lTypesCodes[$key];
+
         $employee_num = \DB::table('users')
-                        ->where('id', $employee_id)
-                        ->value('employee_num');
+                            ->where('id', $employee_id)
+                            ->value('employee_num');
 
         $totApplications = \DB::table('applications')
-                            ->where('user_id', $employee_id)
-                            ->where('is_deleted', 0)
-                            ->count();
+                                ->where('user_id', $employee_id)
+                                ->where('type_incident_id', $type_id)
+                                ->where('is_deleted', 0)
+                                ->count();
+
+        $totApplications = $totApplications + 1;
 
         $stTotApp = (string)$totApplications;
         for($i = 4; $i > strlen($totApplications); $i--){
@@ -24,7 +33,7 @@ class folioUtils {
             $employee_num = $ceros.$employee_num;
         }
 
-        $folio = $employee_num.'-'.$stTotApp;
+        $folio = $letter.'-'.$employee_num.'-'.$stTotApp;
 
         return $folio;
     }

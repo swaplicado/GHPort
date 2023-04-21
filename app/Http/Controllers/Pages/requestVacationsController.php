@@ -665,6 +665,7 @@ class requestVacationsController extends Controller
         }
 
         $arrJson = [
+            'to_insert' => true,
             'application_id' => $oApplication->id_application,
             'folio' => $oApplication->folio_n,
             'employee_id' => $employee->external_id_n,

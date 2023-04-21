@@ -1,0 +1,199 @@
+@extends('layouts.principal')
+
+@section('headStyles')
+<link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
+<link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
+<link href="myApp/Utils/SDatePicker/css/datepicker.min.css" rel="stylesheet" />
+<link href="myApp/Utils/SDatePicker/css/datepicker-bs4.min.css" rel="stylesheet" />
+<link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
+<link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
+@endsection
+
+@section('headJs')
+<script src="{{ asset("daterangepicker/jquery.daterangepicker.min.js") }}" type="text/javascript"></script>
+    <script src="{{ asset('select2js/js/select2.min.js') }}"></script>
+    <script>
+        function GlobalData(){
+            this.lIncidences = <?php echo json_encode($lIncidences); ?>;
+            this.constants = <?php echo json_encode($constants); ?>;
+            this.lClass = <?php echo json_encode($lClass); ?>;
+            this.lTypes = <?php echo json_encode($lTypes); ?>;
+            this.lTemp = <?php echo json_encode($lTemp); ?>;
+            this.lHolidays = <?php echo json_encode($lHolidays); ?>;
+            this.oUser = <?php echo json_encode($oUser); ?>;
+            this.routeCreate = <?php echo json_encode(route('incidences_create')); ?>;
+            this.routeUpdate = <?php echo json_encode(route('incidences_update')); ?>;
+            this.routeDelete = <?php echo json_encode(route('incidences_delete')); ?>;
+            this.routeGetIncidence = <?php echo json_encode(route('incidences_getIncidence')); ?>;
+            this.indexes_incidences = {
+                'id_application': 0,
+                'request_status_id': 1,
+                'emp_comments_n': 2,
+                'sup_comments_n': 3,
+                'user_apr_rej_id': 4,
+                'id_incidence_cl': 5,
+                'id_incidence_tp': 6,
+                'incidence_tp_name': 7,
+                'folio_n': 8,
+                'date_send_n': 9,
+                'user_apr_rej_name': 10,
+                'accept_reject_date': 11,
+                'start_date': 12,
+                'end_date': 13,
+                'return_date': 14,
+                'total_days': 15,
+                'subtype': 16,
+                'applications_st_name': 17,
+            }
+        }
+        var oServerData = new GlobalData();
+    </script>
+@endsection
+
+@section('content') 
+<div class="card shadow mb-4" id="incidencesApp">
+    
+    @include('Incidences.modal_incidences')
+
+    <div class="card-header">
+        <h3>
+            <b>Mis incidencias</b>
+        </h3>
+    </div>
+    <div class="card-body">
+        <div class="contenedor-elem-ini">
+            <label for="incident_cl_filter">Filtrar por clase: </label>
+            <select class="select2-class form-control" name="incident_cl_filter" id="incident_cl_filter" style="width: 15%;"></select>
+            &nbsp;&nbsp;
+            <label for="incident_tp_filter">Filtrar por tipo: </label>
+            <select class="select2-class form-control" name="incident_tp_filter" id="incident_tp_filter" style="width: 15%;"></select>
+        </div>
+        <br>
+        @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true ])
+        <br>
+        <br>
+        @include('Incidences.incidences_table', ['table_id' => 'table_MyIncidences'])
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+
+<script>
+    moment.locale('es');
+    $(document).ready(function () {
+        $.fn.dataTable.ext.search.push(
+            function( settings, data, dataIndex ) {
+                let iClass = parseInt( $('#incident_cl_filter').val(), 10 );
+                let iType = parseInt( $('#incident_tp_filter').val(), 10 );
+                let col_class = 0;
+                let col_type = 0;
+
+                col_class = parseInt( data[oServerData.indexes_incidences.id_incidence_cl] );
+                col_type = parseInt( data[oServerData.indexes_incidences.id_incidence_tp] );
+                if(col_class === iClass && col_type === iType){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        );
+    });
+</script>
+@include('layouts.table_jsControll', [
+                                        'table_id' => 'table_MyIncidences',
+                                        'colTargets' => [0,1,2,3,4,16],
+                                        'colTargetsSercheable' => [5,6],
+                                        'noDom' => true,
+                                        'select' => true,
+                                        'crear_modal' => true,
+                                        'edit_modal' => true,
+                                        'delete' => true,
+                                    ] )
+<script>
+    $(document).ready(function (){
+        $('#incident_cl_filter').change( function() {
+            app.select_changed = true;
+        });
+        
+        $('#incident_tp_filter').change( function() {
+            table['table_MyIncidences'].draw();
+        });
+    });
+</script>
+<script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
+<script>
+    var oDateRangePicker = null;
+    function initCalendar(
+        sStart_date,
+        bSingleMonth,
+        bSingleDate,
+        payment,
+        lTemp,
+        lHolidays,
+        birthday,
+        aniversaryDay
+    ){
+        if(oDateRangePicker != null){
+            let oCalendar = $('#two-inputs-calendar').data('dateRangePicker');
+            oCalendar.destroy();
+        }
+        oDateRangePicker = new SDateRangePicker();
+        oDateRangePicker.setDateRangePicker(
+            'two-inputs-calendar',
+            'date-range-001',
+            'date-range-002',
+            'clear',
+            oServerData.constants,
+            sStart_date,
+            bSingleMonth,
+            bSingleDate,
+            payment,
+            lTemp,
+            lHolidays,
+            birthday,
+            aniversaryDay
+        );
+    }
+
+    function dateRangePickerSetValue(){
+        if($('#date-range-001').val() && $('#date-range-002').val()){
+            app.startDate = app.oDateUtils.formatDate($('#date-range-001').val(), 'ddd DD-MMM-YYYY');
+            app.endDate = app.oDateUtils.formatDate($('#date-range-002').val(), 'ddd DD-MMM-YYYY');
+            // app.checkSelectDates();
+        }else{
+            app.startDate = '';
+            app.endDate = '';
+        }
+        app.getDataDays();
+    }
+
+    function dateRangePickerGetValue(){
+        if ($('#date-range-001').val() && $('#date-range-002').val() ){
+            app.startDate = app.oDateUtils.formatDate($('#date-range-001').val());
+            app.endDate = app.oDateUtils.formatDate($('#date-range-002').val());
+            // app.getDataDays();
+        }
+    }
+
+    function dateRangePickerClearValue(){
+        app.returnDate = null;
+    }
+</script>
+<script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
+<script type="text/javascript" src="{{ asset('myApp/Incidences/vue_incidences.js') }}"></script>
+<script type="text/javascript" src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
+<script>
+    var elem = document.querySelector('input[name="datepicker"]');
+    var datepicker = new Datepicker(elem, {
+        language: 'es',
+        format: 'dd/mm/yyyy',
+        // showOnFocus: true,
+        // minDate: null,
+    });
+
+    elem.addEventListener('changeDate', function (e, details) { 
+        app.setMyReturnDate();
+    });
+</script>
+@endsection

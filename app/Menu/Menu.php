@@ -17,6 +17,7 @@ class Menu {
                 $lMenus = [
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $element, 'route' => route('incidences_index'), 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
@@ -39,6 +40,11 @@ class Menu {
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias']
+                                                ],
+                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
+                    ],
                     (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('recoveredVacations'), 'icon' => 'bx bx-circle bx-sm', 'name' => 'Reactivación de vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
@@ -70,6 +76,11 @@ class Menu {
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias']
+                                                ],
+                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
+                    ],
                     (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                     (object) ['type' => $list, 'list' => [
@@ -96,6 +107,11 @@ class Menu {
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                              ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias']
+                                                ],
+                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
+                    ],
                     (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],

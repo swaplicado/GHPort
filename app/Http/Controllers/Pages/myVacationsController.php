@@ -351,6 +351,12 @@ class myVacationsController extends Controller
         try {
             $application = Application::findOrFail($request->id_application);
 
+            $data = $this->checkExternalIncident($application, json_decode($application->ldays));
+
+            if($data->code == 500 || $data->code == 550){
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
+
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
             }
@@ -480,4 +486,54 @@ class myVacationsController extends Controller
 
         return json_encode(['success' => true, 'oUser' => $user]);
     }
+
+    public function checkExternalIncident($oApplication, $lDays){
+        $employee = \DB::table('users')
+                        ->where('id', $oApplication->user_id)
+                        ->first();
+
+        $ext_company_id = \DB::table('ext_company')
+                            ->where('id_company', $employee->company_id)
+                            ->value('external_id');
+
+        $appBreakDowns = ApplicationsBreakdown::where('application_id', $oApplication->id_application)->get();
+
+        $typeIncident = \DB::table('cat_incidence_tps')
+                            ->where('id_incidence_tp', $oApplication->type_incident_id)
+                            ->first();
+
+        $userVacation = \DB::table('vacation_users')
+                            ->where('user_id', $employee->id)
+                            ->where('is_deleted', 0)
+                            ->get();
+        $count = 0;
+        
+        $arrJson = [
+            'to_insert' => false,
+            'application_id' => $oApplication->id_application,
+            'folio' => $oApplication->folio_n,
+            'employee_id' => $employee->external_id_n,
+            'company_id' => $ext_company_id,
+            'type_pay_id' => $employee->payment_frec_id,
+            'type_incident_id' => $typeIncident->id_incidence_tp,
+            'class_incident_id' => $typeIncident->incidence_cl_id,
+            'date_send' => $oApplication->date_send_n,
+            'date_ini' => $oApplication->start_date,
+            'date_end' => $oApplication->end_date,
+            'total_days' => $oApplication->total_days
+        ];
+        $config = \App\Utils\Configuration::getConfigurations();
+        $client = new Client([
+            'base_uri' => $config->urlSync,
+            'timeout' => 30.0,
+        ]);
+
+        $str = json_encode($arrJson);
+
+        $response = $client->request('GET', 'postIncidents/' . json_encode($arrJson));
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
+    } 
 }

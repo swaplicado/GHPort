@@ -12867,4 +12867,26 @@ body.sidebar-toggled footer.sticky-footer {
     border-top: 1px solid black;
     margin-top: 10px;
     margin-bottom: 10px;
-  }  
+}  
+.separator-light{
+    border-top: 1px solid #e3e6f0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}  
+
+.contenedor-elem-fin {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.contenedor-elem-ini {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+}
+.contenedor-elem-ini button, 
+.contenedor-elem-ini select{
+    margin-right: 10px;
+}
+  

@@ -120,4 +120,20 @@ class delegationUtils {
             return $username;
         }
     }
+
+    /**
+     * Si esta en modo delegación regresa el job_id del usuario delegado,
+     * si no, regresa el job_id del usuario en sesión
+     */
+    public static function getJobIdUser(){
+        if(!Session::get('is_delegation')){
+            return \Auth::user()->job_id;
+        }else{
+            $username = User::where('id', Session::get('user_delegated_id'))
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->value('job_id');
+            return $username;
+        }
+    }
 }
