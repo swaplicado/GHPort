@@ -8,6 +8,7 @@ use \App\Constants\SysConst;
 use \App\Utils\EmployeeVacationUtils;
 use \App\Utils\folioUtils;
 use \App\Models\Vacations\Application;
+use \App\Models\Vacations\ApplicationVsTypes;
 use \App\Models\Vacations\ApplicationLog;
 use \App\Utils\delegationUtils;
 use \App\Utils\incidencesUtils;
@@ -19,6 +20,7 @@ class incidencesController extends Controller
         $lIncidences = \DB::table('applications as ap')
                         ->leftJoin('cat_incidence_tps as tp', 'tp.id_incidence_tp', '=', 'ap.type_incident_id')
                         ->leftJoin('cat_incidence_cls as cl', 'cl.id_incidence_cl', '=', 'tp.incidence_cl_id')
+                        ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'ap.id_application')
                         ->leftJoin('sys_applications_sts as st', 'st.id_applications_st', '=', 'ap.request_status_id')
                         ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
                         ->where('type_incident_id', '!=', SysConst::TYPE_VACACIONES)
@@ -26,6 +28,9 @@ class incidencesController extends Controller
                         ->where('ap.user_id', $user_id)
                         ->select(
                             'ap.*',
+                            'at.is_normal',
+                            'at.is_past',
+                            'at.is_season_special',
                             'tp.id_incidence_tp',
                             'tp.incidence_tp_name',
                             'cl.id_incidence_cl',
@@ -88,6 +93,9 @@ class incidencesController extends Controller
         $employee_id = $request->employee_id;
         $type_incident_id = $request->incident_type_id;
         $class_incident_id = $request->incident_class_id;
+        $is_normal = $request->is_normal;
+        $is_past = $request->is_past;
+        $is_season_special  = $request->is_season_special;
         try {
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
@@ -116,6 +124,14 @@ class incidencesController extends Controller
             $application->emp_comments_n = $comments;
             $application->is_deleted = false;
             $application->save();
+
+            $applicationVsType = new ApplicationVsTypes();
+            $applicationVsType->application_id = $application->id_application;
+            $applicationVsType->is_past = $is_past;
+            $applicationVsType->is_season_special = $is_season_special;
+            $applicationVsType->is_recover_vacation = 0;
+            $applicationVsType->is_normal = !($request->is_past || $request->is_season_special);
+            $applicationVsType->save();
 
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
@@ -149,6 +165,9 @@ class incidencesController extends Controller
         $employee_id = $request->employee_id;
         $type_incident_id = $request->incident_type_id;
         $class_incident_id = $request->incident_class_id;
+        $is_normal = $request->is_normal;
+        $is_past = $request->is_past;
+        $is_season_special  = $request->is_season_special;
 
         try {
             $application = Application::findOrFail($id_application);
@@ -163,6 +182,12 @@ class incidencesController extends Controller
             $application->ldays = json_encode($lDays);
             $application->emp_comments_n = $comments;
             $application->update();
+
+            $applicationVsType = ApplicationVsTypes::where('application_id', $application->id_application)->first();
+            $applicationVsType->is_past = $is_past;
+            $applicationVsType->is_season_special = $is_season_special;
+            $applicationVsType->is_normal = !($request->is_past || $request->is_season_special);
+            $applicationVsType->update();
 
             $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
             
@@ -180,17 +205,20 @@ class incidencesController extends Controller
         try {
             $oApplication = \DB::table('applications as ap')
                                 ->leftJoin('cat_incidence_tps as tp', 'tp.id_incidence_tp', '=', 'ap.type_incident_id')                    
-                                ->leftJoin('cat_incidence_cls as cl', 'cl.id_incidence_cl', '=', 'tp.incidence_cl_id')                    
+                                ->leftJoin('cat_incidence_cls as cl', 'cl.id_incidence_cl', '=', 'tp.incidence_cl_id')
+                                ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'ap.id_application')
                                 ->where('id_application', $application_id)
                                 ->select(
                                     'ap.*',
+                                    'at.is_normal',
+                                    'at.is_past',
+                                    'at.is_season_special',
                                     'tp.id_incidence_tp',
                                     'tp.incidence_tp_name',
                                     'cl.id_incidence_cl',
                                     'cl.incidence_cl_name',
                                 )
                                 ->first();
-
 
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
@@ -218,5 +246,9 @@ class incidencesController extends Controller
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
+    }
+
+    public function sendIncident(Request $request){
+
     }
 }

@@ -152,7 +152,7 @@ var app = new Vue({
             }
             return a.every(element => b.includes(element));
         },
-        
+
         createCalendar(val){
             $('#clear').trigger('click');
             if(!!val){
@@ -296,6 +296,9 @@ var app = new Vue({
                 this.takedDays = this.oApplication.total_days;
                 this.lDays = this.formatlDays(this.oApplication.ldays);
                 this.comments = this.oApplication.emp_comments_n;
+                this.is_normal = this.oApplication.is_normal;
+                this.is_past = this.oApplication.is_past;
+                this.is_season_special = this.oApplication.is_season_special;
             }else{
                 if(this.HasIncidencesCreated()){
                     SGui.showMessage('', 'No puede crear otra incidencia si tiene incidencias creadas pendientes de enviar', 'warning');
@@ -347,6 +350,9 @@ var app = new Vue({
                 'lDays': copylDays,
                 'incident_type_id': this.type_id,
                 'incident_class_id': this.class_id,
+                'is_normal': this.is_normal,
+                'is_past': this.is_past,
+                'is_season_special': this.is_season_special,
             })
             .then( result => {
                 let data = result.data;
