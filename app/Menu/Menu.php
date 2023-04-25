@@ -41,7 +41,8 @@ class Menu {
                             ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $list, 'list' => [
-                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias']
+                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
+                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
                                                 ],
                                                 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
                     ],
@@ -77,7 +78,8 @@ class Menu {
                             ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $list, 'list' => [
-                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias']
+                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
+                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
                                                 ],
                                                 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
                     ],
@@ -108,7 +110,8 @@ class Menu {
                              ],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $list, 'list' => [
-                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias']
+                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
+                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
                                                 ],
                                                 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
                     ],

@@ -12,6 +12,8 @@ use \App\Models\Vacations\ApplicationVsTypes;
 use \App\Models\Vacations\ApplicationLog;
 use \App\Utils\delegationUtils;
 use \App\Utils\incidencesUtils;
+use App\Utils\orgChartUtils;
+use App\Models\Vacations\MailLog;
 use Carbon\Carbon;
 
 class incidencesController extends Controller
@@ -249,6 +251,100 @@ class incidencesController extends Controller
     }
 
     public function sendIncident(Request $request){
+        $application_id = $request->application_id;
+        try {
+            $application = Application::findOrFail($application_id);
+            // $data = incidencesUtils::checkExternalIncident($application);
 
+            // if($data->code == 500 || $data->code == 550){
+            //     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            // }
+
+            $date = Carbon::now();
+            $application->request_status_id = SysConst::APPLICATION_ENVIADO;
+            $application->date_send_n = $date->toDateString();
+            $application->update();
+
+            $user = \DB::table('users')
+                        ->where('id', $application->user_id)
+                        ->first();
+
+            $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($user->org_chart_job_id);
+
+            // $mailLog = new MailLog();
+            // $mailLog->date_log = Carbon::now()->toDateString();
+            // $mailLog->to_user_id = $superviser->id;
+            // $mailLog->application_id_n = $application->id_application;
+            // $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            // $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_VACACIONES;
+            // $mailLog->is_deleted = 0;
+            // $mailLog->created_by = delegationUtils::getIdUser();
+            // $mailLog->updated_by = delegationUtils::getIdUser();
+            // $mailLog->save();
+
+            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al enviar la incidencia']);
+        }
+
+        // $mypool = Pool::create();
+        //     $mypool[] = async(function () use ($application, $request, $superviser, $mailLog){
+        //         try {
+        //             Mail::to($superviser->institutional_mail)->send(new requestVacationMail(
+        //                                                     $application->id_application,
+        //                                                     $request->employee_id,
+        //                                                     $application->ldays,
+        //                                                     $request->returnDate
+        //                                                 )
+        //                                             );
+        //         } catch (\Throwable $th) {
+        //             $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+        //             $mailLog->update();   
+        //             return null; 
+        //         }
+
+        //         $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+        //         $mailLog->update();
+        //     })->then(function ($mailLog) {
+                
+        //     })->catch(function ($mailLog) {
+                
+        //     })->timeout(function ($mailLog) {
+                
+        //     });
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
+    }
+
+    public function sendAndAuthorize(Request $request){
+        try {
+            $application_id = $request->application_id;
+
+            \DB::beginTransaction();
+            
+            $application = Application::findOrFail($application_id);
+            // $data = incidencesUtils::checkExternalIncident($application);
+
+            // if($data->code == 500 || $data->code == 550){
+            //     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            // }
+
+            $date = Carbon::now();
+            $application->request_status_id = SysConst::APPLICATION_APROBADO;
+            $application->date_send_n = $date->toDateString();
+            $application->update();
+
+            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+            
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => 'Error al enviar y autorizar la solicitud', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
 }

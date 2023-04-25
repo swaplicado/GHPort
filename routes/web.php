@@ -160,4 +160,12 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('incidences/getIncidence', 'Pages\incidencesController@getApplication')->name('incidences_getIncidence');
     Route::post('incidences/update', 'Pages\incidencesController@updateIncidence')->name('incidences_update');
     Route::post('incidences/delete', 'Pages\incidencesController@deleteIncidence')->name('incidences_delete');
+    Route::post('incidences/send', 'Pages\incidencesController@sendIncident')->name('incidences_send');
+
+    Route::get('requestIncidences', 'Pages\requestIncidencesController@index')->name('requestIncidences_index');
+    Route::post('requestIncidences/getEmployee', 'Pages\requestIncidencesController@getEmployee')->name('requestIncidences_getEmployee');
+    Route::post('requestIncidences/approbe', 'Pages\requestIncidencesController@approbeIncidence')->name('requestIncidences_approbe');
+    Route::post('requestIncidences/reject', 'Pages\requestIncidencesController@rejectIncidence')->name('requestIncidences_reject');
+    Route::get('requestIncidences/getAllEmployees', 'Pages\requestIncidencesController@getAllEmployees')->name('requestIncidences_getAllEmployees');
+    Route::get('requestIncidences/getEmployeeData', 'Pages\requestIncidencesController@getEmployeeData')->name('requestIncidences_getEmployeeData');
 });

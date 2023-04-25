@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        <div v-show="!isEdit">
+                        <div v-show="!isEdit && !isRevision">
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for="">Selecciona clase:</label>
@@ -29,22 +29,29 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="isEdit">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">Clase de incidencia:</label>
-                                </div>
-                                <div class="col-md-9">
-                                    @{{class_name}}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">Tipo de incidencia:</label>
-                                </div>
-                                <div class="col-md-9">
-                                    @{{type_name}}
-                                </div>
+                        <div v-if="isRevision">
+                            <div v-if="oUser != null" style="border-bottom: solid 1px rgba(0,0,0,.125);">
+                                <table class="table">
+                                    <thead>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><b>Colaborador:</b>&nbsp</td>
+                                            <td>@{{oUser.full_name}}</td>
+                                            <td rowspan="3" style="text-align: center; vertical-align:middle;">
+                                                <img class="rounded-circle" :src="'data:image/jpg;base64,'+oUser.photo64" style="width:100px;height:100px;">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Fecha de ingreso:</b>&nbsp</td>
+                                            <td>@{{ oDateUtils.formatDate(oUser.benefits_date, 'ddd DD-MMM-YYYY')}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Antigüedad:</b>&nbsp</td>
+                                            <td>@{{oUser.antiquity}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -66,7 +73,7 @@
                                             <td>
                                                 <input class="form-control" v-model="startDate" style="width: 40%; display: inline" readonly> a <input class="form-control" v-model="endDate" style="width: 40%; display: inline" readonly>
                                             </td>
-                                            <td>
+                                            <td v-if="!isRevision">
                                                 <button type="button" class="btn btn-primary inline" id="clear">Limpiar</button>
                                             </td>
                                         </tr>
@@ -82,6 +89,13 @@
                         <table>
                             <thead></thead>
                             <tbody>
+                                <tr v-if="isEdit || isRevision">
+                                    <td><b>Clase de incidencia:</b></td>
+                                    <td>@{{class_name}}</td>
+                                    <td><p>&nbsp &nbsp</p></td>
+                                    <td><b>Tipo de incidencia:</b></td>
+                                    <td>@{{type_name}}</td>
+                                </tr>
                                 <tr>
                                     <td style="vertical-align: top;"><b>Fecha inicio:</b></td>
                                     <td style="vertical-align: top;"><input class="form-control" v-model="startDate" readonly></td>
@@ -147,8 +161,15 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" v-on:click="save()" :hidden="!valid">Guardar</a>
+                <template v-if="!isRevision">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" v-on:click="save()" :hidden="!valid">Guardar</a>
+                </template>
+                <template v-else-if="isRevision">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" v-on:click="approbeIncidence()">Aprobar</a>
+                    <button type="button" class="btn btn-danger" v-on:click="rejectIncidence()">Rechazar</a>
+                </template>
             </div>
         </div>
     </div>

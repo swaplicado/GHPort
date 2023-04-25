@@ -37,6 +37,11 @@ var app = new Vue({
         is_past: false,
         is_season_special: false,
         lSpecialTypes: [],
+        isRevision: false,
+        table_name: oServerData.table_name,
+        lEmployees: oServerData.lEmployees,
+        needRenderTableIncidences: false,
+        renderTabletaReqIncidences: false,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -47,9 +52,11 @@ var app = new Vue({
         filter_class_id:function(val){
             this.setTypesToSelect(val);            
 
-            $('#incident_tp_filter').empty().trigger("change");
+            // $('#incident_tp_filter').empty().trigger("change");
+            $('#incident_tp_filter').empty();
             
             let dataTypes = [];
+            val == 0 ? dataTypes = [{id: '0', text: 'Todos'}] : '';
             for (let i = 0; i < this.lTypesToFilter.length; i++) {
                 dataTypes.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
             }
@@ -58,23 +65,39 @@ var app = new Vue({
                 data: dataTypes,
             });
 
-            if(!!table['table_MyIncidences'] && this.select_changed){
-                table['table_MyIncidences'].draw();
+            $('#incident_tp_filter').trigger("change");
+
+            if(!!table['table_Incidences'] && this.select_changed){
+                table['table_Incidences'].draw();
                 this.select_changed = false;
             }
+
+            // if(!!$('#myIncident_tp_filter')){
+            //     $('#myIncident_tp_filter').empty().trigger("change");
+            
+            //     let dataTypes = [];
+            //     val == 0 ? dataTypes = [{id: '0', text: 'Todos'}] : '';
+            //     for (let i = 0; i < this.lTypesToFilter.length; i++) {
+            //         dataTypes.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
+            //     }
+                
+            //     $('#myIncident_tp_filter').select2({
+            //         data: dataTypes,
+            //     });
+            // }
         },
         filter_type_id:function(val){
             
         },
         class_id:function(val){
-            if(!this.isEdit){
+            if(!this.isEdit && !this.isRevision){
                 $('#clear').trigger('click');
                 this.showCalendar = false;
-                this.setClass();
+                this.setClass(val);
             }
         },
         type_id:function(val){
-            if(!this.isEdit){
+            if(!this.isEdit && !this.isRevision){
                 this.createCalendar(val);
             }
         },
@@ -90,22 +113,82 @@ var app = new Vue({
         },
     },
     updated() {
-        
+        this.$nextTick(function () {
+            if(typeof self.$refs.table_Incidences != 'undefined' && self.needRenderTableIncidences){
+                this.createTable('table_Incidences', [0,2,3,4,16], [1,5,6]);
+                let dataClassFilter = [{id: '0', text: 'Todos'}];
+                for (let i = 0; i < this.lClass.length; i++) {
+                    dataClassFilter.push({id: this.lClass[i].id_incidence_cl, text: this.lClass[i].incidence_cl_name });
+                }
+
+                $('#myIncident_cl_filter').select2({
+                    data: dataClassFilter,
+                });
+
+                $('#myIncident_tp_filter').empty().trigger("change");
+            
+                let dataTypes = [];
+                dataTypes = [{id: '0', text: 'Todos'}];
+                for (let i = 0; i < this.lTypesToFilter.length; i++) {
+                    dataTypes.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
+                }
+                
+                $('#myIncident_tp_filter').select2({
+                    data: dataTypes,
+                });
+
+                $('#myIncident_cl_filter').change( function() {
+                    $('#myIncident_tp_filter').empty();
+                    let val = $('#myIncident_cl_filter').val();
+                    let lDataTypes = [];
+                    let dataTypes = [];
+                    if(val != 0){
+                        lDataTypes = self.lTypes.filter(function(item) {
+                            return item.incidence_cl_id == val;
+                        });
+                    }else{
+                        lDataTypes = self.lTypes;
+                    }
+            
+                    val == 0 ? dataTypes = [{id: '0', text: 'Todos'}] : '';
+                    for (let i = 0; i < lDataTypes.length; i++) {
+                        dataTypes.push({id: lDataTypes[i].id_incidence_tp, text: lDataTypes[i].incidence_tp_name });
+                    }
+                    
+                    $('#myIncident_tp_filter').select2({
+                        data: dataTypes,
+                    });
+                    self.filterIncidenceTable();
+                });
+                
+                $('#myIncident_tp_filter').change( function() {
+                    self.filterIncidenceTable();
+                });
+            }
+            // if(typeof self.$refs.table_myRequest != 'undefined' && !self.renderTableMyRequest){
+            //     this.createMyRequestTable(this.tempData);
+            //     this.initDatePicker();
+            // }
+        })
     },
     mounted(){
-        var self = this;
+        self = this;
         this.lTypesToFilter = this.lTypes.filter(function(item) {
             return item.incidence_cl_id == self.lClass[0].id_incidence_cl;
         });
 
+        let dataClassFilter = [{id: '0', text: 'Todos'}];
         let dataClass = [];
         for (let i = 0; i < this.lClass.length; i++) {
             dataClass.push({id: this.lClass[i].id_incidence_cl, text: this.lClass[i].incidence_cl_name });
+            dataClassFilter.push({id: this.lClass[i].id_incidence_cl, text: this.lClass[i].incidence_cl_name });
         }
 
+        let dataTypesFilter = [{id: '0', text: 'Todos'}];
         let dataTypes = [];
         for (let i = 0; i < this.lTypesToFilter.length; i++) {
             dataTypes.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
+            dataTypesFilter.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
         }
         
         $('.select2-class-modal').select2({
@@ -115,13 +198,13 @@ var app = new Vue({
         $('.select2-class').select2({});
 
         $('#incident_cl_filter').select2({
-            data: dataClass,
+            data: dataClassFilter,
         }).on('select2:select', function(e) {
             self.filter_class_id = e.params.data.id;
         });
 
         $('#incident_tp_filter').select2({
-            data: dataTypes,
+            data: dataTypesFilter,
         }).on('select2:select', function(e) {
             self.filter_type_id = e.params.data.id;
         });
@@ -146,6 +229,128 @@ var app = new Vue({
 
     },
     methods: {
+        initRequestincidences(){
+            this.isRevision = true;
+            this.oUser = null;
+        },
+
+        initGestionIncidences(){
+            this.isRevision = false;
+            this.oUser = null;
+            this.setSelectEmployees();
+        },
+
+        createTable(table_name, colTargets = [], colTargetsSercheable = []){
+            table[table_name] = $('#'+table_name).DataTable({
+                "language": {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                "responsive": false,
+                "dom": 'Bfrtip',
+                "columnDefs": [
+                    {
+                        "targets": colTargets,
+                        "visible": false,
+                        "searchable": false,
+                        "orderable": false,
+                    },
+                    {
+                        "targets": colTargetsSercheable,
+                        "visible": false,
+                        "searchable": true,
+                        "orderable": false,
+                    },
+                    {
+                        "orderable": false,
+                        "targets": "no-sort",
+                    }
+                ],
+                "buttons": [
+                    
+                ],
+                "paging": false,
+                "dom": 'Bfrtip',
+                "initComplete": function(){ 
+                    $("#"+table_name).wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
+                    $('#'+table_name+' tbody').on('click', 'tr', function () {
+                        if ($(this).hasClass('selected')) {
+                            $(this).removeClass('selected');
+                        }
+                        else {
+                            table[table_name].$('tr.selected').removeClass('selected');
+                            $(this).addClass('selected');
+                        }
+                    });
+
+                    /**
+                     * Editar un registro con vue modal
+                     */
+                    $('#btn_edit').click(function () {
+                        if (table[table_name].row('.selected').data() == undefined) {
+                            SGui.showError("Debe seleccionar un renglón");
+                            return;
+                        }
+                
+                        app.showModal(table[table_name].row('.selected').data());
+                    });
+
+                    /**
+                     * Crear un registro con vue modal
+                     */
+                    $('#btn_crear').click(function () {        
+                        app.showModal();
+                    });
+
+                    /**
+                     * Borrar un registro con vue
+                     */
+                    $('#btn_delete').click(function  () {
+                        if (table[table_name].row('.selected').data() == undefined) {
+                            SGui.showError("Debe seleccionar un renglón");
+                            return;
+                        }
+                        app.deleteRegistry(table[table_name].row('.selected').data());
+                    });
+
+                    /**
+                    * Enviar un registro con vue
+                    */
+                    $('#btn_send').click(function  () {
+                        if (table[table_name].row('.selected').data() == undefined) {
+                            SGui.showError("Debe seleccionar un renglón");
+                            return;
+                        }
+                        app.sendRegistry(table[table_name].row('.selected').data());
+                    });
+                },
+            });
+
+            
+            this.reDrawTableIncidences('table_Incidences', this.lIncidences);
+            this.needRenderTableIncidences = false;
+        },
+
         arraysEqual(a, b) {
             if (a.length !== b.length) {
                 return false;
@@ -153,7 +358,7 @@ var app = new Vue({
             return a.every(element => b.includes(element));
         },
 
-        createCalendar(val){
+        createCalendar(val, enable = true){
             $('#clear').trigger('click');
             if(!!val){
                 this.showCalendar = true;
@@ -165,11 +370,12 @@ var app = new Vue({
                             null,
                             false,
                             false,
-                            oServerData.oUser.payment_frec_id,
-                            oServerData.lTemp,
+                            this.oUser.payment_frec_id,
+                            this.lTemp,
                             oServerData.lHolidays,
-                            oServerData.oUser.birthday_n,
-                            oServerData.oUser.benefits_date,
+                            this.oUser.birthday_n,
+                            this.oUser.benefits_date,
+                            enable,
                         );
                         break;
                     case 4:
@@ -178,11 +384,12 @@ var app = new Vue({
                             null,
                             true,
                             true,
-                            oServerData.oUser.payment_frec_id,
-                            oServerData.lTemp,
+                            this.oUser.payment_frec_id,
+                            this.lTemp,
                             oServerData.lHolidays,
-                            oServerData.oUser.birthday_n,
-                            oServerData.oUser.benefits_date,
+                            this.oUser.birthday_n,
+                            this.oUser.benefits_date,
+                            enable,
                         );
                         break;
                     default:
@@ -191,10 +398,15 @@ var app = new Vue({
             }
         },
 
-        setClass(){
+        setClass(val){
+            let lDataTypes = [];
+            lDataTypes = this.lTypes.filter(function(item) {
+                return item.incidence_cl_id == val;
+            });
+
             let dataTypes = [];
-            for (let i = 0; i < this.lTypesToFilter.length; i++) {
-                dataTypes.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
+            for (let i = 0; i < lDataTypes.length; i++) {
+                dataTypes.push({id: lDataTypes[i].id_incidence_tp, text: lDataTypes[i].incidence_tp_name });
             }
 
             $('#incident_type').empty().trigger("change");
@@ -210,10 +422,13 @@ var app = new Vue({
 
         setTypesToSelect(val){
             this.lTypesToFilter = [];
-            this.lTypesToFilter = this.lTypes.filter(function(item) {
-                return item.incidence_cl_id == val;
-            });
-
+            if(val == 0){
+                this.lTypesToFilter = this.lTypes;
+            }else{
+                this.lTypesToFilter = this.lTypes.filter(function(item) {
+                    return item.incidence_cl_id == val;
+                });
+            }
             if(this.lTypesToFilter.length > 0){
                 this.filter_type_id = this.lTypesToFilter[0].id_incidence_tp;
             }else{
@@ -358,7 +573,7 @@ var app = new Vue({
                 let data = result.data;
                 if(data.success){
                     this.oCopylIncidences = data.lIncidences;
-                    this.reDrawTableMyIncidences(data);
+                    this.reDrawTableIncidences('table_Incidences', data.lIncidences);
                     SGui.showOk();
                     $('#modal_incidences').modal('hide');
                 }else{
@@ -408,11 +623,12 @@ var app = new Vue({
             this.valid = true;
             this.idApplication = null;
             this.isEdit = false;
+            // this.isRevision = false;
         },
 
-        reDrawTableMyIncidences(data){
+        reDrawTableIncidences(table_name, lIncidences){
             var dataIncidences = [];
-            for(let incident of data.lIncidences){
+            for(let incident of lIncidences){
                 dataIncidences.push(
                     [
                         incident.id_application,
@@ -443,8 +659,8 @@ var app = new Vue({
                     ]
                 );
             }
-            table['table_MyIncidences'].clear().draw();
-            table['table_MyIncidences'].rows.add(dataIncidences).draw();
+            table[table_name].clear().draw();
+            table[table_name].rows.add(dataIncidences).draw();
         },
 
         HasIncidencesCreated(){
@@ -486,7 +702,7 @@ var app = new Vue({
                 var data = response.data;
                 if(data.success){
                     this.oCopylIncidences = data.lIncidences;
-                    this.reDrawTableMyIncidences(data);
+                    this.reDrawTableIncidences('table_Incidences', data.lIncidences);
                     SGui.showOk();
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -532,5 +748,218 @@ var app = new Vue({
 
             return [is_special, message];
         },
-    },
-})
+
+        sendRegistry(data){
+            if(data[this.indexes_incidences.applications_st_name] != 'CREADO'){
+                SGui.showMessage('','Solo se pueden enviar incidencias con el estatus CREADO', 'warning');
+                return
+            }
+            Swal.fire({
+                title: '¿Desea enviar la incidencia ' + data[this.indexes_incidences.folio_n] + ' ?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.sendIncident(data[this.indexes_incidences.id_application]);
+                }
+            })
+        },
+
+        sendIncident(application_id){
+            SGui.showWaiting(15000);
+            axios.post(this.oData.routeSend, {
+                'application_id': application_id,
+            })
+            .then(response => {
+                var data = response.data;
+                if(data.success){
+                    this.oCopylIncidences = data.lIncidences;
+                    this.reDrawTableIncidences('table_Incidences', data.lIncidences);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        /**
+         * Metodo utilizado en la vista de revisor para obtener el usuario de la incidencia
+         */
+        getEmployee(user_id){
+            return new Promise((resolve) =>
+                axios.post(this.oData.routeGetEmployee, {
+                    'user_id': user_id,
+                })
+                .then( result => {
+                    let data = result.data;
+                    if(data.success){
+                        this.oUser = data.oUser;
+                        this.lTemp = data.lTemp;
+                        resolve(data.oUser);
+                    }else{
+                        SGui.showMessage('', data.message, data.icon);
+                        resolve(null);
+                    }
+                })
+                .catch( function(error){
+                    console.log(error);
+                    SGui.showError(error);
+                    resolve(error);
+                })
+            );
+        },
+
+        approbeIncidence(){
+            SGui.showWaiting(15000);
+            axios.post(this.oData.routeApprobe, {
+                'application_id': this.oApplication.id_application,
+                'comments': this.comments,
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylIncidences = data.lIncidences;
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                    $('#modal_incidences').modal('hide');
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        rejectIncidence(){
+            SGui.showWaiting(15000)
+            axios.post(this.oData.routeReject, {
+                'application_id': this.oApplication.id_application,
+                'comments': this.comments,
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylIncidences = data.lIncidences;
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                    $('#modal_incidences').modal('hide');
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data,icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
+        /**
+         * Show modal para la vista de revision de incidencias
+         * @param {*} data 
+         */
+        async showDataModal(data){
+            SGui.showWaiting(15000);
+            this.isRevision = true;
+            this.idApplication = data[this.indexes_incidences.id_application];
+            await this.getApplication();
+            await this.getEmployee(this.oApplication.user_id);
+            this.class_id = data[this.indexes_incidences.id_incidence_cl];
+            this.type_id = data[this.indexes_incidences.id_incidence_tp];
+            this.class_name = this.oApplication.incidence_cl_name;
+            this.type_name = this.oApplication.incidence_tp_name;
+            this.createCalendar(this.type_id, false);
+            this.showCalendar = true;
+            $('#date-range-001').val(moment(data[this.indexes_incidences.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            $('#date-range-002').val(moment(data[this.indexes_incidences.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
+            this.startDate = this.oDateUtils.formatDate(this.oApplication.start_date, 'ddd DD-MMM-YYYY');
+            this.endDate = this.oDateUtils.formatDate(this.oApplication.end_date, 'ddd DD-MMM-YYYY');
+            this.returnDate = this.oDateUtils.formatDate(this.oApplication.return_date, 'ddd DD-MMM-YYYY');
+            this.totCalendarDays = this.oApplication.tot_calendar_days;
+            this.takedDays = this.oApplication.total_days;
+            this.lDays = this.formatlDays(this.oApplication.ldays);
+            this.comments = this.oApplication.emp_comments_n;
+            this.is_normal = this.oApplication.is_normal;
+            this.is_past = this.oApplication.is_past;
+            this.is_season_special = this.oApplication.is_season_special;
+            $('#modal_incidences').modal('show');
+        },
+
+        getAllEmployees(){
+            SGui.showWaiting(15000);
+            axios.get(this.oData.routeGetAllEmployees, {
+
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.lEmployees = data.lEmployees;
+                    this.setSelectEmployees();
+                    SGui.showWaiting(15000);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        setGestionIncidences(){
+            SGui.showWaiting(15000);
+            this.getEmployeeData();
+            this.needRenderTableIncidences = true;
+        },
+    
+        getEmployeeData(){
+            let user_id = null;
+            if(!!$('#selectEmp').val()){
+                user_id = $('#selectEmp').val();
+            }
+            axios.post(this.oData.routeGetEmployee, {
+                'user_id': user_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oUser = data.oUser;
+                    this.lIncidences = data.lIncidences;
+                    this.lTemp = data.lTemp;
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        setSelectEmployees(){
+            if(!!$('#selectEmp')){
+                $('#selectEmp').empty().trigger('change');
+                $('#selectEmp').select2({
+                    data: self.lEmployees
+                })
+
+                $('#selectEmp').val('').trigger('change');
+            }
+        },
+
+        filterIncidenceTable(){
+            table['table_Incidences'].draw();
+        },
+    }
+});

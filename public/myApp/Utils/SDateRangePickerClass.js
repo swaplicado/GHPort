@@ -29,7 +29,8 @@ class SDateRangePicker {
         lTemp,
         lHolidays,
         birthday,
-        aniversaryDay
+        aniversaryDay,
+        enable = true,
     ){  
         $.dateRangePickerLanguages['es'] =
         {
@@ -76,7 +77,7 @@ class SDateRangePicker {
 
             beforeShowDay: function(t)
             {
-                var valid = true;
+                var valid = enable;
                 var _class = '';
                 var _tooltip = '';
 

@@ -21,9 +21,11 @@
             this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
+            this.table_name = <?php echo json_encode('table_MyIncidences'); ?>;
             this.routeCreate = <?php echo json_encode(route('incidences_create')); ?>;
             this.routeUpdate = <?php echo json_encode(route('incidences_update')); ?>;
             this.routeDelete = <?php echo json_encode(route('incidences_delete')); ?>;
+            this.routeSend = <?php echo json_encode(route('incidences_send')); ?>;
             this.routeGetIncidence = <?php echo json_encode(route('incidences_getIncidence')); ?>;
             this.indexes_incidences = {
                 'id_application': 0,
@@ -67,12 +69,19 @@
             &nbsp;&nbsp;
             <label for="incident_tp_filter">Filtrar por tipo: </label>
             <select class="select2-class form-control" name="incident_tp_filter" id="incident_tp_filter" style="width: 15%;"></select>
+            &nbsp;&nbsp;
+            @include('layouts.status_filter', [
+                                                'filterType' => 1,
+                                                'status_id' => 'status_myIncidence',
+                                                'status_name' => 'status_myIncidence',
+                                                'width' => '20%'
+                                                ])
         </div>
         <br>
         @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true ])
         <br>
         <br>
-        @include('Incidences.incidences_table', ['table_id' => 'table_MyIncidences'])
+        @include('Incidences.incidences_table', ['table_id' => 'table_Incidences', 'table_ref' => 'table_Incidences'])
     </div>
 </div>
 @endsection
@@ -86,13 +95,16 @@
             function( settings, data, dataIndex ) {
                 let iClass = parseInt( $('#incident_cl_filter').val(), 10 );
                 let iType = parseInt( $('#incident_tp_filter').val(), 10 );
-                let col_class = 0;
-                let col_type = 0;
+                let iStatus = parseInt( $('#status_myIncidence').val(), 10 );
+                let col_class = null;
+                let col_type = null;
+                let col_status = null;
 
                 col_class = parseInt( data[oServerData.indexes_incidences.id_incidence_cl] );
                 col_type = parseInt( data[oServerData.indexes_incidences.id_incidence_tp] );
-                if(col_class === iClass && col_type === iType){
-                    return true;
+                col_status = parseInt( data[oServerData.indexes_incidences.request_status_id] );
+                if(col_type == iType || iType == 0){
+                    return col_status == iStatus;
                 }else{
                     return false;
                 }
@@ -101,14 +113,15 @@
     });
 </script>
 @include('layouts.table_jsControll', [
-                                        'table_id' => 'table_MyIncidences',
-                                        'colTargets' => [0,1,2,3,4,16],
-                                        'colTargetsSercheable' => [5,6],
+                                        'table_id' => 'table_Incidences',
+                                        'colTargets' => [0,2,3,4,16],
+                                        'colTargetsSercheable' => [1,5,6],
                                         'noDom' => true,
                                         'select' => true,
                                         'crear_modal' => true,
                                         'edit_modal' => true,
                                         'delete' => true,
+                                        'send' => true
                                     ] )
 <script>
     $(document).ready(function (){
@@ -117,6 +130,10 @@
         });
         
         $('#incident_tp_filter').change( function() {
+            table['table_MyIncidences'].draw();
+        });
+
+        $('#status_myIncidence').change( function() {
             table['table_MyIncidences'].draw();
         });
     });

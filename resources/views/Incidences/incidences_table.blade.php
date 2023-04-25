@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-bordered" id="{{$table_id}}" width="100%" cellspacing="0">
+    <table class="table table-bordered" id="{{$table_id}}" ref="{{$table_ref}}" width="100%" cellspacing="0">
         <thead class="thead-light">
             <th>id</th>
             <th>incidence_status_id</th>
@@ -54,7 +54,11 @@
                 <td>@{{oDateUtils.formatDate(incident.return_date, 'ddd DD-MMM-YYYY')}}</td>
                 <td>@{{incident.total_days}}</td>
                 <td>SUBTIPO</td>
-                <td>@{{incident.applications_st_name}}</td>
+                <td>@{{
+                        !isRevision ? incident.applications_st_name : 
+                            (incident.request_status_id == 2 ? 'NUEVO' : incident.applications_st_name)
+                    }}
+                </td>
             </tr>
         </tbody>
     </table>
