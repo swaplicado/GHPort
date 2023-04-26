@@ -74,7 +74,7 @@
                                                 <input class="form-control" v-model="startDate" style="width: 40%; display: inline" readonly> a <input class="form-control" v-model="endDate" style="width: 40%; display: inline" readonly>
                                             </td>
                                             <td v-if="!isRevision">
-                                                <button type="button" class="btn btn-primary inline" id="clear">Limpiar</button>
+                                                <button type="button" class="btn btn-primary inline" id="clear":hidden="!valid">Limpiar</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -163,12 +163,12 @@
             <div class="modal-footer">
                 <template v-if="!isRevision">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" v-on:click="save()" :hidden="!valid">Guardar</a>
+                    <button type="button" class="btn btn-primary" v-on:click="save()" v-if="valid">Guardar</a>
                 </template>
                 <template v-else-if="isRevision">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" v-on:click="approbeIncidence()">Aprobar</a>
-                    <button type="button" class="btn btn-danger" v-on:click="rejectIncidence()">Rechazar</a>
+                    <button type="button" class="btn btn-success" v-on:click="approbeIncidence()" v-if="valid">Aprobar</a>
+                    <button type="button" class="btn btn-danger" v-on:click="rejectIncidence()" v-if="valid">Rechazar</a>
                 </template>
             </div>
         </div>

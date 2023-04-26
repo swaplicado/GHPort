@@ -27,6 +27,7 @@
             this.routeDelete = <?php echo json_encode(route('incidences_delete')); ?>;
             this.routeSend = <?php echo json_encode(route('incidences_send')); ?>;
             this.routeGetIncidence = <?php echo json_encode(route('incidences_getIncidence')); ?>;
+            this.routeGestionSendIncidence = <?php echo json_encode(route('incidences_gestionSendIncidence')); ?>;
             this.indexes_incidences = {
                 'id_application': 0,
                 'request_status_id': 1,
@@ -130,11 +131,11 @@
         });
         
         $('#incident_tp_filter').change( function() {
-            table['table_MyIncidences'].draw();
+            table['table_Incidences'].draw();
         });
 
         $('#status_myIncidence').change( function() {
-            table['table_MyIncidences'].draw();
+            table['table_Incidences'].draw();
         });
     });
 </script>
@@ -149,7 +150,8 @@
         lTemp,
         lHolidays,
         birthday,
-        aniversaryDay
+        aniversaryDay,
+        enable,
     ){
         if(oDateRangePicker != null){
             let oCalendar = $('#two-inputs-calendar').data('dateRangePicker');
@@ -169,7 +171,8 @@
             lTemp,
             lHolidays,
             birthday,
-            aniversaryDay
+            aniversaryDay,
+            enable
         );
     }
 

@@ -29,7 +29,7 @@ var app = new Vue({
         comments: null,
         valid: true,
         idApplication: null,
-        oApplication: null,
+        oApplication: oServerData.oApplication,
         isEdit: false,
         class_name: null,
         type_name: null,
@@ -51,8 +51,6 @@ var app = new Vue({
     watch: {
         filter_class_id:function(val){
             this.setTypesToSelect(val);            
-
-            // $('#incident_tp_filter').empty().trigger("change");
             $('#incident_tp_filter').empty();
             
             let dataTypes = [];
@@ -71,20 +69,6 @@ var app = new Vue({
                 table['table_Incidences'].draw();
                 this.select_changed = false;
             }
-
-            // if(!!$('#myIncident_tp_filter')){
-            //     $('#myIncident_tp_filter').empty().trigger("change");
-            
-            //     let dataTypes = [];
-            //     val == 0 ? dataTypes = [{id: '0', text: 'Todos'}] : '';
-            //     for (let i = 0; i < this.lTypesToFilter.length; i++) {
-            //         dataTypes.push({id: this.lTypesToFilter[i].id_incidence_tp, text: this.lTypesToFilter[i].incidence_tp_name });
-            //     }
-                
-            //     $('#myIncident_tp_filter').select2({
-            //         data: dataTypes,
-            //     });
-            // }
         },
         filter_type_id:function(val){
             
@@ -104,7 +88,7 @@ var app = new Vue({
         propertyAAndPropertyB(newVal, oldVal) {
             let oldlTypes = structuredClone(this.lSpecialTypes);
             this.lSpecialTypes = [];
-            if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
+            if(this.endDate != null && this.endDate != undefined && this.endDate != "" && this.valid){
                 let res = this.checkSpecial();
                 if(res[0] && !this.arraysEqual(this.lSpecialTypes, oldlTypes)){
                     SGui.showMessage('', res[1], 'warning');
@@ -164,11 +148,9 @@ var app = new Vue({
                 $('#myIncident_tp_filter').change( function() {
                     self.filterIncidenceTable();
                 });
+
+                self.filterIncidenceTable();
             }
-            // if(typeof self.$refs.table_myRequest != 'undefined' && !self.renderTableMyRequest){
-            //     this.createMyRequestTable(this.tempData);
-            //     this.initDatePicker();
-            // }
         })
     },
     mounted(){
@@ -227,14 +209,20 @@ var app = new Vue({
 
         $('#incident_type').val('').trigger('change');
 
+        if(!!this.oApplication && !!this.oUser){
+            let data = [this.oApplication.id_application];
+            this.showDataModal(data);
+        }
     },
     methods: {
         initRequestincidences(){
             this.isRevision = true;
             this.oUser = null;
+            table['table_ReqIncidences'].draw();
         },
 
         initGestionIncidences(){
+            this.needRenderTableIncidences = true;
             this.isRevision = false;
             this.oUser = null;
             this.setSelectEmployees();
@@ -439,7 +427,7 @@ var app = new Vue({
         getDataDays(){
             var result = this.vacationUtils.getTakedDays(
                             this.oData.lHolidays,
-                            this.oUser.payment_frec_id,
+                            this.oUser != null ? this.oUser.payment_frec_id : 1,
                             moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                             moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                             this.oData.constants,
@@ -463,7 +451,7 @@ var app = new Vue({
                     let data = result.data;
                     if(data.success){
                         this.oApplication = data.oApplication;
-                        swal.close();
+                        // swal.close();
                         resolve(data.oApplication);
                     }else{
                         SGui.showMessage('', data.message, data.icon);
@@ -496,16 +484,19 @@ var app = new Vue({
                 this.isEdit = true;
                 this.idApplication = data[this.indexes_incidences.id_application];
                 await this.getApplication();
-                this.class_id = data[this.indexes_incidences.id_incidence_cl];
-                this.type_id = data[this.indexes_incidences.id_incidence_tp];
+                this.class_id = this.oApplication.id_incidence_cl;
+                this.type_id = this.oApplication.id_incidence_tp;
                 this.class_name = this.oApplication.incidence_cl_name;
                 this.type_name = this.oApplication.incidence_tp_name;
-                this.createCalendar(this.type_id);
+                this.valid = this.oApplication.request_status_id == this.oData.constants.APPLICATION_CREADO;
+                $('#date-range-001').val(this.oApplication.start_date);
+			    $('#date-range-002').val(this.oApplication.end_date);
+                this.createCalendar(this.type_id, this.valid);
                 this.showCalendar = true;
-                $('#date-range-001').val(moment(data[this.indexes_incidences.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
-			    $('#date-range-002').val(moment(data[this.indexes_incidences.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
                 this.startDate = this.oDateUtils.formatDate(this.oApplication.start_date, 'ddd DD-MMM-YYYY');
                 this.endDate = this.oDateUtils.formatDate(this.oApplication.end_date, 'ddd DD-MMM-YYYY');
+                $('#date-range-001').val(this.oApplication.start_date).trigger('change');
+			    $('#date-range-002').val(this.oApplication.end_date).trigger('change');
                 this.returnDate = this.oDateUtils.formatDate(this.oApplication.return_date, 'ddd DD-MMM-YYYY');
                 this.totCalendarDays = this.oApplication.tot_calendar_days;
                 this.takedDays = this.oApplication.total_days;
@@ -514,6 +505,7 @@ var app = new Vue({
                 this.is_normal = this.oApplication.is_normal;
                 this.is_past = this.oApplication.is_past;
                 this.is_season_special = this.oApplication.is_season_special;
+                Swal.close();
             }else{
                 if(this.HasIncidencesCreated()){
                     SGui.showMessage('', 'No puede crear otra incidencia si tiene incidencias creadas pendientes de enviar', 'warning');
@@ -608,6 +600,7 @@ var app = new Vue({
 
         cleanData(){
             // this.lTemp = oServerData.lTemp;
+            this.oApplication = null;
             this.class_id = null;
             this.type_id = null;
             this.showCalendar = false;
@@ -770,7 +763,7 @@ var app = new Vue({
 
         sendIncident(application_id){
             SGui.showWaiting(15000);
-            axios.post(this.oData.routeSend, {
+            axios.post(this.oData.routeGestionSendIncidence, {
                 'application_id': application_id,
             })
             .then(response => {
@@ -869,29 +862,60 @@ var app = new Vue({
          * @param {*} data 
          */
         async showDataModal(data){
-            SGui.showWaiting(15000);
+            // SGui.showWaiting(15000);
+            this.cleanData();
+            $('#clear').trigger('click');
             this.isRevision = true;
             this.idApplication = data[this.indexes_incidences.id_application];
             await this.getApplication();
             await this.getEmployee(this.oApplication.user_id);
-            this.class_id = data[this.indexes_incidences.id_incidence_cl];
-            this.type_id = data[this.indexes_incidences.id_incidence_tp];
+            this.class_id = this.oApplication.id_incidence_cl;
+            this.type_id = this.oApplication.id_incidence_tp;
             this.class_name = this.oApplication.incidence_cl_name;
             this.type_name = this.oApplication.incidence_tp_name;
-            this.createCalendar(this.type_id, false);
             this.showCalendar = true;
-            $('#date-range-001').val(moment(data[this.indexes_incidences.start_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
-            $('#date-range-002').val(moment(data[this.indexes_incidences.end_date], 'ddd DD-MMM-YYYY').format('YYYY-MM-DD')).trigger('change');
             this.startDate = this.oDateUtils.formatDate(this.oApplication.start_date, 'ddd DD-MMM-YYYY');
             this.endDate = this.oDateUtils.formatDate(this.oApplication.end_date, 'ddd DD-MMM-YYYY');
+            // $('#date-range-001').val(this.oApplication.start_date).trigger('change');
+            // $('#date-range-002').val(this.oApplication.end_date).trigger('change');
+            $('#date-range-001').val(this.oApplication.start_date);
+            $('#date-range-002').val(this.oApplication.end_date);
+            this.createCalendar(this.type_id, false);
             this.returnDate = this.oDateUtils.formatDate(this.oApplication.return_date, 'ddd DD-MMM-YYYY');
             this.totCalendarDays = this.oApplication.tot_calendar_days;
             this.takedDays = this.oApplication.total_days;
-            this.lDays = this.formatlDays(this.oApplication.ldays);
+            this.lDays = this.formatlDays(this.oApplication.ldays); 
             this.comments = this.oApplication.emp_comments_n;
             this.is_normal = this.oApplication.is_normal;
             this.is_past = this.oApplication.is_past;
             this.is_season_special = this.oApplication.is_season_special;
+            this.valid = this.oApplication.request_status_id == this.oData.constants.APPLICATION_ENVIADO;
+            Swal.close();
+            if(this.oApplication.request_status_id == this.oData.constants.APPLICATION_APROBADO){
+                Swal.fire({
+                    title: '',
+                    html: 'Esta solicitud ya ha sido aprobada por: ' +
+                            '<br>' +
+                            this.oApplication.revisor +
+                            '<br>' +
+                            'Con fecha: ' +
+                            '<br>' +
+                            this.oDateUtils.formatDate(this.oApplication.approved_date_n, 'ddd DD-MMM-YYYY'),
+                    icon: 'info',
+                });
+            }else if(this.oApplication.request_status_id == this.oData.constants.APPLICATION_RECHAZADO){
+                Swal.fire({
+                    title: '',
+                    html: 'Esta solicitud ya ha sido rechazada por: ' +
+                            '<br>' +
+                            this.oApplication.revisor +
+                            '<br>' +
+                            'Con fecha: ' +
+                            '<br>' +
+                            this.oDateUtils.formatDate(this.oApplication.rejected_date_n, 'ddd DD-MMM-YYYY'),
+                    icon: 'info',
+                });
+            }
             $('#modal_incidences').modal('show');
         },
 
@@ -923,6 +947,8 @@ var app = new Vue({
         },
     
         getEmployeeData(){
+            this.cleanData();
+            this.oUser = null;
             let user_id = null;
             if(!!$('#selectEmp').val()){
                 user_id = $('#selectEmp').val();
@@ -949,9 +975,13 @@ var app = new Vue({
 
         setSelectEmployees(){
             if(!!$('#selectEmp')){
+                let dataEmp = []
+                for (let i = 0; i < this.lEmployees.length; i++) {
+                    dataEmp.push({id: this.lEmployees[i].id, text: this.lEmployees[i].employee});
+                }
                 $('#selectEmp').empty().trigger('change');
                 $('#selectEmp').select2({
-                    data: self.lEmployees
+                    data: dataEmp
                 })
 
                 $('#selectEmp').val('').trigger('change');

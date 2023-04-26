@@ -16,7 +16,7 @@ use Carbon\Carbon;
 
 class requestIncidencesController extends Controller
 {
-    public function index(){
+    public function index($idApplication = null){
         delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
         if(\Auth::user()->rol_id == SysConst::ADMINISTRADOR){
             $myManagers = orgChartUtils::getMyManagers(2);
@@ -32,6 +32,10 @@ class requestIncidencesController extends Controller
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
             'TYPE_CUMPLEAÑOS' => SysConst::TYPE_CUMPLEAÑOS,
+            'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
+            'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
+            'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
         ];
 
         $lClass = \DB::table('cat_incidence_cls')
@@ -55,15 +59,47 @@ class requestIncidencesController extends Controller
 
         $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
 
-        $lEmployees = \DB::table('users')
-                        ->where('is_active', 1)
-                        ->where('is_delete', 0)
-                        ->whereIn('org_chart_job_id', $lChildAreas)
-                        ->select(
-                            'id',
-                            'full_name_ui as text',
-                        )
-                        ->get();
+        $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
+
+        $ids = $lEmployees->pluck('id');
+
+        $oApplication = null;
+        $oUser = null;
+        if($idApplication != null){
+            $oApplication = \DB::table('applications as a')
+                                ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
+                                ->leftJoin('sys_applications_sts as ap_st', 'ap_st.id_applications_st', '=', 'a.request_status_id')
+                                ->leftJoin('users as u_rev', 'u_rev.id', '=', 'a.user_apr_rej_id')
+                                ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
+                                ->where('a.id_application', $idApplication)
+                                ->where('a.is_deleted', 0)
+                                ->where('a.type_incident_id', '!=', SysConst::TYPE_VACACIONES)
+                                ->whereIn('a.request_status_id', [
+                                    SysConst::APPLICATION_ENVIADO,
+                                    SysConst::APPLICATION_APROBADO,
+                                    SysConst::APPLICATION_RECHAZADO,
+                                ])
+                                ->whereIn('a.user_id', $ids)
+                                ->select(
+                                    'a.*',
+                                    'at.is_normal',
+                                    'at.is_past',
+                                    'at.is_advanced',
+                                    'at.is_proportional',
+                                    'at.is_season_special',
+                                    'at.is_recover_vacation',
+                                    'u.birthday_n',
+                                    'u.benefits_date',
+                                    'u.payment_frec_id',
+                                    'ap_st.applications_st_name',
+                                    'u_rev.full_name_ui as revisor',
+                                )
+                                ->first();
+
+            if($oApplication != null){
+                $oUser = $lEmployees->where('id', $oApplication->user_id)->first();
+            }
+        }
 
         return view('Incidences.requestIncidences')->with('constants', $constants)
                                                     ->with('myManagers', $myManagers)
@@ -73,7 +109,8 @@ class requestIncidencesController extends Controller
                                                     ->with('lTemp', $lTemp_special)
                                                     ->with('lHolidays', $lHolidays)
                                                     ->with('lEmployees', $lEmployees)
-                                                    ->with('oUser', null);
+                                                    ->with('oApplication', $oApplication)
+                                                    ->with('oUser', $oUser);
     }
 
     public function getEmployee(Request $request){

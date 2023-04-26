@@ -3,10 +3,10 @@
 @section('headStyles')
 <link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
 <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
-<link href="myApp/Utils/SDatePicker/css/datepicker.min.css" rel="stylesheet" />
-<link href="myApp/Utils/SDatePicker/css/datepicker-bs4.min.css" rel="stylesheet" />
-<link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
-<link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
+<link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bs4.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bulma.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-foundation.min.css') }}" rel="stylesheet" />
 @endsection
 
 @section('headJs')
@@ -14,6 +14,7 @@
     <script src="{{ asset('select2js/js/select2.min.js') }}"></script>
     <script>
         function GlobalData(){
+            this.oApplication = <?php echo json_encode($oApplication); ?>;
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
             this.lIncidences = <?php echo json_encode($lIncidences); ?>;
             this.constants = <?php echo json_encode($constants); ?>;
