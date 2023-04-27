@@ -961,6 +961,7 @@ var app = new Vue({
                 if(data.success){
                     this.oUser = data.oUser;
                     this.lIncidences = data.lIncidences;
+                    this.oCopylIncidences = data.lIncidences;
                     this.lTemp = data.lTemp;
                     SGui.showOk();
                 }else{
@@ -991,5 +992,34 @@ var app = new Vue({
         filterIncidenceTable(){
             table['table_Incidences'].draw();
         },
+
+        sendAuthorize(){
+            if (table['table_Incidences'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            }
+
+            let data = table['table_Incidences'].row('.selected').data();
+    
+            SGui.showWaiting(15000);
+
+            axios.post(this.oData.routeSendAuthorize, {
+                'application_id': data[this.indexes_incidences.id_application],
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylIncidences = data.lIncidences;
+                    this.reDrawTableIncidences('table_Incidences', data.lIncidences);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            })
+        }
     }
 });

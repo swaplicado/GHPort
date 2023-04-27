@@ -33,6 +33,8 @@
             this.routeApprobe = <?php echo json_encode(route('requestIncidences_approbe')); ?>;
             this.routeReject = <?php echo json_encode(route('requestIncidences_reject')); ?>;
             this.routeGetAllEmployees = <?php echo json_encode(route('requestIncidences_getAllEmployees')); ?>;
+            this.routeGestionSendIncidence = <?php echo json_encode(route('incidences_gestionSendIncidence')); ?>;
+            this.routeSendAuthorize = <?php echo json_encode(route('requestIncidences_sendAndAuthorize')); ?>;
             this.indexes_incidences = {
                 'id_application': 0,
                 'request_status_id': 1,
@@ -153,7 +155,7 @@
                         </div>
                         <br>
                         @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true ])
-                        <button id="btn_sendAprov" type="button" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
+                        <button id="btn_sendAprov" type="button" v-on:click="sendAuthorize()" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
                             <span class="bx bxs-send"></span>
                         </button>
                         <br>
