@@ -132,6 +132,7 @@ class EmployeeVacationUtils {
                     ->where('a.user_id', $employee_id)
                     ->where('a.is_deleted', 0)
                     ->whereIn('a.request_status_id', [SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_ENVIADO])
+                    ->where('a.type_incident_id', SysConst::TYPE_VACACIONES)
                     ->where('ab.application_year', $nextVac->year)
                     ->sum('ab.days_effective');
 
@@ -183,6 +184,7 @@ class EmployeeVacationUtils {
                                                         ]
                         )
                         ->where('a.is_deleted', 0)
+                        ->where('a.type_incident_id', SysConst::TYPE_VACACIONES)
                         ->where('ab.application_year', $year)
                         ->where(function($query){
                             $query->where('as.is_deleted', 0)
@@ -224,6 +226,7 @@ class EmployeeVacationUtils {
                         ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
                         ->where('a.user_id', $id)
                         ->whereIn('a.request_status_id', $status)
+                        ->where('a.type_incident_id', SysConst::TYPE_VACACIONES)
                         ->where('a.is_deleted', 0);
 
         if(!is_null($year)){
@@ -581,7 +584,10 @@ class EmployeeVacationUtils {
     public static function syncVacConsumed($id){
         $config = \App\Utils\Configuration::getConfigurations();
         
-        $lVacRequest = Application::where('user_id', $id)->where('is_deleted', 0)->get();
+        $lVacRequest = Application::where('user_id', $id)
+                                    ->where('is_deleted', 0)
+                                    ->where('type_incident_id', SysConst::TYPE_VACACIONES)
+                                    ->get();
         $vacAlloc = VacationAllocation::where('user_id', $id)->where('is_deleted', 0)->get();
         foreach($lVacRequest as $req){
             $app_breakdowns_ids = ApplicationsBreakdown::where('application_id', $req->id_application)->pluck('id_application_breakdown')->toArray();
@@ -602,6 +608,7 @@ class EmployeeVacationUtils {
         $applicationsEA = Application::where('user_id', $user_id)
                                     ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO])
                                     ->where('is_deleted', 0)
+                                    ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                     ->select('start_date', 'end_date')
                                     ->get();
         
@@ -840,6 +847,7 @@ class EmployeeVacationUtils {
                             ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
                             ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'ap.request_status_id')
                             ->whereIn('ap.user_id', $arrUsers)
+                            ->where('ap.type_incident_id', SysConst::TYPE_VACACIONES)
                             ->where('ap.is_deleted', 0);
         
         if(!is_null($year)){
@@ -977,6 +985,7 @@ class EmployeeVacationUtils {
                             ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
                             ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'ap.request_status_id')
                             ->whereIn('ap.user_id', $arrMyUser)
+                            ->where('ap.type_incident_id', SysConst::TYPE_VACACIONES)
                             ->where('ap.is_deleted', 0)
                             ->whereYear('ap.updated_at', $year)
                             ->whereIn('ap.request_status_id', $lStatus)
@@ -1049,6 +1058,7 @@ class EmployeeVacationUtils {
                             ->where('ap.user_id', $user_id)
                             ->where('ap.request_status_id', SysConst::APPLICATION_ENVIADO)
                             ->where('ap.is_deleted', 0)
+                            ->where('ap.type_incident_id', SysConst::TYPE_VACACIONES)
                             ->max('apb.application_year');
 
         $lastIncidentYear = $lastAlloc;

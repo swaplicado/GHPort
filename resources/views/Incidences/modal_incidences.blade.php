@@ -140,6 +140,13 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr v-if="type_id == oData.constants.TYPE_CUMPLEAÑOS">
+                                    <td><b>Año aplicación:</b></td>
+                                    <td><input type="number" class="form-control" v-model="birthDayYear" @blur="updateBirthDayYear" :readonly="isRevision"></td>
+                                    <td><p>&nbsp &nbsp</p></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                         <div>

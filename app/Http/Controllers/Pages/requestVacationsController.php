@@ -207,6 +207,7 @@ class requestVacationsController extends Controller
                                 ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'a.id_application')
                                 ->where('a.id_application', $idApplication)
                                 ->where('a.is_deleted', 0)
+                                ->where('a.type_incident_id', SysConst::TYPE_VACACIONES)
                                 ->select(
                                     'a.*',
                                     'at.is_normal',
@@ -524,6 +525,7 @@ class requestVacationsController extends Controller
         $lApplications = Application::where('user_id', $employee_id)
                                     ->whereIn('request_status_id', $arrRequestStatus)
                                     ->where('is_deleted', 0)
+                                    ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                     ->get();
 
         $applicationsId = [];
@@ -544,6 +546,7 @@ class requestVacationsController extends Controller
         $lApplications = Application::where('user_id', $employee_id)
                                     ->whereIn('id_application', $applicationsId)
                                     ->where('id_application', '!=', $application_id)
+                                    ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                     ->get();
 
         if($isAccept){

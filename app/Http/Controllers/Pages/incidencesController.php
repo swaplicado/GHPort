@@ -10,6 +10,7 @@ use \App\Utils\folioUtils;
 use \App\Models\Vacations\Application;
 use \App\Models\Vacations\ApplicationVsTypes;
 use \App\Models\Vacations\ApplicationLog;
+use App\Models\Vacations\ApplicationsBreakdown;
 use \App\Utils\delegationUtils;
 use \App\Utils\incidencesUtils;
 use App\Utils\orgChartUtils;
@@ -130,6 +131,15 @@ class incidencesController extends Controller
             $application->emp_comments_n = $comments;
             $application->is_deleted = false;
             $application->save();
+
+            if($type_incident_id == SysConst::TYPE_CUMPLEAÑOS){
+                $appBreakdown = new ApplicationsBreakdown();
+                $appBreakdown->application_id = $application->id_application;
+                $appBreakdown->days_effective = 1;
+                $appBreakdown->application_year = $request->birthDayYear;
+                $appBreakdown->admition_count = 1;
+                $appBreakdown->save();
+            }
 
             $applicationVsType = new ApplicationVsTypes();
             $applicationVsType->application_id = $application->id_application;
@@ -417,5 +427,59 @@ class incidencesController extends Controller
         // });
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
+    }
+
+    public function getBirdthDayIncidences(Request $request){
+        try {
+            if(is_null($request->application_id)){
+                $oUser = \DB::table('users')
+                            ->where('id', $request->user_id)
+                            ->first();
+    
+                $minYear = Carbon::parse($oUser->benefits_date)->format('Y');
+                
+                $lBirthDay = \DB::table('applications as a')
+                                ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
+                                ->where('a.user_id', $request->user_id)
+                                ->where('a.type_incident_id', SysConst::TYPE_CUMPLEAÑOS)
+                                ->where('a.is_deleted', 0)
+                                ->orderBy('ab.application_year')
+                                ->pluck('ab.application_year');
+    
+                $now = Carbon::createFromFormat('d-m', Carbon::now()->format('d-m'));
+                $birthDay = Carbon::createFromFormat('d-m', Carbon::parse($oUser->birthday_n)->format('d-m'));
+    
+                if($now->gte($birthDay)){
+                    $year = Carbon::now()->format('Y');
+                }else{
+                    $year = Carbon::now()->subYears(1)->format('Y');
+                }
+            }else{
+                $oUser = \DB::table('users')
+                            ->where('id', $request->user_id)
+                            ->first();
+
+                $minYear = Carbon::parse($oUser->benefits_date)->format('Y');
+                
+                $year = \DB::table('applications as a')
+                            ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
+                            ->where('a.id_application', $request->application_id)
+                            ->value('ab.application_year');
+
+                $lBirthDay = \DB::table('applications as a')
+                            ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
+                            ->where('a.user_id', $request->user_id)
+                            ->where('a.type_incident_id', SysConst::TYPE_CUMPLEAÑOS)
+                            ->where('a.is_deleted', 0)
+                            ->where('a.id_application', '!=', $request->application_id)
+                            ->orderBy('ab.application_year')
+                            ->pluck('ab.application_year');
+            }
+
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener el año de aplicación']);
+        }
+
+        return json_encode(['success' => true, 'lBirthDay' => $lBirthDay, 'birthDayYear' => $year, 'minYear' => $minYear]);
     }
 }

@@ -42,6 +42,9 @@ var app = new Vue({
         lEmployees: oServerData.lEmployees,
         needRenderTableIncidences: false,
         renderTabletaReqIncidences: false,
+        lBirthDay: [],
+        birthDayYear: null,
+        minYear: null,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -83,6 +86,10 @@ var app = new Vue({
         type_id:function(val){
             if(!this.isEdit && !this.isRevision){
                 this.createCalendar(val);
+            }
+
+            if(val == this.oData.constants.TYPE_CUMPLEAÑOS){
+                this.getBirdthDayIncidences();
             }
         },
         propertyAAndPropertyB(newVal, oldVal) {
@@ -560,6 +567,7 @@ var app = new Vue({
                 'is_normal': this.is_normal,
                 'is_past': this.is_past,
                 'is_season_special': this.is_season_special,
+                'birthDayYear': this.birthDayYear,
             })
             .then( result => {
                 let data = result.data;
@@ -578,9 +586,7 @@ var app = new Vue({
             });
         },
 
-        save(){
-            SGui.showWaiting(15000);
-
+        async save(){
             if(this.startDate == null || this.startDate == ""){
                 SGui.showMessage('', 'Debe ingresar una fecha de inicio');
                 return;
@@ -590,6 +596,15 @@ var app = new Vue({
                 SGui.showMessage('', 'Debe ingresar una fecha de fin');
                 return;
             }
+
+            if(this.type_id == this.oData.constants.TYPE_CUMPLEAÑOS){
+                let aux = await this.checkBirthDaysTaked();
+                if(!aux){
+                    return;
+                }
+            }
+
+            SGui.showWaiting(15000);
 
             if(this.isEdit){
                 this.setApplication(this.oData.routeUpdate);
@@ -809,7 +824,13 @@ var app = new Vue({
             );
         },
 
-        approbeIncidence(){
+        async approbeIncidence(){
+            if(this.type_id == this.oData.constants.TYPE_CUMPLEAÑOS){
+                let aux = await this.checkBirthDaysTaked();
+                if(!aux){
+                    return;
+                }
+            }
             SGui.showWaiting(15000);
             axios.post(this.oData.routeApprobe, {
                 'application_id': this.oApplication.id_application,
@@ -1020,6 +1041,60 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             })
+        },
+
+        checkBirthDaysTaked(){
+            return new Promise((resolve) => {
+                    if(this.lBirthDay.includes(parseInt(this.birthDayYear))){
+                        Swal.fire({
+                            title: 'Ya existe una incidencia de cumpleaños para el año:',
+                            html: this.birthDayYear,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                resolve(true);
+                            }else{
+                                resolve(false);
+                            }
+                        })
+                    }else{
+                        resolve(true);
+                    }
+                }
+            );
+        },
+
+        updateBirthDayYear(){
+            if(this.birthDayYear < this.minYear){
+                this.birthDayYear = moment().format('Y');
+                SGui.showMessage('', 'El año de aplicación no puede ser menor a tu fecha de ingreso', 'warning');
+                return;
+            }
+        },
+
+        getBirdthDayIncidences(){
+            axios.post(this.oData.routeGetBirdthDayIncidences, {
+                'user_id': this.oUser.id,
+                'application_id': this.idApplication,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.lBirthDay = data.lBirthDay;
+                    this.birthDayYear = data.birthDayYear;
+                    this.minYear = data.minYear;
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
         }
     }
 });

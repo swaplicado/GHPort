@@ -411,6 +411,7 @@ class specialVacationsController extends Controller
         $lApplications = Application::where('user_id', $employee_id)
                                     ->whereIn('request_status_id', $arrRequestStatus)
                                     ->where('is_deleted', 0)
+                                    ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                     ->get();
 
         $applicationsId = [];
@@ -431,6 +432,7 @@ class specialVacationsController extends Controller
         $lApplications = Application::where('user_id', $employee_id)
                                     ->whereIn('id_application', $applicationsId)
                                     ->where('id_application', '!=', $application_id)
+                                    ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                     ->get();
 
         if($isAccept){
