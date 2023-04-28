@@ -21,6 +21,7 @@
         function GlobalData(){
             this.lAreas = <?php echo json_encode($lAreas); ?>;
             this.lUsers = <?php echo json_encode($lUsers); ?>;
+            this.lLevels = <?php echo json_encode($lLevels); ?>;
             this.updateRoute = <?php echo json_encode( route('update_assignArea') ); ?>;
             this.createRoute = <?php echo json_encode( route('create_assignArea') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_assignArea') ); ?>;
@@ -51,6 +52,8 @@
                 <input type="number" id="numAreaC" min="1" name="numAreaC" style="width: 90%;" v-model="job_num">
                 <label for="selArea">Área superior:</label>
                 <select class="select2-class-create" id="selAreaC" name="selAreaC" style="width: 90%;"></select>
+                <label for="selLevel">Nivel jerarquico:</label>
+                <select class="select2-class-create-nj" id="selOrgC" name="selOrgC" style="width: 90%"></select>
                 <br><br>
 
                 <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
@@ -87,6 +90,8 @@
                 <input type="number" id="numArea" min="1" name="numArea" style="width: 90%;" v-model="job_num">
                 <label for="selArea">Área superior:</label>
                 <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
+                <label for="selLevel">Nivel jerarquico:</label>
+                <select class="select2-class-edit-nj" id="selOrgE" name="selOrgE" style="width: 90%"></select>
                 <br><br>
 
                 <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
@@ -124,12 +129,13 @@
                         <th>Área</th>
                         <th>Responsable area</th>
                         <th>Área superior</th>
+                        <th>Nivel jerárquico</th>
                         <th>Posiciones</th>
                         <th>is_leader_area</th>
                         <th>is_leader_config</th>
                         <th>Nodos hijos</th>
                         <th>es líder de area</th>
-                        <th>hace configuraciones</th>
+                        <th>Hace configuraciones</th>
 
                     </tr>
                 </thead>
@@ -141,6 +147,7 @@
                         <td>@{{area.job_name}}</td>
                         <td>@{{area.head_user}}</td>
                         <td>@{{area.top_org_chart_job}}</td>
+                        <td>@{{area.org_level}}</td>
                         <td>@{{area.positions}}</td>
                         <td>@{{area.is_boss}}</td>
                         <td>@{{area.is_leader_config}}</td>
@@ -149,6 +156,7 @@
                         <td v-else="area.is_boss == 1">Sí</td>
                         <td v-if="area.is_leader_config == 0">No</td>
                         <td v-else="area.is_leader_config == 1">Sí</td>
+                        <td>@{{area.org_level_id}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -160,7 +168,7 @@
 @section('scripts')
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_areas',
-                                            'colTargets' => [0,1,2,4,7,8],
+                                            'colTargets' => [0,1,2,4,8,9,13],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'crear_modal' => true,

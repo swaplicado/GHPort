@@ -35,8 +35,25 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('createArea', 'Adm\OrgChartController@createAssignArea')->name('create_assignArea');
     Route::post('updateArea', 'Adm\OrgChartController@updateAssignArea')->name('update_assignArea');
     Route::post('orgChart/getUsers', 'Adm\OrgChartController@getUsers')->name('orgChart_getUsers');
-
     Route::post('deleteArea', 'Adm\OrgChartController@deleteAssignArea')->name('delete_assignArea');
+
+    //Rutas para tipos de incidencias
+    Route::get('TpIncidence', 'Adm\TpIncidencesController@index')->name('index_tpincidence');
+    Route::post('createTpIncidence', 'Adm\TpIncidencesController@store')->name('create_tpIncidence');
+    Route::post('updateTpIncidence', 'Adm\TpIncidencesController@update')->name('update_tpIncidence');
+    Route::post('deleteTpIncidence', 'Adm\TpIncidencesController@destroy')->name('delete_tpIncidence');
+    
+    //Rutas tabla configuración tipos de incidencia vs sistemas externos
+    Route::get('PivotIncidence', 'Adm\TpIncidencesController@index_pivot')->name('index_pivotincidence');
+    Route::post('createPivotIncidence', 'Adm\TpIncidencesController@st_pivot')->name('create_pivotIncidence');
+    Route::post('updatePivotIncidence', 'Adm\TpIncidencesController@up_pivot')->name('update_pivotIncidence');
+    Route::post('deletePivotIncidence', 'Adm\TpIncidencesController@de_pivot')->name('delete_pivotIncidence');
+
+    //Rutas vista usuarios
+    Route::get('users', 'Adm\UsersController@index')->name('index_user');
+    Route::post('updateUsers', 'Adm\UsersController@update')->name('update_user');
+    Route::post('deleteUsers', 'Adm\UsersController@destroy')->name('delete_user');
+
     Route::get('profile', 'Pages\profileController@index')->name('profile');
     Route::post('profile/update', 'Pages\profileController@updatePass')->name('profile_update');
 
