@@ -53,6 +53,10 @@ class incidencesController extends Controller
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
             'TYPE_CUMPLEAÑOS' => SysConst::TYPE_CUMPLEAÑOS,
+            'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
+            'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
+            'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
         ];
 
         $lClass = \DB::table('cat_incidence_cls')
@@ -102,7 +106,7 @@ class incidencesController extends Controller
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
             foreach($arrApplicationsEA as $arr){
-                $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
+                $isBetWeen = Carbon::parse($arr)->between($start_date, $end_date);
                 if($isBetWeen){
                     return json_encode(['success' => false, 'message' => 'Ya existe una incidencia para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
                 }
@@ -142,7 +146,7 @@ class incidencesController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+            $lIncidences = $this->getIncidences($application->user_id);
 
             \DB::commit();
         } catch (\Throwable $th) {
@@ -191,7 +195,7 @@ class incidencesController extends Controller
             $applicationVsType->is_normal = !($request->is_past || $request->is_season_special);
             $applicationVsType->update();
 
-            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+            $lIncidences = $this->getIncidences($application->user_id);
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -209,6 +213,7 @@ class incidencesController extends Controller
                                 ->leftJoin('cat_incidence_tps as tp', 'tp.id_incidence_tp', '=', 'ap.type_incident_id')                    
                                 ->leftJoin('cat_incidence_cls as cl', 'cl.id_incidence_cl', '=', 'tp.incidence_cl_id')
                                 ->leftJoin('applications_vs_types as at', 'at.application_id', '=', 'ap.id_application')
+                                ->leftJoin('users as u_rev', 'u_rev.id', '=', 'ap.user_apr_rej_id')
                                 ->where('id_application', $application_id)
                                 ->select(
                                     'ap.*',
@@ -219,6 +224,7 @@ class incidencesController extends Controller
                                     'tp.incidence_tp_name',
                                     'cl.id_incidence_cl',
                                     'cl.incidence_cl_name',
+                                    'u_rev.full_name_ui as revisor',
                                 )
                                 ->first();
 
@@ -239,7 +245,7 @@ class incidencesController extends Controller
             $application->is_deleted = 1;
             $application->update();
 
-            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+            $lIncidences = $this->getIncidences($application->user_id);
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -248,6 +254,41 @@ class incidencesController extends Controller
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
+    }
+
+    public function gestionSendIncidence(Request $request){
+        try {
+            $oApplication = Application::findOrFail($request->application_id);
+            $confAuth = \DB::table('config_authorization as ca')
+                            ->where('tp_incidence_id', $oApplication->type_incidence_id)
+                            ->get();
+
+            $needAuth = null;
+            if(count($confAuth) > 0){
+                $oAuth = collect($confAuth);
+                $confUser =  $oAuth->where('user_id', $oApplication->user_id)->first();
+                $confOrgChart = $oAuth->where('org_chart_id', $oApplication->user_id)->first();
+                $confCompany = $oAuth->where('company_id', $oApplication->user_id)->first();
+                $needAuth = null;
+                if($confUser != null){
+                    $needAuth = $confUser->needAuth;
+                }else if($confOrgChart != null){
+                    $needAuth = $confOrgChart->needAuth;
+                }else if($confCompany != null){
+                    $needAuth = $confCompany->needAuth;
+                }
+            }
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+        }
+
+        if($needAuth == null || $needAuth == 1){
+            $result = $this->sendIncident($request);
+        }else{
+            $result = $this->sendAndAuthorize($request);
+        }
+
+        return $result;
     }
 
     public function sendIncident(Request $request){
@@ -324,7 +365,7 @@ class incidencesController extends Controller
             $application_id = $request->application_id;
 
             \DB::beginTransaction();
-            
+
             $application = Application::findOrFail($application_id);
             // $data = incidencesUtils::checkExternalIncident($application);
 
@@ -337,13 +378,43 @@ class incidencesController extends Controller
             $application->date_send_n = $date->toDateString();
             $application->update();
 
-            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+            $lIncidences = $this->getIncidences($application->user_id);
+
+            $employee = \DB::table('users')
+                            ->where('id', $application->user_id)
+                            ->first();
             
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
             return json_encode(['success' => false, 'message' => 'Error al enviar y autorizar la solicitud', 'icon' => 'error']);
         }
+
+        // $mypool = Pool::create();
+        // $mypool[] = async(function () use ($application, $request, $employee, $mailLog){
+        //     try {
+        //         Mail::to($employee->institutional_mail)->send(new authorizeVacationMail(
+        //                                                 $application->id_application,
+        //                                                 $employee->id,
+        //                                                 $request->lDays,
+        //                                                 $request->returnDate
+        //                                             )
+        //                                         );
+        //     } catch (\Throwable $th) {
+        //         $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+        //         $mailLog->update();   
+        //         return null; 
+        //     }
+
+        //     $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+        //     $mailLog->update();
+        // })->then(function ($mailLog) {
+            
+        // })->catch(function ($mailLog) {
+            
+        // })->timeout(function ($mailLog) {
+            
+        // });
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
