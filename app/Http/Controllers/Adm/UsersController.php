@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use \App\Utils\delegationUtils;
 use Carbon\Carbon;
 use App\User;
 use App\Models\Adm\Job;
 use App\Models\Adm\UserAdmissionLog;
 use Illuminate\Support\Str;
 use App\Models\Adm\UsersPhotos;
+use App\Constants\SysConst;
 
 class UsersController extends Controller
 {
@@ -228,21 +229,56 @@ class UsersController extends Controller
         $oLog->update();
     }
 
-    // public function dumySetUserAdmissionLog(){
-    //     try {
-    //         $lUsers = User::where([['is_active', 1],['is_delete', 0]])->get();
-    
-    //         foreach($lUsers as $oUser){
-    //             $oLog = new UserAdmissionLog();
+    public function index(){
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
+        $lUser = \DB::table('users as us')
+                        ->join('cat_vacation_plans as vp', 'vp.id_vacation_plan', '=', 'us.vacation_plan_id')
+                        ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
+                        ->where('us.is_delete',0)
+                        ->select('us.id AS idUser','us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active')
+                        ->get();
         
-    //             $oLog->user_id = $oUser->id;
-    //             $oLog->user_admission_date = $oUser->last_admission_date;
-    //             $oLog->user_leave_date = $oUser->last_dismiss_date_n;
-    //             $oLog->admission_count = 1;
-    //             $oLog->save();
-    //         }
-    //     } catch (\Throwable $th) {
-    //         echo $th;
-    //     }
-    // }
+        return view('Adm.indexUser')->with('lUser', $lUser);   
+    }
+
+    public function update(Request $request){
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]); 
+        
+        if($request->passRess == 0){
+            try {
+                $us = User::findOrFail($request->idUser);
+                    $us->username = $request->username;
+                    $us->email = $request->mail;
+                    $us->is_active = $request->active; 
+                    $us->updated_by = \Auth::user()->id;
+                    $us->update();
+            } catch (\Throwable $th) {
+                \DB::rollback();
+                return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
+            }    
+        }else{
+            try {
+                $us = User::findOrFail($request->idUser);
+                $us->username = $request->username;
+                $us->email = $request->mail;
+                $us->password = \Hash::make($request->username);
+                $us->is_active = $request->active; 
+                $us->updated_by = \Auth::user()->id;
+                $us->changed_password = 0;
+                $us->update();
+            } catch (\Throwable $th) {
+                \DB::rollback();
+                return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
+            }
+        }
+        
+        $lUser = \DB::table('users as us')
+                        ->join('cat_vacation_plans as vp', 'vp.id_vacation_plan', '=', 'us.vacation_plan_id')
+                        ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
+                        ->where('us.is_delete',0)
+                        ->select('us.id AS idUser','us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active')
+                        ->get();
+
+        return json_encode(['success' => true, 'message' => 'Registro actualizado con exitó', 'lUser' => $lUser]);
+    }
 }

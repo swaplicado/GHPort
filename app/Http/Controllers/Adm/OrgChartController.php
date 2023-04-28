@@ -65,6 +65,7 @@ class OrgChartController extends Controller
         // \Auth::user()->authorizedRole([SysConst::ADMINISTRADOR, SysConst::GH]);
         delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
         $areas = \DB::table('org_chart_jobs as ocj')
+                    ->join('organization_levels', 'ocj.org_level_id', '=', 'organization_levels.id_organization_level')
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
                     ->where('ocj.id_org_chart_job', '!=', 1)
@@ -86,6 +87,7 @@ class OrgChartController extends Controller
                 $area->head_user_id = null;
                 $area->head_user = null;
             }
+            $area->org_level = $area->level. ' - '. $area->name;
             
         }
 
@@ -94,8 +96,13 @@ class OrgChartController extends Controller
                     ->where('is_delete', 0)
                     ->select('id', 'full_name as text')
                     ->get();
+        
+        $levels = \DB::table('organization_levels')
+                    ->get();
+
         return view('Adm.assignArea')->with('lAreas', $areas)
-                                    ->with('lUsers', $users);
+                                    ->with('lUsers', $users)
+                                    ->with('lLevels', $levels);
     }
 
     public function updateAssignArea(Request $request){
@@ -108,6 +115,7 @@ class OrgChartController extends Controller
                 $area->job_code = $request->area;
                 $area->job_name = $request->area;
                 $area->job_name_ui = $request->area; 
+                $area->org_level_id = $request->org_level_id;
                 $area->positions = $request->job_num;
                 $area->is_leader_area = $request->leader;
                 $area->is_boss = $request->leader;
@@ -123,6 +131,7 @@ class OrgChartController extends Controller
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
+                    ->join('organization_levels', 'ocj.org_level_id', '=', 'organization_levels.id_organization_level')
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
                     ->where('ocj.id_org_chart_job', '!=', 1)
@@ -131,6 +140,10 @@ class OrgChartController extends Controller
         foreach($areas as $area){
             $ar = !is_null($area->top_org_chart_job_id_n) ? $areas->where('id_org_chart_job', $area->top_org_chart_job_id_n)->first() : null;
             $area->top_org_chart_job = !is_null($ar) ? $ar->job_name : null;
+            $childs = orgChartUtils::getDirectChildsOrgChartJob($area->id_org_chart_job);
+            $childs = count($childs);
+
+            $area->childs = $childs;
             if($area->positions == 1){
                 $head_user = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->first();
                 $area->head_user_id = !is_null($head_user) ? $head_user->id : null;
@@ -139,6 +152,7 @@ class OrgChartController extends Controller
                 $area->head_user_id = null;
                 $area->head_user = null;
             }
+            $area->org_level = $area->level. ' - '. $area->name;
         }
 
         return json_encode(['success' => true, 'message' => 'Registro actualizadó con exitó', 'lAreas' => $areas]);
@@ -168,6 +182,7 @@ class OrgChartController extends Controller
                 $area->job_code = $request->area;
                 $area->job_name = $request->area;
                 $area->job_name_ui = $request->area; 
+                $area->org_level_id = $request->org_level_id;
                 $area->positions = $request->job_num;
                 $area->is_leader_area = $request->leader;
                 $area->is_boss = $request->leader;
@@ -185,6 +200,7 @@ class OrgChartController extends Controller
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
+                    ->join('organization_levels', 'ocj.org_level_id', '=', 'organization_levels.id_organization_level')
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
                     ->where('ocj.id_org_chart_job', '!=', 1)
@@ -205,6 +221,7 @@ class OrgChartController extends Controller
                 $area->head_user_id = null;
                 $area->head_user = null;
             }
+            $area->org_level = $area->level. ' - '. $area->name;
         }
 
         return json_encode(['success' => true, 'message' => 'Registro creado con exitó', 'lAreas' => $areas]);
@@ -226,6 +243,7 @@ class OrgChartController extends Controller
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
+                    ->join('organization_levels', 'ocj.org_level_id', '=', 'organization_levels.id_organization_level')
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
                     ->where('ocj.id_org_chart_job', '!=', 1)
@@ -246,6 +264,7 @@ class OrgChartController extends Controller
                 $area->head_user_id = null;
                 $area->head_user = null;
             }
+            $area->org_level = $area->level. ' - '. $area->name;
         }
 
         return json_encode(['success' => true, 'message' => 'Registro eliminado con exitó', 'lAreas' => $areas]);
