@@ -158,6 +158,13 @@ class requestIncidencesController extends Controller
             $application_log->created_by = delegationUtils::getIdUser();
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
+
+            $data = json_decode($this->sendIncidence($application));
+
+            if($data->code == 500 || $data->code == 550){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
             
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
             \DB::commit();

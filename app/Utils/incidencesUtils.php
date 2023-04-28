@@ -4,6 +4,9 @@ namespace App\Utils;
 
 use \App\Constants\SysConst;
 use Illuminate\Support\Arr;
+use App\Models\Vacations\requestVacationLog;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class incidencesUtils {
     public static function getMyEmployeeslIncidences(){
@@ -87,6 +90,87 @@ class incidencesUtils {
         $response = $client->request('GET', 'postIncidents/' . json_encode($arrJson));
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
+
+        return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
+    }
+
+    public static function sendIncidence($oApplication){
+        $employee = \DB::table('users')
+                        ->where('id', $oApplication->user_id)
+                        ->first();
+
+        $ext_company_id = \DB::table('ext_company')
+                            ->where('id_company', $employee->company_id)
+                            ->value('external_id');
+
+        $typeIncident = \DB::table('cat_incidence_tps')
+                            ->where('id_incidence_tp', $oApplication->type_incident_id)
+                            ->first();
+
+        if($oApplication->type_incident_id == SysConst::TYPE_CUMPLEAÑOS){
+            $appBreakdown = \DB::table('applications_breakdowns')
+                                ->where('application_id', $oApplication->id_application)
+                                ->first();
+
+            $row = [
+                'breakdown_id' => $appBreakdown->id_application_breakdown,
+                'folio' => $oApplication->folio_n,
+                'effective_days' => 1,
+                'year' => $appBreakdown->application_year,
+                'anniversary' => 0,
+                'start_date' => $oApplication->start_date,
+                'end_date' => $oApplication->end_date,
+            ];
+        }else{
+            $row = [
+                'breakdown_id' => $oApplication->id_application,
+                'folio' => $oApplication->folio_n,
+                'effective_days' => $oApplication->total_days,
+                'year' => 0,
+                'anniversary' => 0,
+                'start_date' => $oApplication->start_date,
+                'end_date' => $oApplication->end_date,
+            ];
+        }
+        $rows = [];
+        array_push($rows, $row);
+        
+        $arrJson = [
+            'to_insert' => true,
+            'application_id' => $oApplication->id_application,
+            'folio' => $oApplication->folio_n,
+            'employee_id' => $employee->external_id_n,
+            'company_id' => $ext_company_id,
+            'type_pay_id' => $employee->payment_frec_id,
+            'type_incident_id' => $typeIncident->id_incidence_tp,
+            'class_incident_id' => $typeIncident->incidence_cl_id,
+            'date_send' => $oApplication->date_send_n,
+            'date_ini' => $oApplication->start_date,
+            'date_end' => $oApplication->end_date,
+            'total_days' => $oApplication->total_days,
+            'rows' => $rows,
+        ];
+
+        $str = json_encode($arrJson);
+
+        $config = \App\Utils\Configuration::getConfigurations();
+        $client = new Client([
+            'base_uri' => $config->urlSync,
+            'timeout' => 30.0,
+        ]);
+
+        $response = $client->request('GET', 'postIncidents/' . json_encode($arrJson));
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        $oVacLog = new requestVacationLog();
+        $oVacLog->application_id = $oApplication->id_application;
+        $oVacLog->employee_id = $oApplication->user_id;
+        $oVacLog->response_code = $data->response->code;
+        $oVacLog->message = $data->response->message;
+        $oVacLog->created_by = delegationUtils::getIdUser();
+        $oVacLog->updated_by = delegationUtils::getIdUser();
+        $oVacLog->save();
 
         return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
     }

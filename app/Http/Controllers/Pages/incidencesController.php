@@ -377,16 +377,17 @@ class incidencesController extends Controller
             \DB::beginTransaction();
 
             $application = Application::findOrFail($application_id);
-            // $data = incidencesUtils::checkExternalIncident($application);
-
-            // if($data->code == 500 || $data->code == 550){
-            //     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            // }
 
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             $application->date_send_n = $date->toDateString();
             $application->update();
+
+            $data = incidencesUtils::sendIncidence($application);
+
+            if($data->code == 500 || $data->code == 550){
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
 
             $lIncidences = $this->getIncidences($application->user_id);
 
