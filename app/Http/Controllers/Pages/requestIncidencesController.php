@@ -13,6 +13,10 @@ use App\Constants\SysConst;
 use App\Utils\EmployeeVacationUtils;
 use Illuminate\Support\Arr;
 use Carbon\Carbon;
+use App\Models\Vacations\MailLog;
+use Spatie\Async\Pool;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\authorizeIncidenceMail;
 
 class requestIncidencesController extends Controller
 {
@@ -159,13 +163,28 @@ class requestIncidencesController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            $data = json_decode($this->sendIncidence($application));
+            $data = incidencesUtils::sendIncidence($application);
 
             if($data->code == 500 || $data->code == 550){
                 \DB::rollBack();
                 return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
             }
             
+            $employee = \DB::table('users')
+                            ->where('id', $application->user_id)
+                            ->first();
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $application->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_REVISION_INCIDENCIA;
+            $mailLog->is_deleted = 0;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
             \DB::commit();
         } catch (\Throwable $th) {
@@ -173,7 +192,30 @@ class requestIncidencesController extends Controller
             return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($application, $employee){
+            try {
+                Mail::to($employee->institutional_mail)->send(new authorizeIncidenceMail(
+                                                        $application->id_application
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
     public function rejectIncidence(Request $request){
@@ -194,6 +236,21 @@ class requestIncidencesController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
+            $employee = \DB::table('users')
+                            ->where('id', $application->user_id)
+                            ->first();
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $application->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_REVISION_INCIDENCIA;
+            $mailLog->is_deleted = 0;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
             \DB::commit();
         } catch (\Throwable $th) {
@@ -201,7 +258,36 @@ class requestIncidencesController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al rechazar la incidencia', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($application, $employee){
+            try {
+                Mail::to($employee->institutional_mail)->send(new authorizeIncidenceMail(
+                                                        $application->id_application
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
+    }
+
+    public function checkMail(Request $request){
+        $mailLog = MailLog::find($request->mail_log_id);
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
     }
 
     public function getAllEmployees(){

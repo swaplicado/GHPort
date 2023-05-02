@@ -134,6 +134,10 @@ class incidencesUtils {
         }
         $rows = [];
         array_push($rows, $row);
+
+        $ext_ids = \DB::table('tp_incidents_pivot')
+                    ->where('tp_incident_id', $typeIncident->id_incidence_tp)
+                    ->first();
         
         $arrJson = [
             'to_insert' => true,
@@ -144,6 +148,8 @@ class incidencesUtils {
             'type_pay_id' => $employee->payment_frec_id,
             'type_incident_id' => $typeIncident->id_incidence_tp,
             'class_incident_id' => $typeIncident->incidence_cl_id,
+            'tp_abs' => $ext_ids->ext_tp_incident_id,
+            'cl_abs' => $ext_ids->ext_cl_incident_id,  
             'date_send' => $oApplication->date_send_n,
             'date_ini' => $oApplication->start_date,
             'date_end' => $oApplication->end_date,

@@ -597,12 +597,6 @@ class requestVacationsController extends Controller
         }
     }
 
-    public function checkMail(Request $request){
-        $mailLog = MailLog::find($request->mail_log_id);
-
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
-    }
-
     public function sendRequestVacation($oApplication, $lDays){
         $lHolidays = \DB::table('holidays')
                         ->where('is_deleted', 0)
@@ -667,6 +661,10 @@ class requestVacationsController extends Controller
             array_push($rows, $row); 
         }
 
+        $ext_ids = \DB::table('tp_incidents_pivot')
+                    ->where('tp_incident_id', $typeIncident->id_incidence_tp)
+                    ->first();
+
         $arrJson = [
             'to_insert' => true,
             'application_id' => $oApplication->id_application,
@@ -674,8 +672,8 @@ class requestVacationsController extends Controller
             'employee_id' => $employee->external_id_n,
             'company_id' => $ext_company_id,
             'type_pay_id' => $employee->payment_frec_id,
-            'type_incident_id' => $typeIncident->id_incidence_tp,
-            'class_incident_id' => $typeIncident->incidence_cl_id,
+            'tp_abs' => $ext_ids->ext_tp_incident_id,
+            'cl_abs' => $ext_ids->ext_cl_incident_id,
             'date_send' => $oApplication->date_send_n,
             'date_ini' => $oApplication->start_date,
             'date_end' => $oApplication->end_date,

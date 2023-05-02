@@ -36,6 +36,7 @@
             this.routeGestionSendIncidence = <?php echo json_encode(route('incidences_gestionSendIncidence')); ?>;
             this.routeSendAuthorize = <?php echo json_encode(route('requestIncidences_sendAndAuthorize')); ?>;
             this.routeGetBirdthDayIncidences = <?php echo json_encode(route('incidences_getBirdthDayIncidences')); ?>;
+            this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
             this.indexes_incidences = {
                 'id_application': 0,
                 'request_status_id': 1,

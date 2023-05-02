@@ -85,5 +85,7 @@ class SysConst {
      */
     public const MAIL_SOLICITUD_VACACIONES = 1;
     public const MAIL_ACEPT_RECH_SOLICITUD = 2;
+    public const MAIL_SOLICITUD_INCIDENCIA = 3;
+    public const MAIL_REVISION_INCIDENCIA = 4;
 }
 ?>

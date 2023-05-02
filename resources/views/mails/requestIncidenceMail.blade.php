@@ -41,7 +41,7 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div>
-                    <h3 class="inline">{{$employee->full_name}} solicitó la siguiente incidencia de {{$application->nameType}}:</h3>
+                    <h3 class="inline">{{$employee->full_name}} solicitó la siguiente incidencia de {{$application->incidence_tp_name}}:</h3>
                 </div>
                 <br>
                 <div>
@@ -76,7 +76,7 @@
                 </div>
                 <br>
                 <div>
-                    <label for="listDays">Desglose de los días de {{$application->nameType}}: </label>
+                    <label for="listDays">Desglose de los días de {{$application->incidence_tp_name}}: </label>
                     <ol name="listDays">
                         @foreach($lDays as $day)
                             @if($day->taked)
@@ -98,7 +98,7 @@
                 <div style="text-align: left">
                     <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
                     <br>
-                    <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">
+                    <a href="{{route('requestIncidences_index', ['id' => $application->id_application])}}" target="_blank">
                         <button  class="btn btn-primary">
                             Ver solicitud
                         </button>
@@ -107,7 +107,7 @@
                 <div>
                     <p>
                         Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                        <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">{{route('requestVacations', ['id' => $application->id_application])}}</a>
+                        <a href="{{route('requestIncidences_index', ['id' => $application->id_application])}}" target="_blank">{{route('requestIncidences_index', ['id' => $application->id_application])}}</a>
                     </p>
                 </div>
                 <hr>

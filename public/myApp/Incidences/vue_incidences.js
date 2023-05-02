@@ -388,6 +388,18 @@ var app = new Vue({
                         );
                         break;
                     default:
+                        this.is_singleDate = false;
+                        initCalendar(
+                            null,
+                            false,
+                            false,
+                            this.oUser.payment_frec_id,
+                            this.lTemp,
+                            oServerData.lHolidays,
+                            this.oUser.birthday_n,
+                            this.oUser.benefits_date,
+                            enable,
+                        );
                         break;
                 }
             }
@@ -787,6 +799,7 @@ var app = new Vue({
                     this.oCopylIncidences = data.lIncidences;
                     this.reDrawTableIncidences('table_Incidences', data.lIncidences);
                     SGui.showOk();
+                    this.checkMail(data.mailLog_id, this.oData.routeCheckMail);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -844,6 +857,7 @@ var app = new Vue({
                     this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
                     $('#modal_incidences').modal('hide');
                     SGui.showOk();
+                    this.checkMail(data.mailLog_id, this.oData.routeCheckMail);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -868,8 +882,9 @@ var app = new Vue({
                     this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
                     $('#modal_incidences').modal('hide');
                     SGui.showOk();
+                    this.checkMail(data.mailLog_id, this.oData.routeCheckMail);
                 }else{
-                    SGui.showMessage('', data.message, data,icon);
+                    SGui.showMessage('', data.message, data.icon);
                 }
             })
             .catch( function(error){
@@ -906,7 +921,7 @@ var app = new Vue({
             this.totCalendarDays = this.oApplication.tot_calendar_days;
             this.takedDays = this.oApplication.total_days;
             this.lDays = this.formatlDays(this.oApplication.ldays); 
-            this.comments = this.oApplication.emp_comments_n;
+            this.comments = this.oApplication.sup_comments_n;
             this.is_normal = this.oApplication.is_normal;
             this.is_past = this.oApplication.is_past;
             this.is_season_special = this.oApplication.is_season_special;
@@ -1033,6 +1048,7 @@ var app = new Vue({
                     this.oCopylIncidences = data.lIncidences;
                     this.reDrawTableIncidences('table_Incidences', data.lIncidences);
                     SGui.showOk();
+                    this.checkMail(data.mailLog_id, this.oData.routeCheckMail);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -1095,6 +1111,41 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
-        }
+        },
+
+        sleep(milliseconds) {
+            return new Promise((resolve) => setTimeout(resolve, milliseconds));
+        },
+
+        async checkMail(mail_log_id, route){
+            var checked = false;
+            for(var i = 0; i<10; i++){
+                console.log(i);
+                await this.sleep(3000);
+
+                if(!checked){
+                    axios.post(route, {
+                        'mail_log_id': mail_log_id,
+                    })
+                    .then(response => {
+                        var data = response.data;
+                        if(data.status == 2){
+                            checked = true;
+                            SGui.showMessage('', 'E-mail enviado con éxito', 'success');
+                        }else if(data.status == 3){
+                            checked = true;
+                            SGui.showMessage('', 'Ocurrio un error al enviar el e-mail, notifique a su colaborador', 'error');
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+                }
+
+                if(checked){
+                    break;
+                }
+            }
+        },
     }
 });

@@ -27,12 +27,12 @@ class SyncController extends Controller
         //$photos = SyncController::SyncPhotos();
         $synchronized = true;
 
-        if($synchronized){
-            $newDate = Carbon::now();
-            $newDate->subMinutes(10);
+        // if($synchronized){
+        //     $newDate = Carbon::now();
+        //     $newDate->subMinutes(10);
     
-            \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
-        }
+        //     \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        // }
 
         return $synchronized;
     }
@@ -67,6 +67,8 @@ class SyncController extends Controller
             $holidaysCont->saveHolidaysFromJSON($data->holidays);
 
             $vacCont = new VacationsController();
+            // $newJsonString = json_encode($data->vacations, JSON_PRETTY_PRINT);
+            // file_put_contents(base_path('vac.json'), stripslashes($newJsonString));
             $vacCont->saveVacFromJSON($data->vacations);
             // $vacCont->dumySetVacationsUser();
         }
