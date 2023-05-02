@@ -24,7 +24,7 @@ class CreateHoursOfLeaveTable extends Migration
             $table->text('ldays');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('request_status_id');
-            $table->unsignedBigInteger('type_incident_id');
+            $table->unsignedBigInteger('type_permission_id');
             $table->unsignedBigInteger('user_apr_rej_id');
             $table->date('approved_date_n');
             $table->date('rejected_date_n');
@@ -37,7 +37,7 @@ class CreateHoursOfLeaveTable extends Migration
             
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('request_status_id')->references('id_applications_st')->on('sys_applications_sts');
-            $table->foreign('type_incident_id')->references('id_incidence_tp')->on('cat_incidence_tps');
+            $table->foreign('type_permission_id')->references('id_permission_tp')->on('cat_permission_tp');
             $table->foreign('user_apr_rej_id')->references('id')->on('users');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
