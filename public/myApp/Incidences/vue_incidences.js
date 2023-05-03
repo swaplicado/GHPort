@@ -45,6 +45,7 @@ var app = new Vue({
         lBirthDay: [],
         birthDayYear: null,
         minYear: null,
+        emp_comments: null,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -922,6 +923,7 @@ var app = new Vue({
             this.takedDays = this.oApplication.total_days;
             this.lDays = this.formatlDays(this.oApplication.ldays); 
             this.comments = this.oApplication.sup_comments_n;
+            this.emp_comments = this.oApplication.emp_comments_n;
             this.is_normal = this.oApplication.is_normal;
             this.is_past = this.oApplication.is_past;
             this.is_season_special = this.oApplication.is_season_special;

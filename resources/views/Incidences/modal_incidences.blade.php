@@ -160,6 +160,11 @@
                                 </template>
                             </ol>
                         </div>
+                        <div v-if="isRevision">
+                            <label for="comentarios_emp"><b>Comentarios del colaborador:</b></label>
+                            <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
+                            <p v-else>(Sin comentarios)</p>
+                        </div>
                         <div>
                             <label class="form-label" for="comments"><b>Comentarios:</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>

@@ -290,6 +290,15 @@ class incidencesController extends Controller
                 }else if($confCompany != null){
                     $needAuth = $confCompany->needAuth;
                 }
+            }else{
+                $oType = \DB::table('cat_incidence_tps')
+                            ->where('id_incidence_tp', $oApplication->type_incident_id)
+                            ->first();
+
+                $needAuth = null;
+                if($oType->need_auth != 0){
+                    $needAuth = 1;
+                }
             }
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
@@ -309,11 +318,17 @@ class incidencesController extends Controller
         try {
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
-            // $data = incidencesUtils::checkExternalIncident($application);
-
-            // if($data->code == 500 || $data->code == 550){
-            //     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            // }
+            $data = incidencesUtils::checkExternalIncident($application);
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            }
 
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
@@ -386,9 +401,15 @@ class incidencesController extends Controller
 
             $data = incidencesUtils::sendIncidence($application);
 
-            if($data->code == 500 || $data->code == 550){
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
             }
 
             $lIncidences = $this->getIncidences($application->user_id);
@@ -399,7 +420,7 @@ class incidencesController extends Controller
 
             $mailLog = new MailLog();
             $mailLog->date_log = Carbon::now()->toDateString();
-            $mailLog->to_user_id = $superviser->id;
+            $mailLog->to_user_id = $employee->id;
             $mailLog->application_id_n = $application->id_application;
             $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
             $mailLog->type_mail_id = SysConst::MAIL_REVISION_INCIDENCIA;
@@ -415,7 +436,7 @@ class incidencesController extends Controller
         }
 
         $mypool = Pool::create();
-        $mypool[] = async(function () use ($application, $employee){
+        $mypool[] = async(function () use ($application, $employee, $mailLog){
             try {
                 Mail::to($employee->institutional_mail)->send(new authorizeIncidenceMail(
                                                         $application->id_application

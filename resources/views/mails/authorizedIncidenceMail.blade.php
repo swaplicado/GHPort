@@ -43,9 +43,9 @@
                 <div>
                     <h3>{{$employee->full_name}}
                         @if ($application->request_status_id == 3)
-                            <span style="color: green">su solicitud @{{incidence_tp_name}} ha sido aprobada:</span>
+                            <span style="color: green">su solicitud {{$application->incidence_tp_name}} ha sido aprobada:</span>
                         @elseif($application->request_status_id == 4)
-                            <span style="color: red">su solicitud @{{incidence_tp_name}} ha sido rechazada:</span>
+                            <span style="color: red">su solicitud {{$application->incidence_tp_name}} ha sido rechazada:</span>
                         @else
                             comprobar el estatus de su solicitud presionando el botón "Ver mis incidencias":
                         @endif
@@ -84,7 +84,7 @@
                 </div>
                 <br>
                 <div>
-                    <label for="listDays">Desglose de los días de vacaciones:</label>
+                    <label for="listDays">Desglose de los días de {{$application->incidence_tp_name}}:</label>
                     <ol name="listDays">
                         @foreach($lDays as $day)
                             @if($day->taked)

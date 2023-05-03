@@ -6,6 +6,7 @@ use \App\Constants\SysConst;
 use Illuminate\Support\Arr;
 use App\Models\Vacations\requestVacationLog;
 use GuzzleHttp\Client;
+use GuzzleHttp\Request;
 use GuzzleHttp\Exception\RequestException;
 
 class incidencesUtils {
@@ -179,5 +180,78 @@ class incidencesUtils {
         $oVacLog->save();
 
         return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
+    }
+
+    public static function loginToCAP(){
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json'
+        ];
+
+        $config = \App\Utils\Configuration::getConfigurations();
+        $client = new Client([
+            'base_uri' => $config->urlSyncCAP,
+            'timeout' => 30.0,
+            'headers' => $headers,
+            'verify' => false
+        ]);
+
+        $body = '{
+                "email": "cap@swaplicado.com.mx",
+                "password": "1234"
+        }';
+
+        $response = $client->request('POST', 'login' , [
+            'body' => $body
+        ]);
+
+        $jsonString = $response->getBody()->getContents();
+
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
+
+    public static function sendToCAP($oApplication){
+        $data = incidencesUtils::loginToCAP();
+        $config = \App\Utils\Configuration::getConfigurations();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $data->token_type.' '.$data->access_token
+        ];
+        
+        $client = new Client([
+            'base_uri' => $config->urlSyncCAP,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $oApplication->cl_incident_id = \DB::table('cat_incidence_tps as tp')
+                                            ->leftJoin('cat_incidence_cls as cl', 'cl.id_incidence_cl', '=', 'tp.incidence_cl_id')
+                                            ->where('tp.id_incidence_tp', $oApplication->type_incident_id)
+                                            ->value('cl.id_incidence_cl');
+
+        $body = '{
+            "ini_date": "'.$oApplication->start_date.'",
+            "end_date": "'.$oApplication->end_date.'",
+            "ext_key": "'.$oApplication->id_application.'",
+            "ext_sys": "pgh",
+            "folio": "'.$oApplication->folio_n.'",
+            "cls_inc_id": "'.$oApplication->cl_incident_id.'",
+            "type_inc_id": "'.$oApplication->type_incident_id.'",
+            "type_sub_inc_id": null,
+            "emp_comments": "'.$oApplication->emp_comments_n.'",
+            "sup_comments": "'.$oApplication->sup_comments_n.'",
+            "employee_id": '.$oApplication->user_id.',
+            "inc_dates": '.$oApplication->ldays.'
+        }';
+        
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'saveincident', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+
+        $data = json_decode($jsonString);
+        return $response;
     }
 }

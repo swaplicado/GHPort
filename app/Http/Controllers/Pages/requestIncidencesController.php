@@ -163,11 +163,17 @@ class requestIncidencesController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
+            // $data = incidencesUtils::sendToCAP($application);
             $data = incidencesUtils::sendIncidence($application);
-
-            if($data->code == 500 || $data->code == 550){
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
             }
             
             $employee = \DB::table('users')
@@ -193,7 +199,7 @@ class requestIncidencesController extends Controller
         }
 
         $mypool = Pool::create();
-        $mypool[] = async(function () use ($application, $employee){
+        $mypool[] = async(function () use ($application, $employee, $mailLog){
             try {
                 Mail::to($employee->institutional_mail)->send(new authorizeIncidenceMail(
                                                         $application->id_application
@@ -259,7 +265,7 @@ class requestIncidencesController extends Controller
         }
 
         $mypool = Pool::create();
-        $mypool[] = async(function () use ($application, $employee){
+        $mypool[] = async(function () use ($application, $employee, $mailLog){
             try {
                 Mail::to($employee->institutional_mail)->send(new authorizeIncidenceMail(
                                                         $application->id_application
