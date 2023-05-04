@@ -1064,7 +1064,11 @@ class EmployeeVacationUtils {
         $lastAppBreak = \DB::table('applications as ap')
                             ->leftJoin('applications_breakdowns as apb', 'apb.application_id', '=', 'ap.id_application')
                             ->where('ap.user_id', $user_id)
-                            ->where('ap.request_status_id', SysConst::APPLICATION_ENVIADO)
+                            ->whereIn('ap.request_status_id', [
+                                                                SysConst::APPLICATION_ENVIADO,
+                                                                SysConst::APPLICATION_APROBADO,
+                                                                SysConst::APPLICATION_CONSUMIDO,
+                                                            ])
                             ->where('ap.is_deleted', 0)
                             ->where('ap.type_incident_id', SysConst::TYPE_VACACIONES)
                             ->max('apb.application_year');

@@ -19,6 +19,7 @@ use Spatie\Async\Pool;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\requestIncidenceMail;
 use Carbon\Carbon;
+use App\Mail\authorizeIncidenceMail;
 
 class incidencesController extends Controller
 {
