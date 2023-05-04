@@ -317,6 +317,14 @@ class EmployeeVacationUtils {
             $customYear = $config->showVacation->years;
             $disableLastYear = $customYear < $checkYear;
             $customYear = $customYear < $checkYear ? $checkYear : $customYear;
+            
+            if(!is_null($checkYear)){
+                $from = Carbon::parse($user->benefits_date);
+                $to = Carbon::today()->locale('es');
+                if($to->diffInYears($from) < 1){
+                    $customYear = 1;
+                }
+            }
             $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear, null, null, $disableLastYear);
         }else{
             $user->vacation = EmployeeVacationUtils::getEmployeeVacations($id, $customYear);

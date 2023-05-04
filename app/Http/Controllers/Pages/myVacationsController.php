@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -353,8 +354,15 @@ class myVacationsController extends Controller
 
             $data = $this->checkExternalIncident($application, json_decode($application->ldays));
 
-            if($data->code == 500 || $data->code == 550){
-                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
             }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
