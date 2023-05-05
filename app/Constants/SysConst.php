@@ -6,6 +6,8 @@ class SysConst {
      * Constantes de la tabla cat_incidence_cls
      */
     public const CLASS_VACACIONES = 1;
+    public const CLASS_INASISTENCIA = 2;
+    public const CLASS_INCAPACIDAD = 3;
 
     /**
      * Constantes de la tabla cat_incidence_tps
@@ -13,7 +15,13 @@ class SysConst {
     public const TYPE_VACACIONES = 1;
     public const TYPE_INASISTENCIA = 2;
     public const TYPE_INASISTENCIA_ADMINISTRATIVA = 3;
-    public const TYPE_CUMPLEAÑOS = 4;
+    public const TYPE_PERMISO_SIN_GOCE = 4;
+    public const TYPE_PERMISO_CON_GOCE = 5;
+    public const TYPE_PERMISO_PATERNIDAD = 6;
+    public const TYPE_PRESCRIPCIÓN_MEDICA = 7;
+    public const TYPE_TEMA_LABORAL = 8;
+    public const TYPE_CUMPLEAÑOS = 9;
+    public const TYPE_HOMEOFFICE = 10;
 
     /**
      * JSON para los tipos de incidencia
@@ -22,32 +30,26 @@ class SysConst {
         'VACACIONES' => 1,
         'INASISTENCIA' => 2,
         'INASISTENCIA_ADMINISTRATIVA' => 3,
-        'CUMPLEANOS' => 4,
-        'PERMISO_SIN_GOCE' => 5,
-        'PERMISO_CON_GOCE' => 6,
-        'PERMISO_PATERNIDAD' => 7,
-        'PRESCRIPCIÓN_MÉDICA' => 8,
-        'TEMA_LABORAL' => 9,
-        'Riesgo_de_trabajo' => 10,
-        'Enfermedad_en_general' => 11,
-        'Maternidad' => 12,
-        'Licencia_por_cuidados_medicos_de_hijos_diagnosticados_con_cancer' => 13,
+        'PERMISO_SIN_GOCE' => 4,
+        'PERMISO_CON_GOCE' => 5,
+        'PERMISO_PATERNIDAD' => 6,
+        'PRESCRIPCIÓN_MEDICA' => 7,
+        'TEMA_LABORAL' => 8,
+        'CUMPLEAÑOS' => 9,
+        'HOMEOFFICE' => 10,
     ];
 
     public const lTypesCodes = [
+        'VACACIONES' => 'VAC',
         'INASISTENCIA' => 'INA',
         'INASISTENCIA_ADMINISTRATIVA' => 'IAD',
         'PERMISO_SIN_GOCE' => 'PSG',
         'PERMISO_CON_GOCE' => 'PCG',
-        'ERMISO_PATERNIDAD' => 'PPA',
-        'PRESCRIPCIÓN_MÉDICA' => 'PME',
+        'PERMISO_PATERNIDAD' => 'PPA',
+        'PRESCRIPCIÓN_MEDICA' => 'PME',
         'TEMA_LABORAL' => 'TLA',
-        'CUMPLEANOS' => 'CUM',
-        'VACACIONES' => 'VAC',
-        'Riesgo_de_trabajo' => 'RIE',
-        'Enfermedad_en_general' => 'ENF',
-        'Maternidad' => 'MAT',
-        'Licencia_por_cuidados_medicos_de_hijos_diagnosticados_con_cancer' => 'LIC',
+        'CUMPLEAÑOS' => 'CUM',
+        'HOMEOFFICE' => 'HOM',
     ];
 
     /**

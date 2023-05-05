@@ -205,8 +205,9 @@ var app = new Vue({
         }).on('select2:select', function(e) {
             self.class_id = e.params.data.id;
         });
-
-        $('#incident_class').val('').trigger('change');
+        this.class_id = this.lClass[0].id_incidence_cl;
+        // this.setClass(this.class_id);
+        // $('#incident_class').val('').trigger('change');
 
         $('#incident_type').select2({
             placeholder: 'Selecciona tipo de incidencia',
@@ -359,22 +360,7 @@ var app = new Vue({
             if(!!val){
                 this.showCalendar = true;
                 switch (parseInt(val)) {
-                    case 2:
-                    case 3:
-                        this.is_singleDate = false;
-                        initCalendar(
-                            null,
-                            false,
-                            false,
-                            this.oUser.payment_frec_id,
-                            this.lTemp,
-                            oServerData.lHolidays,
-                            this.oUser.birthday_n,
-                            this.oUser.benefits_date,
-                            enable,
-                        );
-                        break;
-                    case 4:
+                    case this.oData.constants.TYPE_CUMPLEAÑOS:
                         this.is_singleDate = true;
                         initCalendar(
                             null,
@@ -497,9 +483,11 @@ var app = new Vue({
 
         async showModal(data = null){
             $('#clear').trigger('click');
-            $('#incident_class').val('').trigger('change');
+            // $('#incident_class').val('').trigger('change');
             $('#incident_type').empty().trigger("change");
             this.cleanData();
+            this.class_id = this.lClass[0].id_incidence_cl;
+            this.setClass(this.class_id);
             if(data != null){
                 this.isEdit = true;
                 this.idApplication = data[this.indexes_incidences.id_application];

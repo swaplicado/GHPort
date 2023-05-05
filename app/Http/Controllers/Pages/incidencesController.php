@@ -57,16 +57,26 @@ class incidencesController extends Controller
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
-            'TYPE_CUMPLEAÑOS' => SysConst::TYPE_CUMPLEAÑOS,
             'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'TYPE_VACACIONES' => SysConst::TYPE_VACACIONES,
+            'TYPE_INASISTENCIA' => SysConst::TYPE_INASISTENCIA,
+            'TYPE_INASISTENCIA_ADMINISTRATIVA' => SysConst::TYPE_INASISTENCIA_ADMINISTRATIVA,
+            'TYPE_PERMISO_SIN_GOCE' => SysConst::TYPE_PERMISO_SIN_GOCE,
+            'TYPE_PERMISO_CON_GOCE' => SysConst::TYPE_PERMISO_CON_GOCE,
+            'TYPE_PERMISO_PATERNIDAD' => SysConst::TYPE_PERMISO_PATERNIDAD,
+            'TYPE_PRESCRIPCIÓN_MEDICA' => SysConst::TYPE_PRESCRIPCIÓN_MEDICA,
+            'TYPE_TEMA_LABORAL' => SysConst::TYPE_TEMA_LABORAL,
+            'TYPE_CUMPLEAÑOS' => SysConst::TYPE_CUMPLEAÑOS,
+            'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
         ];
 
         $lClass = \DB::table('cat_incidence_cls')
                         ->where('id_incidence_cl', '!=', SysConst::TYPE_VACACIONES)
                         ->where('is_deleted', 0)
+                        ->where('is_active', 1)
                         ->get();
 
         $lTypes = \DB::table('cat_incidence_tps')

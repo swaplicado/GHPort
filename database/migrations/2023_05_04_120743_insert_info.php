@@ -30,7 +30,7 @@ class InsertInfo extends Migration
             ['id_incidence_tp' => 10, 'incidence_cl_id' => 2, 'incidence_tp_name' => 'HOMEOFFICE', 'is_active' => 1, 'need_auth' => 1, 'interact_system_id' => 1, 'external_id' => 1, 'is_deleted' => 0, 'created_by' => 1, 'updated_by' => 1],
         ]);
 
-        DB::table('tp_incidents')->insert([
+        DB::table('tp_incidents_pivot')->insert([
             ['id_pivot' => 1, 'tp_incident_id' => 1, 'ext_tp_incident_id' => 1, 'ext_cl_incident_id' => 3, 'int_sys_id' => 2, 'is_deleted' => 0, 'created_by' => 1, 'updated_by' => 1],
             ['id_pivot' => 2, 'tp_incident_id' => 2, 'ext_tp_incident_id' => 1, 'ext_cl_incident_id' => 1, 'int_sys_id' => 2, 'is_deleted' => 0, 'created_by' => 1, 'updated_by' => 1],
             ['id_pivot' => 3, 'tp_incident_id' => 3, 'ext_tp_incident_id' => 5, 'ext_cl_incident_id' => 1, 'int_sys_id' => 2, 'is_deleted' => 0, 'created_by' => 1, 'updated_by' => 1],
