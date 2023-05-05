@@ -597,6 +597,12 @@ class requestVacationsController extends Controller
         }
     }
 
+    public function checkMail(Request $request){
+        $mailLog = MailLog::find($request->mail_log_id);
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
+    }
+
     public function sendRequestVacation($oApplication, $lDays){
         $lHolidays = \DB::table('holidays')
                         ->where('is_deleted', 0)
