@@ -107,7 +107,7 @@ var app = new Vue({
     updated() {
         this.$nextTick(function () {
             if(typeof self.$refs.table_Incidences != 'undefined' && self.needRenderTableIncidences){
-                this.createTable('table_Incidences', [0,2,3,4,16], [1,5,6]);
+                this.createTable('table_Incidences', [0,2,3,4,7,16,17], [1,5,6]);
                 let dataClassFilter = [{id: '0', text: 'Todos'}];
                 for (let i = 0; i < this.lClass.length; i++) {
                     dataClassFilter.push({id: this.lClass[i].id_incidence_cl, text: this.lClass[i].incidence_cl_name });
@@ -647,6 +647,7 @@ var app = new Vue({
                         incident.user_apr_rej_id,
                         incident.id_incidence_cl,
                         incident.id_incidence_tp,
+                        incident.employee,
                         incident.incidence_tp_name,
                         incident.folio_n,
                         (incident.date_send_n != null ? 
