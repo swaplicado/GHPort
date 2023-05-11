@@ -189,4 +189,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('requestIncidences/getAllEmployees', 'Pages\requestIncidencesController@getAllEmployees')->name('requestIncidences_getAllEmployees');
     Route::get('requestIncidences/getEmployeeData', 'Pages\requestIncidencesController@getEmployeeData')->name('requestIncidences_getEmployeeData');
     Route::post('requestIncidences/sendAndAuthorize', 'Pages\incidencesController@sendAndAuthorize')->name('requestIncidences_sendAndAuthorize');
+
+    Route::get('permission', 'Pages\permissionController@index')->name('permission_index');
+    Route::post('permission/save', 'Pages\permissionController@createPermission')->name('permission_create');
+    Route::post('permission/update', 'Pages\permissionController@updatePermission')->name('permission_update');
+    Route::post('permission/getPermission', 'Pages\permissionController@getPermission')->name('permission_getPermission');
+    Route::post('permission/delete', 'Pages\permissionController@deletePermission')->name('permission_delete');
 });

@@ -15,36 +15,32 @@
     <script>
         function GlobalData(){
             this.lPermissions = <?php echo json_encode($lPermissions); ?>;
+            this.oPermission = <?php echo json_encode($oPermission); ?>;
             this.constants = <?php echo json_encode($constants); ?>;
             this.lTypes = <?php echo json_encode($lTypes); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
+            this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
-            this.table_name = <?php echo json_encode('table_MyPermissions'); ?>;
-            this.routeCreate = <?php echo json_encode(route('permissions_create')); ?>;
-            this.routeUpdate = <?php echo json_encode(route('permissions_update')); ?>;
-            this.routeDelete = <?php echo json_encode(route('permissions_delete')); ?>;
-            this.routeSend = <?php echo json_encode(route('permissions_send')); ?>;
-            this.routeGetIncidence = <?php echo json_encode(route('permissions_getPermissions')); ?>;
-            this.routeGestionSendIncidence = <?php echo json_encode(route('permissions_gestionSendPermissions')); ?>;
-            this.indexes_incidences = {
-                'id_application': 0,
+            this.routeCreate = <?php echo json_encode(route('permission_create')) ?>;
+            this.routeUpdate = <?php echo json_encode(route('permission_update')) ?>;
+            this.routeGetPermission = <?php echo json_encode(route('permission_getPermission')) ?>;
+            this.routeDelete = <?php echo json_encode(route('permission_delete')) ?>;
+            this.indexes_permission = {
+                'id': 0,
                 'request_status_id': 1,
-                'emp_comments_n': 2,
-                'sup_comments_n': 3,
-                'user_apr_rej_id': 4,
-                'id_incidence_cl': 5,
-                'id_incidence_tp': 6,
-                'incidence_tp_name': 7,
-                'folio_n': 8,
-                'date_send_n': 9,
-                'user_apr_rej_name': 10,
-                'accept_reject_date': 11,
-                'start_date': 12,
-                'end_date': 13,
-                'return_date': 14,
-                'total_days': 15,
-                'subtype': 16,
-                'applications_st_name': 17,
+                'emp coment.': 2,
+                'sup coment.': 3,
+                'revisor_id': 4,
+                'type_incident_id': 5,
+                'empleado': 6,
+                'Permiso': 7,
+                'tiempo': 8,
+                'Folio': 9,
+                'Fecha solicitud': 10,
+                'Revisor': 11,
+                'Fecha revisión': 12,
+                'Fecha': 13,
+                'Estatus': 14,
             }
         }
         var oServerData = new GlobalData();
@@ -63,8 +59,8 @@
     </div>
     <div class="card-body">
         <div class="contenedor-elem-ini">
-            <label for="permissions_tp_filter">Filtrar por tipo: </label>
-            <select class="select2-class form-control" name="permissions_tp_filter" id="permissions_tp_filter" style="width: 15%;"></select>
+            <label for="permission_tp_filter">Filtrar por tipo: </label>
+            <select class="select2-class form-control" name="permission_tp_filter" id="permission_tp_filter" style="width: 15%;"></select>
             &nbsp;&nbsp;
             @include('layouts.status_filter', [
                                                 'filterType' => 1,
@@ -77,7 +73,7 @@
         @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true ])
         <br>
         <br>
-        @include('Incidences.incidences_table', ['table_id' => 'table_´Permissions', 'table_ref' => 'table_Permissions'])
+        @include('permissions.permissions_table', ['table_id' => 'table_permissions', 'table_ref' => 'table_permissions'])
     </div>
 </div>
 @endsection
@@ -89,14 +85,13 @@
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
-                let iType = parseInt( $('#permissions_tp_filter').val(), 10 );
+                let iType = parseInt( $('#permission_tp_filter').val(), 10 );
                 let iStatus = parseInt( $('#status_myPermission').val(), 10 );
-                let col_class = null;
                 let col_type = null;
                 let col_status = null;
 
-                col_type = parseInt( data[oServerData.indexes_permissions.id_permission_tp] );
-                col_status = parseInt( data[oServerData.indexes_permissions.request_status_id] );
+                col_type = parseInt( data[oServerData.indexes_permission.request_status_id] );
+                col_status = parseInt( data[oServerData.indexes_permission.request_status_id] );
                 if(col_type == iType || iType == 0){
                     return col_status == iStatus;
                 }else{
@@ -107,9 +102,9 @@
     });
 </script>
 @include('layouts.table_jsControll', [
-                                        'table_id' => 'table_Permissions',
-                                        'colTargets' => [0,2,3,4,16],
-                                        'colTargetsSercheable' => [1,5,6],
+                                        'table_id' => 'table_permissions',
+                                        'colTargets' => [0,2,3,4],
+                                        'colTargetsSercheable' => [1,5],
                                         'noDom' => true,
                                         'select' => true,
                                         'crear_modal' => true,
@@ -119,13 +114,12 @@
                                     ] )
 <script>
     $(document).ready(function (){
-        
         $('#permission_tp_filter').change( function() {
-            table['table_Permissions'].draw();
+            table['table_permissions'].draw();
         });
 
         $('#status_myPermission').change( function() {
-            table['table_Permissions'].draw();
+            table['table_permissions'].draw();
         });
     });
 </script>
@@ -170,7 +164,6 @@
         if($('#date-range-001').val() && $('#date-range-002').val()){
             app.startDate = app.oDateUtils.formatDate($('#date-range-001').val(), 'ddd DD-MMM-YYYY');
             app.endDate = app.oDateUtils.formatDate($('#date-range-002').val(), 'ddd DD-MMM-YYYY');
-            // app.checkSelectDates();
         }else{
             app.startDate = '';
             app.endDate = '';
@@ -181,15 +174,15 @@
         if ($('#date-range-001').val() && $('#date-range-002').val() ){
             app.startDate = app.oDateUtils.formatDate($('#date-range-001').val());
             app.endDate = app.oDateUtils.formatDate($('#date-range-002').val());
-            // app.getDataDays();
         }
     }
 
     function dateRangePickerClearValue(){
-        app.returnDate = null;
+        
     }
 </script>
-<script type="text/javascript" src="{{ asset('myApp/Incidences/vue_permissions.js') }}"></script>
+<script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
+<script type="text/javascript" src="{{ asset('myApp/permissions/vue_permissions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
 
 @endsection
