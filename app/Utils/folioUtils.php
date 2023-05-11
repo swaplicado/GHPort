@@ -12,11 +12,19 @@ class folioUtils {
                             ->where('id', $employee_id)
                             ->value('employee_num');
 
-        $totApplications = \DB::table('applications')
-                                ->where('user_id', $employee_id)
-                                ->where('type_incident_id', $type_id)
-                                ->where('is_deleted', 0)
-                                ->count();
+        if($type_id != SysConst::TYPE_PERMISO_HORAS){
+            $totApplications = \DB::table('applications')
+                                    ->where('user_id', $employee_id)
+                                    ->where('type_incident_id', $type_id)
+                                    ->where('is_deleted', 0)
+                                    ->count();
+        }else if($type_id == SysConst::TYPE_PERMISO_HORAS){
+            $totApplications = \DB::table('hours_leave')
+                                    ->where('user_id', $employee_id)
+                                    ->where('is_deleted', 0)
+                                    ->count();
+        }
+
 
         $totApplications = $totApplications + 1;
 
