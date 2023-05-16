@@ -189,4 +189,13 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('requestIncidences/getAllEmployees', 'Pages\requestIncidencesController@getAllEmployees')->name('requestIncidences_getAllEmployees');
     Route::get('requestIncidences/getEmployeeData', 'Pages\requestIncidencesController@getEmployeeData')->name('requestIncidences_getEmployeeData');
     Route::post('requestIncidences/sendAndAuthorize', 'Pages\incidencesController@sendAndAuthorize')->name('requestIncidences_sendAndAuthorize');
+
+    Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
+    Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');
+    Route::post('createAuth', 'Pages\configAuthController@createAuth')->name('create_authConf');
+    Route::post('deleteAuth', 'Pages\configAuthController@deleteAuth')->name('delete_authConf');
+
+    Route::get('annUsersChilds', 'Pages\annUsersChildsController@employeesDirectAnn')->name('annUsersChilds');
+
+    Route::get('annAllUsersChilds', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('annAllUsersChilds');
 });
