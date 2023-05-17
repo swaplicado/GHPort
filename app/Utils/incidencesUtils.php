@@ -234,6 +234,10 @@ class incidencesUtils {
                                             ->where('tp.id_incidence_tp', $oApplication->type_incident_id)
                                             ->value('cl.id_incidence_cl');
 
+        $external_employee_id = \DB::table('users')
+                                    ->where('id', $oApplication->user_id)
+                                    ->value('external_id_n');
+
         $body = '{
             "ini_date": "'.$oApplication->start_date.'",
             "end_date": "'.$oApplication->end_date.'",
@@ -245,7 +249,7 @@ class incidencesUtils {
             "type_sub_inc_id": null,
             "emp_comments": "'.$oApplication->emp_comments_n.'",
             "sup_comments": "'.$oApplication->sup_comments_n.'",
-            "employee_id": '.$oApplication->user_id.',
+            "employee_id": '.$external_employee_id.',
             "inc_dates": '.$oApplication->ldays.'
         }';
         
@@ -254,6 +258,6 @@ class incidencesUtils {
         $jsonString = $response->getBody()->getContents();
 
         $data = json_decode($jsonString);
-        return $response;
+        return $data;
     }
 }

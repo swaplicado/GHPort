@@ -4,6 +4,7 @@ namespace App\Utils;
 
 use \App\Constants\SysConst;
 use Illuminate\Support\Arr;
+use GuzzleHttp\Client;
 
 class permissionsUtils {
     public static function getMyEmployeeslPermissions(){
@@ -21,13 +22,23 @@ class permissionsUtils {
     }
 
     public static function getPermission($permission_id){
-        $oPermission = \DB::table('hours_leave')
-                        ->where('id_hours_leave', $permission_id)
+        $oPermission = \DB::table('hours_leave as h')
+                        ->leftJoin('cat_permission_tp as pt', 'pt.id_permission_tp', '=', 'h.type_permission_id')
+                        ->leftJoin('users as u', 'u.id', '=', 'h.user_apr_rej_id')
+                        ->leftJoin('users as emp', 'emp.id', '=', 'h.user_id')
+                        ->where('h.id_hours_leave', $permission_id)
+                        ->select(
+                            'h.*',
+                            'pt.permission_tp_name',
+                            'u.full_name_ui as user_apr_rej_name',
+                            'emp.full_name_ui as employee',
+                        )
                         ->first();
 
         $result = permissionsUtils::convertMinutesToHours($oPermission->minutes);
         $oPermission->hours = $result[0];
         $oPermission->min = $result[1];
+        $oPermission->time = $result[0].':'.$result[1].' hrs';
 
         return $oPermission;
     }
@@ -82,4 +93,42 @@ class permissionsUtils {
         return array($hours, $minutes);
     }
     
+    public static function sendPermissionToCAP($oPermission){
+        $data = incidencesUtils::loginToCAP();
+        $config = \App\Utils\Configuration::getConfigurations();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $data->token_type.' '.$data->access_token
+        ];
+        
+        $client = new Client([
+            'base_uri' => $config->urlSyncCAP,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $adjus_type_id = $oPermission->type_permission_id == 1 ? 3 : 8;
+
+        $external_employee_id = \DB::table('users')
+                                    ->where('id', $oPermission->user_id)
+                                    ->value('external_id_n');
+
+        $body = '{
+            "dt_date": "'.$oPermission->start_date.'",
+            "minutes": "'.$oPermission->minutes.'",
+            "comments": "'.$oPermission->emp_comments_n.'",
+            "ext_key": "'.$oPermission->id_hours_leave.'",
+            "ext_sys": "pgh",
+            "adjust_type_id": '.$adjus_type_id.',
+            "employee_id": '.$external_employee_id.'
+          }';
+        
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'saveadjust', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+
+        $data = json_decode($jsonString);
+        return $data;
+    }
 }

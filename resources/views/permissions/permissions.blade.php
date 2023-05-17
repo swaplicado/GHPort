@@ -17,6 +17,7 @@
             this.lPermissions = <?php echo json_encode($lPermissions); ?>;
             this.oPermission = <?php echo json_encode($oPermission); ?>;
             this.constants = <?php echo json_encode($constants); ?>;
+            this.permission_time = <?php echo json_encode($permission_time); ?>;
             this.lTypes = <?php echo json_encode($lTypes); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;
@@ -25,6 +26,8 @@
             this.routeUpdate = <?php echo json_encode(route('permission_update')) ?>;
             this.routeGetPermission = <?php echo json_encode(route('permission_getPermission')) ?>;
             this.routeDelete = <?php echo json_encode(route('permission_delete')) ?>;
+            this.routeGestionSendIncidence = <?php echo json_encode(route('permission_gestionSendIncidence')) ?>;
+            this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
             this.indexes_permission = {
                 'id': 0,
                 'request_status_id': 1,
@@ -48,7 +51,7 @@
 @endsection
 
 @section('content') 
-<div class="card shadow mb-4" id="incidencesApp">
+<div class="card shadow mb-4" id="permissionsApp">
     
     @include('permissions.modal_permissions')
 
@@ -182,6 +185,9 @@
     }
 </script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
+<script>
+    var self;
+</script>
 <script type="text/javascript" src="{{ asset('myApp/permissions/vue_permissions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
 
