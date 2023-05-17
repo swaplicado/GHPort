@@ -18,6 +18,7 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $element, 'route' => route('incidences_index'), 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias'],
+                    (object) ['type' => $element, 'route' => route('permission_index'), 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
@@ -45,6 +46,12 @@ class Menu {
                         ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
                                                 ],
                                                 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
+                    ],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos'],
+                        ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos'],
+                                                ],
+                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
                     ],
                     (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('recoveredVacations'), 'icon' => 'bx bx-circle bx-sm', 'name' => 'Reactivación de vacaciones'],
@@ -114,6 +121,12 @@ class Menu {
                         ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
                                                 ],
                                                 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
+                    ],
+                    (object) ['type' => $list, 'list' => [
+                        ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos'],
+                        ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos'],
+                                                ],
+                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
                     ],
                     (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],

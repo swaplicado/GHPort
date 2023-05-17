@@ -11,30 +11,32 @@
             <div class="modal-body">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="">Selecciona Tipo:</label>
+                        <div v-if="!isRevision">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="">Selecciona Tipo:</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select class="select2-class-modal form-control" name="permission_type" id="permission_type" style="width: 90%;"></select>
+                                </div>
                             </div>
-                            <div class="col-md-9">
-                                <select class="select2-class-modal form-control" name="permission_type" id="permission_type" style="width: 90%;"></select>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for=""></label>
-                            </div>
-                            <div class="col-md-1">
-                                <label for="">Horas:</label>
-                            </div>
-                            <div class="col-md-1">
-                                <input type="number" class="form-input" id="horas" min="0" max="3" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
-                            </div>
-                            <div class="col-md-1">
-                                <label for="">Minutos:</label>
-                            </div>
-                            <div class="col-md-1">
-                                <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for=""></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="">Horas:</label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="number" class="form-input" id="horas" min="0" max="3" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="">Minutos:</label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                </div>
                             </div>
                         </div>
                         <div v-if="isRevision">
@@ -97,9 +99,19 @@
                         <table>
                             <thead></thead>
                             <tbody>
+                                <tr v-if="isRevision">
+                                    <td style="vertical-align: top;"><b>Tipo:</b></td>
+                                    <td style="vertical-align: top;"><input class="form-control" v-model="type_name" readonly></td>
+                                    <td><p>&nbsp &nbsp</p></td>
+                                    <td style="vertical-align: top;"><b>Tiempo</b></td>
+                                    <td style="vertical-align: top;"><input class="form-control" v-model="time" readonly></td>
+                                </tr>
                                 <tr>
                                     <td style="vertical-align: top;"><b>Fecha</b></td>
                                     <td style="vertical-align: top;"><input class="form-control" v-model="startDate" readonly></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -123,8 +135,8 @@
                 </template>
                 <template v-else-if="isRevision">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" v-on:click="approbePermission()" v-if="valid">Aprobar</a>
-                    <button type="button" class="btn btn-danger" v-on:click="rejectPermission()" v-if="valid">Rechazar</a>
+                    <button type="button" class="btn btn-success" v-on:click="approbePermission()" v-if="valid && isRevision">Aprobar</a>
+                    <button type="button" class="btn btn-danger" v-on:click="rejectPermission()" v-if="valid && isRevision">Rechazar</a>
                 </template>
             </div>
         </div>

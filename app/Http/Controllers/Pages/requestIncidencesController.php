@@ -330,6 +330,6 @@ class requestIncidencesController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'lEmployees']);
+        return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 }

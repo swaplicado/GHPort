@@ -195,4 +195,14 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('permission/update', 'Pages\permissionController@updatePermission')->name('permission_update');
     Route::post('permission/getPermission', 'Pages\permissionController@getPermission')->name('permission_getPermission');
     Route::post('permission/delete', 'Pages\permissionController@deletePermission')->name('permission_delete');
+    Route::post('permission/gestionSendIncidence', 'Pages\permissionController@gestionSendIncidence')->name('permission_gestionSendIncidence');
+    Route::post('permission/checkMail', 'Pages\permissionController@checkMail')->name('permission_checkMail');
+
+    Route::get('requestPermission/{id?}', 'Pages\requestPermissionController@index')->name('requestPermission_index');
+    Route::post('requestPermission/getEmployee', 'Pages\requestPermissionController@getEmployee')->name('requestPermission_getEmployee');
+    Route::post('requestPermission/approbePermission', 'Pages\requestPermissionController@approbePermission')->name('requestPermission_approbe');
+    Route::post('requestPermission/rejectPermission', 'Pages\requestPermissionController@rejectPermission')->name('requestPermission_reject');
+    Route::post('requestPermission/getAllEmployees', 'Pages\requestPermissionController@getAllEmployees')->name('requestPermission_getAllEmployees');
+    Route::post('requestPermission/getDirectEmployees', 'Pages\requestPermissionController@getDirectEmployees')->name('requestPermission_getDirectEmployees');
+    Route::post('requestPermission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
 });
