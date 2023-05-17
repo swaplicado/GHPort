@@ -8,6 +8,7 @@
             <th>revisor_id</th>
             <th>incidence_cl_id</th>
             <th>incidence_type_id</th>
+            <th>Empleado</th>
             <th>Incidencia</th>
             <th>Folio</th>
             <th>Fecha solicitud</th>
@@ -29,6 +30,7 @@
                 <td>@{{incident.user_apr_rej_id}}</td>
                 <td>@{{incident.id_incidence_cl}}</td>
                 <td>@{{incident.id_incidence_tp}}</td>
+                <td>@{{incident.employee}}</td>
                 <td>@{{incident.incidence_tp_name}}</td>
                 <td>@{{incident.folio_n}}</td>
                 <td>

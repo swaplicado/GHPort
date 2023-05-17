@@ -30,6 +30,7 @@ class incidencesUtils {
                         ->leftJoin('cat_incidence_cls as cl', 'cl.id_incidence_cl', '=', 'tp.incidence_cl_id')
                         ->leftJoin('sys_applications_sts as st', 'st.id_applications_st', '=', 'ap.request_status_id')
                         ->leftJoin('users as u', 'u.id', '=', 'ap.user_apr_rej_id')
+                        ->leftJoin('users as emp', 'emp.id', '=', 'ap.user_id')
                         ->where('type_incident_id', '!=', SysConst::TYPE_VACACIONES)
                         ->where('ap.is_deleted', 0)
                         ->where('ap.user_id', $user_id)
@@ -40,7 +41,8 @@ class incidencesUtils {
                             'cl.id_incidence_cl',
                             'cl.incidence_cl_name',
                             'st.applications_st_name',
-                            'u.full_name_ui as user_apr_rej_name'
+                            'u.full_name_ui as user_apr_rej_name',
+                            'emp.full_name_ui as employee',
                         )
                         ->get();
 

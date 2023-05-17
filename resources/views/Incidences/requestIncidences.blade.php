@@ -45,17 +45,18 @@
                 'user_apr_rej_id': 4,
                 'id_incidence_cl': 5,
                 'id_incidence_tp': 6,
-                'incidence_tp_name': 7,
-                'folio_n': 8,
-                'date_send_n': 9,
-                'user_apr_rej_name': 10,
-                'accept_reject_date': 11,
-                'start_date': 12,
-                'end_date': 13,
-                'return_date': 14,
-                'total_days': 15,
-                'subtype': 16,
-                'applications_st_name': 17,
+                'employee': 7,
+                'incidence_tp_name': 8,
+                'folio_n': 9,
+                'date_send_n': 10,
+                'user_apr_rej_name': 11,
+                'accept_reject_date': 12,
+                'start_date': 13,
+                'end_date': 14,
+                'return_date': 15,
+                'total_days': 16,
+                'subtype': 17,
+                'applications_st_name': 18,
             }
         }
         var oServerData = new GlobalData();
@@ -210,7 +211,7 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_ReqIncidences',
-                                        'colTargets' => [0,2,3,4,16],
+                                        'colTargets' => [0,2,3,4,16,17],
                                         'colTargetsSercheable' => [1,5,6],
                                         'noDom' => true,
                                         'select' => true,
