@@ -150,7 +150,7 @@
                             </tbody>
                         </table>
                         <div>
-                            <label class="form-label" for="listDays"><b>Desglose de los días de vacaciones:</b></label>
+                            <label class="form-label" for="listDays"><b>Desglose de los días de incidencia:</b></label>
                             <ol class="ulColumns3" name="listDays">
                                 <template v-for="(day, index) in lDays">
                                     <li v-bind:style="{'color': day.taked ? 'green' : 'red'}">
