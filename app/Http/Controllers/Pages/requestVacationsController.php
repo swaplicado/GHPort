@@ -298,7 +298,7 @@ class requestVacationsController extends Controller
                                                                                             true);
             }
 
-            $application->request_status_id = SysConst::APPLICATION_APROBADO;
+            $application->request_status_id = SysConst::APPLICATION_CONSUMIDO;
             // $application->user_apr_rej_id = \Auth::user()->id;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
