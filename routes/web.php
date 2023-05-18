@@ -205,4 +205,12 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestPermission/getAllEmployees', 'Pages\requestPermissionController@getAllEmployees')->name('requestPermission_getAllEmployees');
     Route::post('requestPermission/getDirectEmployees', 'Pages\requestPermissionController@getDirectEmployees')->name('requestPermission_getDirectEmployees');
     Route::post('requestPermission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
+    Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
+    Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');
+    Route::post('createAuth', 'Pages\configAuthController@createAuth')->name('create_authConf');
+    Route::post('deleteAuth', 'Pages\configAuthController@deleteAuth')->name('delete_authConf');
+
+    Route::get('annUsersChilds', 'Pages\annUsersChildsController@employeesDirectAnn')->name('annUsersChilds');
+
+    Route::get('annAllUsersChilds', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('annAllUsersChilds');
 });

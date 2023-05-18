@@ -66,7 +66,13 @@ class Menu {
                     !Session::get('is_delegation') ? 
                         (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
                             : '',
-                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
+                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'Reporte mis empleados'],
+                    (object) ['type' => $list, 'list' => [
+                                                    ['route' => route('annUsersChilds'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
+                                                    ['route' => route('annAllUsersChilds'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab']
+                                                ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Aniv. Y cump. Colaboradores', 'id' => 'aniv_colabs'
+                            ],
                 ];
                     
                 break;
@@ -152,6 +158,7 @@ class Menu {
                             : '',
                     (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General'],
                     (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
+                    (object) ['type' => $element, 'route' => route('configAuth'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Autorización de incidencias'],
                 ];
                 break;
             
