@@ -224,7 +224,7 @@ class OrgChartController extends Controller
             $area->org_level = $area->level. ' - '. $area->name;
         }
 
-        return json_encode(['success' => true, 'message' => 'Registro creado con exitó', 'lAreas' => $areas]);
+        return json_encode(['success' => true, 'message' => 'Registro creado con éxito', 'lAreas' => $areas]);
     }
 
     public function deleteAssignArea(Request $request){
