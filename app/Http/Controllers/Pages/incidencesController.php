@@ -370,6 +370,7 @@ class incidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+			\Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al enviar la incidencia']);
         }
 
@@ -381,6 +382,7 @@ class incidencesController extends Controller
                                                     )
                                                 );
             } catch (\Throwable $th) {
+				\Log::error($th); 
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();   
                 return null; 
@@ -389,11 +391,11 @@ class incidencesController extends Controller
             $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
             $mailLog->update();
         })->then(function ($mailLog) {
-            
+       
         })->catch(function ($mailLog) {
-            
+           
         })->timeout(function ($mailLog) {
-            
+         
         });
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);

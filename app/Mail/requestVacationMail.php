@@ -50,7 +50,7 @@ class requestVacationMail extends Mailable
                         ->where('id', $this->idEmployee)
                         ->first();
 
-        $email = env('MAIL_FROM_ADDRESS');
+        $email = "Portalgh@aeth.mx";
         return $this->from($email)
                         ->subject('[PGH] Solicitud vacaciones '.$employee->short_name)
                         ->view('mails.requestVacationMail')

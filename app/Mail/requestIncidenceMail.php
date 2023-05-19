@@ -50,7 +50,7 @@ class requestIncidenceMail extends Mailable
             $lDays[$i]->date = dateUtils::formatDate($lDays[$i]->date, 'D/m/Y dddd');
         }
 
-        $email = env('MAIL_FROM_ADDRESS');
+        $email = "Portalgh@aeth.mx";
         return $this->from($email)
                         ->subject('[PGH] Solicitud incidencia '.$employee->short_name)
                         ->view('mails.requestIncidenceMail')
