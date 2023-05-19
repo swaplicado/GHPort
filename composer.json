@@ -13,7 +13,8 @@
         "guzzlehttp/guzzle": "^7.5",
         "laravel/framework": "^6.20.26",
         "laravel/tinker": "^2.5",
-        "nesbot/carbon": "^2.59"
+        "nesbot/carbon": "^2.59",
+        "spatie/async": "1.5"
     },
     "require-dev": {
         "facade/ignition": "^1.16.15",
