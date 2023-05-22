@@ -63,5 +63,6 @@
         "years": 0,
         "months": 1,
         "days": 0
-    }
+    },
+    "permission_time": 180
 }

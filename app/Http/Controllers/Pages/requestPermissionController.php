@@ -131,7 +131,7 @@ class requestPermissionController extends Controller
 
             $data = permissionsUtils::sendPermissionToCAP($permission);
 
-            if($data->code != 200){
+            if($data->status != 'Success'){
                 \DB::rollBack();
                 return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
             }
