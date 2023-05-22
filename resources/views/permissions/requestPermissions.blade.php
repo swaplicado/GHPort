@@ -34,6 +34,10 @@
             this.routeGetAllEmployees = <?php echo json_encode(route('requestPermission_getAllEmployees')) ?>;
             this.routeGetDirectEmployees = <?php echo json_encode(route('requestPermission_getDirectEmployees')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:solicitudesvacaciones" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:gestionvacaciones" ); ?>;
+            this.manualRoute[2] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
             this.indexes_permission = {
                 'id': 0,
                 'request_status_id': 1,
@@ -69,6 +73,7 @@
         <div class="card-header">
             <h3>
                 <b>solicitudes de permisos de horas</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -94,6 +99,7 @@
         <div class="card-header">
             <h3>
                 <b>Solicitudes incidencias</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -206,6 +212,7 @@
                                         'select' => true,
                                         'show' => true,
                                     ] )
+@include('layouts.manual_jsControll')
 <script>
     $(document).ready(function (){
         $('#permission_tp_filter').change( function() {

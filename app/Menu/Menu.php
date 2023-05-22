@@ -40,7 +40,12 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
-                    (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                                ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                                ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
+                                                 ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations'
+                            ],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
                         ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias'],
@@ -55,7 +60,6 @@ class Menu {
                     //                             ],
                     //                             'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
                     // ],
-                    (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('recoveredVacations'), 'icon' => 'bx bx-circle bx-sm', 'name' => 'Reactivación de vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
                     // (object) ['type' => $element, 'route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-sm', 'name' => 'Temporadas especiales'],
@@ -91,7 +95,12 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
-                    (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                                ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                                ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
+                                                 ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations'
+                    ],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
                         ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']

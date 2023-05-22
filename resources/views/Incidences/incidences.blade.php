@@ -30,6 +30,8 @@
             this.routeGestionSendIncidence = <?php echo json_encode(route('incidences_gestionSendIncidence')); ?>;
             this.routeGetBirdthDayIncidences = <?php echo json_encode(route('incidences_getBirdthDayIncidences')); ?>;
             this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misincidencias" ); ?>;
             this.indexes_incidences = {
                 'id_application': 0,
                 'request_status_id': 1,
@@ -64,6 +66,7 @@
     <div class="card-header">
         <h3>
             <b>Mis incidencias</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -127,6 +130,7 @@
                                         'delete' => true,
                                         'send' => true
                                     ] )
+@include('layouts.manual_jsControll')
 <script>
     $(document).ready(function (){
         $('#incident_cl_filter').change( function() {
