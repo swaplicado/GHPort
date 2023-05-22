@@ -43,16 +43,18 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
-                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
+                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias'],
+                        ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos horas'],
+                        ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos horas', 'size' => '80%'],
                                                 ],
                                                 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
                     ],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos'],
-                        ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos'],
-                                                ],
-                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
-                    ],
+                    // (object) ['type' => $list, 'list' => [
+                    //     ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos horas'],
+                    //     ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos horas'],
+                    //                             ],
+                    //                             'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
+                    // ],
                     (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
                     (object) ['type' => $element, 'route' => route('recoveredVacations'), 'icon' => 'bx bx-circle bx-sm', 'name' => 'Reactivación de vacaciones'],
                     (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
@@ -215,7 +217,11 @@ class Menu {
                         <div class="py-2 collapse-inner rounded">';
         
         foreach($list as $l){
-            $str = $str.'<a onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
+            if(!isset($l['size'])){
+                $str = $str.'<a onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
+            }else{
+                $str = $str.'<a onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'" style="font-size:'.$l['size'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
+            }
         }
                     
         $str = $str.'</div></div></li>';
