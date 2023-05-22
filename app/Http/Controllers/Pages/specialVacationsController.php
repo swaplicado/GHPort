@@ -387,7 +387,7 @@ class specialVacationsController extends Controller
         ];
 
         $client = new Client([
-            'base_uri' => '192.168.1.233:9001',
+            'base_uri' => '192.168.1.251:9001',
             'timeout' => 10.0,
         ]);
 
