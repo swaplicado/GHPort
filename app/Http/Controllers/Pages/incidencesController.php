@@ -410,6 +410,8 @@ class incidencesController extends Controller
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             $application->date_send_n = $date->toDateString();
+            $application->user_apr_rej_id = delegationUtils::getIdUser();
+            $application->approved_date_n = Carbon::now()->toDateString();
             $application->update();
 
             $data = incidencesUtils::sendIncidence($application);
