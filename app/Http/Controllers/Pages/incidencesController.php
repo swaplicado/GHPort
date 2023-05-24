@@ -376,7 +376,7 @@ class incidencesController extends Controller
             $data = new \stdClass;
             $data->user_id = $superviser->id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de '.$type_incident;
-            $data->url = route('requestIncidences_index', ['id' => $application->application_id]);
+            $data->url = route('requestIncidences_index', ['id' => $application->id_application]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_INCIDENCIA;
             $data->priority = SysConst::NOTIFICATION_PRIORITY_INCIDENCIA;
             $data->icon = SysConst::NOTIFICATION_ICON_INCIDENCIA;

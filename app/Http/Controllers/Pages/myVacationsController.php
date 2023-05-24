@@ -425,7 +425,7 @@ class myVacationsController extends Controller
             $data = new \stdClass;
             $data->user_id = $superviser->id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de vacaciones';
-            $data->url = route('requestVacations', ['id' => $application->application_id]);
+            $data->url = route('requestVacations', ['id' => $application->id_application]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_VACACIONES;
             $data->priority = SysConst::NOTIFICATION_PRIORITY_VACACIONES;
             $data->icon = SysConst::NOTIFICATION_ICON_VACACIONES;

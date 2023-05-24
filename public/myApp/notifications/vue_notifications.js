@@ -14,10 +14,7 @@ var appPrinciaplNotifications = new Vue({
         },
 
         async test(){
-            let i = 0;
             while(true){
-                console.log(i);
-                i++;
                 this.getlNotifications();
                 await this.sleep(10000);
             }
@@ -32,7 +29,6 @@ var appPrinciaplNotifications = new Vue({
                 if(data.success){
                     this.lNotifications = data.lNotifications;
                     this.showNotificationAlert = data.showNotificationAlert;
-                    console.log(this.lNotifications);
                 }
             })
             .catch( function(error){

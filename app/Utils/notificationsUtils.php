@@ -129,7 +129,7 @@ class notificationsUtils {
             $oNotification = new Notification();
             $oNotification->user_id = $data->user_id;
             $oNotification->message = $data->message;
-            $oNotification->url = $data->url.'/'.$data->row_id;
+            $oNotification->url = $data->url;
             $oNotification->is_revised = 0;
             $oNotification->is_deleted = 0;
             $oNotification->type_id = $data->type_id;
