@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\requestIncidenceMail;
 use Carbon\Carbon;
 use App\Mail\authorizeIncidenceMail;
+use App\Utils\notificationsUtils;
 
 class incidencesController extends Controller
 {
@@ -331,17 +332,17 @@ class incidencesController extends Controller
         try {
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
-            $data = incidencesUtils::checkExternalIncident($application);
-            if(!empty($data)){
-                $data = json_decode($data);
-                if($data->code == 500 || $data->code == 550){
-                    \DB::rollBack();
-                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-                }
-            }else{
-                \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            }
+            // $data = incidencesUtils::checkExternalIncident($application);
+            // if(!empty($data)){
+            //     $data = json_decode($data);
+            //     if($data->code == 500 || $data->code == 550){
+            //         \DB::rollBack();
+            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            //     }
+            // }else{
+            //     \DB::rollBack();
+            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            // }
 
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
@@ -366,6 +367,24 @@ class incidencesController extends Controller
             $mailLog->save();
 
             $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
+
+
+            $type_incident = \DB::table('cat_incidence_tps')
+                                ->where('id_incidence_tp', $application->type_incident_id)
+                                ->value('incidence_tp_name');
+
+            $data = new \stdClass;
+            $data->user_id = $superviser->id;
+            $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de '.$type_incident;
+            $data->url = route('requestIncidences_index', ['id' => $application->application_id]);
+            $data->type_id = SysConst::NOTIFICATION_TYPE_INCIDENCIA;
+            $data->priority = SysConst::NOTIFICATION_PRIORITY_INCIDENCIA;
+            $data->icon = SysConst::NOTIFICATION_ICON_INCIDENCIA;
+            $data->row_type_id = $application->type_incident_id;
+            $data->row_id = $application->id_application;
+            $data->end_date = null;
+
+            notificationsUtils::createNotification($data);
 
             \DB::commit();
         } catch (\Throwable $th) {

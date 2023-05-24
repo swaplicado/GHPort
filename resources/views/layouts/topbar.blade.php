@@ -29,7 +29,12 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="cleanNumberOfNotifications();">
                 <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">@{{numberOfNotifications}}</span>
+                <!-- <span class="badge badge-danger badge-counter">@{{numberOfNotifications}}</span> -->
+                <span class="badge badge-danger badge-counter">
+                    <template v-if = "showNotificationAlert">
+                        <span class="bx bxs-circle"></span>
+                    </template>
+                </span>
             </a>
             <!-- Dropdown - Alerts -->
             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -39,7 +44,7 @@
                 </h6>
                 <!-- Ejemplo de notificacion -->
                 <template v-for="oNotify in lNotifications">
-                    <a class="dropdown-item d-flex align-items-center" :href="oNotify.link">
+                    <a class="dropdown-item d-flex align-items-center" v-on:click="revisedNotification(oNotify.url, oNotify)" href="#">
                         <div class="mr-3">
                             <div class="icon-circle bg-primary">
                                 <i v-bind:class="[oNotify.icon]"></i>
@@ -47,7 +52,7 @@
                         </div>
                         <div>
                             <!-- <div class="small text-gray-500">December 12, 2019</div> -->
-                            <span class="font-weight-bold">@{{oNotify.text}}</span>
+                            <span class="font-weight-bold">@{{oNotify.message}}</span>
                         </div>
                     </a>
                 </template>

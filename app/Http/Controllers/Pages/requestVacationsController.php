@@ -22,6 +22,7 @@ use GuzzleHttp\Exception\RequestException;
 use \App\Utils\delegationUtils;
 use \App\Utils\folioUtils;
 use App\Utils\recoveredVacationsUtils;
+use App\Utils\notificationsUtils;
 
 class requestVacationsController extends Controller
 {
@@ -306,6 +307,8 @@ class requestVacationsController extends Controller
             $application->return_date = $request->returnDate;
             $application->update();
 
+            notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
+
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
             $application_log->application_status_id = $application->request_status_id;
@@ -424,6 +427,8 @@ class requestVacationsController extends Controller
             $application->sup_comments_n = $request->comments;
             $application->return_date = $request->returnDate;
             $application->update();
+
+            notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
 
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
@@ -705,6 +710,12 @@ class requestVacationsController extends Controller
 
         return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
             // return null;
+    }
+
+    public function checkMail(Request $request){
+        $mailLog = MailLog::find($request->mail_log_id);
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
     }
 
     public function checkDate($oDate, $lHolidays, $employee){

@@ -95,5 +95,29 @@ class SysConst {
     public const MAIL_REVISION_INCIDENCIA = 4;
     public const MAIL_SOLICITUD_PERMISO = 5;
     public const MAIL_REVISION_PERMISO = 6;
+
+    /**
+     * Constantes de la tabla cat_notifications_type
+     */
+    public const NOTIFICATION_TYPE_VACACIONES = 1;
+    public const NOTIFICATION_TYPE_INCIDENCIA = 2;
+    public const NOTIFICATION_TYPE_PERMISO = 3;
+    public const NOTIFICATION_TYPE_GLOBAL = 4;
+
+    /**
+     * Prioridad de tipos de notificaciones
+     */
+    public const NOTIFICATION_PRIORITY_VACACIONES = 2;
+    public const NOTIFICATION_PRIORITY_INCIDENCIA = 2;
+    public const NOTIFICATION_PRIORITY_PERMISO = 2;
+    public const NOTIFICATION_PRIORITY_GLOBAL = 1;
+
+     /**
+      * iconos de notificaciones
+      */
+    public const NOTIFICATION_ICON_VACACIONES = 'bx bx-calendar-event';
+    public const NOTIFICATION_ICON_INCIDENCIA = 'bx bx-calendar-event';
+    public const NOTIFICATION_ICON_PERMISO = 'bx bx-calendar-event';
+    public const NOTIFICATION_ICON_GLOBAL = 'bx bx-calendar-event';
 }
 ?>

@@ -45,7 +45,9 @@
         function GlobalDataNotification(){
             this.lNotifications = <?php echo json_encode(session()->get('lNotifications')) ?>;
             this.numberOfNotifications = <?php echo json_encode(session()->get('notificationsToSee')) ?>;
-            this.notifications_cleanRoute = <?php echo json_encode(route('notifications_clean')) ?>;
+            this.notifications_cleanPendetNotificationRoute = <?php echo json_encode(route('notifications_cleanPendetNotification')) ?>;
+            this.notifications_getNotificationsRoute = <?php echo json_encode(route('notifications_getNotifications')) ?>;
+            this.notifications_revisedNotificationRoute = <?php echo json_encode(route('notifications_revisedNotification')) ?>;
         }
 
         var oGlobalDataNotification = new GlobalDataNotification();

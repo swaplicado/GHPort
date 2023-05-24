@@ -17,6 +17,7 @@ use App\Models\Vacations\MailLog;
 use Spatie\Async\Pool;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\authorizeIncidenceMail;
+use App\Utils\notificationsUtils;
 
 class requestIncidencesController extends Controller
 {
@@ -174,17 +175,17 @@ class requestIncidencesController extends Controller
             $application_log->save();
 
             // $data = incidencesUtils::sendToCAP($application);
-            $data = incidencesUtils::sendIncidence($application);
-            if(!empty($data)){
-                $data = json_decode($data);
-                if($data->code == 500 || $data->code == 550){
-                    \DB::rollBack();
-                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-                }
-            }else{
-                \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            }
+            // $data = incidencesUtils::sendIncidence($application);
+            // if(!empty($data)){
+            //     $data = json_decode($data);
+            //     if($data->code == 500 || $data->code == 550){
+            //         \DB::rollBack();
+            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            //     }
+            // }else{
+            //     \DB::rollBack();
+            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            // }
             
             $employee = \DB::table('users')
                             ->where('id', $application->user_id)
@@ -202,6 +203,9 @@ class requestIncidencesController extends Controller
             $mailLog->save();
 
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+
+            notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -268,6 +272,9 @@ class requestIncidencesController extends Controller
             $mailLog->save();
 
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+
+            notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();

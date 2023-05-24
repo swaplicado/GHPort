@@ -22,6 +22,7 @@ use Spatie\Async\Pool;
 use \App\Utils\delegationUtils;
 use \App\Utils\folioUtils;
 use App\Utils\recoveredVacationsUtils;
+use App\Utils\notificationsUtils;
 
 class myVacationsController extends Controller
 {
@@ -352,18 +353,18 @@ class myVacationsController extends Controller
         try {
             $application = Application::findOrFail($request->id_application);
 
-            $data = $this->checkExternalIncident($application, json_decode($application->ldays));
+            // $data = $this->checkExternalIncident($application, json_decode($application->ldays));
 
-            if(!empty($data)){
-                $data = json_decode($data);
-                if($data->code == 500 || $data->code == 550){
-                    \DB::rollBack();
-                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-                }
-            }else{
-                \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            }
+            // if(!empty($data)){
+            //     $data = json_decode($data);
+            //     if($data->code == 500 || $data->code == 550){
+            //         \DB::rollBack();
+            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            //     }
+            // }else{
+            //     \DB::rollBack();
+            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            // }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
@@ -420,6 +421,19 @@ class myVacationsController extends Controller
             $mailLog->created_by = delegationUtils::getIdUser();
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
+
+            $data = new \stdClass;
+            $data->user_id = $superviser->id;
+            $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de vacaciones';
+            $data->url = route('requestVacations', ['id' => $application->application_id]);
+            $data->type_id = SysConst::NOTIFICATION_TYPE_VACACIONES;
+            $data->priority = SysConst::NOTIFICATION_PRIORITY_VACACIONES;
+            $data->icon = SysConst::NOTIFICATION_ICON_VACACIONES;
+            $data->row_type_id = $application->type_incident_id;
+            $data->row_id = $application->id_application;
+            $data->end_date = null;
+
+            notificationsUtils::createNotification($data);
             
             \DB::commit();
         } catch (\Throwable $th) {
