@@ -8,11 +8,16 @@
                 <div class="card-header text-white" style="background-color: #4e73df;" >Acceso</div>
 
                 <div class="card-body">
+                    @if (session('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('message') }}
+                        </div>
+                    @endif
                     <form id="login_form" method="POST" action="{{ route('login', ['idRoute' => $idRoute, 'idApp' => $idApp]) }}">
                         @csrf
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">Usuario:</label>
+                            <label for="username" class="col-md-4 col-form-label text-md-right">Usuario:</label>
 
                             <div class="col-md-6">
                                 <input id="username" placeholder="nombre.apellido" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
