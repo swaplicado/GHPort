@@ -175,17 +175,17 @@ class requestIncidencesController extends Controller
             $application_log->save();
 
             // $data = incidencesUtils::sendToCAP($application);
-            // $data = incidencesUtils::sendIncidence($application);
-            // if(!empty($data)){
-            //     $data = json_decode($data);
-            //     if($data->code == 500 || $data->code == 550){
-            //         \DB::rollBack();
-            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            //     }
-            // }else{
-            //     \DB::rollBack();
-            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            // }
+            $data = incidencesUtils::sendIncidence($application);
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            }
             
             $employee = \DB::table('users')
                             ->where('id', $application->user_id)

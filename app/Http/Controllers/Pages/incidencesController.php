@@ -332,17 +332,17 @@ class incidencesController extends Controller
         try {
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
-            // $data = incidencesUtils::checkExternalIncident($application);
-            // if(!empty($data)){
-            //     $data = json_decode($data);
-            //     if($data->code == 500 || $data->code == 550){
-            //         \DB::rollBack();
-            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            //     }
-            // }else{
-            //     \DB::rollBack();
-            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            // }
+            $data = incidencesUtils::checkExternalIncident($application);
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            }
 
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
