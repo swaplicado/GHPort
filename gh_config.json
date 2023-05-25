@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2023-05-22 06:04:34",
+    "lastSyncDateTime": "2023-05-25 17:55:08",
     "expiration_vacations": {
         "years": 100,
         "months": 0,
@@ -64,5 +64,5 @@
         "months": 1,
         "days": 0
     },
-    "permission_time": 180
+    "permission_time": 120
 }

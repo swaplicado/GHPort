@@ -47,7 +47,7 @@ class authorizePermissionMail extends Mailable
         $result = permissionsUtils::convertMinutesToHours($permission->minutes);
         $permission->time = $result[0].':'.$result[1].' hrs';
 
-        $email = env('MAIL_FROM_ADDRESS');
+        $email = "Portalgh@aeth.mx";
         return $this->from($email)
                         ->subject('[PGH] Solicitud permiso horas '.$employee->short_name)
                         ->view('mails.authorizedPermissionMail')
