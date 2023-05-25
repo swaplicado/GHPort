@@ -16,7 +16,7 @@ var appPrinciaplNotifications = new Vue({
         async test(){
             while(true){
                 this.getlNotifications();
-                await this.sleep(10000);
+                await this.sleep(60000);
             }
         },
 
