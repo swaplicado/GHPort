@@ -17,6 +17,7 @@ use App\Models\Vacations\MailLog;
 use Spatie\Async\Pool;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\authorizeIncidenceMail;
+use App\Utils\notificationsUtils;
 
 class requestIncidencesController extends Controller
 {
@@ -202,6 +203,9 @@ class requestIncidencesController extends Controller
             $mailLog->save();
 
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+
+            notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -268,6 +272,9 @@ class requestIncidencesController extends Controller
             $mailLog->save();
 
             $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+
+            notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();

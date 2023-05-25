@@ -40,7 +40,12 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
-                    (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                                ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                                ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
+                                                 ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations'
+                            ],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
                         ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias'],
@@ -91,7 +96,12 @@ class Menu {
                                                 ],
                                                 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
                             ],
-                    (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                    (object) ['type' => $list, 'list' => [
+                                ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
+                                ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
+                                                 ],
+                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations'
+                    ],
                     (object) ['type' => $list, 'list' => [
                         ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
                         ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']

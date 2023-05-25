@@ -28,6 +28,8 @@
             this.routeDelete = <?php echo json_encode(route('permission_delete')) ?>;
             this.routeGestionSendIncidence = <?php echo json_encode(route('permission_gestionSendIncidence')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:mispermisos" ); ?>;
             this.indexes_permission = {
                 'id': 0,
                 'request_status_id': 1,
@@ -58,6 +60,7 @@
     <div class="card-header">
         <h3>
             <b>Mis permisos de horas</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -115,6 +118,7 @@
                                         'delete' => true,
                                         'send' => true
                                     ] )
+@include('layouts.manual_jsControll')
 <script>
     $(document).ready(function (){
         $('#permission_tp_filter').change( function() {

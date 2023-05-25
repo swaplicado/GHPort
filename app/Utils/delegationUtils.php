@@ -136,4 +136,28 @@ class delegationUtils {
             return $username;
         }
     }
+
+    public static function getRolUser(){
+        if(!Session::get('is_delegation')){
+            return \Auth::user()->rol_id;
+        }else{
+            $rol_id = User::where('id', Session::get('user_delegated_id'))
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->value('rol_id');
+            return $rol_id;
+        }
+    }
+
+    public static function getFullNameUI(){
+        if(!Session::get('is_delegation')){
+            return \Auth::user()->full_name_ui;
+        }else{
+            $full_name_ui = User::where('id', Session::get('user_delegated_id'))
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->value('full_name_ui');
+            return $full_name_ui;
+        }
+    }
 }

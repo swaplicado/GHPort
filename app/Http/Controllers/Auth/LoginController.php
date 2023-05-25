@@ -129,9 +129,12 @@ class LoginController extends Controller
             $sync = new SyncController();
             $sync->toSynchronize(false);
 
-            $oNotify = new notificationsUtils();
-            $oNotify->initNotifications();
-            $oNotify->notifyVacationToExpire();
+            // $oNotify = new notificationsUtils();
+            // $oNotify->initNotifications();
+            // $oNotify->notifyVacationToExpire();
+            // $oNotify->notifyVacationsRequest();
+            // $oNotify->setNotificationsToSee();
+            // $oNotify->setOldNotifications();
             if(!is_null($idRoute) && $idRoute != ""){
                 return redirect("/$idRoute/$idApp");
             }else{

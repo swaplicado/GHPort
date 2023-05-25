@@ -37,6 +37,9 @@
             this.routeSendAuthorize = <?php echo json_encode(route('requestIncidences_sendAndAuthorize')); ?>;
             this.routeGetBirdthDayIncidences = <?php echo json_encode(route('incidences_getBirdthDayIncidences')); ?>;
             this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.indexes_incidences = {
                 'id_application': 0,
                 'request_status_id': 1,
@@ -76,6 +79,7 @@
         <div class="card-header">
             <h3>
                 <b>Solicitudes incidencias</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -104,6 +108,7 @@
         <div class="card-header">
             <h3>
                 <b>Solicitudes incidencias</b>
+                @include('layouts.manual_button')
             </h3>
         </div>
         <div class="card-body">
@@ -217,6 +222,7 @@
                                         'select' => true,
                                         'show' => true,
                                     ] )
+@include('layouts.manual_jsControll')
 <script>
     $(document).ready(function (){
         $('#incident_cl_filter').change( function() {

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\authorizePermissionMail;
 use App\Models\Vacations\MailLog;
 use \App\Utils\incidencesUtils;
+use App\Utils\notificationsUtils;
 
 class requestPermissionController extends Controller
 {
@@ -152,6 +153,9 @@ class requestPermissionController extends Controller
             $mailLog->save();
 
             $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+
+            notificationsUtils::revisedNotificationFromAction(SysConst::TYPE_PERMISO_HORAS, $permission->id_hours_leave);
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -212,6 +216,9 @@ class requestPermissionController extends Controller
             $mailLog->save();
 
             $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+
+            notificationsUtils::revisedNotificationFromAction(SysConst::TYPE_PERMISO_HORAS, $permission->id_hours_leave);
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();

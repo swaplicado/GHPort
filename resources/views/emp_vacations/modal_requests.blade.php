@@ -138,7 +138,7 @@
                             <label class="form-label" for="listDays"><b>Desglose de los días de vacaciones:</b></label>
                             <ol class="ulColumns3" name="listDays">
                                 <template v-for="(day, index) in lDays">
-                                    <li v-bind:style="{'color': day.taked ? 'green' : 'red'}">
+                                    <li v-if="day.taked"  v-bind:style="{'color': day.taked ? 'green' : 'red'}">
                                         <label class="" :for="'exampleCheck'+index">@{{day.date}}</label>
                                     </li>
                                 </template>

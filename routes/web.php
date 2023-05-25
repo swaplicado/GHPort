@@ -170,7 +170,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('recoveredVacations', 'Pages\recoveredVacationsController@index')->name('recoveredVacations');
     Route::post('recoveredVacations/save', 'Pages\recoveredVacationsController@save')->name('recoveredVacations_save');
 
-    Route::post('notifications/clean', 'Utils\notificationsController@cleanNotificationsToSee')->name('notifications_clean');
+    // Route::post('notifications/clean', 'Utils\notificationsController@cleanNotificationsToSee')->name('notifications_clean');
+    Route::get('notifications/getNotifications', 'Utils\notificationsController@getNotifications')->name('notifications_getNotifications');
+    Route::post('notifications/cleanPendetNotification', 'Utils\notificationsController@cleanPendetNotification')->name('notifications_cleanPendetNotification');
+    Route::post('notifications/revisedNotification', 'Utils\notificationsController@revisedNotification')->name('notifications_revisedNotification');
    
     Route::get('incidences', 'Pages\incidencesController@index')->name('incidences_index');
     Route::post('incidences/create', 'Pages\incidencesController@createIncidence')->name('incidences_create');
@@ -205,6 +208,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestPermission/getAllEmployees', 'Pages\requestPermissionController@getAllEmployees')->name('requestPermission_getAllEmployees');
     Route::post('requestPermission/getDirectEmployees', 'Pages\requestPermissionController@getDirectEmployees')->name('requestPermission_getDirectEmployees');
     Route::post('requestPermission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
+    
     Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
     Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');
     Route::post('createAuth', 'Pages\configAuthController@createAuth')->name('create_authConf');

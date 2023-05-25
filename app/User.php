@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use App\Utils\orgChartUtils;
 use App\Notifications\PasswordReset;
 use App\Models\Adm\UsersPhotos;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class User extends Authenticatable
 {
@@ -98,8 +100,12 @@ class User extends Authenticatable
         abort_unless(!is_null($emp), 401);
     }
 
+    // public function sendPasswordResetNotification($token){
+    //     $this->notify(new PasswordReset($token));
+    // }
+
     public function sendPasswordResetNotification($token){
-        $this->notify(new PasswordReset($token));
+        Notification::route('mail', $this->institutional_mail)->notify(new PasswordReset($token));
     }
 
     public function getPhoto(){
@@ -108,5 +114,9 @@ class User extends Authenticatable
                             ->value('photo_base64_n');
 
         return $photo64;
+    }
+
+    public function getEmailForPasswordReset(){
+        return $this->institutional_mail;
     }
 }

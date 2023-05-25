@@ -17,6 +17,7 @@ use Spatie\Async\Pool;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\requestPermissionMail;
 use App\Mail\authorizePermissionMail;
+use App\Utils\notificationsUtils;
 
 class permissionController extends Controller
 {
@@ -206,6 +207,19 @@ class permissionController extends Controller
             $mailLog->save();
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id);
+
+            $data = new \stdClass;
+            $data->user_id = $superviser->id;
+            $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de permiso de horas';
+            $data->url = route('requestPermission_index', ['id' => $permission->id_hours_leave]);
+            $data->type_id = SysConst::NOTIFICATION_TYPE_PERMISO;
+            $data->priority = SysConst::NOTIFICATION_PRIORITY_PERMISO;
+            $data->icon = SysConst::NOTIFICATION_ICON_PERMISO;
+            $data->row_type_id = SysConst::TYPE_PERMISO_HORAS;
+            $data->row_id = $permission->id_hours_leave;
+            $data->end_date = null;
+
+            notificationsUtils::createNotification($data);
 
             \DB::commit();
         } catch (\Throwable $th) {
