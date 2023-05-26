@@ -79,7 +79,7 @@ class OrgChartUtils {
 
         $org_chart_id = $id;
         for($i = 0; $i < count($arrOrgJobs); $i++){
-            $dirOrgJobs = orgChartUtils::getDirectFatherOrgChartJob($org_chart_id);
+            $dirOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($org_chart_id);
             $superviser = \DB::table('users')
                                 ->where('is_delete', 0)
                                 ->where('is_active', 1)
