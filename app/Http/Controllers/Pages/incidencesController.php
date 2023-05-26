@@ -287,7 +287,8 @@ class incidencesController extends Controller
         try {
             $oApplication = Application::findOrFail($request->application_id);
             $confAuth = \DB::table('config_authorization as ca')
-                            ->where('tp_incidence_id', $oApplication->type_incidence_id)
+                            ->where('is_deleted', 0)
+                            ->where('tp_incidence_id', $oApplication->type_incident_id)
                             ->get();
 
             $needAuth = null;
@@ -298,11 +299,11 @@ class incidencesController extends Controller
                 $confCompany = $oAuth->where('company_id', $oApplication->user_id)->first();
                 $needAuth = null;
                 if($confUser != null){
-                    $needAuth = $confUser->needAuth;
+                    $needAuth = $confUser->need_auth;
                 }else if($confOrgChart != null){
-                    $needAuth = $confOrgChart->needAuth;
+                    $needAuth = $confOrgChart->need_auth;
                 }else if($confCompany != null){
-                    $needAuth = $confCompany->needAuth;
+                    $needAuth = $confCompany->need_auth;
                 }
             }else{
                 $oType = \DB::table('cat_incidence_tps')
@@ -318,7 +319,7 @@ class incidencesController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
         }
 
-        if($needAuth == null || $needAuth == 1){
+        if( is_null($needAuth) || $needAuth == 1){
             $result = $this->sendIncident($request);
         }else{
             $result = $this->sendAndAuthorize($request);
