@@ -147,4 +147,14 @@ class OrgChartUtils {
 
         return $lUsers;
     }
+
+    public static function getAllUsersByOrgChartJob($org_chart_id){
+        $lUsers = \DB::table('users')
+                    ->where('org_chart_job_id', $org_chart_id)
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->get();
+
+        return $lUsers;
+    }
 }

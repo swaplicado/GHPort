@@ -124,6 +124,11 @@ class requestPermissionController extends Controller
         try {
             \DB::beginTransaction();
             $permission = Permission::findOrFail($request->permission_id);
+
+            if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
             $permission->request_status_id = SysConst::APPLICATION_APROBADO;
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->approved_date_n = Carbon::now()->toDateString();
@@ -192,6 +197,11 @@ class requestPermissionController extends Controller
         try {
             \DB::beginTransaction();
             $permission = Permission::findOrFail($request->permission_id);
+
+            if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
             $permission->request_status_id = SysConst::APPLICATION_RECHAZADO;
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->rejected_date_n = Carbon::now()->toDateString();

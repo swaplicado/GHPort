@@ -375,7 +375,8 @@ class incidencesController extends Controller
                                 ->value('incidence_tp_name');
 
             $data = new \stdClass;
-            $data->user_id = $superviser->id;
+            $data->user_id = null;
+            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de '.$type_incident;
             $data->url = route('requestIncidences_index', ['id' => $application->id_application]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_INCIDENCIA;

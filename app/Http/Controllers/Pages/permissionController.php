@@ -209,7 +209,8 @@ class permissionController extends Controller
             $lPermissions = permissionsUtils::getUserPermissions($employee_id);
 
             $data = new \stdClass;
-            $data->user_id = $superviser->id;
+            $data->user_id = null;
+            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de permiso de horas';
             $data->url = route('requestPermission_index', ['id' => $permission->id_hours_leave]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_PERMISO;

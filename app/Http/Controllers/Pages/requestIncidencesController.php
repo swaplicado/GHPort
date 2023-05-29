@@ -160,6 +160,11 @@ class requestIncidencesController extends Controller
         try {
             \DB::beginTransaction();
             $application = Application::findOrFail($request->application_id);
+
+            if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
@@ -242,6 +247,11 @@ class requestIncidencesController extends Controller
         try {
             \DB::beginTransaction();
             $application = Application::findOrFail($request->application_id);
+
+            if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->rejected_date_n = Carbon::now()->toDateString();

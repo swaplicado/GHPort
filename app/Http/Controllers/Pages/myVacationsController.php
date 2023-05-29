@@ -423,7 +423,8 @@ class myVacationsController extends Controller
             $mailLog->save();
 
             $data = new \stdClass;
-            $data->user_id = $superviser->id;
+            $data->user_id = null;
+            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de vacaciones';
             $data->url = route('requestVacations', ['id' => $application->id_application]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_VACACIONES;
