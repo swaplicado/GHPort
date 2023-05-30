@@ -397,7 +397,14 @@ class incidencesController extends Controller
         $mypool = Pool::create();
         $mypool[] = async(function () use ($application, $superviser, $mailLog){
             try {
-                Mail::to($superviser->institutional_mail)->send(new requestIncidenceMail(
+                $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                $arrUsers = $lUsers->map(function ($item) {
+                    return $item->institutional_mail;
+                })->toArray();
+
+                $arrUsers = array_unique($arrUsers);
+
+                Mail::to($arrUsers)->send(new requestIncidenceMail(
                                                         $application->id_application
                                                     )
                                                 );
