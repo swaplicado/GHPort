@@ -8,6 +8,7 @@ var app = new Vue({
         vacationUtils: new vacationUtils(),
         indexes_permission: oServerData.indexes_permission,
         oUser: oServerData.oUser,
+        lSuperviser: oServerData.lSuperviser,
         lEmployees: oServerData.lEmployees,
         lTemp: oServerData.lTemp,
         lTypes: oServerData.lTypes,
@@ -667,8 +668,19 @@ var app = new Vue({
                 SGui.showMessage('','Solo se pueden enviar permisos con el estatus CREADO', 'warning');
                 return
             }
+
+            let message = '<b>Se enviará a:</b>' +
+                            '<br>' +
+                            '<ul>';
+
+            for (const user of this.lSuperviser) {
+                message = message + '<li>' + user.full_name_ui + '</li>';
+            }
+                message = message + '</ul>';
+
             Swal.fire({
                 title: '¿Desea enviar el permiso ' + data[this.indexes_permission.Folio] + ' ?',
+                html: message,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

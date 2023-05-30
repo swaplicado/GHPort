@@ -8,6 +8,7 @@ var app = new Vue({
         vacationUtils: new vacationUtils(),
         indexes_incidences: oServerData.indexes_incidences,
         oUser: oServerData.oUser,
+        lSuperviser: oServerData.lSuperviser,
         lClass: oServerData.lClass,
         lTypes: oServerData.lTypes,
         lTypesToFilter: [],
@@ -764,8 +765,19 @@ var app = new Vue({
                 SGui.showMessage('','Solo se pueden enviar incidencias con el estatus CREADO', 'warning');
                 return
             }
+
+            let message = '<b>Se enviará a:</b>' +
+                            '<br>' +
+                            '<ul>';
+
+            for (const user of this.lSuperviser) {
+                message = message + '<li>' + user.full_name_ui + '</li>';
+            }
+                message = message + '</ul>';
+
             Swal.fire({
                 title: '¿Desea enviar la incidencia ' + data[this.indexes_incidences.folio_n] + ' ?',
+                html: message,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

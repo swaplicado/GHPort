@@ -62,9 +62,9 @@
 
 @section('content') 
 <a class="btn btn-outline-secondary focus" id="ReqPermissions" onclick="btnActive('ReqPermissions');" href="#home"
-    data-role="link">Solicitudes incidencias</a>
+    data-role="link">Solicitudes permisos</a>
 <a class="btn btn-outline-secondary" id="gestionPermissions" onclick="btnActive('gestionPermissions');" href="#other"
-    data-role="link">Gestión incidencias</a>
+    data-role="link">Gestión permisos</a>
 <div class="card shadow mb-4" id="permissionsApp">
         
     @include('permissions.modal_permissions')
@@ -98,7 +98,7 @@
     <div data-page="other" id="other">
         <div class="card-header">
             <h3>
-                <b>Solicitudes incidencias</b>
+                <b>Solicitudes permisos</b>
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -134,7 +134,7 @@
             <div v-if="oUser != null">
                 <div class="card shadow mb-4">
                     <div class="card-header">
-                        <h3>Incidencias @{{oUser.full_name_ui}}</h3>
+                        <h3>Permisos @{{oUser.full_name_ui}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="contenedor-elem-ini">

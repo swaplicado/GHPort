@@ -95,13 +95,17 @@ class incidencesController extends Controller
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
+        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
+        $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+
         return view('Incidences.incidences')->with('lIncidences', $lIncidences)
                                             ->with('constants', $constants)
                                             ->with('lClass', $lClass)
                                             ->with('lTypes', $lTypes)
                                             ->with('lTemp', $lTemp_special)
                                             ->with('lHolidays', $lHolidays)
-                                            ->with('oUser', \Auth::user());
+                                            ->with('oUser', \Auth::user())
+                                            ->with('lSuperviser', $lSuperviser);
     }
 
     public function createIncidence(Request $request){

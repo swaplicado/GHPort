@@ -153,6 +153,10 @@ class OrgChartUtils {
                     ->where('org_chart_job_id', $org_chart_id)
                     ->where('is_active', 1)
                     ->where('is_delete', 0)
+                    ->select(
+                        'full_name_ui',
+                        'institutional_mail',
+                        )
                     ->get();
 
         return $lUsers;

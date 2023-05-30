@@ -47,6 +47,9 @@ class permissionController extends Controller
 
         $config = \App\Utils\Configuration::getConfigurations();
 
+        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
+        $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -54,7 +57,8 @@ class permissionController extends Controller
                                             ->with('lTemp', $lTemp_special)
                                             ->with('oPermission', null)
                                             ->with('oUser', \Auth::user())
-                                            ->with('permission_time', $config->permission_time);
+                                            ->with('permission_time', $config->permission_time)
+                                            ->with('lSuperviser', $lSuperviser);
     }
 
     public function createPermission(Request $request){

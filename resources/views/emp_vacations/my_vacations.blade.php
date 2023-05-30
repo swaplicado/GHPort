@@ -33,6 +33,7 @@
     <script>
         function GlobalData(){
             this.oUser = <?php echo json_encode($user); ?>;
+            this.lSuperviser = <?php echo json_encode($lSuperviser); ?>;
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;

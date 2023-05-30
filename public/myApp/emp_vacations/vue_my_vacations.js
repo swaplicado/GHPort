@@ -6,6 +6,7 @@ var appMyVacations = new Vue({
         vacationUtils: new vacationUtils(),
         indexes: oServerData.indexesMyRequestTable,
         oUser: null,  //No modificar, mejor modificar oCopyUser
+        lSuperviser: oServerData.lSuperviser,
         oCopyUser: null,
         lEmployees: [],
         lHolidays: oServerData.lHolidays,
@@ -888,9 +889,23 @@ var appMyVacations = new Vue({
                 SGui.showMessage('','Solo se pueden enviar solicitudes con el estatus CREADO', 'warning');
                 return
             }
+
+            let message = '<b>Inicio:</b> ' + data[this.indexes.start_date] +
+                            '<br>' +
+                            '<b>Fin:</b> ' +  data[this.indexes.end_date] +
+                            '<br>' +
+                            '<b>Se enviará a:</b>' +
+                            '<br>' +
+                            '<ul>';
+
+            for (const user of this.lSuperviser) {
+                message = message + '<li>' + user.full_name_ui + '</li>';
+            }
+                message = message + '</ul>';
+
             Swal.fire({
                 title: '¿Desea enviar la solicitud para las fechas?',
-                html: '<b>Inicio:</b> ' + data[this.indexes.start_date] + '<br>' + '<b>Fin:</b> ' +  data[this.indexes.end_date],
+                html: message,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
