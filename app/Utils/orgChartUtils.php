@@ -154,6 +154,7 @@ class OrgChartUtils {
                     ->where('is_active', 1)
                     ->where('is_delete', 0)
                     ->select(
+                        'id',
                         'full_name_ui',
                         'institutional_mail',
                         )

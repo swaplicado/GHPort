@@ -153,7 +153,7 @@
                     <label for="rqStatus">Filtrar por estatus: </label>
                     <select class="form-control inline" name="rqStatus" id="rqStatus" v-model="rqStatus" style="width: 30%;">
                         <option value="0" selected>Nuevos</option>
-                        <option value="1">Aprobados</option>
+                        <option value="3">Consumidas</option>
                         <option value="2">Rechazados</option>
                     </select>&nbsp;&nbsp;
                     <template v-if="rqStatus != 0">
@@ -217,7 +217,7 @@
                                     <td>@{{ oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.user_apr_rej_name }}</td>
                                     <td>
-                                        @{{ (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
+                                        @{{ (rec.request_status_id == oData.const.APPLICATION_CONSUMIDO) ?
     oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
         ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
             oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
@@ -374,7 +374,7 @@
                                 <select class="form-control inline" v-on:change="filterMyVacationTable();" name="myRqStatus" id="myRqStatus" style="width: 30%;">
                                     <option value="0" selected>Creados</option>
                                     <option value="1">Enviados</option>
-                                    <option value="2">Aprobados</option>
+                                    <option value="4">Consumidos</option>
                                     <option value="3">Rechazados</option>
                                 </select>&nbsp;&nbsp;
                                 <label>Filtrar por año:</label>
@@ -446,6 +446,10 @@
                             case 2:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 4;
+
+                            case 3:
+                                filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
+                                return filter === 5;
     
                             default:
                                 break;

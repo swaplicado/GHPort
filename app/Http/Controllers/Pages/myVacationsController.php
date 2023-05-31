@@ -49,7 +49,7 @@ class myVacationsController extends Controller
             'QUINCENA' => SysConst::QUINCENA,
             'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
-            'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_CONSUMIDO' => SysConst::APPLICATION_CONSUMIDO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 

@@ -219,7 +219,13 @@ class EmployeeVacationUtils {
     /**
      * Obtiene las solicitudes de vacaciones con el estatus que se inserte en el metodo
      */
-    public static function getApplications($id, $year, $status = [1,2,3,4]){
+    public static function getApplications($id, $year, $status = [
+                                                                SysConst::APPLICATION_CREADO,
+                                                                SysConst::APPLICATION_ENVIADO,
+                                                                SysConst::APPLICATION_RECHAZADO,
+                                                                SysConst::APPLICATION_CONSUMIDO
+                                                            ]
+                                                        ){
         $oRequested = \DB::table('applications as a')
                         ->leftJoin('sys_applications_sts as as', 'as.id_applications_st', '=', 'a.request_status_id')
                         ->leftJoin('users as u', 'u.id', '=', 'a.user_apr_rej_id')
