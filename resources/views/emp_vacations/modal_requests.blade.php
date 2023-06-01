@@ -2,17 +2,17 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header modal-header-small">
                 <h5 class="modal-title" id="exampleModalLabel">Solicitud de vacaciones</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-small">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body card-body-small">
                         <div v-if="oUser != null" style="border-bottom: solid 1px rgba(0,0,0,.125);">
-                            <table class="table">
+                            <table class="table table-small">
                                 <thead>
                                 </thead>
                                 <tbody>
@@ -34,7 +34,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <br>
+                        <div class="myBreakLine"></div>
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" disabled v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">
@@ -54,7 +54,7 @@
                                 <span hidden>
                                     <input id="date-range200" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
                                 </span>
-                                <table style="width: 100%;">
+                                <table class="table-small" style="width: 100%;">
                                     <tbody>
                                         <thead></thead>
                                         <tbody>
@@ -69,13 +69,13 @@
                                         </tbody>
                                     </tbody>
                                 </table>
-                                <br>
+                                <div class="myBreakLine"></div>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body card-body-small">
                         <div>
                             <table>
                                 <thead>
@@ -133,7 +133,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <br>
+                        <div class="myBreakLine"></div>
                         <div>
                             <label class="form-label" for="listDays"><b>Desglose de los días de vacaciones:</b></label>
                             <ol class="ulColumns3" name="listDays">
@@ -162,7 +162,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer modal-footer-small">
                 <template v-if="isFromMail">
                     <button v-if="oApplication.request_status_id == 2" type="button" class="btn btn-success" v-on:click="acceptRequest()"><span class="bx bxs-like"></span>&nbsp Aprobar</a>
                     <button v-if="oApplication.request_status_id == 2" type="button" class="btn btn-danger" v-on:click="rejectRequest"><span class="bx bxs-dislike"></span>&nbsp Rechazar</a>

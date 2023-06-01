@@ -2,15 +2,15 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header modal-header-small">
                 <h5 class="modal-title" id="exampleModalLabel">Permiso</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-small">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body card-body-small">
                         <div v-if="!isRevision">
                             <div class="row">
                                 <div class="col-md-3">
@@ -20,7 +20,7 @@
                                     <select class="select2-class-modal form-control" name="permission_type" id="permission_type" style="width: 90%;"></select>
                                 </div>
                             </div>
-                            <br>
+                            <div class="myBreakLine"></div>
                             <div class="row">
                                 <div class="col-md-3">
                                     <label for=""></label>
@@ -41,7 +41,7 @@
                         </div>
                         <div v-if="isRevision">
                             <div v-if="oUser != null" style="border-bottom: solid 1px rgba(0,0,0,.125);">
-                                <table class="table">
+                                <table class="table table-small">
                                     <thead>
                                     </thead>
                                     <tbody>
@@ -68,7 +68,7 @@
                 </div>
                 <div style="text-align: center">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body card-body-small">
                             <span id="two-inputs-calendar">
                                 <span hidden>
                                     <input id="date-range-001" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range-002" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
@@ -89,13 +89,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <br>
+                                <div class="myBreakLine"></div>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body card-body-small">
                         <table>
                             <thead></thead>
                             <tbody>
@@ -115,7 +115,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <br>
+                        <div class="myBreakLine"></div>
                         <div v-if="isRevision">
                             <label for="comentarios_emp"><b>Comentarios del colaborador:</b></label>
                             <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
@@ -128,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer modal-footer-small">
                 <template v-if="!isRevision">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" v-on:click="save()" v-if="valid">Guardar</a>
