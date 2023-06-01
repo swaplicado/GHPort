@@ -125,7 +125,8 @@ class requestIncidencesController extends Controller
                                                     ->with('lHolidays', $lHolidays)
                                                     ->with('lEmployees', $lEmployees)
                                                     ->with('oApplication', $oApplication)
-                                                    ->with('oUser', $oUser);
+                                                    ->with('oUser', $oUser)
+                                                    ->with('myManagers', $myManagers);
     }
 
     public function getEmployee(Request $request){
@@ -207,7 +208,22 @@ class requestIncidencesController extends Controller
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
 
-            $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+            $org_chart_job_id = null;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+
+                $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+            }
+
+            if(is_null($org_chart_job_id)){
+                $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+            }else{
+                $lIncidences = incidencesUtils::getMyManagerlIncidences($oManager->org_chart_job_id);
+            }
 
             notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
 
@@ -281,7 +297,22 @@ class requestIncidencesController extends Controller
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
 
-            $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+            $org_chart_job_id = null;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+
+                $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+            }
+
+            if(is_null($org_chart_job_id)){
+                $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+            }else{
+                $lIncidences = incidencesUtils::getMyManagerlIncidences($oManager->org_chart_job_id);
+            }
 
             notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
 
@@ -348,5 +379,30 @@ class requestIncidencesController extends Controller
         }
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
+    }
+
+    public function seeLikeManager(Request $request){
+        try {
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+                            
+                if(is_null($oManager)){
+                    return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
+                }
+
+                $lIncidences = incidencesUtils::getMyManagerlIncidences($oManager->org_chart_job_id);
+            }else{
+                $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+            }
+
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener las incidencias', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
 }

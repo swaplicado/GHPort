@@ -352,7 +352,7 @@ class requestVacationsController extends Controller
         if(!is_null($request->manager_id)){
             $oManager = \DB::table('users')
                             ->where('id', $request->manager_id)
-                            ->where('is_deleted', 0)
+                            ->where('is_delete', 0)
                             ->where('is_active', 1)
                             ->first();
 

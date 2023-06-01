@@ -9,6 +9,8 @@ var app = new Vue({
         indexes_incidences: oServerData.indexes_incidences,
         oUser: oServerData.oUser,
         lSuperviser: oServerData.lSuperviser,
+        myManagers: oServerData.myManagers,
+        selectedmanager: null,
         lClass: oServerData.lClass,
         lTypes: oServerData.lTypes,
         lTypesToFilter: [],
@@ -223,6 +225,19 @@ var app = new Vue({
             let data = [this.oApplication.id_application];
             this.showDataModal(data);
         }
+
+        var dataMyManagers = [];
+        for (let i = 0; i < this.myManagers.length; i++) {
+            dataMyManagers.push({id: this.myManagers[i].id, text: this.myManagers[i].full_name_ui });
+        }
+
+        $('#selManager')
+            .select2({
+                placeholder: 'selecciona',
+                data: dataMyManagers,
+            });
+
+        $('#selManager').val('').trigger('change');
     },
     methods: {
         initRequestincidences(){
@@ -851,6 +866,7 @@ var app = new Vue({
                 'application_id': this.oApplication.id_application,
                 'comments': this.comments,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'manager_id': this.selectedmanager,
             })
             .then( result => {
                 let data = result.data;
@@ -876,6 +892,7 @@ var app = new Vue({
                 'application_id': this.oApplication.id_application,
                 'comments': this.comments,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'manager_id': this.selectedmanager,
             })
             .then( result => {
                 let data = result.data;
@@ -1149,6 +1166,57 @@ var app = new Vue({
                     break;
                 }
             }
+        },
+
+        seeLikeManager(){
+            this.selectedmanager = parseInt($('#selManager').val());
+            if(!(!!this.selectedmanager)){
+                SGui.showMessage('', 'Debe seleccionar un supervisor', 'info');
+                return;
+            }
+            SGui.showWaiting(15000);
+            let manager_id = $('#selManager').val();
+            let manager_name = $('#selManager').find(':selected').text();
+            axios.post( this.oData.routeSeeLikeManager,{
+                'manager_id': parseInt(manager_id),
+                'manager_name': manager_name,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    SGui.showOk();
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
+        cleanManager(){
+            SGui.showWaiting(15000);
+            axios.post( this.oData.routeSeeLikeManager,{
+                'manager_id': null,
+                'manager_name': null,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    SGui.showOk();
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                    $('#selManager').val('').trigger('change');
+                    this.selectedmanager = null;
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
         },
     }
 });
