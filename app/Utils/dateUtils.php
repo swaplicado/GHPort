@@ -6,14 +6,26 @@ class dateUtils {
     public static function formatDate($sDate, $format){
         $days = ['Dom.', 'Lun.', 'Mar.', 'Mié.', 'Jue.', 'Vie.', 'Sáb.'];
         $daysComplete = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-        $months = ['', 'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-        $monthsAux = ['', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+        $daysMin = ['dom.', 'lun.', 'mar.', 'mié.', 'jue.', 'vie.', 'sáb.'];
+        $months = ['', 'Ene.', 'Feb.', 'Mar.', 'Abr.', 'May.', 'Jun.', 'Jul.', 'Ago.', 'Sep.', 'Oct.', 'Nov.', 'Dic.'];
+        $monthsComplete = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        $monthsAux = ['', 'ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'];
+        $config = \App\Utils\Configuration::getConfigurations();
 
         try {
             $oDate = Carbon::parse($sDate);
-            switch ($format) {
+            switch ($config->format_php) {
                 case 'ddd D-M-Y':
+                    $date = $daysMin[$oDate->dayOfWeek].' '.$oDate->format('d').'-'.$months[$oDate->month].'-'.$oDate->format('Y');
+                    break;
+                case 'ddd D-m-Y':
+                    $date = $daysMin[$oDate->dayOfWeek].' '.$oDate->format('d').'-'.$monthsAux[$oDate->month].'-'.$oDate->format('Y');
+                    break;
+                case 'DDD D-M-Y':
                     $date = $days[$oDate->dayOfWeek].' '.$oDate->format('d').'-'.$months[$oDate->month].'-'.$oDate->format('Y');
+                    break;
+                case 'DDD D-m-Y':
+                    $date = $days[$oDate->dayOfWeek].' '.$oDate->format('d').'-'.$monthsAux[$oDate->month].'-'.$oDate->format('Y');
                     break;
                 case 'D/m/Y dddd':
                     $date = $oDate->format('d').'/'.$monthsAux[$oDate->month].'/'.$oDate->format('Y').' ('.$daysComplete[$oDate->dayOfWeek].')';

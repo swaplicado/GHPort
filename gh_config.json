@@ -27,8 +27,7 @@
     ],
     "urlSync": "192:168:1:233:9001",
     "urlSyncCAP": "192.168.1.233:8080/CAP/public/api/",
-    "lSituation": [
-        {
+    "lSituation": [{
             "id": 1,
             "text": "Normal",
             "type": "is_normal"
@@ -64,5 +63,6 @@
         "months": 1,
         "days": 0
     },
-    "permission_time": 180
+    "permission_time": 180,
+    "format_php": "ddd D-m-Y"
 }

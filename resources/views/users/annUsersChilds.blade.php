@@ -19,7 +19,7 @@
 
     <div class="card-header">
         <h3>
-            <b> ANIVERSARIOS Y CUMPLEAÑOS DE COLABORADORES DIRECTOS</b>
+            <b> Aniversarios y cumpleaños de colaboradores directos</b>
         </h3>
     </div>
     <div class="card-body">
@@ -46,5 +46,16 @@
 </div>
 @endsection
 @section('scripts')
+@include('layouts.table_jsControll', [
+                                        'table_id' => 'table_annUsers',
+                                        'colTargets' => [],
+                                        'colTargetsSercheable' => [],
+                                        // 'noSearch' => true,
+                                        // 'noDom' => true,
+                                        // 'noPaging' => true,
+                                        // 'noInfo' => true,
+                                        // 'noColReorder' => true,
+                                        // 'noSort' => true
+                                    ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_annUsersChilds.js') }}"></script>
 @endsection
