@@ -18,7 +18,7 @@
 <div class="card shadow mb-4" id="allEmpVacationApp">
     <div class="card-header">
         <h3>
-            <b>VACACIONES TODOS MIS COLABORADORES</b>
+            <b>Vacaciones todos mis colaboradores</b>
             @include('layouts.manual_button')
         </h3>
     </div>

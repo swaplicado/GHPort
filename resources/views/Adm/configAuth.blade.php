@@ -105,7 +105,7 @@
 </div>
     <div class="card-header">
         <h3>
-            <b> AUTORIZACIÓN DE INCIDENCIAS</b>
+            <b> Configuración de autorización de incidencias</b>
         </h3>
     </div>
     <div class="card-body">

@@ -17,7 +17,7 @@
 <div class="card shadow mb-4" id="allVacations">
     <div class="card-header">
         <h3>
-            <b>REPORTE VACACIONES</b>
+            <b>Reporte vacaciones</b>
             @include('layouts.manual_button')
             <div style="float: right;">
                 <h4>Periodo: @{{period}}</h4>

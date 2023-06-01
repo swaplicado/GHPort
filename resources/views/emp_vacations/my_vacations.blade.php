@@ -87,7 +87,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    <b>MIS VACACIONES</b>
+                    <b>Mis vacaciones</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>
@@ -178,7 +178,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    <b>MIS SOLICITUDES VACACIONES</b>
+                    <b>Mis solicitudes de vacaciones</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>

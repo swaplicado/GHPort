@@ -18,7 +18,7 @@
 <div class="card shadow mb-4" id="myEmplVac">
     <div class="card-header">
         <h3>
-            <b>VACACIONES MIS COLABORADORES DIRECTOS</b>
+            <b>Vacaciones mis colaboradores directos</b>
             @include('layouts.manual_button')
         </h3>
     </div>
