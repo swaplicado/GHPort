@@ -258,7 +258,11 @@
                                     <td>@{{oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY')}}</td>
                                     <td>@{{rec.total_days}}</td>
                                     <td>@{{specialType(rec)}}</td>
-                                    <td>@{{rec.applications_st_name}}</td>
+                                    <td>
+                                        @{{
+                                            rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name
+                                        }}
+                                    </td>
                                     <td>@{{rec.sup_comments_n}}</td>
                                 </tr>
                             </template>

@@ -230,7 +230,7 @@
                                     <td>@{{ oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.total_days }}</td>
                                     <td>@{{ specialType(rec) }}</td>
-                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name }}</td>
+                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name) }}</td>
                                     <td>@{{ rec.emp_comments_n }}</td>
                                 </tr>
                             </template>

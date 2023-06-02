@@ -815,7 +815,7 @@ var appMyVacations = new Vue({
                         this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                         rec.total_days,
                         this.specialType(rec),
-                        rec.applications_st_name,
+                        (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name),
                         rec.sup_comments_n,
                     ]
                 );
