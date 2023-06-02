@@ -497,9 +497,10 @@ var appMyVacations = new Vue({
                 await this.getlDays(data[this.indexes.id]);
                 this.valid = (data[this.indexes.request_status_id] == this.oData.const.APPLICATION_ENVIADO || 
                                 data[this.indexes.request_status_id] == this.oData.const.APPLICATION_CONSUMIDO ||
-                                    data[this.indexes.request_status_id] == this.oData.const.APPLICATION_RECHAZADO) ?
-                                        false :
-                                            true;
+                                    data[this.indexes.request_status_id] == this.oData.const.APPLICATION_APROBADO ||
+                                        data[this.indexes.request_status_id] == this.oData.const.APPLICATION_RECHAZADO) ?
+                                            false :
+                                                true;
                 dateRangePickerValid = this.valid;
                 if(!this.valid){
                     SGui.showMessage('', 'No se puede editar una solicitud con estatus: '+data[this.indexes.status], 'warning');
@@ -801,17 +802,20 @@ var appMyVacations = new Vue({
                         rec.folio_n,
                         this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                         rec.user_apr_rej_name,
-                        ((rec.request_status_id == this.oData.const.APPLICATION_CONSUMIDO) ?
-                            this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
-                                ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
-                                    this.oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
-                                        '')),
+                        ((
+                            rec.request_status_id == this.oData.const.APPLICATION_CONSUMIDO ||
+                            rec.request_status_id == this.oData.const.APPLICATION_APROBADO
+                                ) ?
+                                this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
+                                    ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
+                                        this.oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
+                                            '')),
                         this.oDateUtils.formatDate(rec.start_date, 'ddd DD-MMM-YYYY'),
                         this.oDateUtils.formatDate(rec.end_date, 'ddd DD-MMM-YYYY'),
                         this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                         rec.total_days,
                         this.specialType(rec),
-                        rec.applications_st_name,
+                        (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name),
                         rec.sup_comments_n,
                     ]
                 );

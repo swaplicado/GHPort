@@ -190,7 +190,7 @@
                         <select class="form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
                             <option value="0" selected>Creados</option>
                             <option value="1">Enviados</option>
-                            <option value="4">Consumidos</option>
+                            <option value="2">Aprobados</option>
                             <option value="3">Rechazados</option>
                         </select>&nbsp;&nbsp;
                         <label>Filtrar por año:</label>
@@ -243,7 +243,10 @@
                                     <td>@{{rec.user_apr_rej_name}}</td>
                                     <td>
                                         @{{
-                                            (rec.request_status_id == oData.const.APPLICATION_CONSUMIDO) ?
+                                            (rec.request_status_id == oData.const.APPLICATION_CONSUMIDO ||
+                                            rec.request_status_id == oData.const.APPLICATION_APROBADO
+                                            ) 
+                                            ?
                                                 oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                                 ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
                                                     oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
@@ -255,7 +258,11 @@
                                     <td>@{{oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY')}}</td>
                                     <td>@{{rec.total_days}}</td>
                                     <td>@{{specialType(rec)}}</td>
-                                    <td>@{{rec.applications_st_name}}</td>
+                                    <td>
+                                        @{{
+                                            rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name
+                                        }}
+                                    </td>
                                     <td>@{{rec.sup_comments_n}}</td>
                                 </tr>
                             </template>
@@ -288,7 +295,7 @@
 
                     case 2:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
-                        return filter === 3;
+                        return filter === 3 || filter === 5;
 
                     case 3:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
