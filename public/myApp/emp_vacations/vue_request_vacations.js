@@ -254,7 +254,9 @@ var appRequestVacation = new Vue({
             this.isFromMail = true;
             $('#modal_solicitud').modal('show');
             Swal.close();
-            if(this.oApplication.request_status_id == this.oData.const.APPLICATION_CONSUMIDO){
+            if(this.oApplication.request_status_id == this.oData.const.APPLICATION_CONSUMIDO ||
+                this.oApplication.request_status_id == this.oData.const.APPLICATION_APROBADO
+                ){
                 Swal.fire({
                     title: '',
                     html: 'Esta solicitud ya ha sido aprobada por: ' +
@@ -404,7 +406,10 @@ var appRequestVacation = new Vue({
                             rec.folio_n,
                             this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                             rec.user_apr_rej_name,
-                            ((rec.request_status_id == this.oData.const.APPLICATION_CONSUMIDO) ?
+                            ((
+                                rec.request_status_id == this.oData.const.APPLICATION_APROBADO ||
+                                rec.request_status_id == this.oData.const.APPLICATION_CONSUMIDO
+                                ) ?
                                 this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
                                     this.oDateUtils.formatDate(rec.updated_at, 'ddd DD-MMM-YYYY') :

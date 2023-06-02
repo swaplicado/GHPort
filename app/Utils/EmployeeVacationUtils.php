@@ -223,6 +223,7 @@ class EmployeeVacationUtils {
                                                                 SysConst::APPLICATION_CREADO,
                                                                 SysConst::APPLICATION_ENVIADO,
                                                                 SysConst::APPLICATION_RECHAZADO,
+                                                                SysConst::APPLICATION_APROBADO,
                                                                 SysConst::APPLICATION_CONSUMIDO
                                                             ]
                                                         ){
