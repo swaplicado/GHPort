@@ -10,11 +10,11 @@ class dateUtils {
         $months = ['', 'Ene.', 'Feb.', 'Mar.', 'Abr.', 'May.', 'Jun.', 'Jul.', 'Ago.', 'Sep.', 'Oct.', 'Nov.', 'Dic.'];
         $monthsComplete = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         $monthsAux = ['', 'ene.', 'feb.', 'mar.', 'abr.', 'may.', 'jun.', 'jul.', 'ago.', 'sep.', 'oct.', 'nov.', 'dic.'];
-        $config = \App\Utils\Configuration::getConfigurations();
+        //$config = \App\Utils\Configuration::getConfigurations();
 
         try {
             $oDate = Carbon::parse($sDate);
-            switch ($config->format_php) {
+            switch ($format) {
                 case 'ddd D-M-Y':
                     $date = $daysMin[$oDate->dayOfWeek].' '.$oDate->format('d').'-'.$months[$oDate->month].'-'.$oDate->format('Y');
                     break;
