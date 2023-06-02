@@ -226,18 +226,21 @@ var app = new Vue({
             this.showDataModal(data);
         }
 
-        var dataMyManagers = [];
-        for (let i = 0; i < this.myManagers.length; i++) {
-            dataMyManagers.push({id: this.myManagers[i].id, text: this.myManagers[i].full_name_ui });
+        if(!!this.myManagers){
+            var dataMyManagers = [];
+            for (let i = 0; i < this.myManagers.length; i++) {
+                dataMyManagers.push({id: this.myManagers[i].id, text: this.myManagers[i].full_name_ui });
+            }
+    
+            $('#selManager')
+                .select2({
+                    placeholder: 'selecciona',
+                    data: dataMyManagers,
+                });
+    
+            $('#selManager').val('').trigger('change');
         }
 
-        $('#selManager')
-            .select2({
-                placeholder: 'selecciona',
-                data: dataMyManagers,
-            });
-
-        $('#selManager').val('').trigger('change');
     },
     methods: {
         initRequestincidences(){

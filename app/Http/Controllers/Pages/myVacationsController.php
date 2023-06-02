@@ -56,7 +56,10 @@ class myVacationsController extends Controller
         $today = Carbon::now()->toDateString();
 
         $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($user->org_chart_job_id);
-        $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        $lSuperviser = [];
+        if(!is_null($superviser)){
+            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        }
 
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)

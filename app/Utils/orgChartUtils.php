@@ -76,7 +76,7 @@ class OrgChartUtils {
      */
     public static function getExistDirectSuperviserOrgChartJob($id){
         $arrOrgJobs = orgChartUtils::getAllFatherBossOrgChartJob($id);
-
+        $superviser = null;
         $org_chart_id = $id;
         for($i = 0; $i < count($arrOrgJobs); $i++){
             $dirOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($org_chart_id);

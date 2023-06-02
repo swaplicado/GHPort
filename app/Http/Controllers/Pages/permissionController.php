@@ -48,7 +48,10 @@ class permissionController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
 
         $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
-        $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        $lSuperviser = [];
+        if(!is_null($superviser)){
+            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        }
 
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
