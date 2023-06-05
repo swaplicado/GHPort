@@ -51,8 +51,8 @@
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" ); ?>;
-            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
 
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {

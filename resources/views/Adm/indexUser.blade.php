@@ -20,7 +20,7 @@
             this.updateRoute = <?php echo json_encode( route('update_user') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_user') ); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesUserTable = {
                 'idUser':0,

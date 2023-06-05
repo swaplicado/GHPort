@@ -105,7 +105,7 @@
                     Perfil
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" target="_blank" href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:portalgh">
+                <a class="dropdown-item" target="_blank" href="http://192.168.1.251/dokuwiki/doku.php?id=wiki:portalgh">
                     <i class="fas fa-book fa-sm fa-fw mr-2 text-gray-400"></i>
                     Manual de usuario
                 </a>

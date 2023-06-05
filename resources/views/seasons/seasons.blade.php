@@ -23,8 +23,8 @@
             this.lSpecialSeasonType = <?php echo json_encode($lSpecialSeasonType); ?>;
             this.year = <?php echo json_encode($year); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tempespeciales" ); ?>;
-            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:tipostempespeciales" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:tempespeciales" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:tipostempespeciales" ); ?>;
 
             /*Datos para la vista temporadas especiales*/
             this.lDeptos = <?php echo json_encode($lDeptos); ?>;

@@ -7,7 +7,7 @@
             this.year = <?php echo json_encode($year); ?>;
             this.getPeriodRoute = <?php echo json_encode(route('allVacations_getPeriod')); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:todasvacaciones" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:todasvacaciones" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>

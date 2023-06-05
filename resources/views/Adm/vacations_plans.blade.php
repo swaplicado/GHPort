@@ -32,7 +32,7 @@
                 'full_name_ui': 1,
             };
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:planvacaciones" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:planvacaciones" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>

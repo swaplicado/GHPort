@@ -5,7 +5,7 @@
         function GlobalData(){
             this.logs = <?php echo json_encode($logs); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_vacaciones_colaboradores" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_vacaciones_colaboradores" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>

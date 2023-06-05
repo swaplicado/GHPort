@@ -39,7 +39,7 @@
             this.lAreas = <?php echo json_encode($lAreas) ?>;
             this.getUsersRoute = <?php echo json_encode(route('orgChart_getUsers')) ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:organigrama" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:organigrama" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>

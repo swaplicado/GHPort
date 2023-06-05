@@ -7,7 +7,7 @@
             this.getVacationHistoryRoute = <?php echo json_encode(route('myEmplVacations_getVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myEmplVacations_hiddeHistory')); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vacmiscolaboradores" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:vacmiscolaboradores" ); ?>;
         }
 
         var oServerData = new GlobalData();

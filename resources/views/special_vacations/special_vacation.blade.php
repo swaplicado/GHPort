@@ -1,4 +1,4 @@
-@extends('layouts.principal')
+    @extends('layouts.principal')
 @section('headStyles')
 <link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
 <style>
@@ -65,7 +65,7 @@
             <div class="card-header">
                 <h3>
                     <b>Vacaciones: dirección general</b>
-                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:vacdirgeneral" target="_blank">
+                    <a href="http://192.168.1.251/dokuwiki/doku.php?id=wiki:vacdirgeneral" target="_blank">
                         <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
                     </a>
                 </h3>
@@ -158,7 +158,7 @@
             <div class="card-header">
                 <h3>
                     <b>SOLICITUDES VACACIONES: DIRECCIÓN GENERAL</b>
-                    <a href="http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" target="_blank">
+                    <a href="http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" target="_blank">
                         <span class="bx bx-question-mark btn3d" style="display: inline-block; margin-left: 10px; background-color: #e4e4e4"></span>
                     </a>
                 </h3>

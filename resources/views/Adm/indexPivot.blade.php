@@ -26,7 +26,7 @@
             this.createRoute = <?php echo json_encode( route('create_pivotIncidence') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_pivotIncidence') ); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
             //Al modificar index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesPivotTable= {
                 'idPiv':0,

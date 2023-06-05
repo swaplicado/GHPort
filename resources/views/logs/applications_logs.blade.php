@@ -15,7 +15,7 @@
                 'return_date': 6,
             };
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_solicitudes_vacaciones" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:bitacoras#bitacora_solicitudes_vacaciones" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
