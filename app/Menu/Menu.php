@@ -171,6 +171,7 @@ class Menu {
                     (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General'],
                     (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
                     (object) ['type' => $element, 'route' => route('configAuth'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Autorización de incidencias'],
+                    (object) ['type' => $element, 'route' => route('index_user'), 'icon' => 'bx bxs-user bx-sm', 'name' => 'Usuarios'],
                 ];
                 break;
             
