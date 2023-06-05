@@ -718,12 +718,6 @@ class requestVacationsController extends Controller
             // return null;
     }
 
-    public function checkMail(Request $request){
-        $mailLog = MailLog::find($request->mail_log_id);
-
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
-    }
-
     public function checkDate($oDate, $lHolidays, $employee){
         for($i = 0; $i < 31; $i++){
             switch ($oDate->dayOfWeek) {
