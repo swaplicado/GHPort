@@ -14,6 +14,7 @@
     <script src="{{ asset('select2js/js/select2.min.js') }}"></script>
     <script>
         function GlobalData(){
+            this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.oApplication = <?php echo json_encode($oApplication); ?>;
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
             this.myManagers = <?php echo json_encode($myManagers); ?>;

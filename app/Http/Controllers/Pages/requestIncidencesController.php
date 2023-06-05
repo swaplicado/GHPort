@@ -116,6 +116,9 @@ class requestIncidencesController extends Controller
             }
         }
 
+        $now = Carbon::now();
+        $initialCalendarDate = $now->subMonths(1)->toDateString();
+
         return view('Incidences.requestIncidences')->with('constants', $constants)
                                                     ->with('myManagers', $myManagers)
                                                     ->with('lIncidences', $lIncidences)
@@ -126,7 +129,8 @@ class requestIncidencesController extends Controller
                                                     ->with('lEmployees', $lEmployees)
                                                     ->with('oApplication', $oApplication)
                                                     ->with('oUser', $oUser)
-                                                    ->with('myManagers', $myManagers);
+                                                    ->with('myManagers', $myManagers)
+                                                    ->with('initialCalendarDate', $initialCalendarDate);
     }
 
     public function getEmployee(Request $request){

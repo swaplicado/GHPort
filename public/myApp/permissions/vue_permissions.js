@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#permissionsApp',
     data: {
         oData: oServerData,
+        initialCalendarDate: oServerData.initialCalendarDate,
         lPermissions: oServerData.lPermissions,
         oCopylPermissions: structuredClone(oServerData.lPermissions),
         oDateUtils: new SDateUtils(),
@@ -247,7 +248,7 @@ var app = new Vue({
         createCalendar(enable = true){
             $('#clear').trigger('click');
             initCalendar(
-                null,
+                this.initialCalendarDate,
                 true,
                 true,
                 this.oUser.payment_frec_id,
