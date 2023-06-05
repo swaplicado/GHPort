@@ -254,7 +254,9 @@ var appRequestVacation = new Vue({
             this.isFromMail = true;
             $('#modal_solicitud').modal('show');
             Swal.close();
-            if(this.oApplication.request_status_id == this.oData.const.APPLICATION_APROBADO){
+            if(this.oApplication.request_status_id == this.oData.const.APPLICATION_CONSUMIDO ||
+                this.oApplication.request_status_id == this.oData.const.APPLICATION_APROBADO
+                ){
                 Swal.fire({
                     title: '',
                     html: 'Esta solicitud ya ha sido aprobada por: ' +
@@ -404,7 +406,10 @@ var appRequestVacation = new Vue({
                             rec.folio_n,
                             this.oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY'),
                             rec.user_apr_rej_name,
-                            ((rec.request_status_id == this.oData.const.APPLICATION_APROBADO) ?
+                            ((
+                                rec.request_status_id == this.oData.const.APPLICATION_APROBADO ||
+                                rec.request_status_id == this.oData.const.APPLICATION_CONSUMIDO
+                                ) ?
                                 this.oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                 ((rec.request_status_id == this.oData.const.APPLICATION_RECHAZADO) ?
                                     this.oDateUtils.formatDate(rec.updated_at, 'ddd DD-MMM-YYYY') :
@@ -414,7 +419,7 @@ var appRequestVacation = new Vue({
                             this.oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY'),
                             rec.total_days,
                             this.specialType(rec),
-                            rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name,
+                            rec.request_status_id == 2 ? 'NUEVO' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name),
                             rec.emp_comments_n
                         ]
                     );

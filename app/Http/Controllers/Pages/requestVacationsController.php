@@ -108,7 +108,9 @@ class requestVacationsController extends Controller
             $applications_revision = EmployeeVacationUtils::getApplications(
                                                             $emp->id,
                                                             $year,
-                                                            [ SysConst::APPLICATION_APROBADO,
+                                                            [ 
+                                                              SysConst::APPLICATION_APROBADO,
+                                                              SysConst::APPLICATION_CONSUMIDO,
                                                               SysConst::APPLICATION_RECHAZADO
                                                             ]
                                                         );
@@ -126,7 +128,9 @@ class requestVacationsController extends Controller
 
         $lEmpSpecial_revision = EmployeeVacationUtils::getApplicationsTypeSpecial(
                                     $org_chart_job_id,
-                                    [   SysConst::APPLICATION_APROBADO,
+                                    [   
+                                        SysConst::APPLICATION_APROBADO,
+                                        SysConst::APPLICATION_CONSUMIDO,
                                         SysConst::APPLICATION_RECHAZADO
                                     ],
                                     $year
@@ -197,6 +201,7 @@ class requestVacationsController extends Controller
             'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_CONSUMIDO' => SysConst::APPLICATION_CONSUMIDO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 
@@ -299,7 +304,7 @@ class requestVacationsController extends Controller
                                                                                             true);
             }
 
-            $application->request_status_id = SysConst::APPLICATION_CONSUMIDO;
+            $application->request_status_id = SysConst::APPLICATION_APROBADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
@@ -352,7 +357,7 @@ class requestVacationsController extends Controller
         if(!is_null($request->manager_id)){
             $oManager = \DB::table('users')
                             ->where('id', $request->manager_id)
-                            ->where('is_deleted', 0)
+                            ->where('is_delete', 0)
                             ->where('is_active', 1)
                             ->first();
 
@@ -399,8 +404,7 @@ class requestVacationsController extends Controller
 
             $arrRequestStatus = [
                 SysConst::APPLICATION_CREADO,
-                SysConst::APPLICATION_ENVIADO, 
-                SysConst::APPLICATION_APROBADO
+                SysConst::APPLICATION_ENVIADO,
             ];
             
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){

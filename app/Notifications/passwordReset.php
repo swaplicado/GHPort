@@ -53,7 +53,7 @@ class passwordReset extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject(Lang::get('Reinicio de contraseña'))
+            ->subject(Lang::get('[PGH] Reinicio de contraseña'))
             ->line('Has recibido este email porque recibimos una petición para reiniciar la contraseña de tu cuenta.')
             ->action('Reiniciar contraseña', $this->ResetPassUrl($this->token))
             ->line('Si no solicitaste el reinicio de la contraseña, ignora este email.');

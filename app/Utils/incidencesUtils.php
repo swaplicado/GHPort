@@ -24,6 +24,19 @@ class incidencesUtils {
         return $lIncidences;
     }
 
+    public static function getMyManagerlIncidences($org_chart_job_id){
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $lIncidences = [];
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        foreach($lEmployees as $emp){
+            array_push($lIncidences, incidencesUtils::getUserIncidences($emp->id));
+        }
+
+        $lIncidences = Arr::collapse($lIncidences);
+
+        return $lIncidences;
+    }
+
     public static function getUserIncidences($user_id){
         $lIncidences = \DB::table('applications as ap')
                         ->leftJoin('cat_incidence_tps as tp', 'tp.id_incidence_tp', '=', 'ap.type_incident_id')

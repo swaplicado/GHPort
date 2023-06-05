@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
+use App\Models\Vacations\Application;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Adm\VacationsController;
 use App\Http\Controllers\Adm\UsersPhotosController;
 use App\Models\Adm\UsersPhotos;
 use App\User;
+use App\Constants\SysConst;
 
 class SyncController extends Controller
 {
@@ -71,6 +73,8 @@ class SyncController extends Controller
             // file_put_contents(base_path('vac.json'), stripslashes($newJsonString));
             $vacCont->saveVacFromJSON($data->vacations);
             // $vacCont->dumySetVacationsUser();
+
+            SyncController::setVacationsConsumed();
         }
         catch (\Throwable $th) {
             return false;
@@ -86,28 +90,43 @@ class SyncController extends Controller
                                   ->pluck('user_id');
                                   
       if(count($lUsersPhotos) > 0){
-          $lUsers = User::whereIn('id', $lUsersPhotos)
-                      ->where('is_delete', 0)
-                      ->where('is_active', 1)
-                      ->pluck('external_id_n')
-                      ->toArray();
+            $lUsers = User::whereIn('id', $lUsersPhotos)
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->pluck('external_id_n')
+                        ->toArray();
 
-                      $lUsers = json_encode($lUsers);
-          try {
-              $client = new Client([
-                  'base_uri' => $config->urlSync,
-                  'timeout' => 30.0,
-              ]);
-      
-              $response = $client->request('GET', 'getEmployeesPhoto/' . $lUsers);
-              $jsonString = $response->getBody()->getContents();
-              $data = json_decode($jsonString);
+                        $lUsers = json_encode($lUsers);
+            try {
+                $client = new Client([
+                    'base_uri' => $config->urlSync,
+                    'timeout' => 30.0,
+                ]);
+        
+                $response = $client->request('GET', 'getEmployeesPhoto/' . $lUsers);
+                $jsonString = $response->getBody()->getContents();
+                $data = json_decode($jsonString);
 
-              $UsersPhotosController = new UsersPhotosController();
-              $UsersPhotosController->saveUsersPhotosFromJSON($data);
-          } catch (\Throwable $th) {
-              return false;
-          }
-      }
+                $UsersPhotosController = new UsersPhotosController();
+                $UsersPhotosController->saveUsersPhotosFromJSON($data);
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }
+    }
+
+    public static function setVacationsConsumed(){
+        try {
+            $lVacations = Application::where('type_incident_id', SysConst::TYPE_VACACIONES)
+                            ->where('is_deleted', 0)
+                            ->where('request_status_id', SysConst::APPLICATION_APROBADO)
+                            ->get();
+    
+            foreach($lVacations as $oVac){
+                $oVac->request_status_id = SysConst::APPLICATION_CONSUMIDO;
+                $oVac->update();
+            }
+        } catch (\Throwable $th) {
+        }
     }
 }

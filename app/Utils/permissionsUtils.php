@@ -21,6 +21,19 @@ class permissionsUtils {
         return $lPermissions;
     }
 
+    public static function getMyManagerlPermissions($org_chart_job_id){
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $lPermissions = [];
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        foreach($lEmployees as $emp){
+            array_push($lPermissions, permissionsUtils::getUserPermissions($emp->id));
+        }
+
+        $lPermissions = Arr::collapse($lPermissions);
+
+        return $lPermissions;
+    }
+
     public static function getPermission($permission_id){
         $oPermission = \DB::table('hours_leave as h')
                         ->leftJoin('cat_permission_tp as pt', 'pt.id_permission_tp', '=', 'h.type_permission_id')

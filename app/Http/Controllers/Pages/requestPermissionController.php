@@ -89,7 +89,8 @@ class requestPermissionController extends Controller
                                             ->with('oPermission', $oPermission)
                                             ->with('oUser', $oUser)
                                             ->with('lEmployees', $lEmployees)
-                                            ->with('permission_time', $config->permission_time);
+                                            ->with('permission_time', $config->permission_time)
+                                            ->with('myManagers', $myManagers);
     }
 
     public function getEmployee(Request $request){
@@ -124,6 +125,11 @@ class requestPermissionController extends Controller
         try {
             \DB::beginTransaction();
             $permission = Permission::findOrFail($request->permission_id);
+
+            if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
             $permission->request_status_id = SysConst::APPLICATION_APROBADO;
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->approved_date_n = Carbon::now()->toDateString();
@@ -152,8 +158,23 @@ class requestPermissionController extends Controller
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
 
-            $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+            $org_chart_job_id = null;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
 
+                $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+            }
+
+            if(is_null($org_chart_job_id)){
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+            }else{
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+            }
+            
             notificationsUtils::revisedNotificationFromAction(SysConst::TYPE_PERMISO_HORAS, $permission->id_hours_leave);
 
             \DB::commit();
@@ -192,6 +213,11 @@ class requestPermissionController extends Controller
         try {
             \DB::beginTransaction();
             $permission = Permission::findOrFail($request->permission_id);
+
+            if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
             $permission->request_status_id = SysConst::APPLICATION_RECHAZADO;
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->rejected_date_n = Carbon::now()->toDateString();
@@ -215,7 +241,22 @@ class requestPermissionController extends Controller
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
 
-            $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+            $org_chart_job_id = null;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+
+                $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+            }
+
+            if(is_null($org_chart_job_id)){
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+            }else{
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+            }
 
             notificationsUtils::revisedNotificationFromAction(SysConst::TYPE_PERMISO_HORAS, $permission->id_hours_leave);
 
@@ -283,5 +324,30 @@ class requestPermissionController extends Controller
         }
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
+    }
+
+    public function seeLikeManager(Request $request){
+        try {
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+                            
+                if(is_null($oManager)){
+                    return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
+                }
+
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+            }else{
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+            }
+
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener los permisos', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
 }

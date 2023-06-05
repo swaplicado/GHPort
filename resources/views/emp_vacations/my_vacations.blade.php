@@ -33,6 +33,7 @@
     <script>
         function GlobalData(){
             this.oUser = <?php echo json_encode($user); ?>;
+            this.lSuperviser = <?php echo json_encode($lSuperviser); ?>;
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;
@@ -86,7 +87,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    <b>MIS VACACIONES</b>
+                    <b>Mis vacaciones</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>
@@ -177,7 +178,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    <b>MIS SOLICITUDES VACACIONES</b>
+                    <b>Mis solicitudes de vacaciones</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>
@@ -242,7 +243,10 @@
                                     <td>@{{rec.user_apr_rej_name}}</td>
                                     <td>
                                         @{{
-                                            (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
+                                            (rec.request_status_id == oData.const.APPLICATION_CONSUMIDO ||
+                                            rec.request_status_id == oData.const.APPLICATION_APROBADO
+                                            ) 
+                                            ?
                                                 oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY') :
                                                 ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
                                                     oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
@@ -254,7 +258,11 @@
                                     <td>@{{oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY')}}</td>
                                     <td>@{{rec.total_days}}</td>
                                     <td>@{{specialType(rec)}}</td>
-                                    <td>@{{rec.applications_st_name}}</td>
+                                    <td>
+                                        @{{
+                                            rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name
+                                        }}
+                                    </td>
                                     <td>@{{rec.sup_comments_n}}</td>
                                 </tr>
                             </template>
@@ -287,7 +295,7 @@
 
                     case 2:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
-                        return filter === 3;
+                        return filter === 3 || filter === 5;
 
                     case 3:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );

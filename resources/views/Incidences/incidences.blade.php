@@ -15,6 +15,7 @@
     <script>
         function GlobalData(){
             this.lIncidences = <?php echo json_encode($lIncidences); ?>;
+            this.lSuperviser = <?php echo json_encode($lSuperviser); ?>;
             this.constants = <?php echo json_encode($constants); ?>;
             this.lClass = <?php echo json_encode($lClass); ?>;
             this.lTypes = <?php echo json_encode($lTypes); ?>;

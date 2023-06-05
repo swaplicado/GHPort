@@ -23,6 +23,7 @@
             this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
+            this.myManagers = <?php echo json_encode($myManagers); ?>;
             this.routeCreate = <?php echo json_encode(route('permission_create')) ?>;
             this.routeUpdate = <?php echo json_encode(route('permission_update')) ?>;
             this.routeGetPermission = <?php echo json_encode(route('permission_getPermission')) ?>;
@@ -34,6 +35,7 @@
             this.routeGetAllEmployees = <?php echo json_encode(route('requestPermission_getAllEmployees')) ?>;
             this.routeGetDirectEmployees = <?php echo json_encode(route('requestPermission_getDirectEmployees')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
+            this.routeSeeLikeManager = <?php echo json_encode(route('requestPermission_seeLikeManager')) ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:solicitudesvacaciones" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:gestionvacaciones" ); ?>;
@@ -62,9 +64,9 @@
 
 @section('content') 
 <a class="btn btn-outline-secondary focus" id="ReqPermissions" onclick="btnActive('ReqPermissions');" href="#home"
-    data-role="link">Solicitudes incidencias</a>
+    data-role="link">Solicitudes permisos</a>
 <a class="btn btn-outline-secondary" id="gestionPermissions" onclick="btnActive('gestionPermissions');" href="#other"
-    data-role="link">Gestión incidencias</a>
+    data-role="link">Gestión permisos</a>
 <div class="card shadow mb-4" id="permissionsApp">
         
     @include('permissions.modal_permissions')
@@ -89,6 +91,21 @@
                                                     ])
             </div>
             <br>
+            <div v-if="myManagers.length > 0" class="row">
+                <div class="col-md-1">
+                    <label for="selManager">Ver como:</label>
+                </div>
+                <div class="col-md-3">
+                    <select class="select2-class form-control" id="selManager"></select>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" v-on:click="seeLikeManager();">Ver solicitudes</button>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-secondary" v-on:click="cleanManager();">Limpiar</button>
+                </div>
+            </div>
+            <br>
             @include('layouts.table_buttons', ['show' => true ])
             <br>
             <br>
@@ -98,7 +115,7 @@
     <div data-page="other" id="other">
         <div class="card-header">
             <h3>
-                <b>Solicitudes incidencias</b>
+                <b>Solicitudes permisos</b>
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -134,7 +151,7 @@
             <div v-if="oUser != null">
                 <div class="card shadow mb-4">
                     <div class="card-header">
-                        <h3>Incidencias @{{oUser.full_name_ui}}</h3>
+                        <h3>Permisos @{{oUser.full_name_ui}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="contenedor-elem-ini">

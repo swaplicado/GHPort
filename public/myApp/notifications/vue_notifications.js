@@ -21,7 +21,7 @@ var appPrinciaplNotifications = new Vue({
         },
 
         getlNotifications(){
-            axios.get(self.oGlobalDataNotification.notifications_getNotificationsRoute, {
+            axios.get(oGlobalDataNotification.notifications_getNotificationsRoute, {
 
             })
             .then( result => {
@@ -38,7 +38,7 @@ var appPrinciaplNotifications = new Vue({
 
         cleanNumberOfNotifications(){
             this.showNotificationAlert = false;
-            axios.post(self.oGlobalDataNotification.notifications_cleanPendetNotificationRoute, {
+            axios.post(oGlobalDataNotification.notifications_cleanPendetNotificationRoute, {
                 'lNotifications': this.lNotifications,
             })
             .then( result => {

@@ -76,7 +76,7 @@ class OrgChartUtils {
      */
     public static function getExistDirectSuperviserOrgChartJob($id){
         $arrOrgJobs = orgChartUtils::getAllFatherBossOrgChartJob($id);
-
+        $superviser = null;
         $org_chart_id = $id;
         for($i = 0; $i < count($arrOrgJobs); $i++){
             $dirOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($org_chart_id);
@@ -134,7 +134,7 @@ class OrgChartUtils {
         // $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($id);
         $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($id);
 
-        $lOrgCharts = OrgChartJob::where('positions', 1)
+        $lOrgCharts = OrgChartJob::where('is_boss', 1)
                                 ->where('is_deleted', 0)
                                 ->whereIn('id_org_chart_job', $arrOrgJobs)
                                 ->pluck('id_org_chart_job');
@@ -143,6 +143,21 @@ class OrgChartUtils {
                     ->whereIn('org_chart_job_id', $lOrgCharts)
                     ->where('is_active', 1)
                     ->where('is_delete', 0)
+                    ->get();
+
+        return $lUsers;
+    }
+
+    public static function getAllUsersByOrgChartJob($org_chart_id){
+        $lUsers = \DB::table('users')
+                    ->where('org_chart_job_id', $org_chart_id)
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->select(
+                        'id',
+                        'full_name_ui',
+                        'institutional_mail',
+                        )
                     ->get();
 
         return $lUsers;

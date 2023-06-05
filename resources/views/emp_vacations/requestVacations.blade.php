@@ -125,7 +125,7 @@
             @include('emp_vacations.modal_requests')
             <div class="card-header">
                 <h3>
-                    <b>SOLICITUDES VACACIONES</b>
+                    <b>Solicitudes vacaciones</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>
@@ -217,7 +217,9 @@
                                     <td>@{{ oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.user_apr_rej_name }}</td>
                                     <td>
-                                        @{{ (rec.request_status_id == oData.const.APPLICATION_APROBADO) ?
+                                        @{{ (rec.request_status_id == oData.const.APPLICATION_CONSUMIDO ||
+                                                rec.request_status_id == oData.const.APPLICATION_CONSUMIDO
+                                            ) ?
     oDateUtils.formatDate(rec.approved_date_n, 'ddd DD-MMM-YYYY'):
         ((rec.request_status_id == oData.const.APPLICATION_RECHAZADO) ?
             oDateUtils.formatDate(rec.rejected_date_n, 'ddd DD-MMM-YYYY') :
@@ -228,7 +230,7 @@
                                     <td>@{{ oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.total_days }}</td>
                                     <td>@{{ specialType(rec) }}</td>
-                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : rec.applications_st_name }}</td>
+                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name) }}</td>
                                     <td>@{{ rec.emp_comments_n }}</td>
                                 </tr>
                             </template>
@@ -356,7 +358,7 @@
                     <div class="card shadow mb-4">
                         <div class="card-header">
                             <h3>
-                                SOLICITUDES VACACIONES: @{{ oUser.employee }}
+                                Solicitudes vacaciones: @{{ oUser.employee }}
                                 @include('layouts.manual_button')
                             </h3>
                         </div>
@@ -441,11 +443,15 @@
     
                             case 1:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
-                                return filter === 3;
+                                return filter === 3 || filter === 5;
     
                             case 2:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 4;
+
+                            case 3:
+                                filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
+                                return filter === 5;
     
                             default:
                                 break;
@@ -466,7 +472,7 @@
 
                             case 2:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
-                                return myRqStatusfilter === 3;
+                                return myRqStatusfilter === 3 || myRqStatusfilter === 5;
 
                             case 3:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );

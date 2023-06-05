@@ -42,7 +42,7 @@
             <div class="card-body">
                 <div>
                     <h3>{{$employee->full_name}}
-                        @if ($application->request_status_id == 3)
+                        @if ($application->request_status_id == 3 || $application->request_status_id == 5)
                             <span style="color: green">su solicitud ha sido aprobada:</span>
                         @elseif($application->request_status_id == 4)
                             <span style="color: red">su solicitud ha sido rechazada:</span>

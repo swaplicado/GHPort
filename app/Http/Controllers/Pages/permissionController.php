@@ -47,6 +47,12 @@ class permissionController extends Controller
 
         $config = \App\Utils\Configuration::getConfigurations();
 
+        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
+        $lSuperviser = [];
+        if(!is_null($superviser)){
+            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        }
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -54,7 +60,8 @@ class permissionController extends Controller
                                             ->with('lTemp', $lTemp_special)
                                             ->with('oPermission', null)
                                             ->with('oUser', \Auth::user())
-                                            ->with('permission_time', $config->permission_time);
+                                            ->with('permission_time', $config->permission_time)
+                                            ->with('lSuperviser', $lSuperviser);
     }
 
     public function createPermission(Request $request){
@@ -209,7 +216,8 @@ class permissionController extends Controller
             $lPermissions = permissionsUtils::getUserPermissions($employee_id);
 
             $data = new \stdClass;
-            $data->user_id = $superviser->id;
+            $data->user_id = null;
+            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de permiso de horas';
             $data->url = route('requestPermission_index', ['id' => $permission->id_hours_leave]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_PERMISO;
@@ -230,7 +238,14 @@ class permissionController extends Controller
         $mypool = Pool::create();
         $mypool[] = async(function () use ($permission, $superviser, $mailLog){
             try {
-                Mail::to($superviser->institutional_mail)->send(new requestPermissionMail(
+                $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                $arrUsers = $lUsers->map(function ($item) {
+                    return $item->institutional_mail;
+                })->toArray();
+
+                $arrUsers = array_unique($arrUsers);
+
+                Mail::to($arrUsers)->send(new requestPermissionMail(
                                                         $permission->id_hours_leave
                                                     )
                                                 );

@@ -2,14 +2,14 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header modal-header-small">
                 <h5 class="modal-title" id="exampleModalLabel">Solicitud de vacaciones</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <table class="table table-bordered">
+            <div class="modal-body modal-body-small">
+                <table class="table table-bordered table-small">
                     <thead>
                         <tr>
                             <th>Días correspondientes al aniversario actual</th>
@@ -26,7 +26,7 @@
                     </tbody>
                 </table>
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body card-body-small">
                         <div style="text-align: left;">
                             {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" v-model="take_rest_days" v-on:change="getDataDays();" id="restDays">
@@ -46,7 +46,7 @@
                                 <span hidden>
                                     <input id="date-range200-myRequest" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range201-myRequest" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
                                 </span>
-                                <table style="width: 100%;">
+                                <table class="table-small" style="width: 100%;">
                                     <thead></thead>
                                     <tbody>
                                         <tr>
@@ -62,13 +62,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <br>
+                                <div class="myBreakLine"></div>
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body card-body-small">
                         <div>
                             <table>
                                 <thead></thead>
@@ -120,7 +120,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <br>
+                        <div class="myBreakLine"></div>
                         <div>
                             <label class="form-label" for="listDays"><b>Desglose de los días de calendario:</b></label>
                             <ol class="ulColumns3" name="listDays">
@@ -139,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer modal-footer-small">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" v-on:click="requestVac()" :disabled="!valid">Guardar</a>
             </div>

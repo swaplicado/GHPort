@@ -95,13 +95,20 @@ class incidencesController extends Controller
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
+        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
+        $lSuperviser = [];
+        if(!is_null($superviser)){
+            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        }
+
         return view('Incidences.incidences')->with('lIncidences', $lIncidences)
                                             ->with('constants', $constants)
                                             ->with('lClass', $lClass)
                                             ->with('lTypes', $lTypes)
                                             ->with('lTemp', $lTemp_special)
                                             ->with('lHolidays', $lHolidays)
-                                            ->with('oUser', \Auth::user());
+                                            ->with('oUser', \Auth::user())
+                                            ->with('lSuperviser', $lSuperviser);
     }
 
     public function createIncidence(Request $request){
@@ -375,7 +382,8 @@ class incidencesController extends Controller
                                 ->value('incidence_tp_name');
 
             $data = new \stdClass;
-            $data->user_id = $superviser->id;
+            $data->user_id = null;
+            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de '.$type_incident;
             $data->url = route('requestIncidences_index', ['id' => $application->id_application]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_INCIDENCIA;
@@ -397,7 +405,14 @@ class incidencesController extends Controller
         $mypool = Pool::create();
         $mypool[] = async(function () use ($application, $superviser, $mailLog){
             try {
-                Mail::to($superviser->institutional_mail)->send(new requestIncidenceMail(
+                $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                $arrUsers = $lUsers->map(function ($item) {
+                    return $item->institutional_mail;
+                })->toArray();
+
+                $arrUsers = array_unique($arrUsers);
+
+                Mail::to($arrUsers)->send(new requestIncidenceMail(
                                                         $application->id_application
                                                     )
                                                 );

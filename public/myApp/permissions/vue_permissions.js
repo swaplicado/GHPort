@@ -8,6 +8,9 @@ var app = new Vue({
         vacationUtils: new vacationUtils(),
         indexes_permission: oServerData.indexes_permission,
         oUser: oServerData.oUser,
+        lSuperviser: oServerData.lSuperviser,
+        myManagers: oServerData.myManagers,
+        selectedmanager: null,
         lEmployees: oServerData.lEmployees,
         lTemp: oServerData.lTemp,
         lTypes: oServerData.lTypes,
@@ -99,6 +102,21 @@ var app = new Vue({
         if(!!this.oPermission && !!this.oUser){
             let data = [this.oPermission.id_hours_leave];
             this.showDataModal(data);
+        }
+
+        if(!!this.myManagers){
+            var dataMyManagers = [];
+            for (let i = 0; i < this.myManagers.length; i++) {
+                dataMyManagers.push({id: this.myManagers[i].id, text: this.myManagers[i].full_name_ui });
+            }
+    
+            $('#selManager')
+                .select2({
+                    placeholder: 'selecciona',
+                    data: dataMyManagers,
+                });
+    
+            $('#selManager').val('').trigger('change');
         }
     },
     methods: {
@@ -667,8 +685,19 @@ var app = new Vue({
                 SGui.showMessage('','Solo se pueden enviar permisos con el estatus CREADO', 'warning');
                 return
             }
+
+            let message = '<b>Se enviará a:</b>' +
+                            '<br>' +
+                            '<ul>';
+
+            for (const user of this.lSuperviser) {
+                message = message + '<li>' + user.full_name_ui + '</li>';
+            }
+                message = message + '</ul>';
+
             Swal.fire({
                 title: '¿Desea enviar el permiso ' + data[this.indexes_permission.Folio] + ' ?',
+                html: message,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -791,6 +820,7 @@ var app = new Vue({
             axios.post(this.oData.routeApprobe, {
                 'permission_id': this.oPermission.id_hours_leave,
                 'comments': this.comments,
+                'manager_id': this.selectedmanager,
             })
             .then( result => {
                 let data = result.data;
@@ -815,6 +845,7 @@ var app = new Vue({
             axios.post(this.oData.routeReject, {
                 'permission_id': this.oPermission.id_hours_leave,
                 'comments': this.comments,
+                'manager_id': this.selectedmanager,
             })
             .then( result => {
                 let data = result.data;
@@ -866,6 +897,57 @@ var app = new Vue({
                     break;
                 }
             }
+        },
+
+        seeLikeManager(){
+            this.selectedmanager = parseInt($('#selManager').val());
+            if(!(!!this.selectedmanager)){
+                SGui.showMessage('', 'Debe seleccionar un supervisor', 'info');
+                return;
+            }
+            SGui.showWaiting(15000);
+            let manager_id = $('#selManager').val();
+            let manager_name = $('#selManager').find(':selected').text();
+            axios.post( this.oData.routeSeeLikeManager,{
+                'manager_id': parseInt(manager_id),
+                'manager_name': manager_name,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    SGui.showOk();
+                    this.reDrawTablePermissions('table_ReqPermissions', data.lPermissions);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
+        cleanManager(){
+            SGui.showWaiting(15000);
+            axios.post( this.oData.routeSeeLikeManager,{
+                'manager_id': null,
+                'manager_name': null,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    SGui.showOk();
+                    this.reDrawTablePermissions('table_ReqPermissions', data.lPermissions);
+                    $('#selManager').val('').trigger('change');
+                    this.selectedmanager = null;
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error) {
+                console.log(error);
+                SGui.showError(error);
+            })
         },
     }
 });

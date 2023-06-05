@@ -50,10 +50,17 @@ class myVacationsController extends Controller
             'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_CONSUMIDO' => SysConst::APPLICATION_CONSUMIDO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
         ];
 
         $today = Carbon::now()->toDateString();
+
+        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($user->org_chart_job_id);
+        $lSuperviser = [];
+        if(!is_null($superviser)){
+            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+        }
 
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
@@ -62,7 +69,8 @@ class myVacationsController extends Controller
                                                 ->with('constants', $constants)
                                                 ->with('config', $config)
                                                 ->with('today', $today)
-                                                ->with('lTemp', $lTemp_special);
+                                                ->with('lTemp', $lTemp_special)
+                                                ->with('lSuperviser', $lSuperviser);
     }
 
     public function getlDays(Request $request){
@@ -423,7 +431,8 @@ class myVacationsController extends Controller
             $mailLog->save();
 
             $data = new \stdClass;
-            $data->user_id = $superviser->id;
+            $data->user_id = null;
+            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
             $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de vacaciones';
             $data->url = route('requestVacations', ['id' => $application->id_application]);
             $data->type_id = SysConst::NOTIFICATION_TYPE_VACACIONES;
@@ -444,7 +453,14 @@ class myVacationsController extends Controller
             $mypool = Pool::create();
             $mypool[] = async(function () use ($application, $request, $superviser, $mailLog){
                 try {
-                    Mail::to($superviser->institutional_mail)->send(new requestVacationMail(
+                    $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                    $arrUsers = $lUsers->map(function ($item) {
+                        return $item->institutional_mail;
+                    })->toArray();
+
+                    $arrUsers = array_unique($arrUsers);
+
+                    Mail::to($arrUsers)->send(new requestVacationMail(
                                                             $application->id_application,
                                                             $request->employee_id,
                                                             $application->ldays,

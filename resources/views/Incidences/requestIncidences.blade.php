@@ -16,6 +16,7 @@
         function GlobalData(){
             this.oApplication = <?php echo json_encode($oApplication); ?>;
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
+            this.myManagers = <?php echo json_encode($myManagers); ?>;
             this.lIncidences = <?php echo json_encode($lIncidences); ?>;
             this.constants = <?php echo json_encode($constants); ?>;
             this.lClass = <?php echo json_encode($lClass); ?>;
@@ -37,6 +38,7 @@
             this.routeSendAuthorize = <?php echo json_encode(route('requestIncidences_sendAndAuthorize')); ?>;
             this.routeGetBirdthDayIncidences = <?php echo json_encode(route('incidences_getBirdthDayIncidences')); ?>;
             this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
+            this.routeSeeLikeManager = <?php echo json_encode(route('requestIncidences_seeLikeManager')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
@@ -96,6 +98,21 @@
                                                     'status_name' => 'status_incidence',
                                                     'width' => '20%'
                                                     ])
+            </div>
+            <br>
+            <div v-if="myManagers.length > 0" class="row">
+                <div class="col-md-1">
+                    <label for="selManager">Ver como:</label>
+                </div>
+                <div class="col-md-3">
+                    <select class="select2-class form-control" id="selManager"></select>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" v-on:click="seeLikeManager();">Ver solicitudes</button>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-secondary" v-on:click="cleanManager();">Limpiar</button>
+                </div>
             </div>
             <br>
             @include('layouts.table_buttons', ['show' => true])

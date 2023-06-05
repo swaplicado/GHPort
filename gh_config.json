@@ -64,5 +64,6 @@
         "months": 1,
         "days": 0
     },
-    "permission_time": 120
+    "permission_time": 120,
+    "format_php": "ddd D-m-Y"
 }
