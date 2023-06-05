@@ -101,6 +101,9 @@ class incidencesController extends Controller
             $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
         }
 
+        $now = Carbon::now();
+        $initialCalendarDate = $now->subMonths(1)->toDateString();
+
         return view('Incidences.incidences')->with('lIncidences', $lIncidences)
                                             ->with('constants', $constants)
                                             ->with('lClass', $lClass)
@@ -108,7 +111,8 @@ class incidencesController extends Controller
                                             ->with('lTemp', $lTemp_special)
                                             ->with('lHolidays', $lHolidays)
                                             ->with('oUser', \Auth::user())
-                                            ->with('lSuperviser', $lSuperviser);
+                                            ->with('lSuperviser', $lSuperviser)
+                                            ->with('initialCalendarDate', $initialCalendarDate);
     }
 
     public function createIncidence(Request $request){

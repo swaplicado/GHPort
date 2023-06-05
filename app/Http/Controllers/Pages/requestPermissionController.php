@@ -81,6 +81,9 @@ class requestPermissionController extends Controller
 
         $config = \App\Utils\Configuration::getConfigurations();
 
+        $now = Carbon::now();
+        $initialCalendarDate = $now->subMonths(1)->toDateString();
+
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -90,7 +93,8 @@ class requestPermissionController extends Controller
                                             ->with('oUser', $oUser)
                                             ->with('lEmployees', $lEmployees)
                                             ->with('permission_time', $config->permission_time)
-                                            ->with('myManagers', $myManagers);
+                                            ->with('myManagers', $myManagers)
+                                            ->with('initialCalendarDate', $initialCalendarDate);
     }
 
     public function getEmployee(Request $request){

@@ -53,6 +53,9 @@ class permissionController extends Controller
             $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
         }
 
+        $now = Carbon::now();
+        $initialCalendarDate = $now->subMonths(1)->toDateString();
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -61,7 +64,8 @@ class permissionController extends Controller
                                             ->with('oPermission', null)
                                             ->with('oUser', \Auth::user())
                                             ->with('permission_time', $config->permission_time)
-                                            ->with('lSuperviser', $lSuperviser);
+                                            ->with('lSuperviser', $lSuperviser)
+                                            ->with('initialCalendarDate', $initialCalendarDate);
     }
 
     public function createPermission(Request $request){

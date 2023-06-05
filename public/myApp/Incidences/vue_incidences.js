@@ -2,6 +2,7 @@ var app = new Vue({
     el: '#incidencesApp',
     data: {
         oData: oServerData,
+        initialCalendarDate: oServerData.initialCalendarDate,
         lIncidences: oServerData.lIncidences,
         oCopylIncidences: structuredClone(oServerData.lIncidences),
         oDateUtils: new SDateUtils(),
@@ -382,7 +383,7 @@ var app = new Vue({
                     case this.oData.constants.TYPE_CUMPLEAÑOS:
                         this.is_singleDate = true;
                         initCalendar(
-                            null,
+                            this.initialCalendarDate,
                             true,
                             true,
                             this.oUser.payment_frec_id,
@@ -396,7 +397,7 @@ var app = new Vue({
                     default:
                         this.is_singleDate = false;
                         initCalendar(
-                            null,
+                            this.initialCalendarDate,
                             false,
                             false,
                             this.oUser.payment_frec_id,
