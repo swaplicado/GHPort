@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2023-04-03 14:37:34",
+    "lastSyncDateTime": "2023-06-07 12:08:06",
     "expiration_vacations": {
         "years": 2,
         "months": 0,
@@ -25,9 +25,10 @@
         114,
         94
     ],
-    "urlSync": "192:168:1:233:9001",
-    "urlSyncCAP": "192.168.1.233:8080/CAP/public/api/",
-    "lSituation": [{
+    "urlSync": "192.168.1.251:9001",
+    "urlSyncCAP": "192.168.1.251/CAP/public/api/",
+    "lSituation": [
+        {
             "id": 1,
             "text": "Normal",
             "type": "is_normal"
