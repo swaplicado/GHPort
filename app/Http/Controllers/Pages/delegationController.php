@@ -15,8 +15,8 @@ class delegationController extends Controller
         // if(\Auth::user()->rol_id == 4){
         if(delegationUtils::getRolIdUser() == 4){
             $lDelegations_created = \DB::table('delegations as d')
-                                ->leftJoin('users as uA', 'u.id', '=', 'd.user_delegation_id')
-                                ->leftJoin('users as uB', 'u.id', '=', 'd.user_delegated_id')
+                                ->leftJoin('users as uA', 'uA.id', '=', 'd.user_delegation_id')
+                                ->leftJoin('users as uB', 'uB.id', '=', 'd.user_delegated_id')
                                 ->where('d.is_deleted', 0)
                                 ->where('d.is_active', 1)
                                 ->select(
