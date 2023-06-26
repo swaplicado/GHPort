@@ -359,6 +359,10 @@ class myVacationsController extends Controller
 
     public function sendRequestVac(Request $request){
         try {
+            if(delegationUtils::getOrgChartJobIdUser() == 1){
+                return json_encode(['success' => false, 'message' => 'No tienes area funcional, favor de comunicarte con el administrador del sistema', 'icon' => 'warning']);
+            }
+
             $application = Application::findOrFail($request->id_application);
 
             $data = $this->checkExternalIncident($application, json_decode($application->ldays));

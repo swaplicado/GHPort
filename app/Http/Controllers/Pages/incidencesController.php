@@ -342,6 +342,9 @@ class incidencesController extends Controller
     public function sendIncident(Request $request){
         $application_id = $request->application_id;
         try {
+            if(delegationUtils::getOrgChartJobIdUser() == 1){
+                return json_encode(['success' => false, 'message' => 'No tienes area funcional, favor de comunicarte con el administrador del sistema', 'icon' => 'warning']);
+            }
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
             $data = incidencesUtils::checkExternalIncident($application);

@@ -192,6 +192,9 @@ class permissionController extends Controller
         $permission_id = $request->permission_id;
         $employee_id = $request->employee_id;
         try {
+            if(delegationUtils::getOrgChartJobIdUser() == 1){
+                return json_encode(['success' => false, 'message' => 'No tienes area funcional, favor de comunicarte con el administrador del sistema', 'icon' => 'warning']);
+            }
             \DB::beginTransaction();
             $permission = Permission::findOrFail($permission_id);
 
