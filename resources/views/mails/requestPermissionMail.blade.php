@@ -88,7 +88,7 @@
                 <div>
                     <p>
                         Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                        <a href="{{route('requestIncidences_index', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestIncidences_index', ['id' => $permission->id_hours_leave])}}</a>
+                        <a href="{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}</a>
                     </p>
                 </div>
                 <hr>
