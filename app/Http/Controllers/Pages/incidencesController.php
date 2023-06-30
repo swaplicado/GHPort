@@ -458,7 +458,15 @@ class incidencesController extends Controller
             $application->approved_date_n = Carbon::now()->toDateString();
             $application->update();
 
-            $data = incidencesUtils::sendIncidence($application);
+            $system =  \DB::table('cat_incidence_tps')
+                            ->where('id_incidence_tp', $application->type_incident_id)
+                            ->first();
+
+            if($system->interact_system_id == 3){
+                $data = incidencesUtils::sendToCAP($application);
+            }else{
+                $data = incidencesUtils::sendIncidence($application);
+            }
 
             if(!empty($data)){
                 $data = json_decode($data);

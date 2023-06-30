@@ -678,6 +678,7 @@ class requestVacationsController extends Controller
 
         $ext_ids = \DB::table('tp_incidents_pivot')
                     ->where('tp_incident_id', $typeIncident->id_incidence_tp)
+                    ->where('int_sys_id', 2)
                     ->first();
 
         $arrJson = [

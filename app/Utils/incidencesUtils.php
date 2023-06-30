@@ -153,6 +153,7 @@ class incidencesUtils {
 
         $ext_ids = \DB::table('tp_incidents_pivot')
                     ->where('tp_incident_id', $typeIncident->id_incidence_tp)
+                    ->where('int_sys_id', 2)
                     ->first();
         
         $arrJson = [
@@ -251,6 +252,8 @@ class incidencesUtils {
                                     ->where('id', $oApplication->user_id)
                                     ->value('external_id_n');
 
+        $oApplication->type_incident_id = incidencesUtils::matchCapIncidence($oApplication->type_incident_id);
+
         $body = '{
             "ini_date": "'.$oApplication->start_date.'",
             "end_date": "'.$oApplication->end_date.'",
@@ -270,7 +273,16 @@ class incidencesUtils {
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
 
-        $data = json_decode($jsonString);
-        return $data;
+        // $data = json_decode($jsonString);
+        return $jsonString;
+    }
+
+    public static function matchCapIncidence($incidence_id){
+        $capIncidence_id = \DB::table('tp_incidents_pivot')
+                                ->where('tp_incident_id', $incidence_id)
+                                ->where('int_sys_id', 3)
+                                ->value('ext_tp_incident_id');
+
+        return $capIncidence_id;
     }
 }

@@ -184,8 +184,16 @@ class requestIncidencesController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            // $data = incidencesUtils::sendToCAP($application);
-            $data = incidencesUtils::sendIncidence($application);
+            $system =  \DB::table('cat_incidence_tps')
+                            ->where('id_incidence_tp', $application->type_incident_id)
+                            ->first();
+
+            if($system->interact_system_id == 3){
+                $data = incidencesUtils::sendToCAP($application);
+            }else{
+                $data = incidencesUtils::sendIncidence($application);
+            }
+
             if(!empty($data)){
                 $data = json_decode($data);
                 if($data->code == 500 || $data->code == 550){
