@@ -3,6 +3,8 @@ var app = new Vue({
     data: {
         oData: oServerData,
         lUser: oServerData.lUser,
+        lPlan: oServerData.lPlan,
+        lOrgChart: oServerData.lOrgChart,
         indexesUserTable: oServerData.indexesUserTable,
         idUser: 0,
         username: '',
@@ -14,9 +16,36 @@ var app = new Vue({
         nameVp: '',
         active: 0,
         passRess: 0,
+        selArea: 0,
+        selVac: 0,
     },
     mounted() {
+        let self = this;
+        var datalAreas = [];
+        var datalPlan = [];
+        for (var i = 0; i < self.lOrgChart.length; i++) {
+            datalAreas.push({ id: self.lOrgChart[i].id_org_chart_job, text: self.lOrgChart[i].job_name_ui });
+        }
+        for (var i = 0; i < self.lPlan.length; i++) {
+            datalPlan.push({ id: self.lPlan[i].id_vacation_plan, text: self.lPlan[i].vacation_plan_name });
+        }
+        $('#selArea')
+            .select2({
+                placeholder: 'selecciona área',
+                data: datalAreas,
+            }).on('select2:select', function(e) {
+                self.selArea = e.params.data.id;
+            });
 
+        $('#selVac')
+            .select2({
+                placeholder: 'selecciona plan',
+                data: datalPlan,
+            }).on('select2:select', function(e) {
+                self.selVac = e.params.data.id;
+            });
+        $('#selArea').val('').trigger('change');
+        $('#selVac').val('').trigger('change');
     },
     methods: {
         showModal(data = null) {
@@ -27,9 +56,15 @@ var app = new Vue({
             this.numUser = data[this.indexesUserTable.numUser];
             this.benDate = data[this.indexesUserTable.benDate];
             this.nameOrg = data[this.indexesUserTable.nameOrg];
+            this.idOrg = parseInt(data[this.indexesUserTable.idOrg]);
             this.nameVp = data[this.indexesUserTable.nameVp];
+            this.idPlan = parseInt(data[this.indexesUserTable.idPlan]);
             this.active = parseInt(data[this.indexesUserTable.active]);
             this.passRess = 0;
+            this.selArea = this.idOrg;
+            this.selVac = this.idPlan;
+            $('#selArea').val(this.idOrg).trigger('change');
+            $('#selVac').val(this.idPlan).trigger('change');
 
             $('#editModal').modal('show');
 
@@ -53,6 +88,8 @@ var app = new Vue({
                     'mail': this.mail,
                     'active': this.active,
                     'passRess': this.passRess,
+                    'selArea': this.selArea,
+                    'selVac': this.selVac,
                 })
                 .then(response => {
                     let res = response.data;
@@ -71,7 +108,9 @@ var app = new Vue({
                                     us.numUser,
                                     us.benDate,
                                     us.nameOrg,
+                                    us.idOrg,
                                     us.nameVp,
+                                    us.idPlan,
                                     us.active,
                                     ((us.active == 0) ? 'No' : 'Sí'),
                                 ]

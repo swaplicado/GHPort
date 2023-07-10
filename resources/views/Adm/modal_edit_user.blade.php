@@ -15,6 +15,10 @@
                 <input type="text" id="username" name="username" style="width: 90%;" v-model="username">
                 <label for="selArea">Correo:</label>
                 <input type="text" id="mail" name="mail" style="width: 90%;" v-model="mail">
+                <label for="selArea">Área funcional: <span title="Puesto en el organigrama" class="bx bx-info-circle"></span></label>
+                <select class="select2-class" id="selArea" name="selArea" v-model="selArea" style="width: 90%;"></select>
+                <label for="selArea">Plan vacaciones: <span title="Días de vacaciones correspondientes" class="bx bx-info-circle"></span></label>
+                <select class="select2-class" id="selVac" name="selVac" v-model="selVac" style="width: 90%;"></select>             
                 <br><br>
 
                 <input type="checkbox" id="active" name="active" value="active" v-model="active">

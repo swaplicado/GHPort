@@ -10,177 +10,201 @@ class Menu {
         if ($oUser == null) {
             return "";
         }
+        $lMenus = [];
+        
+        // primer grupo de menus vacaciones 
+        // arreglo para ingresar submenus
+        $vacaciones = [];
 
-        switch ($oUser->rol_id) {
-            //Estándar
-            case '1':
-                $lMenus = [
-                    (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
-                    (object) ['type' => $element, 'route' => route('incidences_index'), 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias'],
-                    (object) ['type' => $element, 'route' => route('permission_index'), 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos'],
-                    (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
-                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
-                    ],
-                    // (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
-                ];
-                break;
+        array_push($vacaciones,['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-xs', 'name' => 'Mis solicitudes']);
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($vacaciones,['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Solicitudes mis colabs.']);    
+        }
+        //submenu de vacaciones
+        $subVacaciones = [];
 
-            //Jefe
-            case '2':
-                $lMenus = [
-                    (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $list, 'list' => [
-                                                    ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
-                                                    ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab.']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
-                            ],
-                    (object) ['type' => $list, 'list' => [
-                                ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
-                                ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
-                                                 ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations'
-                            ],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
-                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias'],
-                        ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos horas'],
-                        ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos horas', 'size' => '80%'],
-                                                ],
-                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
-                    ],
-                    // (object) ['type' => $list, 'list' => [
-                    //     ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos horas'],
-                    //     ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos horas'],
-                    //                             ],
-                    //                             'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
-                    // ],
-                    (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
-                    // (object) ['type' => $element, 'route' => route('recoveredVacations'), 'icon' => 'bx bx-circle bx-sm', 'name' => 'Reactivación de vacaciones'],
-                    (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
-                    // (object) ['type' => $element, 'route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-sm', 'name' => 'Temporadas especiales'],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
-                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
-                    ],
-                    !Session::get('is_delegation') ? 
-                        (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
-                            : '',
-                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'Reporte mis empleados'],
-                    (object) ['type' => $list, 'list' => [
-                                                    ['route' => route('annUsersChilds'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
-                                                    ['route' => route('annAllUsersChilds'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Aniv. Y cump. Colaboradores', 'id' => 'aniv_colabs'
-                            ],
-                ];
-                    
-                break;
-
-            //GH
-            case '3':
-                $lMenus = [
-                    (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Áreas funcionales'],
-                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs áreas'],
-                    (object) ['type' => $list, 'list' => [
-                                                    ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
-                                                    ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab.']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
-                            ],
-                    (object) ['type' => $list, 'list' => [
-                                ['route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
-                                ['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
-                                                 ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations'
-                    ],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
-                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
-                                                ],
-                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
-                    ],
-                    (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
-                    (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
-                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
-                    ],
-                    // (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
-                ];
-                break;
-
-            //Administrador Sistema
-            case '4':
-                $lMenus = [
-                    (object) ['type' => $element, 'route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Organigrama'],
-                    (object) ['type' => $element, 'route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-sm', 'name' => 'Áreas funcionales'],
-                    (object) ['type' => $element, 'route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-sm', 'name' => 'Colaboradores vs áreas'],
-                    (object) ['type' => $element, 'route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-sm', 'name' => 'Puestos vs áreas'],
-                    (object) ['type' => $list, 'list' => [
-                                                    ['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Mis colab. Direct.'],
-                                                    ['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-sm', 'name' => 'Todos mis colab.']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vac. colaboradores', 'id' => 'vac_colabs'
-                             ],
-                    (object) ['type' => $element, 'route' => route('myVacations'), 'icon' => 'bx bx-calendar bx-sm', 'name' => 'Mis vacaciones'],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis incidencias'],
-                        ['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes incidencias']
-                                                ],
-                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias'
-                    ],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('permission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Mis permisos'],
-                        ['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Solicitudes permisos'],
-                                                ],
-                                                'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos', 'id' => 'Permisos'
-                    ],
-                    (object) ['type' => $element, 'route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solicitudes vacaciones'],
-                    (object) ['type' => $element, 'route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Reporte Vacaciones'],
-                    (object) ['type' => $element, 'route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-sm', 'name' => 'Registro e-mails'],
-                    (object) ['type' => $element, 'route' => route('vacationPlans'), 'icon' => 'bx bxs-notepad bx-sm', 'name' => 'Plan vacaciones'],
-                    (object) ['type' => $element, 'route' => route('bitacoras'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Bitacoras'],
-                    (object) ['type' => $element, 'route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-sm', 'name' => 'Temporadas especiales'],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('specialType'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Tipos solic.'],
-                        ['route' => route('SpecialTypeVsOrgChart'), 'icon' => 'bx bx-file bx-sm', 'name' => 'Asignación solic.']
-                                                ],
-                                                'icon' => 'bx bxs-archive bx-sm', 'name' => 'Solic. Esp.', 'id' => 'solic_esp'
-                    ],
-                    (object) ['type' => $list, 'list' => [
-                        ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
-                        ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación']
-                                                ],
-                                                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
-                    ],
-                    
-                    !Session::get('is_delegation') ?
-                        (object) ['type' => $element, 'route' => route('delegation'), 'icon' => 'bx bxs-contact bx-sm', 'name' => 'Delegaciones']
-                            : '',
-                    (object) ['type' => $element, 'route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-sm', 'name' => 'Vac. Dir. General'],
-                    (object) ['type' => $element, 'route' => route('report_myEmpVacations'), 'icon' => 'bx bx-detail bx-sm', 'name' => 'reporte mis empleados'],
-                    (object) ['type' => $element, 'route' => route('configAuth'), 'icon' => 'bx bxs-archive bx-sm', 'name' => 'Autorización de incidencias'],
-                    (object) ['type' => $element, 'route' => route('index_user'), 'icon' => 'bx bxs-user bx-sm', 'name' => 'Usuarios'],
-                ];
-                break;
-            
-            default:
-                $lMenus = [];
-                break;
-
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($subVacaciones,['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colab. Direct.']);       
         }
 
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($subVacaciones,['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colab.']);       
+        }
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($vacaciones,['type' => $list, 'list' => $subVacaciones, 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Vac. mis colabs.', 'id' => 'Vacmiscolab']);       
+        }
+        //cierra submenu
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($vacaciones,['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'React. mis colabs.']);    
+        }
+
+
+        $lMenus = [(object) ['type' => $list, 'list' => $vacaciones, 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations']];
+        // cierra primer grupo de menus
+
+        //segundo grupo de menus incidencias
+        //arreglo para ingresar incidencias
+        $incidencias = [];
+
+        array_push($incidencias,['route' => route('incidences_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Mis solicitudes']);
+        
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($incidencias,['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
+        }
+
+        array_push($lMenus,(object) ['type' => $list, 'list' =>$incidencias, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias']);
+
+        //cierra segundo grupo de menus
+
+        //tercer grupo de menus permisos
+        //arreglo paraa ingresar permisos
+        $permisos = [];
+
+        array_push($permisos,['route' => route('permission_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Mis solicitudes']);
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($permisos,['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
+        }
+
+        array_push($lMenus,(object) ['type' => $list, 'list' =>$permisos, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos hrs.', 'id' => 'Permisos']);
+
+        //cierrar tercer grupo de menus
+
+        //cuarto grupo de menus gestión
+        $gestion = [];
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($gestion,['route' => route('delegation'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Mis delegaciones']);   
+        }
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($lMenus,(object) ['type' => $list, 'list' =>$gestion, 'icon' => 'bx bxs-briefcase-alt bx-sm', 'name' => 'Gestión', 'id' => 'Gestion']);    
+        }
+
+        //cierra cuarto grupo de menus
+
+        //quinto grupo de menus consultas
+        $consultas = [];
+
+        array_push($consultas,['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-xs', 'name' => 'Organigrama']);
+        
+        //submenu de festejos
+        $festejos = [];
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($festejos,['route' => route('annUsersChilds'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colab. directos']);       
+        }
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($festejos,['route' => route('annAllUsersChilds'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colabs.']);       
+        }
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($consultas,['type' => $list, 'list' => $subVacaciones, 'icon' => 'bx bxs-cake bx-xs', 'name' => 'Festejos colabs.', 'id' => 'aniv_colabs']);       
+        }
+        //cierra submenu
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($lMenus,(object) ['type' => $list, 'list' =>$consultas, 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Consultas', 'id' => 'Consultas']);    
+        }
+
+        //cierra quinto grupo de menus
+
+        //sexto grupo de menus ayuda
+        array_push($lMenus,(object) ['type' => $list, 'list' => [['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-xs', 'name' => 'Tutorial solicitudes'], ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-xs', 'name' => 'Tutorial aprobación']],'icon' => 'bx bx-help-circle bx-sm', 'name' => 'Ayuda', 'id' => 'ayuda']);
+
+        //cierra sexto grupo de menus
+
+        //septimo grupo de menus administración
+        $administracion = [];
+
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Vac. directas']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Reactivaciones']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Delegaciones']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Consulta estatus vacs.']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('mailLog'), 'icon' => 'bx bx-envelope bx-xs', 'name' => 'Bitacora errores emails']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('bitacoras'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Bitacoras sistema']);    
+        }
+
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($lMenus,(object) ['type' => $list, 'list' =>$administracion, 'icon' => 'bx bxs-user-pin bx-sm', 'name' => 'Administración', 'id' => 'Administracion']);    
+        }
+
+        //cierra septimo grupo de menus
+
+        //octavo grupo de menus configuración
+        $configuracion = [];
+
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('index_user'), 'icon' => 'bx bxs-user bx-xs', 'name' => 'Usuarios']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-xs', 'name' => 'Áreas func.']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-xs', 'name' => 'Colabs. vs áreas func.']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-xs', 'name' => 'Puestos vs áreas func.']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('vacationPlans'), 'icon' => 'bx bxs-notepad bx-xs', 'name' => 'Plan vacaciones']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-xs', 'name' => 'Temporadas especiales']);    
+        }
+        //submenu solicitudes especiales
+        $solicitudes = [];
+
+         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($solicitudes,['route' => route('specialType'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Tipos solicitud']);       
+        }
+ 
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($solicitudes,['route' => route('SpecialTypeVsOrgChart'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Asignación solicitud']);       
+        }
+ 
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['type' => $list, 'list' => $solicitudes, 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Solicitudes Especiales', 'id' => 'solic_esp']);       
+        }
+         //cierra submenu
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('configAuth'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Aut. incidencias']);    
+        }
+
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($lMenus,(object) ['type' => $list, 'list' =>$configuracion, 'icon' => 'bx bx-cog bx-sm', 'name' => 'Configuración', 'id' => 'Configuracion']);    
+        }
+
+        //cierra octavo grupo de menus
+        
+        /*prueba
+        array_push($lMenus,(object) ['type' => $list, 'list' => [
+            ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
+            ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación'],
+            ['type' => $list, 'list' => [
+                ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],
+                ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial aprobación'],
+                ],
+                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'prueba'
+            ],
+            ],
+                'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Tutoriales', 'id' => 'tutorial'
+        ],);
+        
+        cierra prueba*/
         if(!$oUser->changed_password){
             $lMenus = [
                 (object) ['type' => $element, 'route' => route('profile'), 'icon' => 'bx bxs-key bx-sm', 'name' => 'Cambiar contraseña']
@@ -224,18 +248,55 @@ class Menu {
                         <i class="'.$icon.'"></i>
                         <span>'.$name.'</span>
                     </a>
-                    <div id="'.$id.'" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div id="'.$id.'" class="collapse" aria-labelledby="headingPages">
                         <div class="py-2 collapse-inner rounded">';
         
         foreach($list as $l){
-            if(!isset($l['size'])){
-                $str = $str.'<a onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
+
+            if( array_key_exists('list',$l) ){
+                $str = $str.Menu::createSubMenu($l['id'],$l['list'],$l['name'],$l['icon']);
             }else{
-                $str = $str.'<a onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'" style="font-size:'.$l['size'].'"><i class="'.$l['icon'].'"></i>'.$l['name'].'</a>';
+                if(!isset($l['size'])){
+                    $str = $str.'<a style="word-wrap: break-word;" onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i> '.$l['name'].'</a>';
+                }else{
+                    $str = $str.'<a style="word-wrap: break-word;" onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'" style="font-size:'.$l['size'].'"><i class="'.$l['icon'].'"></i> '.$l['name'].'</a>';
+                }
             }
+
         }
                     
         $str = $str.'</div></div></li>';
+
+        return $str;
+    }
+
+    private static function createSubMenu($id, $list,$name, $icon){
+  
+        $str = '<ul class="navbar-nav" id="accordionSidebar">
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" style="width:12rem" href="#" data-toggle="collapse" data-target="#'.$id.'"
+                            aria-expanded="true" aria-controls="'.$id.'">
+                            <i class="'.$icon.'"></i>
+                            <span>'.$name.'</span>
+                        </a>
+                        <div id="'.$id.'" class="collapse" aria-labelledby="headingPages" >
+                        <div class="py-2 collapse-inner rounded">';
+        
+        foreach($list as $l){
+
+            if( array_key_exists('list',$l) ){
+                $str = $str.Menu::createSubMenu($l['id'],$l['list'],$l['name'],$l['icon']);
+            }else{
+                if(!isset($l['size'])){
+                    $str = $str.'<a style="word-wrap: break-word;" onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'"><i class="'.$l['icon'].'"></i> '.$l['name'].'</a>';
+                }else{
+                    $str = $str.'<a style="word-wrap: break-word;" onclick="showPageWaiting()" class="collapse-item" href="'.$l['route'].'" style="font-size:'.$l['size'].'"><i class="'.$l['icon'].'"></i> '.$l['name'].'</a>';
+                }
+            }
+                
+            }
+        
+        $str = $str.'</div></div></li></ul>';
 
         return $str;
     }
