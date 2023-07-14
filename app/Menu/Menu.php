@@ -100,12 +100,12 @@ class Menu {
             array_push($festejos,['route' => route('annAllUsersChilds'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colabs.']);       
         }
 
-        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+        if( $oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($consultas,['type' => $list, 'list' => $subVacaciones, 'icon' => 'bx bxs-cake bx-xs', 'name' => 'Festejos colabs.', 'id' => 'aniv_colabs']);       
         }
         //cierra submenu
 
-        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+        if( $oUser->rol_id == 1 || $oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($lMenus,(object) ['type' => $list, 'list' =>$consultas, 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Consultas', 'id' => 'Consultas']);    
         }
 
