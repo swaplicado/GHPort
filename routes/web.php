@@ -53,9 +53,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('users', 'Adm\UsersController@index')->name('index_user');
     Route::post('updateUsers', 'Adm\UsersController@update')->name('update_user');
     Route::post('deleteUsers', 'Adm\UsersController@destroy')->name('delete_user');
-
+    
     Route::get('profile', 'Pages\profileController@index')->name('profile');
     Route::post('profile/update', 'Pages\profileController@updatePass')->name('profile_update');
+    Route::post('updateReportUser', 'Pages\profileController@updateReport')->name('report_user');
 
     Route::get('myEmplVacations', 'Pages\EmployeesVacationsController@employeesDirectIndex')->name('myEmplVacations');
     Route::post('myEmplVacations/getVacationHistory', 'Pages\EmployeesVacationsController@getVacationHistory')->name('myEmplVacations_getVacationHistory');

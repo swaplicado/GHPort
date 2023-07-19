@@ -10,6 +10,83 @@ use GuzzleHttp\Request;
 use GuzzleHttp\Exception\RequestException;
 
 class incidencesUtils {
+    public static function getUserIncidencesAndPermissions($user_id, $date_ini = null, $date_end = null, $lDays = null){
+        $lIncidences = \DB::table('applications as ap')
+                            ->leftJoin('cat_incidence_tps as tp', 'tp.id_incidence_tp', '=', 'ap.type_incident_id')
+                            ->where('ap.is_deleted', 0)
+                            ->where('ap.user_id', $user_id)
+                            ->whereIn('ap.request_status_id', [SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_CONSUMIDO]);
+
+        if(!is_null($date_ini)){
+            $lIncidences = $lIncidences->where('start_date', '>=', $date_ini);
+        }
+
+        if(!is_null($date_end)){
+            $lIncidences = $lIncidences->where('start_date', '<=', $date_end);
+        }
+
+        $lIncidences = $lIncidences->select(
+                                'ap.folio_n',
+                                'ap.start_date',
+                                'ap.end_date',
+                                'ap.return_date',
+                                'ap.ldays',
+                                'ap.user_id',
+                                'ap.sup_comments_n',
+                                'ap.emp_comments_n',
+                                'tp.incidence_tp_name as name',
+                            )
+                            ->selectRaw('0 as minutes')
+                            ->selectRaw('"incidence" as application_type')
+                            ->get();
+
+        $lPermissions = \DB::table('hours_leave as h')
+                            ->join('cat_permission_tp as pt', 'pt.id_permission_tp', '=', 'h.type_permission_id')
+                            ->where('h.user_id', $user_id)
+                            ->where('h.is_deleted', 0)
+                            ->whereIn('h.request_status_id', [SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_CONSUMIDO]);
+
+        if(!is_null($date_ini)){
+            $lPermissions = $lPermissions->where('start_date', '>=', $date_ini);
+        }
+
+        if(!is_null($date_end)){
+            $lPermissions = $lPermissions->where('start_date', '<=', $date_end);
+        }
+
+        $lPermissions = $lPermissions->select(
+                                        'h.folio_n',
+                                        'h.start_date',
+                                        'h.end_date',
+                                        'h.ldays',
+                                        'h.user_id',
+                                        'h.sup_comments_n',
+                                        'h.emp_comments_n',
+                                        'pt.permission_tp_name as name',
+                                        'h.minutes',
+                                    )
+                                    ->selectRaw('"permission" as application_type')
+                                    ->get();
+
+        foreach($lPermissions as $per){
+            $per->ldays = json_encode([['date' => $per->start_date, 'taked' => true]]);
+        }
+
+        $lIncidences = $lIncidences->merge($lPermissions);
+
+        return $lIncidences;
+    }
+
+    public static function getMyDirectEmployeeslIncidences($org_chart_job_id, $date_ini = null, $date_end = null, $lDays = null){
+        $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        foreach($lEmployees as $emp){
+            $emp->lIncidences = incidencesUtils::getUserIncidencesAndPermissions($emp->id, $date_ini, $date_end, $lDays);
+        }
+
+        return $lEmployees;
+    }
+
     public static function getMyEmployeeslIncidences(){
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
