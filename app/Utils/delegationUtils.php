@@ -1,5 +1,6 @@
 <?php namespace App\Utils;
 
+use App\Constants\SysConst;
 use \App\User;
 use \Session;
 
@@ -39,7 +40,12 @@ class delegationUtils {
      */
     public static function getOrgChartJobIdUser(){
         if(!Session::get('is_delegation')){
-            return \Auth::user()->org_chart_job_id;    
+            if(\Auth::user()->rol_id == SysConst::ADMINISTRADOR){
+                return SysConst::ORG_CHART_JOB_ID_TO_ADMIN;
+            }else{
+                return \Auth::user()->org_chart_job_id;    
+            }
+
         }else{
             $org_chart_job_id = User::where('id', Session::get('user_delegated_id'))
                         ->where('is_delete', 0)

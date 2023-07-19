@@ -119,5 +119,10 @@ class SysConst {
     public const NOTIFICATION_ICON_INCIDENCIA = 'bx bx-calendar-event';
     public const NOTIFICATION_ICON_PERMISO = 'bx bx-calendar-event';
     public const NOTIFICATION_ICON_GLOBAL = 'bx bx-calendar-event';
+
+    /**
+     * Id del rol gerente
+     */
+    public const ORG_CHART_JOB_ID_TO_ADMIN = 2;
 }
 ?>

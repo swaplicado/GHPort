@@ -23,14 +23,8 @@ class requestIncidencesController extends Controller
 {
     public function index($idApplication = null){
         delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
-        if(\Auth::user()->rol_id == SysConst::ADMINISTRADOR){
-            $myManagers = orgChartUtils::getMyManagers(2);
-            $org_chart_job_id = 2;
-        }else{
-            $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
-            $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
-        }
-        
+        $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
+        $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
 
         $constants = [
