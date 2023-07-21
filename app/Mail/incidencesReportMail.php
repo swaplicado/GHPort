@@ -31,7 +31,8 @@ class incidencesReportMail extends Mailable
      */
     public function build()
     {
-        $email = env('MAIL_FROM_ADDRESS');
+        // $email = env('MAIL_FROM_ADDRESS');
+        $email = "Portalgh@aeth.mx";
         return $this->from($email)
                         ->subject('[PGH] Reporte de incidencias ')
                         ->view('mails.incidencesReportMail')
