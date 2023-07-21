@@ -8,6 +8,8 @@ var app = new Vue({
         changePass: false,
         showPassword: false,
         typeInputPass: 'password',
+        reportChecked: oServerData.reportChecked,
+        always_send: oServerData.reportAlways_send ? 'option2' : 'option1',
     },
     mounted(){
 
@@ -51,5 +53,36 @@ var app = new Vue({
             this.showPassword = !this.showPassword;
             this.showPassword == true ? this.typeInputPass = 'text' : this.typeInputPass = 'password';
         },
+
+        updateReports(){
+            SGui.showWaiting(15000);
+
+            let send;
+            if(this.always_send == 'option1'){
+                send = false;
+            }else{
+                send = true;
+            }
+
+            let route = this.oData.updateReportRoute;
+            axios.post(route,{
+                'is_active': this.reportChecked,
+                'always_send': send,
+            })
+            .then(result => {
+                let data = result.data;
+                if(data.success){
+                    this.reportChecked = data.checked;
+                    SGui.showOk();
+                }else{
+                    this.reportChecked = data.checked;
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        }
     }
 })

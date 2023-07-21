@@ -8,15 +8,19 @@
         function GlobalData() {
             this.user = <?php echo json_encode($user); ?>;
             this.user_update = <?php echo json_encode(route('profile_update')); ?>;
+            this.reportChecked = <?php echo json_encode($reportChecked); ?>;
+            this.reportAlways_send = <?php echo json_encode($reportAlways_send); ?>;
+            this.updateReportRoute = <?php echo json_encode(route('report_user')); ?>;
         }
         var oServerData = new GlobalData();
     </script>
 @endsection
 
 @section('content')
+<div id="profile">
     <div class="row justify-content-md-center">
         <div class="col-md-6">
-            <div class="card shadow" id="profile">
+            <div class="card shadow">
                 <div class="card-header">
                     <h3>
                         <b>Mi perfil</b>
@@ -68,6 +72,39 @@
             </div>
         </div>
     </div>
+    @if (($user->rol_id == $constants['JEFE'] || $user->rol_id == $constants['GH'] || $user->rol_id == $constants['ADMIN']) && $report_enabled)
+        <br>
+        <div class="row justify-content-md-center">
+            <div class="col-md-6">
+                <div class="card shadow" id="profile">
+                    <div class="card-header">
+                        <h3>
+                            <b>Reportario</b>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="reports" v-model="reportChecked" v-on:change="updateReports()"/>
+                            <label class="form-check-label" for="reports">
+                                Reporte de incidencias
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" v-model="always_send"
+                                value="option1" v-on:change="updateReports()" :disabled="!reportChecked">
+                            <label class="form-check-label" for="inlineRadio1">Enviar reporte solo si existen incidencias</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" v-model="always_send"
+                                value="option2" v-on:change="updateReports()" :disabled="!reportChecked">
+                            <label class="form-check-label" for="inlineRadio2">Enviar siempre el reporte</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
 @endsection
 
 @section('scripts')

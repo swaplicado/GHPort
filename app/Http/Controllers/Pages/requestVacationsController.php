@@ -189,12 +189,7 @@ class requestVacationsController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $year = Carbon::now()->year;
         $data = $this->getData($year);
-        // $myManagers = orgChartUtils::getMyManagers(\Auth::user()->org_chart_job_id);
-        if(\Auth::user()->rol_id == SysConst::ADMINISTRADOR){
-            $myManagers = orgChartUtils::getMyManagers(2);
-        }else{
-            $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
-        }
+        $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,

@@ -30,7 +30,9 @@ class dateUtils {
                 case 'D/m/Y dddd':
                     $date = $oDate->format('d').'/'.$monthsAux[$oDate->month].'/'.$oDate->format('Y').' ('.$daysComplete[$oDate->dayOfWeek].')';
                     break;
-                
+                case 'D-M-Y':
+                    $date = $oDate->format('d').'-'.$months[$oDate->month].'-'.$oDate->format('Y');
+                    break;
                 default:
                     $date = $oDate->format($format);
                     break;
