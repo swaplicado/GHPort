@@ -635,11 +635,13 @@ class requestVacationsController extends Controller
         $rows = [];
         $start_date = Carbon::parse($oApplication->start_date);
         $count = 0;
+        $indexlDays = 0;
         foreach($appBreakDowns as $index => $br){
             if($index != 0){
-                for($i=$effective_days; $i < count($lDays); $i++){
+                for($i=$indexlDays; $i < count($lDays); $i++){
                     if($lDays[$i]->taked){
                         $start_date = Carbon::parse($lDays[$i]->date);
+                        $indexlDays = $i+1;
                         break;
                     }
                 }
@@ -647,11 +649,11 @@ class requestVacationsController extends Controller
             $year = $userVacation->where('year', $br->application_year)->first();
             $end_date = clone $start_date;
             $count = 0;
-            $index != 0 ? $i=$effective_days : $i = 0;
 
-            for($i; $i < count($lDays); $i++){
+            for($i=$indexlDays; $i < count($lDays); $i++){
                 if($lDays[$i]->taked){
                     $end_date = Carbon::parse($lDays[$i]->date);
+                    $indexlDays = $i+1;
                     $count++;
                 }
                 if($count >= $br->days_effective){
@@ -668,8 +670,7 @@ class requestVacationsController extends Controller
                 'end_date' => $end_date->toDateString(),
             ];
 
-            array_push($rows, $row); 
-            $effective_days = $br->days_effective;
+            array_push($rows, $row);
         }
 
         $ext_ids = \DB::table('tp_incidents_pivot')
