@@ -641,7 +641,7 @@ class requestVacationsController extends Controller
                 for($i=$indexlDays; $i < count($lDays); $i++){
                     if($lDays[$i]->taked){
                         $start_date = Carbon::parse($lDays[$i]->date);
-                        $indexlDays = $i+1;
+                        $indexlDays = $i;
                         break;
                     }
                 }
