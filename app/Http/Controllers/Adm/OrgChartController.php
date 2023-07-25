@@ -16,9 +16,14 @@ class OrgChartController extends Controller
 {
     public function index(){
         $areas = \DB::table('org_chart_jobs as ocj')
+                    ->leftJoin('organization_levels as ol', 'ol.id_organization_level', '=', 'ocj.org_level_id')
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
                     ->where('ocj.id_org_chart_job', '!=', 1)
+                    ->select(
+                        'ocj.*',
+                        'ol.name as level'
+                    )
                     ->get();
 
         foreach($areas as $area){
@@ -44,7 +49,7 @@ class OrgChartController extends Controller
                     'parentId' => $ar->top_org_chart_job_id_n,
                     'jobs' => count($ar->users).'/'.$ar->positions,
                     'countUsers' => count($ar->users),
-                    'level' => $ar->org_level_id,
+                    'level' => $ar->level,
                 ];
             }else{
                 $lAreas[] = [
@@ -55,7 +60,7 @@ class OrgChartController extends Controller
                     'parentId' => $ar->top_org_chart_job_id_n,
                     'jobs' => count($ar->users).'/'.$ar->positions,
                     'countUsers' => 2,
-                    'level' => $ar->org_level_id,
+                    'level' => $ar->level,
                 ];
             }
         }
