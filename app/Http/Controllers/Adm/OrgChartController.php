@@ -44,6 +44,7 @@ class OrgChartController extends Controller
                     'parentId' => $ar->top_org_chart_job_id_n,
                     'jobs' => count($ar->users).'/'.$ar->positions,
                     'countUsers' => count($ar->users),
+                    'level' => $ar->org_level_id,
                 ];
             }else{
                 $lAreas[] = [
@@ -54,6 +55,7 @@ class OrgChartController extends Controller
                     'parentId' => $ar->top_org_chart_job_id_n,
                     'jobs' => count($ar->users).'/'.$ar->positions,
                     'countUsers' => 2,
+                    'level' => $ar->org_level_id,
                 ];
             }
         }

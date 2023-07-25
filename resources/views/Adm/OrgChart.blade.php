@@ -27,7 +27,7 @@
             </h3>
         </div>
         <div class="card-body">
-            <div class="chart-container" style="height: 1200px; background-color: #f6f6f6">
+            <div class="chart-container" style="height: 1200px; background-color: #f6f6f6;">
             </div>
         </div>
     </div>
@@ -83,6 +83,11 @@
                  d.width - 2
                }px;border-radius:1px"></div>
 
+               <div style="text-align:center">
+                   <div style="color:#111672;font-size:16px;font-weight:bold; float: right; padding-right: 15px; padding-top: 5px;"> ${
+                     d.data.level
+                   } </div>
+               </div> 
                <div style="padding:20px; padding-top:35px;text-align:center">
                    <div style="color:#111672;font-size:16px;font-weight:bold"> ${
                      d.data.name
