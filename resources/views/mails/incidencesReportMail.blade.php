@@ -66,7 +66,7 @@
                         @foreach ($emp->myWeek as $inc)
                             <td style="border: solid 1px black;">
                                 @foreach ($inc['incidences'] as $item)
-                                    {{ strtolower($item) }}
+                                    {{ mb_strtolower($item) }}
                                     <br>
                                 @endforeach
                             </td>

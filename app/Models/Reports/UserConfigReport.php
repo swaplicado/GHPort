@@ -12,6 +12,7 @@ class UserConfigReport extends Model
         'user_id',
         'is_active',
         'all_employees',
-        'always_send'
+        'always_send',
+        'organization_level_id'
     ];
 }

@@ -2,6 +2,8 @@ var app = new Vue({
     el: '#profile',
     data: {
         oData: oServerData,
+        levels: oServerData.levels,
+        myConf_level: oServerData.myConf_level,
         user: oServerData.user,
         password: null,
         confirm_password: null,
@@ -12,7 +14,22 @@ var app = new Vue({
         always_send: oServerData.reportAlways_send ? 'option2' : 'option1',
     },
     mounted(){
+        self = this;
 
+        $('.select2-class').select2({});
+
+        $('#sel_levels').select2({
+            placeholder: 'Selecciona nivel',
+            data: self.levels,
+        }).on('select2:select', function(e) {
+            self.myConf_level = e.params.data.id;
+            self.updateReports();
+        });
+
+        if(self.myConf_level == null){
+            self.myConf_level = 0;
+        }
+        $('#sel_levels').val(self.myConf_level).trigger('change');
     },
     methods: {
         updatePass(){
@@ -68,6 +85,7 @@ var app = new Vue({
             axios.post(route,{
                 'is_active': this.reportChecked,
                 'always_send': send,
+                'myConf_level': self.myConf_level,
             })
             .then(result => {
                 let data = result.data;

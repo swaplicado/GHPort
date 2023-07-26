@@ -28,11 +28,40 @@ class profileController extends Controller
             $oReport->always_send = 0;
         }
 
+        $myLevel = \DB::table('org_chart_jobs as o')
+                        ->join('organization_levels as l', 'l.id_organization_level', '=', 'o.org_level_id')
+                        ->where('id_org_chart_job', $user->org_chart_job_id)
+                        ->value('l.level');
+
+        $levels = [];
+        if($myLevel > 0){
+            $oLevels = \DB::table('organization_levels')
+                        ->where('level', '>', $myLevel)
+                        ->get();
+
+            $levels = $oLevels->map(function ($item){
+                return [
+                    'id' => $item->id_organization_level,
+                    'text' => $item->name,
+                ];
+            });
+
+
+            $levels->prepend(['id' => 0, 'text' => 'Todos']);
+        }
+
+        $myConf_level = \DB::table('users_config_reports')
+                            ->where('user_id', \Auth::user()->id)
+                            ->where('is_active', 1)
+                            ->value('organization_level_id');
+
         return view('users.profile')->with('user', $user)
                                     ->with('constants', $constants)
                                     ->with('reportChecked', $oReport->is_active)
                                     ->with('reportAlways_send', $oReport->always_send)
-                                    ->with('report_enabled', $report_enabled);
+                                    ->with('report_enabled', $report_enabled)
+                                    ->with('levels', $levels)
+                                    ->with('myConf_level', $myConf_level);
     }
 
     public function updatePass(Request $request){
@@ -59,6 +88,7 @@ class profileController extends Controller
     public function updateReport(Request $request){
         try {
             $is_active = $request->is_active;
+            $myConf_level = $request->myConf_level == 0 ? null : $request->myConf_level;
 
             \DB::beginTransaction();
 
@@ -71,6 +101,7 @@ class profileController extends Controller
             $oReport->is_active = $is_active;
             $oReport->all_employees = 0;
             $oReport->always_send = $request->always_send;
+            $oReport->organization_level_id = $myConf_level;
             $oReport->save();
 
             \DB::commit();

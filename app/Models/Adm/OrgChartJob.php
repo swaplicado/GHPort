@@ -35,6 +35,9 @@ class OrgChartJob extends Model
     public function children(){
         return $this->hasMany('App\Models\Adm\OrgChartJob', 'top_org_chart_job_id_n')->where('is_deleted', 0);
     }
+    public function childrenToLevel($level_id){
+        return $this->hasMany('App\Models\Adm\OrgChartJob', 'top_org_chart_job_id_n')->where('is_deleted', 0)->where('org_level_id', '<=', $level_id);
+    }
 
     public function getChildrens(){
         $child = $this->children()->get();
@@ -114,5 +117,15 @@ class OrgChartJob extends Model
             $c->parent = $c->getAllParents();
         }
         return $parent;
+    }
+
+    public function getChildrensToLevel($level_id){
+        $child = $this->childrenToLevel($level_id)->get();
+        foreach($child as $c){
+            if($c->org_level_id <= $level_id){
+                $c->child = $c->getChildrensToLevel($level_id);
+            }
+        }
+        return $child;
     }
 }

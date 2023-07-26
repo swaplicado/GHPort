@@ -77,8 +77,34 @@ class incidencesUtils {
         return $lIncidences;
     }
 
+    public static function getEmployeesByLevel($org_chart_id, $level_id, $date_ini = null, $date_end = null, $lDays = null){
+        $arrOrgJobs = orgChartUtils::getOrgChartJobToLevel($org_chart_id, $level_id);
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        foreach($lEmployees as $emp){
+            $emp->lIncidences = incidencesUtils::getUserIncidencesAndPermissions($emp->id, $date_ini, $date_end, $lDays);
+        }
+
+        return $lEmployees;
+    }
+
+    /**
+     * Metodo para el reporte de incidencias semanal
+     */
     public static function getMyDirectEmployeeslIncidences($org_chart_job_id, $date_ini = null, $date_end = null, $lDays = null){
         $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        foreach($lEmployees as $emp){
+            $emp->lIncidences = incidencesUtils::getUserIncidencesAndPermissions($emp->id, $date_ini, $date_end, $lDays);
+        }
+
+        return $lEmployees;
+    }
+
+    /**
+     * Metodo para el reporte de incidencias semanal
+     */
+    public static function getAllMyEmployeeslIncidences($org_chart_job_id, $date_ini = null, $date_end = null, $lDays = null){
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         foreach($lEmployees as $emp){
             $emp->lIncidences = incidencesUtils::getUserIncidencesAndPermissions($emp->id, $date_ini, $date_end, $lDays);

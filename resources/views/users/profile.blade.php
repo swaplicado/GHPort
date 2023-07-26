@@ -1,12 +1,16 @@
 @extends('layouts.principal')
 
 @section('headStyles')
+<link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
 @endsection
 
 @section('headJs')
+<script src="{{ asset('select2js/js/select2.min.js') }}"></script>
     <script>
         function GlobalData() {
             this.user = <?php echo json_encode($user); ?>;
+            this.levels = <?php echo json_encode($levels); ?>;
+            this.myConf_level = <?php echo json_encode($myConf_level); ?>;
             this.user_update = <?php echo json_encode(route('profile_update')); ?>;
             this.reportChecked = <?php echo json_encode($reportChecked); ?>;
             this.reportAlways_send = <?php echo json_encode($reportAlways_send); ?>;
@@ -98,6 +102,10 @@
                             <input class="form-check-input" type="radio" v-model="always_send"
                                 value="option2" v-on:change="updateReports()" :disabled="!reportChecked">
                             <label class="form-check-label" for="inlineRadio2">Enviar siempre el reporte</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label for="sel_levels" style="padding-right: 10px;">Nivel:</label>
+                            <select class="select2-class form-control" name="sel_levels" id="sel_levels" style="width: 100%;" :disabled="!reportChecked"></select>
                         </div>
                     </div>
                 </div>

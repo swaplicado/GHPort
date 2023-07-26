@@ -1,6 +1,7 @@
 <?php namespace App\Utils;
 
 use App\Models\Adm\OrgChartJob;
+use Illuminate\Foundation\Auth\User;
 
 class OrgChartUtils {
 
@@ -95,11 +96,61 @@ class OrgChartUtils {
         return $superviser;
     }
 
+    public static function getSupervisersToSend($org_chart_id){
+        $config = \App\Utils\Configuration::getConfigurations();
+        $arrOrgJobs = orgChartUtils::getAllFathersOrgChartJob($org_chart_id);
+        if(count($arrOrgJobs) > 1){
+            $clave = array_search($config->root_node, $arrOrgJobs);
+            if ($clave !== false) {
+                unset($arrOrgJobs[$clave]);
+            }
+        }
+
+        $users = [];
+        foreach($arrOrgJobs as $org){
+            $orgChart = OrgChartJob::find($org);
+            
+            if(!is_null($orgChart) && $orgChart->is_boss){
+                $users = orgChartUtils::getUsersInOrgChart($orgChart->id_org_chart_job);
+                if(count($users) == 0){
+                    $users = delegationUtils::getUsersDelegationByOrgChart($orgChart->id_org_chart_job);
+                }
+            }
+
+            if(count($users) > 0){
+                break;
+            }
+        }
+
+        if(count($users) == 0){
+            $users = orgChartUtils::getUsersInOrgChart($config->default_node);
+        }
+
+        return $users;
+    }
+
+    public static function getUsersInOrgChart($org_chart_id){
+        $oOrgChart = OrgChartJob::find($org_chart_id);
+        $users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $oOrgChart->id_org_chart_job]])
+                                ->select(
+                                    'id',
+                                    'institutional_mail',
+                                    'full_name_ui',
+                                    'org_chart_job_id'
+                                    )
+                                ->get();
+
+        return $users;
+    }
+
     /**
      * Obtiene todos los org chart jobs superiores al org chart job
      */
     public static function getAllFathersOrgChartJob($id){
-        
+        $oOrgChart = $group = OrgChartJob::find($id);
+        $oOrgChart->parent = $oOrgChart->getAllParents();
+        $arrayAreas = $group->getArrayParents();
+        return $arrayAreas;
     }
 
     /**
@@ -161,5 +212,12 @@ class OrgChartUtils {
                     ->get();
 
         return $lUsers;
+    }
+
+    public static function getOrgChartJobToLevel($org_chart_id, $to_level){
+        $group = OrgChartJob::find($org_chart_id);
+        $group->child = $group->getChildrensToLevel($to_level);
+        $arrayAreas = $group->getArrayChilds();
+        return $arrayAreas;
     }
 }
