@@ -60,7 +60,7 @@ class Vacations_report {
                 }
 
                 if(is_null($conf->organization_level_id)){
-                    $lEmployees = incidencesUtils::getAllMyEmployeeslIncidences($conf->org_chart_job_id, $conf->organization_level_id, $date_ini, $date_end, $week);
+                    $lEmployees = incidencesUtils::getAllMyEmployeeslIncidences($conf->org_chart_job_id, $date_ini, $date_end, $week);
                 }else{
                     $lEmployees = incidencesUtils::getEmployeesByLevel($conf->org_chart_job_id, $conf->organization_level_id, $date_ini, $date_end, $week);
                 }

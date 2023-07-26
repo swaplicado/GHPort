@@ -18,7 +18,7 @@ class incidencesUtils {
                             ->whereIn('ap.request_status_id', [SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_CONSUMIDO]);
 
         if(!is_null($date_ini)){
-            $lIncidences = $lIncidences->where('start_date', '>=', $date_ini);
+            $lIncidences = $lIncidences->where('end_date', '>=', $date_ini);
         }
 
         if(!is_null($date_end)){
