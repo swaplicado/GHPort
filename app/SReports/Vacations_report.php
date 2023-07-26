@@ -29,6 +29,7 @@ class Vacations_report {
                                                     'u.rol_id',
                                                 )
                                                 ->get();
+            
             Carbon::setLocale('es');
 
             if($config->incidents_report->week == "next"){
