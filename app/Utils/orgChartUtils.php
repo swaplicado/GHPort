@@ -216,7 +216,7 @@ class OrgChartUtils {
 
     public static function getOrgChartJobToLevel($org_chart_id, $to_level){
         $group = OrgChartJob::find($org_chart_id);
-        $group->child = $group->getChildrensToLevel($to_level);
+        $group->child = $group->getChildrensToLevel($org_chart_id, $to_level);
         $arrayAreas = $group->getArrayChilds();
         return $arrayAreas;
     }
