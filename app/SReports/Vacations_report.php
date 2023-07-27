@@ -51,8 +51,11 @@ class Vacations_report {
             $date_ini = $date_ini->toDateString();
             $date_end = $date_end->toDateString();
 
-            $ini = dateUtils::formatDate($date_ini, 'ddd D-M-Y');
-            $end = dateUtils::formatDate($date_end, 'ddd D-M-Y');
+            $sDate = dateUtils::datesToString($date_ini, $date_end);
+            $sDateHead = dateUtils::datesToString($date_ini, $date_end, 'm');
+
+            $ini = dateUtils::formatDate($date_ini, 'D-m-Y');
+            $end = dateUtils::formatDate($date_end, 'D-m-Y');
 
             foreach ($lConfigReports as $conf) {
                 if($conf->rol_id == SysConst::ADMINISTRADOR){
@@ -90,14 +93,33 @@ class Vacations_report {
                     }
                 }
 
+                $arrOrg = $lEmployees->pluck('org_chart_job_id')->unique();
+
+                $lOrgCharts = \DB::table('org_chart_jobs as org')
+                                ->leftJoin('organization_levels as l', 'l.id_organization_level', '=', 'org_level_id')
+                                ->whereIn('id_org_chart_job', $arrOrg)
+                                ->select(
+                                    'org.id_org_chart_job',
+                                    'org.job_name',
+                                    'l.id_organization_level',
+                                    'l.level',
+                                    'l.name as level_name'
+                                )
+                                ->orderBy('level')
+                                ->get();
+
+                foreach($lOrgCharts as $org){
+                    $org->lEmployees = $lEmployees->where('org_chart_job_id', $org->id_org_chart_job)->sortBy('full_name');
+                }
+
                 if(!$config->incidents_report->always_send){
                     if($conf->always_send){
-                        Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end));
+                        Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
                     }elseif (count($lEmployees) > 0) {
-                        Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end));
+                        Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
                     }
                 }else{
-                    Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end));
+                    Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
                 }
                 $output = new \Symfony\Component\Console\Output\ConsoleOutput();
                 $output->writeln("Reporte enviado a ".$conf->institutional_mail);
