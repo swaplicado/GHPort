@@ -103,9 +103,10 @@
                                 value="option2" v-on:change="updateReports()" :disabled="!reportChecked">
                             <label class="form-check-label" for="inlineRadio2">Enviar siempre el reporte</label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <label for="sel_levels" style="padding-right: 10px;">Nivel:</label>
-                            <select class="select2-class form-control" name="sel_levels" id="sel_levels" style="width: 100%;" :disabled="!reportChecked"></select>
+                        <div class="col-md-12">
+                            <label for="sel_levels" style="padding-right: 10px;">Nivel organizacional:</label>
+                            <select class="select2-class form-control inline" name="sel_levels" id="sel_levels" 
+                                :disabled="!reportChecked" style="width: 60%"></select>
                         </div>
                     </div>
                 </div>
