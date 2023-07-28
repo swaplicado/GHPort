@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Constants\SysConst;
 use App\Http\Controllers\Controller;
 use App\Models\Reports\UserConfigReport;
+use App\Utils\OrgChartUtils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
@@ -33,10 +34,17 @@ class profileController extends Controller
                         ->where('id_org_chart_job', $user->org_chart_job_id)
                         ->value('l.level');
 
+        $arrOrgJobs = OrgChartUtils::getAllChildsOrgChartJob($user->org_chart_job_id);
+        $lOrgChart = \DB::table('org_chart_jobs')
+                        ->whereIn('id_org_chart_job', $arrOrgJobs)
+                        ->groupBy('org_level_id')
+                        ->pluck('org_level_id')
+                        ->toArray();
+
         $levels = [];
         if($myLevel > 0){
             $oLevels = \DB::table('organization_levels')
-                        ->where('level', '>', $myLevel)
+                        ->whereIn('id_organization_level', $lOrgChart)
                         ->get();
 
             $levels = $oLevels->map(function ($item){
@@ -45,7 +53,6 @@ class profileController extends Controller
                     'text' => $item->name,
                 ];
             });
-
 
             $levels->prepend(['id' => 0, 'text' => 'Todos']);
         }
