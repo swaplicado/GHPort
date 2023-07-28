@@ -45,6 +45,7 @@ class profileController extends Controller
         if($myLevel > 0){
             $oLevels = \DB::table('organization_levels')
                         ->whereIn('id_organization_level', $lOrgChart)
+                        ->where('id_organization_level', '!=', 1)
                         ->get();
 
             $levels = $oLevels->map(function ($item){
