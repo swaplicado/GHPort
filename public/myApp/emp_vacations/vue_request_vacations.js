@@ -109,6 +109,52 @@ var appRequestVacation = new Vue({
             this.originalDaysTaked = result[1];
         },
 
+        cancelRegistry(data){
+            Swal.fire({
+                title: '¿Desea cancelar la solicitud?',
+                html:   '<b>Colaborador: </b>' +
+                        data[this.indexes.employee] +
+                        '<br>' +
+                        '<b>Inicio:</b> ' +
+                        data[this.indexes.start_date] +
+                        '<br>' +
+                        '<b>Fin:</b> ' +
+                        data[this.indexes.end_date],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.cancelRequest(data[this.indexes.id]);
+                }
+            })
+        },
+
+        cancelRequest(application_id){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.cancelRequestRoute;
+            axios.post(route, {
+                'application_id': application_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.reDrawRequestTable(data.lEmployees);
+                    SGui.showOk();
+                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
         async showAcceptRegistry(data){
             SGui.showWaiting(15000);
             this.oApplication = null;
@@ -420,7 +466,8 @@ var appRequestVacation = new Vue({
                             rec.total_days,
                             this.specialType(rec),
                             rec.request_status_id == 2 ? 'NUEVO' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name),
-                            rec.emp_comments_n
+                            rec.emp_comments_n,
+                            rec.start_date,
                         ]
                     );
 

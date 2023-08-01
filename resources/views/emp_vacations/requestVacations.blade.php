@@ -45,6 +45,7 @@
             this.applicationsEARoute = <?php echo json_encode(route('requestVacations_getEmpApplicationsEA')); ?>;
             this.getDataManagerRoute = <?php echo json_encode(route('requestVacations_getDataManager')); ?>;
             this.getRequestlDaysRoute = <?php echo json_encode(route('requestVacations_getlDays')); ?>;
+            this.cancelRequestRoute = <?php echo json_encode(route('requestVacations_cancelRequest')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             this.oApplication = <?php echo json_encode($oApplication); ?>;
             this.getApplicationRoute = <?php echo json_encode(route('requestVacations_getApplication')); ?>;
@@ -72,6 +73,7 @@
                 'type': 19,
                 'applications_st_name': 20,
                 'comments': 21,
+                'fecha_envio': 22,
             };
 
         //data para la vista my_vacations
@@ -148,6 +150,10 @@
                 <button id="btn_getApp" v-on:click="getApplication()" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 5px" title="Ver solicitud">
                     <span class="bx bx-show-alt"></span>
                 </button>
+                
+                <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="rqStatus == 1">
+                    <span class="bx bx-x"></span>
+                </button>
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
                     &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
@@ -197,6 +203,7 @@
                         <th>Tipo</th>
                         <th>Estatus</th>
                         <th>coment.</th>
+                        <th>fecha env</th>
                     </thead>
                     <tbody>
                         <template v-for="emp in lEmployees">
@@ -214,7 +221,7 @@
                                     <td>@{{ rec.user_apr_rej_id }}</td>
                                     <td>@{{ emp.employee }}</td>
                                     <td>@{{ rec.folio_n }}</td>
-                                    <td>@{{ oDateUtils.formatDate(rec.created_at, 'ddd DD-MMM-YYYY') }}</td>
+                                    <td>@{{ oDateUtils.formatDate(rec.date_send_n, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.user_apr_rej_name }}</td>
                                     <td>
                                         @{{ (rec.request_status_id == oData.const.APPLICATION_CONSUMIDO ||
@@ -232,6 +239,7 @@
                                     <td>@{{ specialType(rec) }}</td>
                                     <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name) }}</td>
                                     <td>@{{ rec.emp_comments_n }}</td>
+                                    <td>@{{ rec.date_send_n }}</td>
                                 </tr>
                             </template>
                         </template>
@@ -493,12 +501,15 @@
     </script>
     @include('layouts.table_jsControll', [
         'table_id' => 'table_requestVac',
-        'colTargets' => [0, 1, 2, 3, 4, 6, 7, 8, 9, 21],
+        'colTargets' => [0, 1, 2, 3, 4, 6, 7, 8, 9, 21, 22],
         'colTargetsSercheable' => [5],
+        'colTargetsNoOrder' => [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
         'select' => true,
-        'noSort' => true,
+        // 'noOrdering' => true,
         'accept' => true,
         'reject' => true,
+        'cancel' => true,
+        'order' => [[22, 'desc']],
     ])
 
     @include('layouts.table_jsControll', [

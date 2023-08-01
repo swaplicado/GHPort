@@ -78,6 +78,7 @@ class SysConst {
     public const APPLICATION_APROBADO = 3;
     public const APPLICATION_RECHAZADO = 4;
     public const APPLICATION_CONSUMIDO = 5;
+    public const APPLICATION_CANCELADO = 6;
 
     /**
      * Constantes de la tabla sys_mails_sts

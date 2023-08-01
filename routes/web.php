@@ -92,6 +92,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestVacations/quickSend', 'Pages\requestVacationsController@quickSend')->name('requestVacations_quickSend');
     Route::post('requestVacations/quickData', 'Pages\requestVacationsController@quickData')->name('requestVacations_quickData');
     Route::post('requestVacations/getApplication', 'Pages\requestVacationsController@getApplication')->name('requestVacations_getApplication');
+    Route::post('requestVacations/cancelRequest', 'Pages\requestVacationsController@cancelRequest')->name('requestVacations_cancelRequest');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');

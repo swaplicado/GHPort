@@ -43,6 +43,9 @@
                     @else
                         "colReorder": true,
                     @endif
+                    @if(isset($noOrdering))
+                        "ordering": false,
+                    @endif
                     @if(isset($noSort))
                         "bSort": false,
                     @endif
@@ -80,8 +83,12 @@
                             "orderable": false,
                         },
                         {
-                            "orderable": false,
-                            "targets": "no-sort",
+                            @if(isset($colTargetsNoOrder))
+                                "targets": <?php echo json_encode($colTargetsNoOrder) ?>,
+                                "visible": true,
+                                "orderable": false,
+                                // "targets": "no-sort",
+                            @endif
                         }
                     ],
                     "buttons": [
@@ -217,6 +224,17 @@
                 }
 
                 app.showDataModal(table['{{$table_id}}'].row('.selected').data());
+            });
+        @endif
+
+        @if(isset($cancel))
+            $('#btn_cancel').click(function () {
+                if(table['{{$table_id}}'].row('.selected').data() == undefined){
+                    SGui.showError("Debe seleccionar un renglón");
+                    return;
+                }
+
+                app.cancelRegistry(table['{{$table_id}}'].row('.selected').data());
             });
         @endif
     });

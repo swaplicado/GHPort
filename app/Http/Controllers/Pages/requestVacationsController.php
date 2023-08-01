@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Mail\cancelIncidenceMail;
+use App\User;
+use App\Utils\CapLinkUtils;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -794,5 +797,88 @@ class requestVacationsController extends Controller
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);
+    }
+
+    public function cancelRequest(Request $request){
+        try {
+            delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+            
+            $application_id = $request->application_id;
+            $manager_id = null;
+            $year = $request->year;
+
+            $oIncidence = Application::findOrFail($application_id);
+
+            delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
+
+            $data = json_decode(CapLinkUtils::cancelIncidence($oIncidence));
+
+            if($data->code == 500 || $data->code == 550){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
+
+            $oIncidence->request_status_id = SysConst::APPLICATION_CANCELADO;
+            $oIncidence->update();
+
+            $employee = User::find($oIncidence->user_id);
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $oIncidence->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_ACEPT_RECH_SOLICITUD;
+            $mailLog->is_deleted = 0;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+    
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+        
+        $org_chart_job_id = null;
+        if(!is_null($manager_id)){
+            $oManager = \DB::table('users')
+                            ->where('id', $manager_id)
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->first();
+
+            $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+        }
+        $data = $this->getData($year, $org_chart_job_id);
+
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
+            try {
+                Mail::to($employee->institutional_mail)->send(new cancelIncidenceMail(
+                                                        $oIncidence->id_application,
+                                                        $oIncidence->user_id,
+                                                        \Auth::user()->id
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+        
+        return json_encode(['success' => true, 'lEmployees' => $data[1], 'mail_log_id' => $mailLog->id_mail_log]);
     }
 }

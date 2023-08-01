@@ -33,6 +33,11 @@
         <span class="bx bx-show-alt"></span>
     </button>
 @endif
+@if(isset($cancel))
+    <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar">
+        <span class="bx bx-x"></span>
+    </button>
+@endif
 @if(isset($filterYear))
     <label>Filtrar por año:</label>
     <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
