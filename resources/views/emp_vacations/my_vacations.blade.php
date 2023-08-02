@@ -49,6 +49,7 @@
             this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
             this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
+            this.calcReturnDate = <?php echo json_encode(route('myVacations_calcReturnDate')); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" ); ?>;

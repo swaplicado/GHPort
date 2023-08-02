@@ -95,10 +95,11 @@
                                                 <tbody>
                                                     <tr>
                                                         <td>
-                                                            <input class="form-control" v-model="returnDate" readonly>
+                                                            <div v-if="loadReturnDate" class="loader-sm"></div>
+                                                            <input v-else class="form-control" v-model="returnDate" readonly>
                                                         </td>
                                                         <td>
-                                                            <button class="btn btn-secondary" v-on:click="editMyReturnDate()"><span class="bx bx-pencil"></span></button>
+                                                            <button v-if="!loadReturnDate" class="btn btn-secondary" v-on:click="editMyReturnDate()"><span class="bx bx-pencil"></span></button>
                                                         </td>
                                                     </tr>
                                                 </tbody>

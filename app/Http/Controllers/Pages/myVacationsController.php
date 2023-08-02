@@ -578,4 +578,59 @@ class myVacationsController extends Controller
 
         return json_encode(['code' => $data->response->code, 'message' => $data->response->message]);
     } 
+
+    public function calcReturnDate(Request $request){
+        try {
+            $star_date = $request->start_date;
+            $end_date = $request->end_date;
+            $user_id = $request->user_id;
+            $application_id = $request->application_id;
+            $oUser = User::findOrFail($user_id);
+            $lApplications = Application::where('user_id', $user_id)
+                                        ->where('is_deleted', 0)
+                                        ->where('end_date', '>=', $end_date);
+
+            if(!is_null($application_id)){
+                $lApplications = $lApplications->where('id_application', '!=', $application_id);
+            }
+
+            $lApplications = $lApplications->get();
+
+            $arrlDays = $lApplications->map(function($item){
+                $lDays = collect(json_decode($item->ldays));
+                $lDays = $lDays->map(function($day){
+                            if($day->taked){
+                                return $day->date;
+                            }
+                        });
+                return $lDays;
+            });
+
+            $arrlDays = \Arr::collapse($arrlDays);
+
+            $lHolidays = \DB::table('holidays')
+                        ->where('fecha', '>=', $end_date)
+                        ->where('is_deleted', 0)
+                        ->pluck('fecha')
+                        ->toArray();
+
+            $arrlDays = array_merge($arrlDays, $lHolidays);
+
+            $invalidDays = $oUser->payment_frec_id == SysConst::SEMANA ? [Carbon::SUNDAY] : [Carbon::SATURDAY, Carbon::SUNDAY];
+            $oReturnDate = Carbon::parse($end_date)->addDay();
+            for($i = 0; $i<365; $i++){
+                if(in_array($oReturnDate->dayOfWeek, $invalidDays)){
+                    $oReturnDate->addDay();
+                }else if(in_array($oReturnDate->toDateString(), $arrlDays)){
+                    $oReturnDate->addDay();
+                }else{
+                    break;
+                }
+            }
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => 'Error al obtener la fecha de regreso', 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'returnDate' => $oReturnDate->toDateString()]);
+    }
 }

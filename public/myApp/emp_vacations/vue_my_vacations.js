@@ -50,6 +50,7 @@ var appMyVacations = new Vue({
         showDatePickerSimple: false,
         isGestionVac: false,
         lTypes: [],
+        loadReturnDate: false,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -79,6 +80,7 @@ var appMyVacations = new Vue({
                 if(res[0] && !this.arraysEqual(this.lTypes, oldlTypes)){
                     SGui.showMessage('', res[1], 'warning');
                 }
+                this.getReturnDate();
             }
         },
     },
@@ -470,6 +472,31 @@ var appMyVacations = new Vue({
             this.renderTableMyRequest = true;
         },
 
+        async getReturnDate(){
+            this.loadReturnDate = true;
+            let route = this.oData.calcReturnDate;
+            axios.post(route,{
+                'user_id': this.oUser.id,
+                'start_date': moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'end_date': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'application_id': this.idRequest,
+            })
+            .then(result => {
+                let data = result.data;
+                if(data.success){
+                    this.returnDate = this.oDateUtils.formatDate(data.returnDate, 'ddd DD-MMM-YYYY');
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+                this.loadReturnDate = false;
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+                this.loadReturnDate = false;
+            });
+        },
+
         setMyReturnDate(){
             if(this.endDate != null && this.endDate != undefined && this.endDate != ''){
                 this.MyReturnDate = datepicker.getDate('dd-mm-yyyy');
@@ -564,7 +591,8 @@ var appMyVacations = new Vue({
                                 this.take_holidays
                             );
     
-                this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
+                // this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
+                // this.getReturnDate();
                 this.takedDays = result[1];
                 this.originalDaysTaked = result[1];
                 this.lDays = result[2];

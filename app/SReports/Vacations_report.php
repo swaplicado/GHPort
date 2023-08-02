@@ -46,7 +46,15 @@ class Vacations_report {
             for($i = 0; $i <= $diff; $i++){
                 // $day = Carbon::now()->next(Carbon::MONDAY);
                 $day = clone $date_ini; 
-                $week[] = ['date' => $day->addDays($i)->format('Y-m-d'), 'day_name' => $day->isoFormat('dddd'), 'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'), 'incidences' => []];
+                $week[] = [
+                            'date' => $day->addDays($i)->format('Y-m-d'),
+                            'day_name' => $day->isoFormat('dddd'),
+                            'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
+                            'incidences' => [],
+                            'comments' => [],
+                            'id' => 0,
+                            'span' => 0,
+                        ];
             }
             $date_ini = $date_ini->toDateString();
             $date_end = $date_end->toDateString();
@@ -72,6 +80,11 @@ class Vacations_report {
                 foreach($lEmployees as $index => $emp){
                     $emp->myWeek = array_slice($week, 0);
                     foreach($emp->lIncidences as $inc){
+                        if($inc->return_date > $week[count($week)-1]['date']){
+                            $emp->returnDate = dateUtils::formatDate($inc->return_date, 'ddd D-m-Y');
+                        }else{
+                            $emp->returnDate = null;
+                        }
                         $incidenceDays = json_decode($inc->ldays);
                         foreach($incidenceDays as $incDay){
                             for($i = 0; $i < sizeof($emp->myWeek); $i++){
@@ -83,11 +96,27 @@ class Vacations_report {
                                         }else{
                                             array_push($emp->myWeek[$i]['incidences'], $inc->name);
                                         }
+                                        array_push($emp->myWeek[$i]['comments'], $inc->emp_comments_n);
+                                        $emp->myWeek[$i]['id'] = $inc->id_incidence;
                                     }
                                 }
                             }
                         }
                     }
+                    $arrAux = [];
+                    $id_incidence = 0;
+                    $span = 1;
+                    foreach($emp->myWeek as $w){
+                        if($id_incidence != $w['id'] || $w['id'] == 0){
+                            array_push($arrAux, $w);
+                            $id_incidence = $w['id'];
+                            $span = 1;
+                        }else{
+                            $span++;
+                            $arrAux[count($arrAux)-1]['span'] = $span;
+                        }
+                    }
+                    $emp->myWeek = $arrAux;
                     if(count($emp->lIncidences) == 0){
                         $lEmployees->forget($index);
                     }
@@ -109,6 +138,15 @@ class Vacations_report {
                                 ->get();
 
                 foreach($lOrgCharts as $org){
+                    $lOrg = OrgChartUtils::getDirectFatherBossOrgChartJob($org->id_org_chart_job);
+
+                    $org->superviser = \DB::table('users')
+                                            ->whereIn('org_chart_job_id', $lOrg)
+                                            ->where('is_active', 1)
+                                            ->where('is_delete', 0)
+                                            ->pluck('full_name')
+                                            ->toArray();
+
                     $org->lEmployees = $lEmployees->where('org_chart_job_id', $org->id_org_chart_job)->sortBy('full_name');
                 }
 

@@ -80,6 +80,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('myVacations/getHistory', 'Pages\myVacationsController@getMyVacationHistory')->name('myVacations_getMyVacationHistory');
     Route::post('myVacations/hiddeHistory', 'Pages\myVacationsController@hiddeHistory')->name('myVacations_hiddeHistory');
     Route::post('myVacations/getlDays', 'Pages\myVacationsController@getlDays')->name('myVacations_getlDays');
+    Route::post('myVacations/calcReturnDate', 'Pages\myVacationsController@calcReturnDate')->name('myVacations_calcReturnDate');
     
     Route::get('requestVacations/{id?}', 'Pages\requestVacationsController@index')->name('requestVacations');
     Route::post('requestVacations/accept', 'Pages\requestVacationsController@acceptRequest')->name('requestVacations_acceptRequest');

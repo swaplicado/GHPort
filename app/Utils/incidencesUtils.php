@@ -38,6 +38,7 @@ class incidencesUtils {
                             )
                             ->selectRaw('0 as minutes')
                             ->selectRaw('"incidence" as application_type')
+                            ->selectRaw('CONCAT(id_application, "a") as id_incidence')
                             ->get();
 
         $lPermissions = \DB::table('hours_leave as h')
@@ -66,6 +67,7 @@ class incidencesUtils {
                                         'h.minutes',
                                     )
                                     ->selectRaw('"permission" as application_type')
+                                    ->selectRaw('CONCAT(id_hours_leave, "p") as id_incidence')
                                     ->get();
 
         foreach($lPermissions as $per){

@@ -617,12 +617,12 @@ class EmployeeVacationUtils {
     }
 
     /**
-     * Obtine las aplications de un usuario, solo con estatus enviado y aprobado.
+     * Obtine las aplications de un usuario, solo con estatus enviado, aprobado y consumido.
      * Regresa un array con todos los dias comprendidos de cada aplication
      */
     public static function getEmpApplicationsEA($user_id){
         $applicationsEA = Application::where('user_id', $user_id)
-                                    ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO])
+                                    ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO, sysConst::APPLICATION_CONSUMIDO])
                                     ->where('is_deleted', 0)
                                     ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                     ->select('start_date', 'end_date')

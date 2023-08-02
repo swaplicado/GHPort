@@ -34,6 +34,9 @@
         text-align: center;
         vertical-align: middle;
         word-wrap: break-word;
+    }
+
+    th {
         width: 13%;
     }
 
@@ -47,13 +50,25 @@
     <div style="width: 100%">
         @foreach ($lOrgCharts as $org)
             <div style="width: 100%; background-color: #D4D4D4;">
-                <h3 style="font-size: 15px;">{{$org->job_name}} <span style="font-weight: normal;"> - {{$org->level_name}}</span></h3>
+                <h3 style="font-size: 15px;">
+                    {{$org->job_name}} <span style="font-weight: normal;"> - {{$org->level_name}}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>
+                        Lider:
+                    </span>
+                    @foreach ($org->superviser as $item)
+                        <span style="font-weight: normal;"> {{$item}};&nbsp;&nbsp;</span>
+                    @endforeach
+                </h3>
             </div>
             @foreach ($org->lEmployees as $emp)
                 <table>
                     <thead>
                         <tr>
-                            <th colspan="{{sizeof($week)}}" style="border: solid 1px black; font-size: 15px;">{{$emp->full_name}}</th>
+                            @if (is_null($emp->returnDate))
+                                <th colspan="{{sizeof($week)}}" style="border: solid 1px black; font-size: 15px;">{{$emp->full_name}}</th>
+                            @else
+                                <th colspan="{{sizeof($week) + 1}}" style="border: solid 1px black; font-size: 15px;">{{$emp->full_name}}</th>
+                            @endif
                         </tr>
                         <tr>
                             @foreach ($week as $w)
@@ -63,14 +78,23 @@
                                     {{$w['day_num']}}
                                 </th>
                             @endforeach
+                            @if(!is_null($emp->returnDate))
+                                <th style="border: solid 1px black">
+                                    fecha regreso
+                                </th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             @foreach ($emp->myWeek as $inc)
                                 @if (count($inc['incidences']) > 0)
-                                    <td style="border: solid 1px black; background-color: #C8F9FF">
+                                    <td colspan="{{$inc['span']}}" style="border: solid 1px black; background-color: #C8F9FF">
                                         @foreach ($inc['incidences'] as $item)
+                                            {{ $item }}
+                                            <br>
+                                        @endforeach
+                                        @foreach ($inc['comments'] as $item)
                                             {{ mb_strtolower($item) }}
                                             <br>
                                         @endforeach
@@ -81,6 +105,11 @@
                                     </td>
                                 @endif
                             @endforeach
+                            @if (!is_null($emp->returnDate))
+                                <td style="border: solid 1px black;">
+                                    {{$emp->returnDate}}
+                                </td>
+                            @endif
                         </tr>
                     </tbody>
                 </table>
