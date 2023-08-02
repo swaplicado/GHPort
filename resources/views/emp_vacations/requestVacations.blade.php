@@ -505,13 +505,13 @@
         'table_id' => 'table_requestVac',
         'colTargets' => [0, 1, 2, 3, 4, 6, 7, 8, 9, 21, 22],
         'colTargetsSercheable' => [5],
-        'colTargetsNoOrder' => [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+        'colTargetsNoOrder' => [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
         'select' => true,
         // 'noOrdering' => true,
         'accept' => true,
         'reject' => true,
         'cancel' => true,
-        'order' => [[22, 'desc']],
+        'order' => [[10, 'asc'], [22, 'desc']],
     ])
 
     @include('layouts.table_jsControll', [
