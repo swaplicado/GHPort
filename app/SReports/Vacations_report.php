@@ -54,6 +54,7 @@ class Vacations_report {
                             'comments' => [],
                             'id' => 0,
                             'span' => 0,
+                            'holiday' => null,
                         ];
             }
             $date_ini = $date_ini->toDateString();
@@ -64,6 +65,17 @@ class Vacations_report {
 
             $ini = dateUtils::formatDate($date_ini, 'D-m-Y');
             $end = dateUtils::formatDate($date_end, 'D-m-Y');
+
+            $holidays = \DB::table('holidays')
+                        ->where('fecha', '>=', $date_ini)
+                        ->where('fecha', '<=', $date_end)
+                        ->where('is_deleted', 0)
+                        ->select(
+                            'fecha',
+                            'name'
+                        )
+                        ->get()
+                        ->toArray();
 
             foreach ($lConfigReports as $conf) {
                 if($conf->rol_id == SysConst::ADMINISTRADOR){
@@ -79,12 +91,21 @@ class Vacations_report {
                 $lEmployees = $lEmployees->sortBy('full_name');
                 foreach($lEmployees as $index => $emp){
                     $emp->myWeek = array_slice($week, 0);
-                    foreach($emp->lIncidences as $inc){
-                        if($inc->return_date > $week[count($week)-1]['date']){
-                            $emp->returnDate = dateUtils::formatDate($inc->return_date, 'ddd D-m-Y');
-                        }else{
-                            $emp->returnDate = null;
+                    for($i = 0; $i < sizeof($emp->myWeek); $i++){
+                        foreach($holidays as $h){
+                            if($h->fecha == $emp->myWeek[$i]['date']){
+                                $emp->myWeek[$i]['holiday'] = $h->name;
+                            }
                         }
+                    }
+
+                    if(count($emp->lIncidences) > 0){
+                        $emp->returnDate = dateUtils::formatDate($emp->lIncidences[count($emp->lIncidences)-1]->return_date, 'ddd D-m-Y');
+                    }else{
+                        $emp->returnDate = null;
+                    }
+                    
+                    foreach($emp->lIncidences as $inc){
                         $incidenceDays = json_decode($inc->ldays);
                         foreach($incidenceDays as $incDay){
                             for($i = 0; $i < sizeof($emp->myWeek); $i++){

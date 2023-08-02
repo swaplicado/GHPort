@@ -78,11 +78,9 @@
                                     {{$w['day_num']}}
                                 </th>
                             @endforeach
-                            @if(!is_null($emp->returnDate))
-                                <th style="border: solid 1px black">
-                                    fecha regreso
-                                </th>
-                            @endif
+                            <th style="border: solid 1px black; background-color: #D4D4D4">
+                                fecha regreso
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,17 +97,19 @@
                                             <br>
                                         @endforeach
                                     </td>
+                                @elseif($inc['holiday'] != null || $inc['holiday'] != '')
+                                    <td style="border: solid 1px black; background-color: #9072FF">
+                                        {{$inc['holiday']}}
+                                    </td>
                                 @else
                                     <td style="border: solid 1px black;">
                                         
                                     </td>
                                 @endif
                             @endforeach
-                            @if (!is_null($emp->returnDate))
-                                <td style="border: solid 1px black;">
-                                    {{$emp->returnDate}}
-                                </td>
-                            @endif
+                            <td style="border: solid 1px black;">
+                                {{$emp->returnDate}}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
