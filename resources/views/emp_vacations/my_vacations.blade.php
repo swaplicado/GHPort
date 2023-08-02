@@ -192,6 +192,7 @@
                             <option value="1">Enviados</option>
                             <option value="2">Aprobados</option>
                             <option value="3">Rechazados</option>
+                            <option value="4">Cancelados</option>
                         </select>&nbsp;&nbsp;
                         <label>Filtrar por año:</label>
                         <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
@@ -303,7 +304,7 @@
 
                     case 4:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
-                        return filter === 5;
+                        return filter === 6;
 
                     default:
                         break;

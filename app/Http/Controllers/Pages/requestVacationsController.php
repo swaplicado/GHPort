@@ -114,7 +114,8 @@ class requestVacationsController extends Controller
                                                             [ 
                                                               SysConst::APPLICATION_APROBADO,
                                                               SysConst::APPLICATION_CONSUMIDO,
-                                                              SysConst::APPLICATION_RECHAZADO
+                                                              SysConst::APPLICATION_RECHAZADO,
+                                                              SysConst::APPLICATION_CANCELADO,
                                                             ]
                                                         );
 

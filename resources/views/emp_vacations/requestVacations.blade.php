@@ -161,6 +161,7 @@
                         <option value="0" selected>Nuevos</option>
                         <option value="1">Aprobados</option>
                         <option value="2">Rechazados</option>
+                        <option value="3">Cancelados</option>
                     </select>&nbsp;&nbsp;
                     <template v-if="rqStatus != 0">
                         <label>Filtrar por año:</label>
@@ -386,6 +387,7 @@
                                     <option value="1">Enviados</option>
                                     <option value="2">Aprobados</option>
                                     <option value="3">Rechazados</option>
+                                    <option value="4">Cancelados</option>
                                 </select>&nbsp;&nbsp;
                                 <label>Filtrar por año:</label>
                                 <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button"
@@ -459,7 +461,7 @@
 
                             case 3:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
-                                return filter === 5;
+                                return filter === 6;
     
                             default:
                                 break;
@@ -488,7 +490,7 @@
 
                             case 4:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
-                                return myRqStatusfilter === 5;
+                                return myRqStatusfilter === 6;
 
                             default:
                                 break;
