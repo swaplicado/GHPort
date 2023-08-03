@@ -124,7 +124,8 @@ var appRequestVacation = new Vue({
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar'
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si'
             }).then((result) => {
                 if (result.isConfirmed) {
                     this.cancelRequest(data[this.indexes.id]);
