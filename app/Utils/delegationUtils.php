@@ -1,10 +1,56 @@
 <?php namespace App\Utils;
 
 use App\Constants\SysConst;
+use App\Models\Adm\Delegation;
+use App\Models\Adm\OrgChartJob;
 use \App\User;
+use Carbon\Carbon;
 use \Session;
 
 class delegationUtils {
+
+    public static function getUsersDelegationByOrgChart($org_chart_id){
+        $today = Carbon::now()->toDateString();
+
+        $oOrgChart = OrgChartJob::find($org_chart_id);
+        $users = User::where([['is_delete', 0], ['org_chart_job_id', $oOrgChart->id_org_chart_job]])
+                                ->select(
+                                        'id',
+                                    )
+                                ->get()
+                                ->pluck('id')
+                                ->toArray();
+
+        $lDelegations = Delegation::whereIn('user_delegated_id', $users)
+                                ->where('delegations.is_active', 1)
+                                ->where('delegations.is_deleted', 0)
+                                ->where('start_date', '<=', $today)
+                                ->where('end_date', '>=', $today)
+                                ->get();
+
+        $arrDelegations = $lDelegations->map(function($item){
+            return $item->user_delegation_id;
+        })->toArray();
+
+        $lUsers = User::whereIn('id', $arrDelegations)
+                    ->where('is_active', 1)
+                    ->where('is_delete', 0)
+                    ->select('*')
+                    ->selectRaw('1 as is_delegation')
+                    ->get();
+
+        foreach($lUsers as $user){
+            $oDelegation = $lDelegations->where('user_delegation_id', $user->id)->first();
+            $delegated = User::find($oDelegation->user_delegated_id);
+            $user->is_delegation = 1;
+            $user->delegated = $delegated->full_name;
+            $user->delegation_start_date = dateUtils::formatDate($oDelegation->start_date, 'dd-M-Y');
+            $user->delegation_end_date = dateUtils::formatDate($oDelegation->end_date, 'dd-M-Y');
+        }
+
+        return $lUsers;
+    }
+
     /**
      * Si esta en modo delegación regresa el id del usuario delegado,
      * si no, regresa el id del usuario en sesión
@@ -49,7 +95,7 @@ class delegationUtils {
         }else{
             $org_chart_job_id = User::where('id', Session::get('user_delegated_id'))
                         ->where('is_delete', 0)
-                        ->where('is_active', 1)
+                        // ->where('is_active', 1)
                         ->value('org_chart_job_id');
 
             return $org_chart_job_id;

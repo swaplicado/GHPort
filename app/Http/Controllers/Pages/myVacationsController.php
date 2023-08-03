@@ -365,18 +365,18 @@ class myVacationsController extends Controller
 
             $application = Application::findOrFail($request->id_application);
 
-            // $data = $this->checkExternalIncident($application, json_decode($application->ldays));
+            $data = $this->checkExternalIncident($application, json_decode($application->ldays));
 
-            // if(!empty($data)){
-            //     $data = json_decode($data);
-            //     if($data->code == 500 || $data->code == 550){
-            //         \DB::rollBack();
-            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            //     }
-            // }else{
-            //     \DB::rollBack();
-            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            // }
+            if(!empty($data)){
+                $data = json_decode($data);
+                if($data->code == 500 || $data->code == 550){
+                    \DB::rollBack();
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+            }else{
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);

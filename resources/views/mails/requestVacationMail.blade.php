@@ -40,6 +40,16 @@
     <div class="container-fluid">
         <div class="card shadow mb-4">
             <div class="card-body">
+                @if($is_delegation)
+                    <div>
+                        <p>Se te envía solicitud por delegación de: {{$delegated}}</p>
+                        @if (!is_null($end_date))
+                            <p>(Período delegación: del {{$delegation_start_date}} al {{$delegation_end_date}})</p>
+                        @else
+                            <p>(Período delegación: abierto desde el {{$delegation_start_date}})</p>
+                        @endif
+                    </div>
+                @endif
                 <div>
                     <h3 class="inline">{{$employee->full_name}} solicitó las siguientes vacaciones:</h3>
                 </div>
@@ -95,21 +105,39 @@
                         @endif
                     </div>
                     <br>
-                <div style="text-align: left">
-                    <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
-                    <br>
-                    <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">
-                        <button  class="btn btn-primary">
-                            Ver solicitud
-                        </button>
-                    </a>
-                </div>
-                <div>
-                    <p>
-                        Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                        <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">{{route('requestVacations', ['id' => $application->id_application])}}</a>
-                    </p>
-                </div>
+                @if (!$is_delegation)
+                    <div style="text-align: left">
+                        <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
+                        <br>
+                        <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver solicitud
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('requestVacations', ['id' => $application->id_application])}}" target="_blank">{{route('requestVacations', ['id' => $application->id_application])}}</a>
+                        </p>
+                    </div>
+                @else
+                    <div style="text-align: left">
+                        <label class="form-label">Haz clic en la siguiente liga para entrar al sistema (Recuerda que deberas entrar en modo delegación para ver la solicitud): </label>
+                        <br>
+                        <a href="{{route('home')}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ingresar
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('home')}}" target="_blank">{{route('home')}}</a>
+                        </p>
+                    </div>
+                @endif
                 <hr>
                 <div>
                     <p style="transform: scale(0.6);">

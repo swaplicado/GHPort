@@ -17,12 +17,13 @@ class requestVacationMail extends Mailable
      *
      * @return void
      */
-    public function __construct($idApplication, $idEmployee, $lDays, $returnDate)
+    public function __construct($idApplication, $idEmployee, $lDays, $returnDate, $superviser = null)
     {
         $this->idApplication = $idApplication;
         $this->idEmployee = $idEmployee;
-        $this->lDays = $lDays; //Obsoleto ya no se usa
+        $this->lDays = $lDays;
         $this->returnDate = $returnDate;
+        $this->superviser = $superviser;
     }
 
     /**
@@ -50,14 +51,20 @@ class requestVacationMail extends Mailable
                         ->where('id', $this->idEmployee)
                         ->first();
 
+        $subject = (!$this->superviser->is_delegation ? '[PGH] Solicitud vacaciones ' : '[PGH] Solicitud vacaciones '.$employee->short_name.' (por delegación)');
+
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
-                        ->subject('[PGH] Solicitud vacaciones '.$employee->short_name)
+                        ->subject($subject)
                         ->view('mails.requestVacationMail')
                         ->with('application', $application)
                         ->with('employee', $employee)
                         ->with('lDays', $lDays)
                         ->with('returnDate', $application->return_date)
-                        ->with('emp_comments_n', $application->emp_comments_n);
+                        ->with('emp_comments_n', $application->emp_comments_n)
+                        ->with('is_delegation', $this->superviser->is_delegation)
+                        ->with('delegated', $this->superviser->delegated)
+                        ->with('delegation_start_date', $this->superviser->delegation_start_date)
+                        ->with('delegation_end_date', $this->superviser->delegation_end_date);
     }
 }
