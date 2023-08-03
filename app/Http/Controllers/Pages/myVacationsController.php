@@ -365,18 +365,18 @@ class myVacationsController extends Controller
 
             $application = Application::findOrFail($request->id_application);
 
-            $data = $this->checkExternalIncident($application, json_decode($application->ldays));
+            // $data = $this->checkExternalIncident($application, json_decode($application->ldays));
 
-            if(!empty($data)){
-                $data = json_decode($data);
-                if($data->code == 500 || $data->code == 550){
-                    \DB::rollBack();
-                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-                }
-            }else{
-                \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
-            }
+            // if(!empty($data)){
+            //     $data = json_decode($data);
+            //     if($data->code == 500 || $data->code == 550){
+            //         \DB::rollBack();
+            //         return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            //     }
+            // }else{
+            //     \DB::rollBack();
+            //     return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+            // }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
@@ -413,7 +413,8 @@ class myVacationsController extends Controller
             $employee = User::find($request->employee_id);
             // $arrOrgJobsAux = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
             // $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
-            $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($employee->org_chart_job_id);
+            $lSuperviser = orgChartUtils::getSupervisersToSend($employee->org_chart_job_id);
+            // $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($employee->org_chart_job_id);
 
             // $superviser = \DB::table('users')
             //                 ->where('is_delete', 0)
@@ -421,32 +422,39 @@ class myVacationsController extends Controller
             //                 ->whereIn('org_chart_job_id', $arrOrgJobs)
             //                 ->first();
 
-            $mailLog = new MailLog();
-            $mailLog->date_log = Carbon::now()->toDateString();
-            $mailLog->to_user_id = $superviser->id;
-            $mailLog->application_id_n = $application->id_application;
-            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
-            $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_VACACIONES;
-            $mailLog->is_deleted = 0;
-            // $mailLog->created_by = \Auth::user()->id;
-            // $mailLog->updated_by = \Auth::user()->id;
-            $mailLog->created_by = delegationUtils::getIdUser();
-            $mailLog->updated_by = delegationUtils::getIdUser();
-            $mailLog->save();
+            if(count($lSuperviser) == 0){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'No se encontró ningún supervisor, notifique al administrador', 'icon' => 'error']);
+            }
 
-            $data = new \stdClass;
-            $data->user_id = null;
-            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
-            $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de vacaciones';
-            $data->url = route('requestVacations', ['id' => $application->id_application]);
-            $data->type_id = SysConst::NOTIFICATION_TYPE_VACACIONES;
-            $data->priority = SysConst::NOTIFICATION_PRIORITY_VACACIONES;
-            $data->icon = SysConst::NOTIFICATION_ICON_VACACIONES;
-            $data->row_type_id = $application->type_incident_id;
-            $data->row_id = $application->id_application;
-            $data->end_date = null;
-
-            notificationsUtils::createNotification($data);
+            foreach($lSuperviser as $superviser){
+                $mailLog = new MailLog();
+                $mailLog->date_log = Carbon::now()->toDateString();
+                $mailLog->to_user_id = $superviser->id;
+                $mailLog->application_id_n = $application->id_application;
+                $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+                $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_VACACIONES;
+                $mailLog->is_deleted = 0;
+                // $mailLog->created_by = \Auth::user()->id;
+                // $mailLog->updated_by = \Auth::user()->id;
+                $mailLog->created_by = delegationUtils::getIdUser();
+                $mailLog->updated_by = delegationUtils::getIdUser();
+                $mailLog->save();
+    
+                $data = new \stdClass;
+                $data->user_id = null;
+                $data->org_chart_job_id_n = $superviser->org_chart_job_id;
+                $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de vacaciones';
+                $data->url = route('requestVacations', ['id' => $application->id_application]);
+                $data->type_id = SysConst::NOTIFICATION_TYPE_VACACIONES;
+                $data->priority = SysConst::NOTIFICATION_PRIORITY_VACACIONES;
+                $data->icon = SysConst::NOTIFICATION_ICON_VACACIONES;
+                $data->row_type_id = $application->type_incident_id;
+                $data->row_id = $application->id_application;
+                $data->end_date = null;
+    
+                notificationsUtils::createNotification($data);
+            }
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -455,22 +463,26 @@ class myVacationsController extends Controller
         }
 
             $mypool = Pool::create();
-            $mypool[] = async(function () use ($application, $request, $superviser, $mailLog){
+            $mypool[] = async(function () use ($application, $request, $lSuperviser, $mailLog){
                 try {
-                    $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
-                    $arrUsers = $lUsers->map(function ($item) {
+                    // $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                    $arrUsers = $lSuperviser->map(function ($item) {
                         return $item->institutional_mail;
                     })->toArray();
 
                     $arrUsers = array_unique($arrUsers);
+                    foreach($lSuperviser as $sup){
+                        $is_delegation = isset($sup->is_delegation);
+                        Mail::to($sup->institutional_mail)->send(new requestVacationMail(
+                                                                $application->id_application,
+                                                                $request->employee_id,
+                                                                $application->ldays,
+                                                                $request->returnDate,
+                                                                $sup
+                                                            )
+                                                        );
+                    }
 
-                    Mail::to($arrUsers)->send(new requestVacationMail(
-                                                            $application->id_application,
-                                                            $request->employee_id,
-                                                            $application->ldays,
-                                                            $request->returnDate
-                                                        )
-                                                    );
                 } catch (\Throwable $th) {
                     $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                     $mailLog->update();   
