@@ -95,11 +95,7 @@ class incidencesController extends Controller
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
-        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
-        $lSuperviser = [];
-        if(!is_null($superviser)){
-            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
-        }
+        $lSuperviser = orgChartUtils::getSupervisersToSend(delegationUtils::getOrgChartJobIdUser());
 
         $now = Carbon::now();
         $initialCalendarDate = $now->subMonths(1)->toDateString();
@@ -347,6 +343,19 @@ class incidencesController extends Controller
             }
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
+
+            $user = \DB::table('users')
+                        ->where('id', $application->user_id)
+                        ->first();
+
+            // $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($user->org_chart_job_id);
+            $lSuperviser = orgChartUtils::getSupervisersToSend($user->org_chart_job_id);
+
+            if(count($lSuperviser) == 0){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'No se encontró ningún supervisor, notifique al administrador', 'icon' => 'error']);
+            }
+
             $data = incidencesUtils::checkExternalIncident($application);
             if(!empty($data)){
                 $data = json_decode($data);
@@ -362,45 +371,41 @@ class incidencesController extends Controller
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
             $application->date_send_n = $date->toDateString();
+            $application->send_default = isset($lSuperviser[0]->is_default);
             $application->update();
 
-            $user = \DB::table('users')
-                        ->where('id', $application->user_id)
-                        ->first();
+            foreach($lSuperviser as $superviser){
+                $mailLog = new MailLog();
+                $mailLog->date_log = Carbon::now()->toDateString();
+                $mailLog->to_user_id = $superviser->id;
+                $mailLog->application_id_n = $application->id_application;
+                $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+                $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_INCIDENCIA;
+                $mailLog->is_deleted = 0;
+                $mailLog->created_by = delegationUtils::getIdUser();
+                $mailLog->updated_by = delegationUtils::getIdUser();
+                $mailLog->save();
+    
+                $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
 
-            $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($user->org_chart_job_id);
-
-            $mailLog = new MailLog();
-            $mailLog->date_log = Carbon::now()->toDateString();
-            $mailLog->to_user_id = $superviser->id;
-            $mailLog->application_id_n = $application->id_application;
-            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
-            $mailLog->type_mail_id = SysConst::MAIL_SOLICITUD_INCIDENCIA;
-            $mailLog->is_deleted = 0;
-            $mailLog->created_by = delegationUtils::getIdUser();
-            $mailLog->updated_by = delegationUtils::getIdUser();
-            $mailLog->save();
-
-            $lIncidences = $this->getIncidences(delegationUtils::getIdUser());
-
-
-            $type_incident = \DB::table('cat_incidence_tps')
-                                ->where('id_incidence_tp', $application->type_incident_id)
-                                ->value('incidence_tp_name');
-
-            $data = new \stdClass;
-            $data->user_id = null;
-            $data->org_chart_job_id_n = $superviser->org_chart_job_id;
-            $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de '.$type_incident;
-            $data->url = route('requestIncidences_index', ['id' => $application->id_application]);
-            $data->type_id = SysConst::NOTIFICATION_TYPE_INCIDENCIA;
-            $data->priority = SysConst::NOTIFICATION_PRIORITY_INCIDENCIA;
-            $data->icon = SysConst::NOTIFICATION_ICON_INCIDENCIA;
-            $data->row_type_id = $application->type_incident_id;
-            $data->row_id = $application->id_application;
-            $data->end_date = null;
-
-            notificationsUtils::createNotification($data);
+                $type_incident = \DB::table('cat_incidence_tps')
+                                    ->where('id_incidence_tp', $application->type_incident_id)
+                                    ->value('incidence_tp_name');
+    
+                $data = new \stdClass;
+                $data->user_id = null;
+                $data->org_chart_job_id_n = $superviser->org_chart_job_id;
+                $data->message = delegationUtils::getFullNameUI().' Tiene una solicitud de '.$type_incident;
+                $data->url = route('requestIncidences_index', ['id' => $application->id_application]);
+                $data->type_id = SysConst::NOTIFICATION_TYPE_INCIDENCIA;
+                $data->priority = SysConst::NOTIFICATION_PRIORITY_INCIDENCIA;
+                $data->icon = SysConst::NOTIFICATION_ICON_INCIDENCIA;
+                $data->row_type_id = $application->type_incident_id;
+                $data->row_id = $application->id_application;
+                $data->end_date = null;
+    
+                notificationsUtils::createNotification($data);
+            }
 
             \DB::commit();
         } catch (\Throwable $th) {
@@ -410,19 +415,20 @@ class incidencesController extends Controller
         }
 
         $mypool = Pool::create();
-        $mypool[] = async(function () use ($application, $superviser, $mailLog){
+        $mypool[] = async(function () use ($application, $lSuperviser, $mailLog){
             try {
-                $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
-                $arrUsers = $lUsers->map(function ($item) {
-                    return $item->institutional_mail;
-                })->toArray();
+                // $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                // $arrUsers = $lUsers->map(function ($item) {
+                //     return $item->institutional_mail;
+                // })->toArray();
 
-                $arrUsers = array_unique($arrUsers);
+                foreach($lSuperviser as $sup){
+                    Mail::to($sup->institutional_mail)->send(new requestIncidenceMail(
+                                                            $application->id_application
+                                                        )
+                                                    );
+                }
 
-                Mail::to($arrUsers)->send(new requestIncidenceMail(
-                                                        $application->id_application
-                                                    )
-                                                );
             } catch (\Throwable $th) {
 				\Log::error($th); 
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;

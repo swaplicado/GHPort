@@ -107,6 +107,7 @@ class requestVacationsController extends Controller
                                             ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
                                             ->where('a.send_default', 1)
                                             ->where('a.is_deleted', 0)
+                                            ->where('type_incident_id', SysConst::TYPE_VACACIONES)
                                             ->where('a.request_status_id', SysConst::APPLICATION_ENVIADO)
                                             ->pluck('org_chart_job_id')
                                             ->toArray();

@@ -66,7 +66,8 @@ class requestIncidencesController extends Controller
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
 
-        $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
+        // $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
+        $lChildAreas = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
 
         $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
 

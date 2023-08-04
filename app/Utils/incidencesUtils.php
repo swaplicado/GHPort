@@ -117,9 +117,28 @@ class incidencesUtils {
 
     public static function getMyEmployeeslIncidences(){
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
-        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
-        $lIncidences = [];
+        // $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        $config = \App\Utils\Configuration::getConfigurations();
+        if($org_chart_job_id == $config->default_node){
+            $arrOrgJobsWitoutSuperviser = \DB::table('applications as a')
+                                            ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
+                                            ->where('a.send_default', 1)
+                                            ->where('a.is_deleted', 0)
+                                            ->where('type_incident_id', '!=', SysConst::TYPE_VACACIONES)
+                                            ->where('a.request_status_id', SysConst::APPLICATION_ENVIADO)
+                                            ->pluck('org_chart_job_id')
+                                            ->toArray();
+
+            $result = array_diff($arrOrgJobsWitoutSuperviser, $arrOrgJobs);
+
+            $lEmployeesWitoutSuperviser = EmployeeVacationUtils::getlEmployees($result);
+
+            $lEmployees = $lEmployees->merge($lEmployeesWitoutSuperviser);
+        }
+        
+        $lIncidences = [];
         foreach($lEmployees as $emp){
             array_push($lIncidences, incidencesUtils::getUserIncidences($emp->id));
         }
