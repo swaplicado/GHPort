@@ -97,9 +97,26 @@ class requestVacationsController extends Controller
         }
 
         // $arrOrgJobsAux = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
-        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        // $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
 
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        $config = \App\Utils\Configuration::getConfigurations();
+        if($org_chart_job_id == $config->default_node){
+            $arrOrgJobsWitoutSuperviser = \DB::table('applications as a')
+                                            ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
+                                            ->where('a.send_default', 1)
+                                            ->where('a.is_deleted', 0)
+                                            ->where('a.request_status_id', SysConst::APPLICATION_ENVIADO)
+                                            ->pluck('org_chart_job_id')
+                                            ->toArray();
+
+            $result = array_diff($arrOrgJobsWitoutSuperviser, $arrOrgJobs);
+
+            $lEmployeesWitoutSuperviser = EmployeeVacationUtils::getlEmployees($result);
+
+            $lEmployees = $lEmployees->merge($lEmployeesWitoutSuperviser);
+        }
 
         foreach($lEmployees as $emp){
             $applications_enviado = EmployeeVacationUtils::getApplications(
@@ -278,9 +295,11 @@ class requestVacationsController extends Controller
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
         delegationUtils::getAutorizeRolUser(SysConst::JEFE);
-        delegationUtils::getIsMyEmployeeUser($request->id_user);
+        $application = Application::findOrFail($request->id_application);
+        if(!$application->send_default){
+            delegationUtils::getIsMyEmployeeUser($request->id_user);
+        }
         try {
-            $application = Application::findOrFail($request->id_application);
 
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
@@ -397,9 +416,11 @@ class requestVacationsController extends Controller
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
         delegationUtils::getAutorizeRolUser(SysConst::JEFE);
-        delegationUtils::getIsMyEmployeeUser($request->id_user);
+        $application = Application::findOrFail($request->id_application);
+        if(!$application->send_default){
+            delegationUtils::getIsMyEmployeeUser($request->id_user);
+        }
         try {
-            $application = Application::findOrFail($request->id_application);
 
             $arrRequestStatus = [
                 SysConst::APPLICATION_CREADO,

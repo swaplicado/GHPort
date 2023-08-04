@@ -124,6 +124,7 @@ class OrgChartUtils {
 
         if(count($users) == 0){
             $users = orgChartUtils::getUsersInOrgChart($config->default_node);
+            $users[0]->is_default = 1;
         }
 
         return $users;
@@ -217,6 +218,13 @@ class OrgChartUtils {
     public static function getOrgChartJobToLevel($org_chart_id, $to_level){
         $group = OrgChartJob::find($org_chart_id);
         $group->child = $group->getChildrensToLevel($group->org_level_id, $to_level);
+        $arrayAreas = $group->getArrayChilds();
+        return $arrayAreas;
+    }
+
+    public static function getAllChildsToRevice($org_id){
+        $group = OrgChartJob::find($org_id);
+        $group->child = $group->getChildrensToRevice();
         $arrayAreas = $group->getArrayChilds();
         return $arrayAreas;
     }

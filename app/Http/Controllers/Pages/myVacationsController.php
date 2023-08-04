@@ -56,11 +56,7 @@ class myVacationsController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($user->org_chart_job_id);
-        $lSuperviser = [];
-        if(!is_null($superviser)){
-            $lSuperviser = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
-        }
+        $lSuperviser = orgChartUtils::getSupervisersToSend($user->org_chart_job_id);
 
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
@@ -382,6 +378,14 @@ class myVacationsController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
             }
 
+            $employee = User::find($request->employee_id);
+            $lSuperviser = orgChartUtils::getSupervisersToSend($employee->org_chart_job_id);
+
+            if(count($lSuperviser) == 0){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => 'No se encontró ningún supervisor, notifique al administrador', 'icon' => 'error']);
+            }
+
             $oType = \DB::table('applications_vs_types')
                         ->where('application_id', $application->id_application)
                         ->first();
@@ -393,39 +397,21 @@ class myVacationsController extends Controller
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
             $application->date_send_n = $date->toDateString();
+            $application->send_default = isset($lSuperviser[0]->is_default);
             // $application->folio_n = $this->makeFolio($date, $application->user_id);
             $application->update();
 
             $application_log = new ApplicationLog();
             $application_log->application_id = $application->id_application;
             $application_log->application_status_id = $application->request_status_id;
-            // $application_log->created_by = \Auth::user()->id;
-            // $application_log->updated_by = \Auth::user()->id;
-            $application_log->created_by = delegationUtils::getIdUser();
-            $application_log->updated_by = delegationUtils::getIdUser();
+            $application_log->created_by = \Auth::user()->id;
+            $application_log->updated_by = \Auth::user()->id;
             $application_log->save();
 
             // $user = $this->getUserVacationsData();
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->employee_id);
             $user->applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
             $user->applications = EmployeeVacationUtils::getTakedDays($user);
-
-            $employee = User::find($request->employee_id);
-            // $arrOrgJobsAux = orgChartUtils::getDirectFatherOrgChartJob($employee->org_chart_job_id);
-            // $arrOrgJobs = orgChartUtils::getDirectFatherBossOrgChartJob($employee->org_chart_job_id);
-            $lSuperviser = orgChartUtils::getSupervisersToSend($employee->org_chart_job_id);
-            // $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob($employee->org_chart_job_id);
-
-            // $superviser = \DB::table('users')
-            //                 ->where('is_delete', 0)
-            //                 ->where('is_active', 1)
-            //                 ->whereIn('org_chart_job_id', $arrOrgJobs)
-            //                 ->first();
-
-            if(count($lSuperviser) == 0){
-                \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'No se encontró ningún supervisor, notifique al administrador', 'icon' => 'error']);
-            }
 
             foreach($lSuperviser as $superviser){
                 $mailLog = new MailLog();

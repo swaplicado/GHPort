@@ -130,4 +130,27 @@ class OrgChartJob extends Model
         }
         return $child;
     }
+
+    public function getChildrensToRevice(){
+        $child = $this->children()->get();
+        foreach($child as $c){
+            if($c->is_boss == 0){
+                $c->child = $c->getChildrensToRevice();
+            }else{
+                $boss = \DB::table('users')
+                            ->where('org_chart_job_id', $c->id_org_chart_job)
+                            ->where('is_active', 1)
+                            ->where('is_delete', 0)
+                            ->first();
+
+                if(!is_null($boss)){
+                    break;
+                }else{
+                    $c->child = $c->getChildrensToRevice();
+                }
+            }
+        }
+
+        return $child;
+    }
 }
