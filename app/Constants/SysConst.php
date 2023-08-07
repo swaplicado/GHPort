@@ -24,6 +24,7 @@ class SysConst {
     public const TYPE_HOMEOFFICE = 10;
 
     public const TYPE_PERMISO_HORAS = 11; //Este permiso no esta en el catalogo de incidencias, es aparte
+    public const TYPE_PERMISO_FALLECIMIENTO = 12;
 
     /**
      * JSON para los tipos de incidencia
@@ -40,6 +41,7 @@ class SysConst {
         'CUMPLEAÑOS' => 9,
         'HOMEOFFICE' => 10,
         'PERMISO_HORAS' => 11,
+        'PERMISO_FALLECIMIENTO' => 12,
     ];
 
     public const lTypesCodes = [
@@ -54,6 +56,7 @@ class SysConst {
         'CUMPLEAÑOS' => 'CUM',
         'HOMEOFFICE' => 'HOM',
         'PERMISO_HORAS' => 'PER',
+        'PERMISO_FALLECIMIENTO' => 'PEF',
     ];
 
     /**
