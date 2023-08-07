@@ -100,7 +100,11 @@ class Vacations_report {
                     }
 
                     if(count($emp->lIncidences) > 0){
-                        $emp->returnDate = dateUtils::formatDate($emp->lIncidences[count($emp->lIncidences)-1]->return_date, 'ddd D-m-Y');
+                        if(isset($emp->lIncidences[count($emp->lIncidences)-1]->return_date)){
+                            $emp->returnDate = dateUtils::formatDate($emp->lIncidences[count($emp->lIncidences)-1]->return_date, 'ddd D-m-Y');
+                        }else{
+                            $emp->returnDate = null;
+                        }
                     }else{
                         $emp->returnDate = null;
                     }
