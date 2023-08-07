@@ -198,11 +198,13 @@ class requestVacationsController extends Controller
                                     'u_rev.full_name_ui as revisor',
                                 )
                                 ->first();
+
+        $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($oApplication->user_id);
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => 'Ocurrio un error al obtener la solicilitud', 'icon' => 'error']);
         }
         
-        return json_encode(['success' => true, 'oApplication' => $oApplication]);
+        return json_encode(['success' => true, 'oApplication' => $oApplication, 'tot_vacation_remaining' => $oUser->tot_vacation_remaining]);
     }
 
     public function index($idApplication = null){

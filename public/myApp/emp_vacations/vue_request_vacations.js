@@ -39,6 +39,7 @@ var appRequestVacation = new Vue({
         MyReturnDate: null,
         showDatePickerSimple: false,
         lTypes: [],
+        tot_vacation_remaining: null,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -245,6 +246,7 @@ var appRequestVacation = new Vue({
                 let data = result.data;
                 if(data.success){
                     this.oApplication = data.oApplication;
+                    this.tot_vacation_remaining = data.tot_vacation_remaining;
                     this.showModal();
                 }else{
                     SGui.showMessage('', data.message, data.icon);

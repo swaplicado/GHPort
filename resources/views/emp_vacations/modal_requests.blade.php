@@ -130,6 +130,13 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td style="vertical-align: top;"><b>Vac restantes:</b></td>
+                                        <td style="vertical-align: top;"><input class="form-control" v-model="tot_vacation_remaining" readonly></td>
+                                        <td style="vertical-align: top;"></td>
+                                        <td style="vertical-align: top;"></td>
+                                        <td style="vertical-align: top;"></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
