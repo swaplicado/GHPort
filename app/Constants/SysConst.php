@@ -47,16 +47,16 @@ class SysConst {
     public const lTypesCodes = [
         'VACACIONES' => 'VAC',
         'INASISTENCIA' => 'INA',
-        'INASISTENCIA_ADMINISTRATIVA' => 'IAD',
-        'PERMISO_SIN_GOCE' => 'PSG',
-        'PERMISO_CON_GOCE' => 'PCG',
+        'INASISTENCIA_ADMINISTRATIVA' => 'ADM',
+        'PERMISO_SIN_GOCE' => 'SGO',
+        'PERMISO_CON_GOCE' => 'GOC',
         'PERMISO_PATERNIDAD' => 'PPA',
-        'PRESCRIPCIÓN_MEDICA' => 'PME',
+        'PRESCRIPCIÓN_MEDICA' => 'MED',
         'TEMA_LABORAL' => 'TLA',
         'CUMPLEAÑOS' => 'CUM',
-        'HOMEOFFICE' => 'HOM',
-        'PERMISO_HORAS' => 'PER',
-        'PERMISO_FALLECIMIENTO' => 'PEF',
+        'HOMEOFFICE' => 'OFF',
+        'PERMISO_HORAS' => 'HOR',
+        'PERMISO_FALLECIMIENTO' => 'FAL',
     ];
 
     /**
