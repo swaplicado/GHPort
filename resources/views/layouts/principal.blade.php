@@ -9,9 +9,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta http-equiv="cache-control" content="max-age=0" />
-    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="expires" content="0"/>
     <meta http-equiv="pragma" content="no-cache"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Portal GH</title>
 
@@ -128,7 +129,7 @@
     </script>
     <script type="text/javascript" src="{{ asset('myApp/notifications/vue_notifications.js') }}"></script>
     @yield('scripts')
-
+    <script> axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');</script>
 </body>
 
 </html>
