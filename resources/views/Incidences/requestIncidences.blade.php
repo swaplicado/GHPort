@@ -40,6 +40,7 @@
             this.routeGetBirdthDayIncidences = <?php echo json_encode(route('incidences_getBirdthDayIncidences')); ?>;
             this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
             this.routeSeeLikeManager = <?php echo json_encode(route('requestIncidences_seeLikeManager')); ?>;
+            this.cancelIncidenceRoute = <?php echo json_encode(route('requestIncidences_cancel')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
@@ -63,6 +64,7 @@
                 'total_days': 16,
                 'subtype': 17,
                 'applications_st_name': 18,
+                'fecha_envio': 19,
             }
         }
         var oServerData = new GlobalData();
@@ -117,6 +119,9 @@
             </div>
             <br>
             @include('layouts.table_buttons', ['show' => true])
+            <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="status_incidence == 3">
+                <span class="bx bx-x"></span>
+            </button>
             <br>
             <br>
             @include('Incidences.incidences_table', ['table_id' => 'table_ReqIncidences', 'table_ref' => 'table_ReqIncidences'])
@@ -234,11 +239,14 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_ReqIncidences',
-                                        'colTargets' => [0,2,3,4,16,17],
+                                        'colTargets' => [0, 2, 3, 4, 16, 17, 19],
                                         'colTargetsSercheable' => [1,5,6],
+                                        'colTargetsNoOrder' => [7,8,9,10,11,12,13,14,15,18],
                                         'noDom' => true,
                                         'select' => true,
                                         'show' => true,
+                                        'cancel' => true,
+                                        'order' => [[7, 'asc'], [19, 'desc']],
                                     ] )
 @include('layouts.manual_jsControll')
 <script>

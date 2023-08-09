@@ -99,6 +99,9 @@ class SysConst {
     public const MAIL_REVISION_INCIDENCIA = 4;
     public const MAIL_SOLICITUD_PERMISO = 5;
     public const MAIL_REVISION_PERMISO = 6;
+    public const MAIL_CANCELACION_VACACIONES = 7;
+    public const MAIL_CANCELACION_INCIDENCIA = 8;
+    public const MAIL_CANCELACION_PERMISO = 9;
 
     /**
      * Constantes de la tabla cat_notifications_type

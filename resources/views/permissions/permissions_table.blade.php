@@ -16,6 +16,7 @@
             <th style="max-width: 20%;">Fecha revisión</th>
             <th>Fecha</th>
             <th>Estatus</th>
+            <th>fecha env</th>
         </thead>
         <tbody>
             <tr v-for="permission in lPermissions">
@@ -52,6 +53,9 @@
                         !isRevision ? permission.applications_st_name : 
                             (permission.request_status_id == 2 ? 'NUEVO' : permission.applications_st_name)
                     }}
+                </td>
+                <td>
+                    @{{permission.date_send_n}}
                 </td>
             </tr>
         </tbody>

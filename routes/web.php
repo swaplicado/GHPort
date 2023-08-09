@@ -196,6 +196,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('requestIncidences/getEmployeeData', 'Pages\requestIncidencesController@getEmployeeData')->name('requestIncidences_getEmployeeData');
     Route::post('requestIncidences/sendAndAuthorize', 'Pages\incidencesController@sendAndAuthorize')->name('requestIncidences_sendAndAuthorize');
     Route::post('requestIncidences/seeLikeManager', 'Pages\requestIncidencesController@seeLikeManager')->name('requestIncidences_seeLikeManager');
+    Route::post('requestIncidences/cancelIncidence', 'Pages\requestIncidencesController@cancelIncidence')->name('requestIncidences_cancel');
 
     Route::get('permission', 'Pages\permissionController@index')->name('permission_index');
     Route::post('permission/save', 'Pages\permissionController@createPermission')->name('permission_create');

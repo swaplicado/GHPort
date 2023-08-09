@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2023-06-07 12:08:06",
+    "lastSyncDateTime": "2023-08-07 10:05:00",
     "expiration_vacations": {
         "years": 100,
         "months": 0,
@@ -25,8 +25,8 @@
         114,
         94
     ],
-    "urlSync": "192.168.1.251:9001",
-    "urlSyncCAP": "192.168.1.251/CAP/public/api/",
+    "urlSync": "127.0.0.1:9001",
+    "urlSyncCAP": "192.168.1.115/checador/public/api/",
     "lSituation": [
         {
             "id": 1,
@@ -70,5 +70,13 @@
         "enabled": true,
         "always_send": false,
         "week": "actual"
+    },
+    "root_node": 2,
+    "default_node": 14,
+    "folio": {
+        "characters": 1,
+        "employee_num_digits": 5,
+        "consecutive_digits": 0,
+        "separator": "-"
     }
 }

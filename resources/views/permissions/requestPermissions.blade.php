@@ -57,6 +57,7 @@
                 'Fecha revisión': 12,
                 'Fecha': 13,
                 'Estatus': 14,
+                'fecha_env': 15,
             }
         }
         var oServerData = new GlobalData();
@@ -108,6 +109,9 @@
             </div>
             <br>
             @include('layouts.table_buttons', ['show' => true ])
+            <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="status_incidence == 3">
+                <span class="bx bx-x"></span>
+            </button>
             <br>
             <br>
             @include('permissions.permissions_table', ['table_id' => 'table_ReqPermissions', 'table_ref' => 'table_ReqPermissions'])
@@ -224,11 +228,14 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_ReqPermissions',
-                                        'colTargets' => [0,2,3,4],
+                                        'colTargets' => [0,2,3,4,15],
                                         'colTargetsSercheable' => [1,5],
+                                        'colTargetsNoOrder' => [6,7,8,9,10,11,12,13,14],
                                         'noDom' => true,
                                         'select' => true,
                                         'show' => true,
+                                        'cancel' => true,
+                                        'order' => [[6, 'asc'], [15, 'desc']],
                                     ] )
 @include('layouts.manual_jsControll')
 <script>
