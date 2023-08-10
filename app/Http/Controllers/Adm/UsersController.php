@@ -75,7 +75,7 @@ class UsersController extends Controller
                                 'last_dismiss_date_n' => $jUser->leave_date,
                                 'birthday_n' => $jUser->dt_bir,
                                 'job_id' => $this->lJobs[$jUser->siie_job_id],
-                                'vacation_plan_id' => 1,
+                                'vacation_plan_id' => 7,
                                 'is_active' => $jUser->is_active,
                                 'is_delete' => $jUser->is_deleted,
                                 'company_id' => $comp
@@ -180,7 +180,7 @@ class UsersController extends Controller
         $oUser->company_id = $comp;
         $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
         $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
-        $oUser->vacation_plan_id = 1;
+        $oUser->vacation_plan_id = 7;
         $oUser->payment_frec_id = $jUser->way_pay;
         $oUser->is_active = $jUser->is_active;
         $oUser->external_id_n = $jUser->id_employee;
