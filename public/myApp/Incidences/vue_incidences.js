@@ -50,6 +50,8 @@ var app = new Vue({
         birthDayYear: null,
         minYear: null,
         emp_comments: null,
+        status_incidence: 0,
+        limit_days: null,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -90,7 +92,23 @@ var app = new Vue({
         },
         type_id:function(val){
             if(!this.isEdit && !this.isRevision){
+                let oIncidence = this.lTypesToFilter.find(({ id_incidence_tp }) => id_incidence_tp == val);
+                this.limit_days = oIncidence.limit_days_n;
                 this.createCalendar(val);
+                $('#two-inputs-calendar').on('datepicker-first-date-selected', function(event, data) {
+                    if(self.limit_days != null && self.limit_days > 0){
+                        if (data.date1 !== undefined) {
+                            let oDate = self.checklDaysToIncidencesWithLimitDays(
+                                    data.date1,
+                                    (self.oUser != null ? self.oUser.payment_frec_id : 1),
+                                    oServerData.lHolidays
+                                );
+                            // const endDate = new Date(moment(data.date1).add(self.limit_days, 'days').format("YYYY-MM-DD"));
+                            const endDate = new Date(oDate.format("YYYY-MM-DD"));
+                            $('#two-inputs-calendar').data('dateRangePicker').setDateRange(data.date1, endDate);
+                        }
+                    }
+                });
             }
 
             if(val == this.oData.constants.TYPE_CUMPLEAÑOS){
@@ -111,7 +129,7 @@ var app = new Vue({
     updated() {
         this.$nextTick(function () {
             if(typeof self.$refs.table_Incidences != 'undefined' && self.needRenderTableIncidences){
-                this.createTable('table_Incidences', [0,2,3,4,7,16,17], [1,5,6]);
+                this.createTable('table_Incidences', [0,2,3,4,7,16,17,19], [1,5,6]);
                 let dataClassFilter = [{id: '0', text: 'Todos'}];
                 for (let i = 0; i < this.lClass.length; i++) {
                     dataClassFilter.push({id: this.lClass[i].id_incidence_cl, text: this.lClass[i].incidence_cl_name });
@@ -242,6 +260,9 @@ var app = new Vue({
             $('#selManager').val('').trigger('change');
         }
 
+        $('#status_incidence').on('change', function() {
+            self.status_incidence = this.value;
+        });
     },
     methods: {
         initRequestincidences(){
@@ -686,6 +707,7 @@ var app = new Vue({
                         incident.total_days,
                         'SUBTIPO',
                         incident.applications_st_name,
+                        incident.date_send_n,
                     ]
                 );
             }
@@ -1222,5 +1244,76 @@ var app = new Vue({
                 SGui.showError(error);
             })
         },
+
+        cancelRegistry(data){
+            Swal.fire({
+                title: '¿Desea cancelar la incidencia?',
+                html:   '<b>Colaborador: </b>' +
+                        data[this.indexes_incidences.employee] +
+                        '<br>' +
+                        '<b>incidencia:</b> ' +
+                        data[this.indexes_incidences.incidence_tp_name] +
+                        '<br>' +
+                        '<b>Inicio:</b> ' +
+                        data[this.indexes_incidences.start_date] +
+                        '<br>' +
+                        '<b>Fin:</b> ' +
+                        data[this.indexes_incidences.end_date],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.cancelRequest(data[this.indexes_incidences.id_application]);
+                }
+            })
+        },
+
+        cancelRequest(application_id){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.cancelIncidenceRoute;
+            axios.post(route, {
+                'application_id': application_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylIncidences = data.lIncidences;
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+
+        checklDaysToIncidencesWithLimitDays(startDate, payment, lHolidays){
+            let oDate = moment(startDate);
+            if(payment == this.oData.constants.QUINCENA){
+                for (let i = 0; i < this.limit_days; i++) {
+                    if(oDate.weekday() == 5 || oDate.weekday() == 6 || lHolidays.includes(oDate.format('YYYY-MM-DD'))){
+                        i--;
+                    }
+                    oDate.add(1, 'days');
+                }
+            }else{
+                for (let i = 0; i < this.limit_days; i++) {
+                    if(oDate.weekday() == 6 || !lHolidays.includes(oDate.format('YYYY-MM-DD'))){
+                        i--;
+                    }
+                    oDate.add(1, 'days');
+                }
+            }
+
+            return oDate;
+        }
     }
 });

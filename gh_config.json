@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2023-06-07 12:08:06",
+    "lastSyncDateTime": "2023-08-07 10:05:00",
     "expiration_vacations": {
         "years": 100,
         "months": 0,
@@ -72,5 +72,11 @@
         "week": "actual"
     },
     "root_node": 2,
-    "default_node": 14
+    "default_node": 14,
+    "folio": {
+        "characters": 1,
+        "employee_num_digits": 5,
+        "consecutive_digits": 0,
+        "separator": "-"
+    }
 }

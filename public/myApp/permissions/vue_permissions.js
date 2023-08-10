@@ -32,6 +32,7 @@ var app = new Vue({
         time: null,
         type_name: null,
         permission_time: oServerData.permission_time,
+        status_incidence: 0,
     },
     watch: {
 
@@ -39,7 +40,7 @@ var app = new Vue({
     updated() {
         this.$nextTick(function () {
             if(typeof self.$refs.table_permissions != 'undefined' && self.needRenderTableIncidences){
-                this.createTable('table_permissions', [0,2,3,4], [1,5]);
+                this.createTable('table_permissions', [0,2,3,4,15], [1,5]);
                 let dataTypeFilter = [{id: '0', text: 'Todos'}];
                 let dataType = [];
                 for (let i = 0; i < this.lTypes.length; i++) {
@@ -119,6 +120,10 @@ var app = new Vue({
     
             $('#selManager').val('').trigger('change');
         }
+
+        $('#status_ReqPermission').on('change', function() {
+            self.status_incidence = this.value;
+        });
     },
     methods: {
         initGestionPermissions(){
@@ -505,7 +510,8 @@ var app = new Vue({
                                     ''),
                         this.oDateUtils.formatDate(permission.start_date, 'ddd DD-MMM-YYYY'),
                         !this.isRevision ? permission.applications_st_name : 
-                            (permission.request_status_id == 2 ? 'NUEVO' : permission.applications_st_name)
+                            (permission.request_status_id == 2 ? 'NUEVO' : permission.applications_st_name),
+                        permission.date_send_n
                     ]
                 );
             }
@@ -949,6 +955,52 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             })
+        },
+
+        cancelRegistry(data){
+            Swal.fire({
+                title: '¿Desea cancelar el permiso?',
+                html:   '<b>Colaborador: </b>' +
+                        data[this.indexes_permission.empleado] +
+                        '<br>' +
+                        '<b>permiso:</b> ' +
+                        data[this.indexes_permission.Permiso] +
+                        '<b>Tiempo:</b> ' +
+                        data[this.indexes_permission.tiempo],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.cancelPermission(data[this.indexes_permission.id]);
+                }
+            })
+        },
+
+        cancelPermission(application_id){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.routePermission_cancel;
+            axios.post(route, {
+                'application_id': application_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylPermissions = data.lPermissions;
+                    this.reDrawTablePermissions('table_ReqPermissions', data.lPermissions);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
         },
     }
 });

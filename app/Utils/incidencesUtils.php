@@ -175,6 +175,7 @@ class incidencesUtils {
                             'ap.*',
                             'tp.id_incidence_tp',
                             'tp.incidence_tp_name',
+                            'tp.limit_days_n',
                             'cl.id_incidence_cl',
                             'cl.incidence_cl_name',
                             'st.applications_st_name',

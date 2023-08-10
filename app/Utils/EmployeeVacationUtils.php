@@ -50,6 +50,7 @@ class EmployeeVacationUtils {
                             'vp.vacation_plan_name',
                             'up.photo_base64_n as photo64',
                         )
+                        ->orderBy('employee')
                         ->get();
 
         return $lEmployees;

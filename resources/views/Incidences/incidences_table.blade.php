@@ -20,6 +20,7 @@
             <th>Días efectivos</th>
             <th>Sub tipo</th>
             <th>Estatus</th>
+            <th>fecha env</th>
         </thead>
         <tbody>
             <tr v-for="incident in lIncidences">
@@ -60,6 +61,9 @@
                         !isRevision ? incident.applications_st_name : 
                             (incident.request_status_id == 2 ? 'NUEVO' : incident.applications_st_name)
                     }}
+                </td>
+                <td>
+                    @{{incident.date_send_n}}
                 </td>
             </tr>
         </tbody>

@@ -828,6 +828,8 @@ class requestVacationsController extends Controller
         try {
             delegationUtils::getAutorizeRolUser(SysConst::JEFE);
             
+            \DB::beginTransaction();
+
             $application_id = $request->application_id;
             $manager_id = null;
             $year = $request->year;
@@ -844,6 +846,7 @@ class requestVacationsController extends Controller
             }
 
             $oIncidence->request_status_id = SysConst::APPLICATION_CANCELADO;
+            $oIncidence->user_apr_rej_id = \Auth::user()->id;
             $oIncidence->update();
 
             $employee = User::find($oIncidence->user_id);
@@ -853,7 +856,7 @@ class requestVacationsController extends Controller
             $mailLog->to_user_id = $employee->id;
             $mailLog->application_id_n = $oIncidence->id_application;
             $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
-            $mailLog->type_mail_id = SysConst::MAIL_ACEPT_RECH_SOLICITUD;
+            $mailLog->type_mail_id = SysConst::MAIL_CANCELACION_VACACIONES;
             $mailLog->is_deleted = 0;
             // $mailLog->created_by = \Auth::user()->id;
             // $mailLog->updated_by = \Auth::user()->id;

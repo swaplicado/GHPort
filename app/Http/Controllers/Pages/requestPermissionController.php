@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Mail\cancelIncidenceMail;
+use App\Mail\cancelPermissionMail;
+use App\Utils\CapLinkUtils;
 use Illuminate\Http\Request;
 use App\Utils\permissionsUtils;
 use \App\Utils\EmployeeVacationUtils;
@@ -348,5 +351,95 @@ class requestPermissionController extends Controller
         }
 
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
+    }
+
+    public function cancelPermission(Request $request){
+        try {
+            $incidence_id = $request->application_id;
+            $oIncidence = Permission::findOrFail($incidence_id);
+
+            $employee = \DB::table('users')
+                            ->where('id', $oIncidence->user_id)
+                            ->first();
+    
+            \DB::beginTransaction();
+            $system =  \DB::table('cat_incidence_tps')
+                                ->where('id_incidence_tp', $oIncidence->type_incident_id)
+                                ->first();
+    
+            $data = json_decode(CapLinkUtils::cancelIncidenceCAP($oIncidence, 'PERMISO'));
+    
+            if($data->code == 500 || $data->code == 550){
+                \DB::rollBack();
+                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+            }
+    
+            \DB::table('hours_leave')
+                ->where('id_hours_leave', $oIncidence->id_hours_leave)
+                ->update(['request_status_id' => SysConst::APPLICATION_CANCELADO, 'user_apr_rej_id' => \Auth::user()->id ]);
+
+            // $oIncidence->request_status_id = SysConst::APPLICATION_CANCELADO;
+            // $oIncidence->user_apr_rej_id = \Auth::user()->id;
+            // $oIncidence->update();
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->hours_leave_id_n = $oIncidence->id_hours_leave;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_CANCELACION_INCIDENCIA;
+            $mailLog->is_deleted = 0;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+
+        $org_chart_job_id = null;
+        if(!is_null($request->manager_id)){
+            $oManager = \DB::table('users')
+                            ->where('id', $request->manager_id)
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->first();
+
+            $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+        }
+
+        if(is_null($org_chart_job_id)){
+            $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+        }else{
+            $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+        }
+
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
+            try {
+                Mail::to($employee->institutional_mail)->send(new cancelPermissionMail(
+                                                        $oIncidence->id_hours_leave,
+                                                        $oIncidence->user_id,
+                                                        \Auth::user()->id
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+
+        return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 }

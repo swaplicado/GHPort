@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Constants\SysConst;
 use App\Utils\dateUtils;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -40,6 +41,14 @@ class cancelIncidenceMail extends Mailable
                                 'i.incidence_tp_name as type_name'
                             )
                             ->first();
+
+        if($oApplication->type_incident_id == SysConst::TYPE_VACACIONES){
+            $oApplication->type = 'VACACIONES';
+        }else if($oApplication->type_incident_id == SysConst::TYPE_CUMPLEAÑOS){
+            $oApplication->type = 'CUMPLEAÑOS';
+        }else{
+            $oApplication->type = 'INCIDENCIA';
+        }
 
         $oApplication->start_date = dateUtils::formatDate($oApplication->start_date, 'D-m-Y');
         $oApplication->end_date = dateUtils::formatDate($oApplication->end_date, 'D-m-Y');
