@@ -214,6 +214,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestPermission/getDirectEmployees', 'Pages\requestPermissionController@getDirectEmployees')->name('requestPermission_getDirectEmployees');
     Route::post('requestPermission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
     Route::post('requestPermission/seeLikeManager', 'Pages\requestPermissionController@seeLikeManager')->name('requestPermission_seeLikeManager');
+    Route::post('requestPermission/cancelPermission', 'Pages\requestPermissionController@cancelPermission')->name('requestPermission_cancel');
     
     Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
     Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');

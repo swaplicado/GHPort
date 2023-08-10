@@ -37,6 +37,7 @@
             this.routeGetDirectEmployees = <?php echo json_encode(route('requestPermission_getDirectEmployees')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
             this.routeSeeLikeManager = <?php echo json_encode(route('requestPermission_seeLikeManager')) ?>;
+            this.routePermission_cancel = <?php echo json_encode(route('requestPermission_cancel')) ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:solicitudesvacaciones" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:gestionvacaciones" ); ?>;

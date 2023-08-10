@@ -1,5 +1,6 @@
 <?php  namespace App\Utils;
 
+use App\Constants\SysConst;
 use App\Models\Vacations\ApplicationsBreakdown;
 use GuzzleHttp\Client;
 
@@ -74,7 +75,7 @@ class CapLinkUtils {
         return $data;
     }
 
-    public static function cancelIncidenceCAP($oIncidence){
+    public static function cancelIncidenceCAP($oIncidence, $type = 'INCIDENCE'){
         $data = incidencesUtils::loginToCAP();
         $config = \App\Utils\Configuration::getConfigurations();
         $headers = [
@@ -93,14 +94,26 @@ class CapLinkUtils {
                                     ->where('id', $oIncidence->user_id)
                                     ->value('employee_num');
 
-        $oIncidence->type_incident_id = incidencesUtils::matchCapIncidence($oIncidence->type_incident_id);
+        // $oIncidence->type_incident_id = incidencesUtils::matchCapIncidence($oIncidence->type_incident_id);
 
+        if($type == 'INCIDENCE'){
+            $oIncidence->incidence_id = $oIncidence->id_application;
+            $oIncidence->permission_id = 0;
+        }else{
+            $oIncidence->permission_id = $oIncidence->id_hours_leave;
+            $oIncidence->incidence_id = 0;
+        }
         $body = '{
             "num_employee": '.$external_employee_num.',
-            "incident_id": '.$oIncidence->id_application.'
+            "incident_id": '.$oIncidence->incidence_id.',
+            "adjust_id": '.$oIncidence->permission_id.'
         }';
-        
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'cancelincident', $headers, $body);
+
+        if($type == 'INCIDENCE'){
+            $request = new \GuzzleHttp\Psr7\Request('POST', 'cancelincident', $headers, $body);
+        }else{
+            $request = new \GuzzleHttp\Psr7\Request('POST', 'canceladjust', $headers, $body);
+        }
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
 

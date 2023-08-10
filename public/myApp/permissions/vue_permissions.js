@@ -961,12 +961,12 @@ var app = new Vue({
             Swal.fire({
                 title: '¿Desea cancelar el permiso?',
                 html:   '<b>Colaborador: </b>' +
-                        data[this.indexes_permission.employee] +
+                        data[this.indexes_permission.empleado] +
                         '<br>' +
                         '<b>permiso:</b> ' +
                         data[this.indexes_permission.Permiso] +
                         '<b>Tiempo:</b> ' +
-                        data[this.indexes_incidences.tiempo],
+                        data[this.indexes_permission.tiempo],
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -975,7 +975,7 @@ var app = new Vue({
                 confirmButtonText: 'Si'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.cancelPermission(data[this.indexes_incidences.id_application]);
+                    this.cancelPermission(data[this.indexes_permission.id]);
                 }
             })
         },
@@ -983,7 +983,7 @@ var app = new Vue({
         cancelPermission(application_id){
             SGui.showWaiting(15000);
 
-            let route = this.oData.cancelIncidenceRoute;
+            let route = this.oData.routePermission_cancel;
             axios.post(route, {
                 'application_id': application_id,
             })

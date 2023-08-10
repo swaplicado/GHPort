@@ -48,11 +48,20 @@
                 <br>
                 <div>
                     <div>
-                        <span>
-                            <b>
-                                Su solicitud para las fechas {{$oApplication->start_date}} a {{$oApplication->end_date}} ha sido cancelada
-                            </b>
-                        </span>
+                        @if ($oApplication->type == 'VACACIONES' || $oApplication->type == 'INCIDENCIA')
+                            <span>
+                                <b>
+                                    Su solicitud {{$oApplication->type_name}} para las fechas {{$oApplication->start_date}} a {{$oApplication->end_date}} ha sido cancelada
+                                </b>
+                            </span>
+                        @endif
+                        @if ($oApplication->type == 'CUMPLEAÑOS' || $oApplication->type == 'PERMISO')
+                            <span>
+                                <b>
+                                    Su solicitud {{$oApplication->type_name}} para la fecha {{$oApplication->start_date}} ha sido cancelada
+                                </b>
+                            </span>
+                        @endif
                     </div>
                     <table>
                         <thead>
@@ -72,21 +81,57 @@
                     </table>
                 </div>
                 <br>
-                <div style="text-align: left">
-                    <label class="form-label">Haz clic en la siguiente liga para revisar tus solicitudes:</label>
-                    <br>
-                    <a href="{{route('myVacations')}}" target="_blank">
-                        <button  class="btn btn-primary">
-                            Ver mis solicitudes
-                        </button>
-                    </a>
-                </div>
-                <div>
-                    <p>
-                        Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                        <a href="{{route('myVacations')}}" target="_blank">{{route('myVacations')}}</a>
-                    </p>
-                </div>
+                @if($oApplication->type == 'VACACIONES')
+                    <div style="text-align: left">
+                        <label class="form-label">Haz clic en la siguiente liga para revisar tus solicitudes:</label>
+                        <br>
+                        <a href="{{route('myVacations')}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver mis solicitudes
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('myVacations')}}" target="_blank">{{route('myVacations')}}</a>
+                        </p>
+                    </div>
+                @endif
+                @if($oApplication->type == 'INCIDENCIA' || $oApplication->type == 'CUMPLEAÑOS')
+                    <div style="text-align: left">
+                        <label class="form-label">Haz clic en la siguiente liga para revisar tus solicitudes:</label>
+                        <br>
+                        <a href="{{route('incidences_index')}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver mis solicitudes
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('incidences_index')}}" target="_blank">{{route('incidences_index')}}</a>
+                        </p>
+                    </div>
+                @endif
+                @if($oApplication->type == 'PERMISO')
+                    <div style="text-align: left">
+                        <label class="form-label">Haz clic en la siguiente liga para revisar tus solicitudes:</label>
+                        <br>
+                        <a href="{{route('permission_index')}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver mis solicitudes
+                            </button>
+                        </a>
+                    </div>
+                    <div>
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('permission_index')}}" target="_blank">{{route('permission_index')}}</a>
+                        </p>
+                    </div>
+                @endif
                 <hr>
                 <div>
                     <p style="transform: scale(0.6);">

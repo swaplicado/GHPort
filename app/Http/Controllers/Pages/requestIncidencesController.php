@@ -430,7 +430,7 @@ class requestIncidencesController extends Controller
                                 ->first();
     
             if($system->interact_system_id == 3){
-                $data = json_decode(CapLinkUtils::cancelIncidenceCAP($oIncidence));
+                $data = json_decode(CapLinkUtils::cancelIncidenceCAP($oIncidence, 'INCIDENCE'));
             }else{
                 $data = json_decode(CapLinkUtils::cancelIncidence($oIncidence));
             }
@@ -439,10 +439,14 @@ class requestIncidencesController extends Controller
                 \DB::rollBack();
                 return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
             }
+
+            \DB::table('applications')
+                ->where('id_application', $oIncidence->id_application)
+                ->update(['request_status_id' => SysConst::APPLICATION_CANCELADO, 'user_apr_rej_id' => \Auth::user()->id ]);
     
-            $oIncidence->request_status_id = SysConst::APPLICATION_CANCELADO;
-            $oIncidence->user_apr_rej_id = \Auth::user()->id;
-            $oIncidence->update();
+            // $oIncidence->request_status_id = SysConst::APPLICATION_CANCELADO;
+            // $oIncidence->user_apr_rej_id = \Auth::user()->id;
+            // $oIncidence->update();
 
             $mailLog = new MailLog();
             $mailLog->date_log = Carbon::now()->toDateString();
