@@ -25,8 +25,8 @@
         114,
         94
     ],
-    "urlSync": "127.0.0.1:9001",
-    "urlSyncCAP": "127.0.0.1:8001/api/",
+    "urlSync": "192.168.1.251:9001",
+    "urlSyncCAP": "192.168.1.251/CAP/public/api/",
     "lSituation": [
         {
             "id": 1,
