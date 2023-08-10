@@ -89,14 +89,14 @@ class CapLinkUtils {
             'headers' => $headers
         ]);
 
-        $external_employee_id = \DB::table('users')
+        $external_employee_num = \DB::table('users')
                                     ->where('id', $oIncidence->user_id)
-                                    ->value('external_id_n');
+                                    ->value('employee_num');
 
         $oIncidence->type_incident_id = incidencesUtils::matchCapIncidence($oIncidence->type_incident_id);
 
         $body = '{
-            "num_employee": '.$external_employee_id.',
+            "num_employee": '.$external_employee_num.',
             "incident_id": '.$oIncidence->id_application.'
         }';
         

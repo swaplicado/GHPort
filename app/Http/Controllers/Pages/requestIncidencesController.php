@@ -193,7 +193,7 @@ class requestIncidencesController extends Controller
 
             if(!empty($data)){
                 $data = json_decode($data);
-                if($data->code == 500 || $data->code == 550){
+                if($data->code == 500 || $data->code == 550 || $data->code == 400){
                     \DB::rollBack();
                     return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
                 }
