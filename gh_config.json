@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2023-06-07 12:08:06",
+    "lastSyncDateTime": "2023-08-10 17:51:52",
     "expiration_vacations": {
         "years": 100,
         "months": 0,
@@ -64,11 +64,13 @@
         "months": 1,
         "days": 0
     },
-    "permission_time": 180,
+    "permission_time": 120,
     "format_php": "ddd D-m-Y",
     "incidents_report": {
         "enabled": true,
         "always_send": false,
-        "week": "actual"
-    }
+        "week": "next"
+    },
+    "root_node": 2,
+    "default_node": 14
 }
