@@ -90,25 +90,25 @@ var appRequestVacation = new Vue({
             return moment(sDate).format('ddd DD-MM-YYYY');
         },
 
-        getReturnDate(data){
-            var result = this.vacationUtils.getTakedDays(
-                this.lHolidays,
-                data[this.indexes.payment_frec_id],
-                moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
-                moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
-                this.oData.const,
-                this.take_rest_days,
-                this.take_holidays
-            );
+        // getReturnDate(data){
+        //     var result = this.vacationUtils.getTakedDays(
+        //         this.lHolidays,
+        //         data[this.indexes.payment_frec_id],
+        //         moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+        //         moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
+        //         this.oData.const,
+        //         this.take_rest_days,
+        //         this.take_holidays
+        //     );
 
-            this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
-            this.takedDays = result[1];
-            this.lDays = result[2];
-            this.totCalendarDays = result[3];
-            this.lNoBussinesDay = result[4];
-            this.noBussinesDayIndex = 0;
-            this.originalDaysTaked = result[1];
-        },
+        //     this.returnDate = this.oDateUtils.formatDate(result[0], 'ddd DD-MMM-YYYY');
+        //     this.takedDays = result[1];
+        //     this.lDays = result[2];
+        //     this.totCalendarDays = result[3];
+        //     this.lNoBussinesDay = result[4];
+        //     this.noBussinesDayIndex = 0;
+        //     this.originalDaysTaked = result[1];
+        // },
 
         cancelRegistry(data){
             Swal.fire({
@@ -694,6 +694,31 @@ var appRequestVacation = new Vue({
             }
 
             return [is_special, message];
+        },
+
+        async getReturnDate(){
+            this.loadReturnDate = true;
+            let route = this.oData.calcReturnDate;
+            axios.post(route,{
+                'user_id': this.oUser.id,
+                'start_date': moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'end_date': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'application_id': this.idRequest,
+            })
+            .then(result => {
+                let data = result.data;
+                if(data.success){
+                    this.returnDate = this.oDateUtils.formatDate(data.returnDate, 'ddd DD-MMM-YYYY');
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+                this.loadReturnDate = false;
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+                this.loadReturnDate = false;
+            });
         },
     },
 })

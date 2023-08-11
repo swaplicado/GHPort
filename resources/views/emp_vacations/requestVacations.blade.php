@@ -90,6 +90,7 @@
             this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
             this.quickSendRoute = <?php echo json_encode(route('requestVacations_quickSend')); ?>;
             this.quickDataRoute = <?php echo json_encode(route('requestVacations_quickData')); ?>;
+            this.calcReturnDate = <?php echo json_encode(route('myVacations_calcReturnDate')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesMyRequestTable = {
                 'id':0,
