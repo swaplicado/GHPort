@@ -37,6 +37,11 @@ class permissionController extends Controller
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
                         ->get();
+        
+        $lClass = \DB::table('permission_cl')
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->get();
 
         $lHolidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
@@ -59,6 +64,7 @@ class permissionController extends Controller
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
+                                            ->with('lClass', $lClass)
                                             ->with('lHolidays', $lHolidays)
                                             ->with('lTemp', $lTemp_special)
                                             ->with('oPermission', null)
@@ -72,6 +78,7 @@ class permissionController extends Controller
         try {
             $startDate = $request->startDate;
             $comments = $request->comments;
+            $class_id = $request->class_id;
             $type_id = $request->type_id;
             $employee_id = $request->employee_id;
             $hours = $request->hours;
@@ -90,6 +97,7 @@ class permissionController extends Controller
             $permission->user_id = $employee_id;
             $permission->request_status_id = SysConst::APPLICATION_CREADO;
             $permission->type_permission_id = $type_id;
+            $permission->cl_permission_id = $class_id;
             $permission->emp_comments_n = $comments;
             $permission->is_deleted = false;
             $permission->created_by = \Auth::user()->id;
@@ -111,6 +119,7 @@ class permissionController extends Controller
             $permission_id = $request->permission_id;
             $startDate = $request->startDate;
             $comments = $request->comments;
+            $class_id = $request->class_id;
             $type_id = $request->type_id;
             $hours = $request->hours;
             $minutes = $request->minutes;
@@ -124,6 +133,7 @@ class permissionController extends Controller
             $permission->ldays = json_encode([$startDate]);
             $permission->minutes = permissionsUtils::getTime($hours, $minutes);
             $permission->type_permission_id = $type_id;
+            $permission->cl_permission_id = $class_id;
             $permission->emp_comments_n = $comments;
             $permission->updated_by = \Auth::user()->id;
             $permission->update();
@@ -154,7 +164,7 @@ class permissionController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al crear el permiso', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'Error al eliminar el permiso', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
