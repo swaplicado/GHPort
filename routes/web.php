@@ -83,17 +83,17 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('myVacations/calcReturnDate', 'Pages\myVacationsController@calcReturnDate')->name('myVacations_calcReturnDate');
     
     Route::get('requestVacations/{id?}', 'Pages\requestVacationsController@index')->name('requestVacations');
-    Route::post('requestVacations/accept', 'Pages\requestVacationsController@acceptRequest')->name('requestVacations_acceptRequest');
-    Route::post('requestVacations/reject', 'Pages\requestVacationsController@rejectRequest')->name('requestVacations_rejectRequest');
-    Route::post('requestVacations/filterYear', 'Pages\requestVacationsController@filterYear')->name('requestVacations_filterYear');
-    Route::post('requestVacations/checkMail', 'Pages\requestVacationsController@checkMail')->name('requestVacations_checkMail');
-    Route::post('requestVacations/getEmpApplicationsEA', 'Pages\requestVacationsController@getEmpApplicationsEA')->name('requestVacations_getEmpApplicationsEA');
-    Route::post('requestVacations/getDataManager', 'Pages\requestVacationsController@getDataManager')->name('requestVacations_getDataManager');
-    Route::post('requestVacations/getlDays', 'Pages\requestVacationsController@getlDays')->name('requestVacations_getlDays');
-    Route::post('requestVacations/quickSend', 'Pages\requestVacationsController@quickSend')->name('requestVacations_quickSend');
-    Route::post('requestVacations/quickData', 'Pages\requestVacationsController@quickData')->name('requestVacations_quickData');
-    Route::post('requestVacations/getApplication', 'Pages\requestVacationsController@getApplication')->name('requestVacations_getApplication');
-    Route::post('requestVacations/cancelRequest', 'Pages\requestVacationsController@cancelRequest')->name('requestVacations_cancelRequest');
+    Route::post('requestVacations/vacations/accept', 'Pages\requestVacationsController@acceptRequest')->name('requestVacations_acceptRequest');
+    Route::post('requestVacations/vacations/reject', 'Pages\requestVacationsController@rejectRequest')->name('requestVacations_rejectRequest');
+    Route::post('requestVacations/vacations/filterYear', 'Pages\requestVacationsController@filterYear')->name('requestVacations_filterYear');
+    Route::post('requestVacations/vacations/checkMail', 'Pages\requestVacationsController@checkMail')->name('requestVacations_checkMail');
+    Route::post('requestVacations/vacations/getEmpApplicationsEA', 'Pages\requestVacationsController@getEmpApplicationsEA')->name('requestVacations_getEmpApplicationsEA');
+    Route::post('requestVacations/vacations/getDataManager', 'Pages\requestVacationsController@getDataManager')->name('requestVacations_getDataManager');
+    Route::post('requestVacations/vacations/getlDays', 'Pages\requestVacationsController@getlDays')->name('requestVacations_getlDays');
+    Route::post('requestVacations/vacations/quickSend', 'Pages\requestVacationsController@quickSend')->name('requestVacations_quickSend');
+    Route::post('requestVacations/vacations/quickData', 'Pages\requestVacationsController@quickData')->name('requestVacations_quickData');
+    Route::post('requestVacations/vacations/getApplication', 'Pages\requestVacationsController@getApplication')->name('requestVacations_getApplication');
+    Route::post('requestVacations/vacations/cancelRequest', 'Pages\requestVacationsController@cancelRequest')->name('requestVacations_cancelRequest');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');
@@ -207,14 +207,14 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('permission/checkMail', 'Pages\permissionController@checkMail')->name('permission_checkMail');
 
     Route::get('requestPermission/{id?}', 'Pages\requestPermissionController@index')->name('requestPermission_index');
-    Route::post('requestPermission/getEmployee', 'Pages\requestPermissionController@getEmployee')->name('requestPermission_getEmployee');
-    Route::post('requestPermission/approbePermission', 'Pages\requestPermissionController@approbePermission')->name('requestPermission_approbe');
-    Route::post('requestPermission/rejectPermission', 'Pages\requestPermissionController@rejectPermission')->name('requestPermission_reject');
-    Route::post('requestPermission/getAllEmployees', 'Pages\requestPermissionController@getAllEmployees')->name('requestPermission_getAllEmployees');
-    Route::post('requestPermission/getDirectEmployees', 'Pages\requestPermissionController@getDirectEmployees')->name('requestPermission_getDirectEmployees');
-    Route::post('requestPermission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
-    Route::post('requestPermission/seeLikeManager', 'Pages\requestPermissionController@seeLikeManager')->name('requestPermission_seeLikeManager');
-    Route::post('requestPermission/cancelPermission', 'Pages\requestPermissionController@cancelPermission')->name('requestPermission_cancel');
+    Route::post('requestPermission/permission/getEmployee', 'Pages\requestPermissionController@getEmployee')->name('requestPermission_getEmployee');
+    Route::post('requestPermission/permission/approbePermission', 'Pages\requestPermissionController@approbePermission')->name('requestPermission_approbe');
+    Route::post('requestPermission/permission/rejectPermission', 'Pages\requestPermissionController@rejectPermission')->name('requestPermission_reject');
+    Route::post('requestPermission/permission/getAllEmployees', 'Pages\requestPermissionController@getAllEmployees')->name('requestPermission_getAllEmployees');
+    Route::post('requestPermission/permission/getDirectEmployees', 'Pages\requestPermissionController@getDirectEmployees')->name('requestPermission_getDirectEmployees');
+    Route::post('requestPermission/permission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
+    Route::post('requestPermission/permission/seeLikeManager', 'Pages\requestPermissionController@seeLikeManager')->name('requestPermission_seeLikeManager');
+    Route::post('requestPermission/permission/cancelPermission', 'Pages\requestPermissionController@cancelPermission')->name('requestPermission_cancel');
     
     Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
     Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');
