@@ -189,14 +189,14 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('incidences/checkMail', 'Pages\incidencesController@checkMail')->name('incidences_checkMail');
 
     Route::get('requestIncidences/{id?}', 'Pages\requestIncidencesController@index')->name('requestIncidences_index');
-    Route::post('requestIncidences/getEmployee', 'Pages\requestIncidencesController@getEmployee')->name('requestIncidences_getEmployee');
-    Route::post('requestIncidences/approbe', 'Pages\requestIncidencesController@approbeIncidence')->name('requestIncidences_approbe');
-    Route::post('requestIncidences/reject', 'Pages\requestIncidencesController@rejectIncidence')->name('requestIncidences_reject');
-    Route::get('requestIncidences/getAllEmployees', 'Pages\requestIncidencesController@getAllEmployees')->name('requestIncidences_getAllEmployees');
-    Route::get('requestIncidences/getEmployeeData', 'Pages\requestIncidencesController@getEmployeeData')->name('requestIncidences_getEmployeeData');
-    Route::post('requestIncidences/sendAndAuthorize', 'Pages\incidencesController@sendAndAuthorize')->name('requestIncidences_sendAndAuthorize');
-    Route::post('requestIncidences/seeLikeManager', 'Pages\requestIncidencesController@seeLikeManager')->name('requestIncidences_seeLikeManager');
-    Route::post('requestIncidences/cancelIncidence', 'Pages\requestIncidencesController@cancelIncidence')->name('requestIncidences_cancel');
+    Route::post('requestIncidences/incidences/getEmployee', 'Pages\requestIncidencesController@getEmployee')->name('requestIncidences_getEmployee');
+    Route::post('requestIncidences/incidences/approbe', 'Pages\requestIncidencesController@approbeIncidence')->name('requestIncidences_approbe');
+    Route::post('requestIncidences/incidences/reject', 'Pages\requestIncidencesController@rejectIncidence')->name('requestIncidences_reject');
+    Route::get('requestIncidences/incidences/getAllEmployees', 'Pages\requestIncidencesController@getAllEmployees')->name('requestIncidences_getAllEmployees');
+    Route::get('requestIncidences/incidences/getEmployeeData', 'Pages\requestIncidencesController@getEmployeeData')->name('requestIncidences_getEmployeeData');
+    Route::post('requestIncidences/incidences/sendAndAuthorize', 'Pages\incidencesController@sendAndAuthorize')->name('requestIncidences_sendAndAuthorize');
+    Route::post('requestIncidences/incidences/seeLikeManager', 'Pages\requestIncidencesController@seeLikeManager')->name('requestIncidences_seeLikeManager');
+    Route::post('requestIncidences/incidences/cancelIncidence', 'Pages\requestIncidencesController@cancelIncidence')->name('requestIncidences_cancel');
 
     Route::get('permission', 'Pages\permissionController@index')->name('permission_index');
     Route::post('permission/save', 'Pages\permissionController@createPermission')->name('permission_create');

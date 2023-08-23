@@ -93,7 +93,7 @@ var app = new Vue({
         type_id:function(val){
             if(!this.isEdit && !this.isRevision){
                 let oIncidence = this.lTypesToFilter.find(({ id_incidence_tp }) => id_incidence_tp == val);
-                this.limit_days = oIncidence.limit_days_n;
+                this.limit_days = oIncidence.limit_days_n != undefined ? oIncidence.limit_days_n : null;
                 this.createCalendar(val);
                 $('#two-inputs-calendar').on('datepicker-first-date-selected', function(event, data) {
                     if(self.limit_days != null && self.limit_days > 0){
@@ -1011,7 +1011,7 @@ var app = new Vue({
                 if(data.success){
                     this.lEmployees = data.lEmployees;
                     this.setSelectEmployees();
-                    SGui.showWaiting(15000);
+                    SGui.showOk();
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }
@@ -1306,7 +1306,7 @@ var app = new Vue({
                 }
             }else{
                 for (let i = 0; i < this.limit_days; i++) {
-                    if(oDate.weekday() == 6 || !lHolidays.includes(oDate.format('YYYY-MM-DD'))){
+                    if(oDate.weekday() == 6 || lHolidays.includes(oDate.format('YYYY-MM-DD'))){
                         i--;
                     }
                     oDate.add(1, 'days');

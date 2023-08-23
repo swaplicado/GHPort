@@ -379,7 +379,7 @@ class requestIncidencesController extends Controller
                             ->whereIn('org_chart_job_id', $lChildAreas)
                             ->select(
                                 'id',
-                                'full_name_ui as text',
+                                'full_name_ui as employee',
                             )
                             ->get();
 
