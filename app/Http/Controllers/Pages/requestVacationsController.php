@@ -325,11 +325,13 @@ class requestVacationsController extends Controller
                                                                                             true);
             }
 
+            $comments = str_replace(['"', "\\"], "", $request->comments);
+
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
-            $application->sup_comments_n = $request->comments;
+            $application->sup_comments_n = $comments;
             $application->return_date = $request->returnDate;
             $application->update();
 
@@ -446,12 +448,14 @@ class requestVacationsController extends Controller
             if(!$oType->is_recover_vacation){
                 $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
             }
+
+            $comments = str_replace(['"', "\\"], "", $request->comments);
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->rejected_date_n = Carbon::now()->toDateString();
-            $application->sup_comments_n = $request->comments;
+            $application->sup_comments_n = $comments;
             $application->return_date = $request->returnDate;
             $application->update();
 
