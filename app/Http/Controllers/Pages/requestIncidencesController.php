@@ -167,10 +167,12 @@ class requestIncidencesController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
             }
 
+            $comments = str_replace(['"', "\\"], "", $request->comments);
+
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
-            $application->sup_comments_n = $request->comments;
+            $application->sup_comments_n = $comments;
             $application->return_date = $request->returnDate;
             $application->update();
 
@@ -277,10 +279,12 @@ class requestIncidencesController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
             }
 
+            $comments = str_replace(['"', "\\"], "", $request->comments);
+
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->rejected_date_n = Carbon::now()->toDateString();
-            $application->sup_comments_n = $request->comments;
+            $application->sup_comments_n = $comments;
             $application->return_date = $request->returnDate;
             $application->update();
 
