@@ -49,7 +49,7 @@ class requestPermissionMail extends Mailable
         
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
-                        ->subject('[PGH] Solicitud permiso horas '.$employee->short_name)
+                        ->subject('[PGH] Solicitud permiso horas '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
                         ->view('mails.requestPermissionMail')
                         ->with('permission', $permission)
                         ->with('employee', $employee)
