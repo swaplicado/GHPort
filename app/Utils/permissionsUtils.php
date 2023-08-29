@@ -37,12 +37,14 @@ class permissionsUtils {
     public static function getPermission($permission_id){
         $oPermission = \DB::table('hours_leave as h')
                         ->leftJoin('cat_permission_tp as pt', 'pt.id_permission_tp', '=', 'h.type_permission_id')
+                        ->leftJoin('permission_cl as cl', 'cl.id_permission_cl', '=', 'h.cl_permission_id')
                         ->leftJoin('users as u', 'u.id', '=', 'h.user_apr_rej_id')
                         ->leftJoin('users as emp', 'emp.id', '=', 'h.user_id')
                         ->where('h.id_hours_leave', $permission_id)
                         ->select(
                             'h.*',
                             'pt.permission_tp_name',
+                            'cl.permission_cl_name',
                             'u.full_name_ui as user_apr_rej_name',
                             'emp.full_name_ui as employee',
                         )
@@ -59,6 +61,7 @@ class permissionsUtils {
     public static function getUserPermissions($user_id){
         $lPermissions = \DB::table('hours_leave as hr')
                         ->leftJoin('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
+                        ->leftJoin('permission_cl as cl', 'cl.id_permission_cl', '=', 'hr.cl_permission_id')
                         ->leftJoin('sys_applications_sts as st', 'st.id_applications_st', '=', 'hr.request_status_id')
                         ->leftJoin('users as u', 'u.id', '=', 'hr.user_apr_rej_id')
                         ->leftJoin('users as emp', 'emp.id', '=', 'hr.user_id')
@@ -68,6 +71,7 @@ class permissionsUtils {
                             'hr.*',
                             'tp.id_permission_tp',
                             'tp.permission_tp_name',
+                            'cl.permission_cl_name',
                             'st.applications_st_name',
                             'u.full_name_ui as user_apr_rej_name',
                             'emp.full_name_ui as employee',

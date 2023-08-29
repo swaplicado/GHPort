@@ -43,6 +43,11 @@ class requestPermissionController extends Controller
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
                         ->get();
+        
+        $lClass = \DB::table('permission_cl')
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->get();
 
         $lHolidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
@@ -85,6 +90,7 @@ class requestPermissionController extends Controller
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
+                                            ->with('lClass', $lClass)
                                             ->with('lHolidays', $lHolidays)
                                             ->with('lTemp', $lTemp_special)
                                             ->with('oPermission', $oPermission)

@@ -20,6 +20,7 @@
             this.constants = <?php echo json_encode($constants); ?>;
             this.permission_time = <?php echo json_encode($permission_time); ?>;
             this.lTypes = <?php echo json_encode($lTypes); ?>;
+            this.lClass = <?php echo json_encode($lClass); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
@@ -39,15 +40,17 @@
                 'sup coment.': 3,
                 'revisor_id': 4,
                 'type_incident_id': 5,
-                'empleado': 6,
-                'Permiso': 7,
-                'tiempo': 8,
-                'Folio': 9,
-                'Fecha solicitud': 10,
-                'Revisor': 11,
-                'Fecha revisión': 12,
-                'Fecha': 13,
-                'Estatus': 14,
+                'cl_permission_id': 6,
+                'empleado': 7,
+                'Permiso': 8,
+                'Clase': 9,
+                'tiempo': 10,
+                'Folio': 11,
+                'Fecha solicitud': 12,
+                'Revisor': 13,
+                'Fecha revisión': 14,
+                'Fecha': 15,
+                'Estatus': 16,
             }
         }
         var oServerData = new GlobalData();
@@ -111,7 +114,7 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_permissions',
-                                        'colTargets' => [0,2,3,4],
+                                        'colTargets' => [0,2,3,4,6],
                                         'colTargetsSercheable' => [1,5],
                                         'noDom' => true,
                                         'select' => true,
@@ -190,6 +193,7 @@
         
     }
 </script>
+
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script>
     var self;

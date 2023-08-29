@@ -14,7 +14,15 @@
                         <div v-if="!isRevision">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label for="">Selecciona Tipo:</label>
+                                    <label for="">Selecciona clase:</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select class="select2-class-modal form-control" name="permission_cl" id="permission_cl" style="width: 90%;"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="">Selecciona tipo:</label>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="select2-class-modal form-control" name="permission_type" id="permission_type" style="width: 90%;"></select>
@@ -29,7 +37,7 @@
                                     <label for="">Horas:</label>
                                 </div>
                                 <div class="col-md-1">
-                                    <input type="number" class="form-input" id="horas" min="0" max="3" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                    <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
                                 </div>
                                 <div class="col-md-1">
                                     <label for="">Minutos:</label>
@@ -100,6 +108,8 @@
                             <thead></thead>
                             <tbody>
                                 <tr v-if="isRevision">
+                                    <td style="vertical-align: top;"><b>Clase:</b></td>
+                                    <td style="vertical-align: top;"><input class="form-control" v-model="class_name" readonly></td>
                                     <td style="vertical-align: top;"><b>Tipo:</b></td>
                                     <td style="vertical-align: top;"><input class="form-control" v-model="type_name" readonly></td>
                                     <td><p>&nbsp &nbsp</p></td>

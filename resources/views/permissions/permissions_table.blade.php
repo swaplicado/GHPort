@@ -7,8 +7,10 @@
             <th>sup coment.</th>
             <th>revisor_id</th>
             <th>type_incident_id</th>
+            <th>class_permission_id</th>
             <th>Empleado</th>
             <th>Permiso</th>
+            <th>Clase</th>
             <th>Tiempo</th>
             <th>Folio</th>
             <th>Fecha solicitud</th>
@@ -26,8 +28,10 @@
                 <td>@{{permission.sup_comments_n}}</td>
                 <td>@{{permission.user_apr_rej_id}}</td>
                 <td>@{{permission.type_permission_id}}</td>
+                <td>@{{permission.class_permission_id}}</td>
                 <td>@{{permission.employee}}</td>
                 <td>@{{permission.permission_tp_name}}</td>
+                <td>@{{permission.permission_cl_name}}</td>
                 <td>@{{permission.time}}</td>
                 <td>@{{permission.folio_n}}</td>
                 <td>
