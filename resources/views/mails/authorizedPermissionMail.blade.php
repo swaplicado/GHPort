@@ -42,12 +42,22 @@
             <div class="card-body">
                 <div>
                     <h3>{{$employee->full_name}}
-                        @if ($permission->request_status_id == 3)
-                            <span style="color: green">su solicitud {{$permission->permission_tp_name}} ha sido aprobada:</span>
-                        @elseif($permission->request_status_id == 4)
-                            <span style="color: red">su solicitud {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                        @if($permission->cl == 1)
+                            @if ($permission->request_status_id == 3)
+                                <span style="color: green">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
+                            @elseif($permission->request_status_id == 4)
+                                <span style="color: red">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                            @else
+                                comprobar el estatus de su solicitud presionando el botón "Ver mis permisos":
+                            @endif    
                         @else
-                            comprobar el estatus de su solicitud presionando el botón "Ver mis permisos":
+                            @if ($permission->request_status_id == 3)
+                                <span style="color: green">su solicitud de tema laboral por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
+                            @elseif($permission->request_status_id == 4)
+                                <span style="color: red">su solicitud de tema laboral por horas de {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                            @else
+                                comprobar el estatus de su solicitud presionando el botón "Ver mis permisos":
+                            @endif
                         @endif
                     </h3>
                 </div>
@@ -85,18 +95,34 @@
                     </div>
                     <br>
                 <div style="text-align: left">
-                    <label class="form-label">Haz clic en la siguiente liga para revisar tus permisos:</label>
-                    <br>
-                    <a href="{{route('permission_index')}}" target="_blank">
-                        <button  class="btn btn-primary">
-                            Ver mis permisos
-                        </button>
-                    </a>
+                    @if ($permission->cl == 1)
+                        <label class="form-label">Haz clic en la siguiente liga para revisar tus permisos personales por horas:</label>
+                        <br>
+                        <a href="{{route('permission_index', $permission->cl)}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver mis permisos
+                            </button>
+                        </a>
+                    @else
+                        <label class="form-label">Haz clic en la siguiente liga para revisar tus temas laborales por horas:</label>
+                        <br>
+                        <a href="{{route('permission_index', $permission->cl)}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver mis permisos
+                            </button>
+                        </a>
+                    @endif
+
                 </div>
                 <div>
                     <p>
                         Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                        <a href="{{route('permission_index')}}" target="_blank">{{route('permission_index')}}</a>
+
+                        @if ($permission->cl == 1)
+                            <a href="{{route('permission_index', $permission->cl)}}" target="_blank">{{route('permission_index', $permission->cl)}}</a>
+                        @else
+                            <a href="{{route('permission_index', $permission->cl)}}" target="_blank">{{route('permission_index', $permission->cl)}}</a>
+                        @endif
                     </p>
                 </div>
                 <hr>

@@ -41,8 +41,16 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div>
-                    <h3 class="inline">{{$employee->full_name}} solicitó el siguiente permiso de {{$permission->permission_tp_name}}:</h3>
+                    <h3 class="inline">{{$employee->full_name}} ha solicitado la siguiente incidencia:</h3> 
+                    @if($permission->class == 1)
+                        <br>
+                        <h3 class="inline">"permiso personal por horas"</h3>   
+                    @else
+                        <br>
+                        <h3 class="inline">"tema laboral por horas"</h3>    
+                    @endif
                 </div>
+                
                 <br>
                 <div>
                     <table>
@@ -77,19 +85,37 @@
                     </div>
                     <br>
                 <div style="text-align: left">
-                    <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
-                    <br>
-                    <a href="{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}" target="_blank">
+                    @if ($permission->class == 1)
+                        <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
+                        <br>
+                        <a href="{{route('requestPersonalPermission', ['id' => $permission->id_hours_leave])}}" target="_blank">
                         <button  class="btn btn-primary">
                             Ver solicitud
                         </button>
-                    </a>
+                        </a>
+                    @else
+                        <label class="form-label">Haz clic en la siguiente liga para atender esta solicitud: </label>
+                        <br>
+                        <a href="{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}" target="_blank">
+                            <button  class="btn btn-primary">
+                                Ver solicitud
+                            </button>
+                        </a>
+                    @endif
+                    
                 </div>
                 <div>
-                    <p>
-                        Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                        <a href="{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}</a>
-                    </p>
+                    @if ($permission->class == 1)
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('requestPersonalPermission', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}</a>
+                        </p>
+                    @else
+                        <p>
+                            Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
+                            <a href="{{route('requestPersonalPermission', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}</a>
+                        </p>
+                    @endif
                 </div>
                 <hr>
                 <div>

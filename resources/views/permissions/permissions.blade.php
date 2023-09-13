@@ -21,6 +21,7 @@
             this.permission_time = <?php echo json_encode($permission_time); ?>;
             this.lTypes = <?php echo json_encode($lTypes); ?>;
             this.lClass = <?php echo json_encode($lClass); ?>;
+            this.clase_permiso = <?php echo json_encode($clase_permiso); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
@@ -64,7 +65,11 @@
 
     <div class="card-header">
         <h3>
-            <b>Mis permisos de horas</b>
+            @if ($clase_permiso == 1)
+                <b>Permiso personal por horas</b>
+            @else
+                <b>Tema laboral por horas</b>    
+            @endif
             @include('layouts.manual_button')
         </h3>
     </div>

@@ -33,10 +33,12 @@ var app = new Vue({
         needRenderTableIncidences: false,
         time: null,
         type_name: null,
+        class_name: null,
         permission_time: oServerData.permission_time,
         status_incidence: 0,
         max_hours: 0,
         max_minutes: 0,
+        clase_permiso: oServerData.clase_permiso,
     },
     watch: {
 
@@ -90,6 +92,7 @@ var app = new Vue({
         })
     },
     mounted() {
+        console.log(oServerData);
         self = this;
 
         $('.select2-class-modal').select2({
@@ -133,7 +136,7 @@ var app = new Vue({
             self.cambiarValor();
         });
 
-        $('#permission_cl').val('').trigger('change');
+        $('#permission_cl').val(this.clase_permiso).trigger('change');
 
         if (!!this.oPermission && !!this.oUser) {
             let data = [this.oPermission.id_hours_leave];
@@ -154,6 +157,7 @@ var app = new Vue({
 
             $('#selManager').val('').trigger('change');
         }
+        i
 
         $('#status_ReqPermission').on('change', function() {
             self.status_incidence = this.value;
@@ -676,6 +680,7 @@ var app = new Vue({
             }
             axios.post(this.oData.routeGetEmployee, {
                     'user_id': user_id,
+                    'cl': this.clase_permiso,
                 })
                 .then(result => {
                     let data = result.data;
@@ -962,6 +967,7 @@ var app = new Vue({
             axios.post(this.oData.routeSeeLikeManager, {
                     'manager_id': parseInt(manager_id),
                     'manager_name': manager_name,
+                    'cl': this.clase_permiso,
                 })
                 .then(result => {
                     let data = result.data;

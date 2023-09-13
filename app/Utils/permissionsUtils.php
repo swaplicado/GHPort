@@ -7,13 +7,13 @@ use Illuminate\Support\Arr;
 use GuzzleHttp\Client;
 
 class permissionsUtils {
-    public static function getMyEmployeeslPermissions(){
+    public static function getMyEmployeeslPermissions($cl = 0){
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
         $lPermissions = [];
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         foreach($lEmployees as $emp){
-            array_push($lPermissions, permissionsUtils::getUserPermissions($emp->id));
+            array_push($lPermissions, permissionsUtils::getUserPermissions($emp->id,$cl));
         }
 
         $lPermissions = Arr::collapse($lPermissions);
@@ -21,12 +21,12 @@ class permissionsUtils {
         return $lPermissions;
     }
 
-    public static function getMyManagerlPermissions($org_chart_job_id){
+    public static function getMyManagerlPermissions($org_chart_job_id, $cl){
         $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
         $lPermissions = [];
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         foreach($lEmployees as $emp){
-            array_push($lPermissions, permissionsUtils::getUserPermissions($emp->id));
+            array_push($lPermissions, permissionsUtils::getUserPermissions($emp->id,$cl));
         }
 
         $lPermissions = Arr::collapse($lPermissions);
@@ -58,8 +58,29 @@ class permissionsUtils {
         return $oPermission;
     }
 
-    public static function getUserPermissions($user_id){
-        $lPermissions = \DB::table('hours_leave as hr')
+    public static function getUserPermissions($user_id,$cl = 0){
+        if($cl != 0){
+            $lPermissions = \DB::table('hours_leave as hr')
+                        ->leftJoin('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
+                        ->leftJoin('permission_cl as cl', 'cl.id_permission_cl', '=', 'hr.cl_permission_id')
+                        ->leftJoin('sys_applications_sts as st', 'st.id_applications_st', '=', 'hr.request_status_id')
+                        ->leftJoin('users as u', 'u.id', '=', 'hr.user_apr_rej_id')
+                        ->leftJoin('users as emp', 'emp.id', '=', 'hr.user_id')
+                        ->where('hr.is_deleted', 0)
+                        ->where('hr.user_id', $user_id)
+                        ->where('cl.id_permission_cl',$cl)
+                        ->select(
+                            'hr.*',
+                            'tp.id_permission_tp',
+                            'tp.permission_tp_name',
+                            'cl.permission_cl_name',
+                            'st.applications_st_name',
+                            'u.full_name_ui as user_apr_rej_name',
+                            'emp.full_name_ui as employee',
+                        )
+                        ->get();
+        }else{
+            $lPermissions = \DB::table('hours_leave as hr')
                         ->leftJoin('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
                         ->leftJoin('permission_cl as cl', 'cl.id_permission_cl', '=', 'hr.cl_permission_id')
                         ->leftJoin('sys_applications_sts as st', 'st.id_applications_st', '=', 'hr.request_status_id')
@@ -77,6 +98,8 @@ class permissionsUtils {
                             'emp.full_name_ui as employee',
                         )
                         ->get();
+        }
+        
 
         foreach ($lPermissions as $permission) {
             $result = permissionsUtils::convertMinutesToHours($permission->minutes);

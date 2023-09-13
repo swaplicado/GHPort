@@ -198,7 +198,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestIncidences/incidences/seeLikeManager', 'Pages\requestIncidencesController@seeLikeManager')->name('requestIncidences_seeLikeManager');
     Route::post('requestIncidences/incidences/cancelIncidence', 'Pages\requestIncidencesController@cancelIncidence')->name('requestIncidences_cancel');
 
-    Route::get('permission', 'Pages\permissionController@index')->name('permission_index');
+    Route::get('permission/{id?}', 'Pages\permissionController@index')->name('permission_index');
     Route::post('permission/save', 'Pages\permissionController@createPermission')->name('permission_create');
     Route::post('permission/update', 'Pages\permissionController@updatePermission')->name('permission_update');
     Route::post('permission/getPermission', 'Pages\permissionController@getPermission')->name('permission_getPermission');
@@ -207,6 +207,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('permission/checkMail', 'Pages\permissionController@checkMail')->name('permission_checkMail');
 
     Route::get('requestPermission/{id?}', 'Pages\requestPermissionController@index')->name('requestPermission_index');
+    Route::get('reqPer/personal/{id?}', 'Pages\requestPermissionController@PersonalTheme')->name('requestPersonalPermission');
     Route::post('requestPermission/permission/getEmployee', 'Pages\requestPermissionController@getEmployee')->name('requestPermission_getEmployee');
     Route::post('requestPermission/permission/approbePermission', 'Pages\requestPermissionController@approbePermission')->name('requestPermission_approbe');
     Route::post('requestPermission/permission/rejectPermission', 'Pages\requestPermissionController@rejectPermission')->name('requestPermission_reject');
@@ -221,7 +222,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('createAuth', 'Pages\configAuthController@createAuth')->name('create_authConf');
     Route::post('deleteAuth', 'Pages\configAuthController@deleteAuth')->name('delete_authConf');
 
-    Route::get('annUsersChilds', 'Pages\annUsersChildsController@employeesDirectAnn')->name('annUsersChilds');
+    Route::get('annUsersChilds', 'Pages\annUsersChildsController@employeesDirectAnn')->name('aniversarios_usuarios');
 
-    Route::get('annAllUsersChilds', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('annAllUsersChilds');
+    Route::get('annAllUsersChilds', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('aniversarios_todos');
+
+    Route::get('anniversaryColab', 'Pages\annUsersChildsController@employeesDirectAnn')->name('colab_ann');
+    Route::get('anniversaryAllColab', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('all_colab_ann');
 });

@@ -28,7 +28,8 @@ class requestPermissionController extends Controller
         delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
         $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
-        $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+        $lPermissions = permissionsUtils::getMyEmployeeslPermissions(2);
+        $clase_permiso = 2;
 
         $constants = [
             'SEMANA' => SysConst::SEMANA,
@@ -47,6 +48,7 @@ class requestPermissionController extends Controller
         $lClass = \DB::table('permission_cl')
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
+                        ->where('id_permission_cl',2)
                         ->get();
 
         $lHolidays = \DB::table('holidays')
@@ -98,8 +100,90 @@ class requestPermissionController extends Controller
                                             ->with('lEmployees', $lEmployees)
                                             ->with('permission_time', $config->permission_time)
                                             ->with('myManagers', $myManagers)
+                                            ->with('clase_permiso', $clase_permiso)
                                             ->with('initialCalendarDate', $initialCalendarDate);
     }
+
+    public function PersonalTheme($permission_id = null){
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
+        $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
+        $lPermissions = permissionsUtils::getMyEmployeeslPermissions(1);
+        $clase_permiso = 1;
+
+        $constants = [
+            'SEMANA' => SysConst::SEMANA,
+            'QUINCENA' => SysConst::QUINCENA,
+            'APPLICATION_CREADO' => SysConst::APPLICATION_CREADO,
+            'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
+            'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+        ];
+
+        $lTypes = \DB::table('cat_permission_tp')
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->get();
+        
+        $lClass = \DB::table('permission_cl')
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->where('id_permission_cl',1)
+                        ->get();
+
+        $lHolidays = \DB::table('holidays')
+                        ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
+                        ->where('is_deleted', 0)
+                        ->pluck('fecha');
+
+        $lTemp_special = [];
+
+        $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
+
+        $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
+
+        $ids = $lEmployees->pluck('id');
+
+        $oPermission = null;
+        $oUser = null;
+        if($permission_id != null){
+            $oPermission = \DB::table('hours_leave')
+                        ->where('id_hours_leave', $permission_id)
+                        ->whereIn('user_id', $ids)
+                        ->first();
+
+            if($oPermission != null){
+                $result = permissionsUtils::convertMinutesToHours($oPermission->minutes);
+                $oPermission->hours = $result[0];
+                $oPermission->min = $result[1];
+                $oUser = $lEmployees->where('id', $oPermission->user_id)->first();
+            }
+
+            if($oPermission != null){
+                $oUser = $lEmployees->where('id', $oPermission->user_id)->first();
+            }
+        }
+
+        $config = \App\Utils\Configuration::getConfigurations();
+
+        $now = Carbon::now();
+        $initialCalendarDate = $now->subMonths(1)->toDateString();
+
+        return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
+                                            ->with('constants', $constants)
+                                            ->with('lTypes', $lTypes)
+                                            ->with('lClass', $lClass)
+                                            ->with('lHolidays', $lHolidays)
+                                            ->with('lTemp', $lTemp_special)
+                                            ->with('oPermission', $oPermission)
+                                            ->with('oUser', $oUser)
+                                            ->with('lEmployees', $lEmployees)
+                                            ->with('permission_time', $config->permission_time)
+                                            ->with('myManagers', $myManagers)
+                                            ->with('clase_permiso', $clase_permiso)
+                                            ->with('initialCalendarDate', $initialCalendarDate);
+    }
+
 
     public function getEmployee(Request $request){
         try {
@@ -120,8 +204,12 @@ class requestPermissionController extends Controller
             $oUser->antiquity = $human;
 
             $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($oUser->org_chart_job_id, $oUser->id, $oUser->job_id);
-
-            $lPermissions = permissionsUtils::getUserPermissions($oUser->id);
+            if( isset($request->cl) ){
+                $lPermissions = permissionsUtils::getUserPermissions($oUser->id,$request->cl);    
+            }else{
+                $lPermissions = permissionsUtils::getUserPermissions($oUser->id);
+            }
+            
         } catch (\Throwable $th) {
             return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
         }
@@ -178,9 +266,9 @@ class requestPermissionController extends Controller
             }
 
             if(is_null($org_chart_job_id)){
-                $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions($permission->cl_permission_id);
             }else{
-                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id, $permission->cl_permission_id);
             }
             
             notificationsUtils::revisedNotificationFromAction(SysConst::TYPE_PERMISO_HORAS, $permission->id_hours_leave);
@@ -261,9 +349,9 @@ class requestPermissionController extends Controller
             }
 
             if(is_null($org_chart_job_id)){
-                $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions($permission->cl_permission_id);
             }else{
-                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id, $permission->cl_permission_id);
             }
 
             notificationsUtils::revisedNotificationFromAction(SysConst::TYPE_PERMISO_HORAS, $permission->id_hours_leave);
@@ -347,9 +435,9 @@ class requestPermissionController extends Controller
                     return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
                 }
 
-                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id, $request->cl);
             }else{
-                $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions($request->cl);
             }
 
         } catch (\Throwable $th) {
@@ -416,9 +504,9 @@ class requestPermissionController extends Controller
         }
 
         if(is_null($org_chart_job_id)){
-            $lPermissions = permissionsUtils::getMyEmployeeslPermissions();
+            $lPermissions = permissionsUtils::getMyEmployeeslPermissions($oIncidence->cl_permission_id);
         }else{
-            $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id);
+            $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id,$oIncidence->cl_permission_id);
         }
 
         $mypool = Pool::create();

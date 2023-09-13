@@ -1,6 +1,8 @@
 @extends('layouts.principal')
 @section('headStyles')
 <link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
+
+<link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
 <!-- Standalone -->
 <link href="myApp/Utils/SDatePicker/css/datepicker.min.css" rel="stylesheet" />
 <!-- For Bootstrap 4 -->
@@ -9,6 +11,7 @@
 <link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
 <!-- For Foundation -->
 <link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
+
 <style>
     /* ul {
         -webkit-column-count: 3;
@@ -30,6 +33,7 @@
 @endsection
 @section('headJs')
     <script src="{{ asset("daterangepicker/jquery.daterangepicker.min.js") }}" type="text/javascript"></script>
+    <script src="{{ asset("select2js/js/select2.min.js") }}"></script>
     <script>
         function GlobalData(){
             this.oUser = <?php echo json_encode($user); ?>;
@@ -188,7 +192,7 @@
                     @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'send' => true])
                     <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                         <label for="rqStatus">Filtrar por estatus: </label>
-                        <select class="form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
+                        <select class="select2-class form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
                             <option value="0" selected>Creados</option>
                             <option value="1">Enviados</option>
                             <option value="2">Aprobados</option>

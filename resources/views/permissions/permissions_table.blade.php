@@ -18,7 +18,7 @@
             <th style="max-width: 20%;">Fecha revisión</th>
             <th>Fecha</th>
             <th>Estatus</th>
-            <th>fecha env</th>
+            <th>Fecha envío</th>
         </thead>
         <tbody>
             <tr v-for="permission in lPermissions">

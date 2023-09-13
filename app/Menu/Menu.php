@@ -24,11 +24,11 @@ class Menu {
         $subVacaciones = [];
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($subVacaciones,['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colab. Direct.']);       
+            array_push($subVacaciones,['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colabs. direct.']);       
         }
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($subVacaciones,['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colab.']);       
+            array_push($subVacaciones,['route' => route('allEmplVacations'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colabs.']);       
         }
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
@@ -53,6 +53,12 @@ class Menu {
             array_push($incidencias,['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
         }
 
+        array_push($incidencias,['route' => route('permission_index', ['id' => 1]), 'icon' => 'bx bx-file bx-xs', 'name' => 'Permiso personal hrs.']);
+        
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($incidencias,['route' => route('requestPersonalPermission'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Sol. permiso per. hrs.']);
+        }
+
         array_push($lMenus,(object) ['type' => $list, 'list' =>$incidencias, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias']);
 
         //cierra segundo grupo de menus
@@ -61,13 +67,13 @@ class Menu {
         //arreglo paraa ingresar permisos
         $permisos = [];
 
-        array_push($permisos,['route' => route('permission_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Mis solicitudes']);
+        array_push($permisos,['route' => route('permission_index', ['id' => 2]), 'icon' => 'bx bx-file bx-xs', 'name' => 'Mis solicitudes']);
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($permisos,['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
         }
 
-        array_push($lMenus,(object) ['type' => $list, 'list' =>$permisos, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permisos hrs.', 'id' => 'Permisos']);
+        array_push($lMenus,(object) ['type' => $list, 'list' =>$permisos, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Tema laboral hrs.', 'id' => 'Permisos']);
 
         //cierrar tercer grupo de menus
 
@@ -93,15 +99,15 @@ class Menu {
         $festejos = [];
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($festejos,['route' => route('annUsersChilds'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colab. directos']);       
+            array_push($festejos,['route' => route('colab_ann'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colabs.']);       
         }
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($festejos,['route' => route('annAllUsersChilds'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colabs.']);       
+            array_push($festejos,['route' => route('all_colab_ann'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Todos mis colabs.']);       
         }
 
         if( $oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($consultas,['type' => $list, 'list' => $subVacaciones, 'icon' => 'bx bxs-cake bx-xs', 'name' => 'Festejos colabs.', 'id' => 'aniv_colabs']);       
+            array_push($consultas,['type' => $list, 'list' => $festejos, 'icon' => 'bx bxs-cake bx-xs', 'name' => 'Festejos colabs.', 'id' => 'aniv_colabs']);       
         }
         //cierra submenu
 

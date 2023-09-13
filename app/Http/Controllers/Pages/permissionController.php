@@ -21,9 +21,12 @@ use App\Utils\notificationsUtils;
 
 class permissionController extends Controller
 {
-    public function index(){
-        $lPermissions = permissionsUtils::getUserPermissions(delegationUtils::getIdUser());
+    public function index($id){
+        $lPermissions = permissionsUtils::getUserPermissions(delegationUtils::getIdUser(),$id);
+        $permiso_personal = 1;
+        $permiso_laboral = 2;
 
+        $clase_permiso = 0;
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -38,10 +41,21 @@ class permissionController extends Controller
                         ->where('is_active', 1)
                         ->get();
         
-        $lClass = \DB::table('permission_cl')
+        if( $id == $permiso_laboral ){
+            $lClass = \DB::table('permission_cl')
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
+                        ->where('id_permission_cl', $permiso_laboral)
                         ->get();
+            $clase_permiso = $permiso_laboral;
+        }else {
+            $lClass = \DB::table('permission_cl')
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->where('id_permission_cl', $permiso_personal)
+                        ->get();
+            $clase_permiso = $permiso_personal;
+        }
 
         $lHolidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
@@ -71,7 +85,8 @@ class permissionController extends Controller
                                             ->with('oUser', \Auth::user())
                                             ->with('permission_time', $config->permission_time)
                                             ->with('lSuperviser', $lSuperviser)
-                                            ->with('initialCalendarDate', $initialCalendarDate);
+                                            ->with('initialCalendarDate', $initialCalendarDate)
+                                            ->with('clase_permiso', $clase_permiso);
     }
 
     public function createPermission(Request $request){
@@ -104,7 +119,7 @@ class permissionController extends Controller
             $permission->updated_by = \Auth::user()->id;
             $permission->save();
 
-            $lPermissions = permissionsUtils::getUserPermissions($employee_id);
+            $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
 
             \DB::commit();
         } catch (\Throwable $th) {
@@ -138,7 +153,7 @@ class permissionController extends Controller
             $permission->updated_by = \Auth::user()->id;
             $permission->update();
 
-            $lPermissions = permissionsUtils::getUserPermissions($employee_id);
+            $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
 
             \DB::commit();
         } catch (\Throwable $th) {
@@ -159,7 +174,7 @@ class permissionController extends Controller
             $permission->is_deleted = true;
             $permission->update();
 
-            $lPermissions = permissionsUtils::getUserPermissions($employee_id);
+            $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -230,7 +245,7 @@ class permissionController extends Controller
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
 
-            $lPermissions = permissionsUtils::getUserPermissions($employee_id);
+            $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
 
             $data = new \stdClass;
             $data->user_id = null;
@@ -308,7 +323,7 @@ class permissionController extends Controller
                 return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
             }
 
-            $lPermissions = permissionsUtils::getUserPermissions($employee_id);
+            $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
 
             $employee = \DB::table('users')
                             ->where('id', $permission->user_id)

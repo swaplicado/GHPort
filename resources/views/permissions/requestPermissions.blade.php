@@ -21,6 +21,7 @@
             this.permission_time = <?php echo json_encode($permission_time); ?>;
             this.lTypes = <?php echo json_encode($lTypes); ?>;
             this.lClass = <?php echo json_encode($lClass); ?>;
+            this.clase_permiso = <?php echo json_encode($clase_permiso); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
@@ -70,9 +71,9 @@
 
 @section('content') 
 <a class="btn btn-outline-secondary focus" id="ReqPermissions" onclick="btnActive('ReqPermissions');" href="#home"
-    data-role="link">Solicitudes permisos</a>
+    data-role="link">Solicitudes</a>
 <a class="btn btn-outline-secondary" id="gestionPermissions" onclick="btnActive('gestionPermissions');" href="#other"
-    data-role="link">Gestión permisos</a>
+    data-role="link">Gestión</a>
 <div class="card shadow mb-4" id="permissionsApp">
         
     @include('permissions.modal_permissions')
@@ -80,7 +81,12 @@
     <div data-page="home" id="home" class="active">
         <div class="card-header">
             <h3>
-                <b>solicitudes de permisos de horas</b>
+                @if($clase_permiso == 1)
+                    <b>solicitudes permiso personal horas</b>
+                @else
+                    <b>solicitudes tema laboral horas</b>
+                @endif
+
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -124,7 +130,11 @@
     <div data-page="other" id="other">
         <div class="card-header">
             <h3>
-                <b>Solicitudes permisos</b>
+                @if($clase_permiso == 1)
+                    <b>solicitudes permiso personal por horas</b>
+                @else
+                    <b>solicitudes tema laboral por horas</b>
+                @endif
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -232,14 +242,14 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_ReqPermissions',
-                                        'colTargets' => [0,2,3,4,15],
+                                        'colTargets' => [0,2,3,4,6,17],
                                         'colTargetsSercheable' => [1,5],
                                         'colTargetsNoOrder' => [6,7,8,9,10,11,12,13,14],
                                         'noDom' => true,
                                         'select' => true,
                                         'show' => true,
                                         'cancel' => true,
-                                        'order' => [[6, 'asc'], [15, 'desc']],
+                                        'order' => [[7, 'asc'], [17, 'desc']],
                                     ] )
 @include('layouts.manual_jsControll')
 <script>

@@ -32,10 +32,12 @@ class authorizePermissionMail extends Mailable
     {
         $permission = \DB::table('hours_leave as hr')
                             ->join('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
+                            ->join('permission_cl as cl', 'cl.id_permission_cl', '=', 'hr.cl_permission_id')
                             ->where('hr.id_hours_leave', $this->permission_id)
                             ->select(
                                 'hr.*',
                                 'tp.permission_tp_name',
+                                'cl.id_permission_cl AS class',
                             )
                             ->first();
 
@@ -48,11 +50,22 @@ class authorizePermissionMail extends Mailable
         $permission->time = $result[0].':'.$result[1].' hrs';
 
         $email = "Portalgh@aeth.mx";
-        return $this->from($email)
-                        ->subject('[PGH] Solicitud permiso horas '.$employee->short_name)
+
+        if( $permission->class == 1 ){
+            return $this->from($email)
+                        ->subject('[PGH] Solicitud permiso personal por horas '.$employee->short_name)
                         ->view('mails.authorizedPermissionMail')
                         ->with('permission', $permission)
                         ->with('employee', $employee)
                         ->with('sup_comments_n', $permission->sup_comments_n);
+        }else{
+            return $this->from($email)
+                        ->subject('[PGH] Solicitud tema laboral por horas '.$employee->short_name)
+                        ->view('mails.authorizedPermissionMail')
+                        ->with('permission', $permission)
+                        ->with('employee', $employee)
+                        ->with('sup_comments_n', $permission->sup_comments_n);
+        }
+        
     }
 }

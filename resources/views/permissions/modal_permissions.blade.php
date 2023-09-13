@@ -3,7 +3,11 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header modal-header-small">
-                <h5 class="modal-title" id="exampleModalLabel">Permiso</h5>
+                @if ($clase_permiso == 1 )
+                    <h5 class="modal-title" id="exampleModalLabel">Permiso personal por horas</h5>
+                @else
+                    <h5 class="modal-title" id="exampleModalLabel">Tema laboral por horas</h5>
+                @endif
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
