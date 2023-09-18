@@ -42,7 +42,7 @@
             <div class="card-body">
                 <div>
                     <h3>{{$employee->full_name}}
-                        @if($permission->cl == 1)
+                        @if($permission->class == 1)
                             @if ($permission->request_status_id == 3)
                                 <span style="color: green">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
                             @elseif($permission->request_status_id == 4)
@@ -95,10 +95,10 @@
                     </div>
                     <br>
                 <div style="text-align: left">
-                    @if ($permission->cl == 1)
+                    @if ($permission->class == 1)
                         <label class="form-label">Haz clic en la siguiente liga para revisar tus permisos personales por horas:</label>
                         <br>
-                        <a href="{{route('permission_index', $permission->cl)}}" target="_blank">
+                        <a href="{{route('permission_index', $permission->class)}}" target="_blank">
                             <button  class="btn btn-primary">
                                 Ver mis permisos
                             </button>
@@ -106,7 +106,7 @@
                     @else
                         <label class="form-label">Haz clic en la siguiente liga para revisar tus temas laborales por horas:</label>
                         <br>
-                        <a href="{{route('permission_index', $permission->cl)}}" target="_blank">
+                        <a href="{{route('permission_index', $permission->class)}}" target="_blank">
                             <button  class="btn btn-primary">
                                 Ver mis permisos
                             </button>
@@ -118,10 +118,10 @@
                     <p>
                         Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
 
-                        @if ($permission->cl == 1)
-                            <a href="{{route('permission_index', $permission->cl)}}" target="_blank">{{route('permission_index', $permission->cl)}}</a>
+                        @if ($permission->class == 1)
+                            <a href="{{route('permission_index', $permission->class)}}" target="_blank">{{route('permission_index', $permission->class)}}</a>
                         @else
-                            <a href="{{route('permission_index', $permission->cl)}}" target="_blank">{{route('permission_index', $permission->cl)}}</a>
+                            <a href="{{route('permission_index', $permission->class)}}" target="_blank">{{route('permission_index', $permission->class)}}</a>
                         @endif
                     </p>
                 </div>
