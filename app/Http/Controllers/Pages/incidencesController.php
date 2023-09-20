@@ -552,6 +552,7 @@ class incidencesController extends Controller
                                 ->join('applications_breakdowns as ab', 'ab.application_id', '=', 'a.id_application')
                                 ->where('a.user_id', $request->user_id)
                                 ->where('a.type_incident_id', SysConst::TYPE_CUMPLEAÑOS)
+                                ->whereIn('a.request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO, SysConst::APPLICATION_CONSUMIDO])
                                 ->where('a.is_deleted', 0)
                                 ->orderBy('ab.application_year')
                                 ->pluck('ab.application_year');
