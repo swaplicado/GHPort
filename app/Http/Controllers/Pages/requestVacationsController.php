@@ -297,7 +297,7 @@ class requestVacationsController extends Controller
     public function acceptRequest(Request $request){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
-        delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
         $application = Application::findOrFail($request->id_application);
         if(!$application->send_default){
             delegationUtils::getIsMyEmployeeUser($request->id_user);
