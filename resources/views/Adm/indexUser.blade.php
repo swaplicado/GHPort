@@ -19,6 +19,7 @@
             this.lUser = <?php echo json_encode($lUser); ?>;
             this.lOrgChart = <?php echo json_encode($lOrgChart); ?>;
             this.lPlan = <?php echo json_encode($lPlan); ?>;
+            this.lRol = <?php echo json_encode($lRol); ?>;
             this.updateRoute = <?php echo json_encode( route('update_user') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_user') ); ?>;
             this.manualRoute = [];
@@ -31,11 +32,13 @@
                 'mail':3,
                 'numUser':4,
                 'benDate':5,
-                'nameOrg':6,
-                'idOrg':7,
-                'nameVp':8,
-                'idPlan':9,
-                'active':10,
+                'nameRol':6,
+                'idRol':7,
+                'nameOrg':8,
+                'idOrg':9,
+                'nameVp':10,
+                'idPlan':11,
+                'active':12,
             };
         }
         var oServerData = new GlobalData();
@@ -65,6 +68,8 @@
                         <th>Correo</th>
                         <th># usuario</th>
                         <th>Inicio beneficios</th>
+                        <th>Rol</th>
+                        <th>id_rol</th>
                         <th>Organigrama</th>
                         <th>id_org</th>
                         <th>Plan de vacaciones</th>
@@ -81,6 +86,8 @@
                         <td>@{{user.mail}}</td>
                         <td>@{{user.numUser}}</td>
                         <td>@{{user.benDate}}</td>
+                        <td>@{{user.nameRol}}</td>
+                        <td>@{{user.idRol}}</td>
                         <td>@{{user.nameOrg}}</td>
                         <td>@{{user.idOrg}}</td>
                         <td>@{{user.nameVp}}</td>
@@ -99,7 +106,7 @@
 @section('scripts')
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_user',
-                                            'colTargets' => [0,7,9,10],
+                                            'colTargets' => [0,7,9,11,12],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'edit_modal' => true,

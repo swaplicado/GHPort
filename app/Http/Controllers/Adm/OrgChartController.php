@@ -94,7 +94,7 @@ class OrgChartController extends Controller
                 $area->head_user_id = null;
                 $area->head_user = null;
             }
-            $area->org_level = $area->level. ' - '. $area->name;
+            $area->org_level = $area->name;
             
         }
 

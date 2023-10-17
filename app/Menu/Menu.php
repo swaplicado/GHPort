@@ -111,9 +111,7 @@ class Menu {
         }
         //cierra submenu
 
-        if( $oUser->rol_id == 1 || $oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($lMenus,(object) ['type' => $list, 'list' =>$consultas, 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Consultas', 'id' => 'Consultas']);    
-        }
+        array_push($lMenus,(object) ['type' => $list, 'list' =>$consultas, 'icon' => 'bx bx-sitemap bx-sm', 'name' => 'Consultas', 'id' => 'Consultas']);   
 
         //cierra quinto grupo de menus
 

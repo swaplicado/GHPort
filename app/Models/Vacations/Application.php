@@ -11,8 +11,6 @@ class Application extends Model
     protected $fillable = [
         'start_date',
         'end_date',
-        'take_nb_days',
-        'take_rest_days',
         'total_days',
         'tot_calendar_days',
         'return_date',

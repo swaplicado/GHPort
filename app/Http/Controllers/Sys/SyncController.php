@@ -24,17 +24,17 @@ class SyncController extends Controller
 {
     public static function toSynchronize($withRedirect = true)
     {
-        $config = \App\Utils\Configuration::getConfigurations();
-        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        $photos = SyncController::SyncPhotos();
+        //$config = \App\Utils\Configuration::getConfigurations();
+        //$synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        //$photos = SyncController::SyncPhotos();
         $synchronized = true;
 
-        if($synchronized){
-             $newDate = Carbon::now();
-             $newDate->subMinutes(10);
+        //if($synchronized){
+             //$newDate = Carbon::now();
+             //$newDate->subMinutes(10);
     
-             \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
-        }
+             //\App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        //}
 
         return $synchronized;
     }
