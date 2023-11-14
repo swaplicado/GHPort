@@ -282,7 +282,8 @@ class requestPermissionController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+            \Log::error($th);
+            return json_encode(['sucess' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
