@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use \App\Constants\SysConst;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use GuzzleHttp\Client;
 
@@ -50,10 +51,17 @@ class permissionsUtils {
                         )
                         ->first();
 
-        $result = permissionsUtils::convertMinutesToHours($oPermission->minutes);
-        $oPermission->hours = $result[0];
-        $oPermission->min = $result[1];
-        $oPermission->time = $result[0].':'.$result[1].' hrs';
+        if($oPermission->type_permission_id!== SysConst::PERMISO_INTERMEDIO){
+            $result = permissionsUtils::convertMinutesToHours($oPermission->minutes);
+            $oPermission->hours = $result[0];
+            $oPermission->min = $result[1];
+            $oPermission->time = $result[0].':'.$result[1].' hrs';
+        }else{
+            $interOut = Carbon::createFromFormat('H:i:s', $oPermission->intermediate_out)->format('h:i A');
+            $interReturn = Carbon::createFromFormat('H:i:s', $oPermission->intermediate_return)->format('h:i A');
+            $oPermission->time = $interOut.' a '.$interReturn;
+        }
+        
 
         return $oPermission;
     }
@@ -102,8 +110,14 @@ class permissionsUtils {
         
 
         foreach ($lPermissions as $permission) {
-            $result = permissionsUtils::convertMinutesToHours($permission->minutes);
-            $permission->time = $result[0].':'.$result[1].' hrs';
+            if($permission->id_permission_tp!== SysConst::PERMISO_INTERMEDIO){
+                $result = permissionsUtils::convertMinutesToHours($permission->minutes);
+                $permission->time = $result[0].':'.$result[1].' hrs';
+            }else{
+                $interOut = Carbon::createFromFormat('H:i:s', $permission->intermediate_out)->format('h:i A');
+                $interReturn = Carbon::createFromFormat('H:i:s', $permission->intermediate_return)->format('h:i A');
+                $permission->time = $interOut.' a '.$interReturn;
+            }
         }
 
         return $lPermissions;
@@ -170,5 +184,14 @@ class permissionsUtils {
 
         $data = json_decode($jsonString);
         return $data;
+    }
+
+    public static function diffInMinutes($timeA, $timeB){
+        $hora1 = Carbon::parse($timeA);
+        $hora2 = Carbon::parse($timeB);
+
+        $diferencia = $hora1->diffInMinutes($hora2);
+
+        return $diferencia;
     }
 }

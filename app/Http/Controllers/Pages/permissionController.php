@@ -23,8 +23,8 @@ class permissionController extends Controller
 {
     public function index($id){
         $lPermissions = permissionsUtils::getUserPermissions(delegationUtils::getIdUser(),$id);
-        $permiso_personal = 1;
-        $permiso_laboral = 2;
+        $permiso_personal = SysConst::PERMISO_PERSONAL;
+        $permiso_laboral = SysConst::PERMISO_LABORAL;
 
         $clase_permiso = 0;
         $constants = [
@@ -98,6 +98,8 @@ class permissionController extends Controller
             $employee_id = $request->employee_id;
             $hours = $request->hours;
             $minutes = $request->minutes;
+            $interOut = $request->interOut;
+            $interReturn = $request->interReturn;
 
             \DB::beginTransaction();
 
@@ -117,6 +119,8 @@ class permissionController extends Controller
             $permission->is_deleted = false;
             $permission->created_by = \Auth::user()->id;
             $permission->updated_by = \Auth::user()->id;
+            $permission->intermediate_out = $interOut;
+            $permission->intermediate_return = $interReturn;
             $permission->save();
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
@@ -139,6 +143,8 @@ class permissionController extends Controller
             $hours = $request->hours;
             $minutes = $request->minutes;
             $employee_id = $request->employee_id;
+            $interOut = $request->interOut;
+            $interReturn = $request->interReturn;
 
             \DB::beginTransaction();
 
@@ -151,6 +157,8 @@ class permissionController extends Controller
             $permission->cl_permission_id = $class_id;
             $permission->emp_comments_n = $comments;
             $permission->updated_by = \Auth::user()->id;
+            $permission->intermediate_out = $interOut;
+            $permission->intermediate_return = $interReturn;
             $permission->update();
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
@@ -316,12 +324,18 @@ class permissionController extends Controller
             $permission->approved_date_n = Carbon::now()->toDateString();
             $permission->update();
 
-            $data = permissionsUtils::sendPermissionToCAP($permission);
+            $config = \App\Utils\Configuration::getConfigurations();
+            $lPermissionConfig = collect($config->hours_leave_interact_sys);
 
-            if($data->status != 'Success'){
-                \DB::rollBack();
-                return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+            $oPerConfig = $lPermissionConfig->where('type_id', $permission->type_permission_id)->first();
+            if($oPerConfig->sys_id == SysConst::CAP){
+                $data = permissionsUtils::sendPermissionToCAP($permission);
+                if($data->status != 'Success'){
+                    \DB::rollBack();
+                    return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+                }
             }
+
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
 

@@ -232,13 +232,19 @@ class requestPermissionController extends Controller
             $permission->sup_comments_n = $request->comments;
             $permission->update();
 
-            $data = permissionsUtils::sendPermissionToCAP($permission);
+            $config = \App\Utils\Configuration::getConfigurations();
+            $lPermissionConfig = collect($config->hours_leave_interact_sys);
 
-            if($data->status != 'Success'){
-                \DB::rollBack();
-                return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+            $oPerConfig = $lPermissionConfig->where('type_id', $permission->type_permission_id)->first();
+
+            if($oPerConfig->sys_id == SysConst::CAP){
+                $data = permissionsUtils::sendPermissionToCAP($permission);
+                if($data->status != 'Success'){
+                    \DB::rollBack();
+                    return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+                }
             }
-            
+
             $employee = \DB::table('users')
                             ->where('id', $permission->user_id)
                             ->first();

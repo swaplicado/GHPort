@@ -131,5 +131,24 @@ class SysConst {
      * Id del rol gerente
      */
     public const ORG_CHART_JOB_ID_TO_ADMIN = 2;
+
+    /**
+     * Clases de permisos de horas
+     */
+    public const PERMISO_PERSONAL = 1;
+    public const PERMISO_LABORAL = 2;
+    /**
+     * Tipos de permisos de horas
+     */
+    public const PERMISO_ENTRADA = 1;
+    public const PERMISO_SALIDA = 2;
+    public const PERMISO_INTERMEDIO = 3;
+
+    /**
+     * Interaccion con sistemas
+     */
+    public const PENDIENTE = 1;
+    public const SIIE = 2;
+    public const CAP = 3;
 }
 ?>

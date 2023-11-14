@@ -39,9 +39,11 @@ var app = new Vue({
         max_hours: 0,
         max_minutes: 0,
         clase_permiso: oServerData.clase_permiso,
+        interOut: null,
+        interReturn: null,
     },
     watch: {
-
+        
     },
     updated() {
         this.$nextTick(function() {
@@ -77,6 +79,10 @@ var app = new Vue({
                     data: dataType,
                 }).on('select2:select', function(e) {
                     self.type_id = e.params.data.id;
+                    self.hours = 0;
+                    self.minutes = "00";
+                    self.interOut = null;
+                    self.interReturn = null;
                 });
 
                 $('#permission_cl').select2({
@@ -87,7 +93,7 @@ var app = new Vue({
                     self.cambiarValor();
                 });
 
-                $('#permission_cl').val('').trigger('change');
+                $('#permission_cl').val(this.clase_permiso).trigger('change');
             }
         })
     },
@@ -124,6 +130,10 @@ var app = new Vue({
             data: dataType,
         }).on('select2:select', function(e) {
             self.type_id = e.params.data.id;
+            self.hours = 0;
+            self.minutes = "00";
+            self.interOut = null;
+            self.interReturn = null;
         });
 
         $('#permission_type').val('').trigger('change');
@@ -302,23 +312,63 @@ var app = new Vue({
         },
 
         checkMaxPermissionTime() {
-            let time = (this.hours * 60) + parseInt(this.minutes);
+            if(this.type_id == 3){
+                if (this.interOut == null || this.interReturn == null) {
+                    return;
+                }
 
-            if (time > this.permission_time) {
-                let horas = Math.floor(this.permission_time / 60);
-                let minutosRestantes = this.permission_time % 60;
-                SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' y ' + minutosRestantes + ' minutos.');
+                var hora1 = moment(this.interOut, 'HH:mm');
+                var hora2 = moment(this.interReturn, 'HH:mm');
 
-                this.hours = horas;
-                this.minutes = minutosRestantes;
+                var diferenciaEnMinutos = hora2.diff(hora1, 'minutes');
+                if(diferenciaEnMinutos < 1){
+                    var inputOut = document.getElementById('inputOut');
+                    var inputReturn = document.getElementById('inputReturn');
+                    inputOut.blur();
+                    inputReturn.blur();
 
-                this.minutes = Math.floor(this.minutes);
-                this.minutes = (this.minutes).toString();
-                this.minutes = this.minutes.padStart(2, "0");
+                    SGui.showMessage('', 'La hora de salida no puede ser menor a la hora de regreso');
 
-                return false;
+                    this.interOut = null;
+                    this.interReturn = null;
+
+                    return false;
+                }
+
+                if(diferenciaEnMinutos > this.permission_time && this.clase_permiso == 1){
+                    
+                    var inputOut = document.getElementById('inputOut');
+                    var inputReturn = document.getElementById('inputReturn');
+                    inputOut.blur();
+                    inputReturn.blur();
+
+                    let horas = Math.floor(this.permission_time / 60);
+                    let minutosRestantes = this.permission_time % 60;
+                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.');
+
+                    this.interOut = null;
+                    this.interReturn = null;
+
+                    return false;
+                }
+            }else{
+                let time = (this.hours * 60) + parseInt(this.minutes);
+    
+                if (time > this.permission_time) {
+                    let horas = Math.floor(this.permission_time / 60);
+                    let minutosRestantes = this.permission_time % 60;
+                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.');
+    
+                    this.hours = horas;
+                    this.minutes = minutosRestantes;
+    
+                    this.minutes = Math.floor(this.minutes);
+                    this.minutes = (this.minutes).toString();
+                    this.minutes = this.minutes.padStart(2, "0");
+    
+                    return false;
+                }
             }
-
             return true;
         },
 
@@ -404,6 +454,7 @@ var app = new Vue({
                     if (data.success) {
                         this.oPermission = data.oPermission;
                         this.type_name = this.oPermission.permission_tp_name;
+                        this.class_name = this.oPermission.permission_cl_name;
                         resolve(data.oPermission);
                     } else {
                         SGui.showMessage('', data.message, data.icon);
@@ -424,10 +475,12 @@ var app = new Vue({
             this.minutes = "00";
             this.type_id = null;
             $('#permission_type').val('').trigger('change');
-            this.class_id = null;
-            $('#permission_cl').val('').trigger('change');
+            this.class_id = this.clase_permiso;
+            $('#permission_cl').val(this.clase_permiso).trigger('change');
             this.comments = null;
             this.isEdit = false;
+            this.interOut = null;
+            this.interReturn = null;
         },
 
         async showModal(data = null) {
@@ -452,6 +505,8 @@ var app = new Vue({
                 $('#date-range-001').val(this.oPermission.start_date).trigger('change');
                 $('#date-range-002').val(this.oPermission.end_date).trigger('change');
                 this.comments = this.oPermission.emp_comments_n;
+                this.interOut = this.oPermission.intermediate_out;
+                this.interReturn = this.oPermission.intermediate_return;
                 Swal.close();
             } else {
                 if (this.HasPermissionsCreated()) {
@@ -487,9 +542,16 @@ var app = new Vue({
                 return;
             }
 
-            if ((this.hours < 1 && this.minutes < 1) || this.hours == null && this.minutes == null) {
-                SGui.showMessage('', 'Debe ingresar tiempo de permiso');
-                return;
+            if(this.type_id != 3){
+                if ((this.hours < 1 && this.minutes < 1) || this.hours == null && this.minutes == null) {
+                    SGui.showMessage('', 'Debe ingresar tiempo de permiso');
+                    return;
+                }
+            }else{
+                if (this.interOut == null || this.interReturn == null) {
+                    SGui.showMessage('', 'Debe ingresar tiempo de permiso');
+                    return;
+                }
             }
 
             SGui.showWaiting(15000);
@@ -511,6 +573,8 @@ var app = new Vue({
                     'employee_id': this.oUser.id,
                     'hours': this.hours,
                     'minutes': this.minutes,
+                    'interOut': this.interOut,
+                    'interReturn': this.interReturn,
                 })
                 .then(result => {
                     let data = result.data;

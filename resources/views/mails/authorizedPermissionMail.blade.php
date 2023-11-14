@@ -44,17 +44,33 @@
                     <h3>{{$employee->full_name}}
                         @if($permission->class == 1)
                             @if ($permission->request_status_id == 3)
-                                <span style="color: green">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
+                                @if ($permission->type_permission_id != 3)
+                                    <span style="color: green">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
+                                @else
+                                    <span style="color: green">su solicitud permiso personal por horas ha sido aprobada:</span>
+                                @endif
                             @elseif($permission->request_status_id == 4)
-                                <span style="color: red">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                                @if ($permission->type_permission_id != 3)
+                                    <span style="color: red">su solicitud permiso personal por horas de {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                                @else
+                                    <span style="color: red">su solicitud permiso personal por horas ha sido rechazada:</span>
+                                @endif
                             @else
                                 comprobar el estatus de su solicitud presionando el botón "Ver mis permisos":
                             @endif    
                         @else
                             @if ($permission->request_status_id == 3)
-                                <span style="color: green">su solicitud de tema laboral por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
+                                @if ($permission->type_permission_id != 3)
+                                    <span style="color: green">su solicitud de tema laboral por horas de {{$permission->permission_tp_name}} ha sido aprobada:</span>
+                                @else
+                                    <span style="color: green">su solicitud de tema laboral por horas ha sido aprobada:</span>
+                                @endif
                             @elseif($permission->request_status_id == 4)
-                                <span style="color: red">su solicitud de tema laboral por horas de {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                                @if ($permission->type_permission_id != 3)
+                                    <span style="color: red">su solicitud de tema laboral por horas de {{$permission->permission_tp_name}} ha sido rechazada:</span>
+                                @else
+                                    <span style="color: red">su solicitud de tema laboral por horas ha sido rechazada:</span>
+                                @endif
                             @else
                                 comprobar el estatus de su solicitud presionando el botón "Ver mis permisos":
                             @endif

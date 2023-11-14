@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                             <div class="myBreakLine"></div>
-                            <div class="row">
+                            <div class="row" v-if="type_id != 3">
                                 <div class="col-md-3">
                                     <label for=""></label>
                                 </div>
@@ -48,6 +48,20 @@
                                 </div>
                                 <div class="col-md-1">
                                     <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                </div>
+                            </div>
+                            <div class="row" v-if="type_id == 3">
+                                <div class="col-md-1">
+                                    <label for="">Salida:</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="time" v-model="interOut" id="inputOut" v-on:blur="checkMaxPermissionTime()"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for="">Regreso:</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="time" v-model="interReturn" id="inputReturn" v-on:blur="checkMaxPermissionTime()"/>
                                 </div>
                             </div>
                         </div>

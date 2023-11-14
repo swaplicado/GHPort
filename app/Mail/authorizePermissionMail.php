@@ -2,6 +2,8 @@
 
 namespace App\Mail;
 
+use App\Constants\SysConst;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -45,9 +47,15 @@ class authorizePermissionMail extends Mailable
                         ->where('id', $permission->user_id)
                         ->first();
 
+        if($permission->type_permission_id != SysConst::PERMISO_INTERMEDIO){
+            $result = permissionsUtils::convertMinutesToHours($permission->minutes);
+            $permission->time = $result[0].':'.$result[1].' hrs';
+        }else{
+            $interOut = Carbon::createFromFormat('H:i:s', $permission->intermediate_out)->format('h:i A');
+            $interReturn = Carbon::createFromFormat('H:i:s', $permission->intermediate_return)->format('h:i A');
+            $permission->time = $interOut.' a '.$interReturn;
+        }
         $permission->start_date = dateUtils::formatDate($permission->start_date, 'D/m/Y dddd');
-        $result = permissionsUtils::convertMinutesToHours($permission->minutes);
-        $permission->time = $result[0].':'.$result[1].' hrs';
 
         $email = "Portalgh@aeth.mx";
 

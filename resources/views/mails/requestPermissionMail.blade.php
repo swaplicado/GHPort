@@ -108,7 +108,7 @@
                     @if ($permission->class == 1)
                         <p>
                             Si se presenta algún problema con la liga, copia y pega la siguiente dirección en tu navegador web: 
-                            <a href="{{route('requestPersonalPermission', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestPermission_index', ['id' => $permission->id_hours_leave])}}</a>
+                            <a href="{{route('requestPersonalPermission', ['id' => $permission->id_hours_leave])}}" target="_blank">{{route('requestPersonalPermission', ['id' => $permission->id_hours_leave])}}</a>
                         </p>
                     @else
                         <p>
