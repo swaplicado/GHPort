@@ -14,7 +14,11 @@ class CapLinkUtils {
                             ->where('id_company', $employee->company_id)
                             ->value('external_id');
 
-        $appBreakDowns = ApplicationsBreakdown::where('application_id', $oIncidences->id_application)->get()->pluck('id_application_breakdown')->toArray();
+        if($oIncidences->type_incident_id == SysConst::TYPE_CUMPLEAÑOS || $oIncidences->type_incident_id == SysConst::TYPE_VACACIONES){
+            $appBreakDowns = ApplicationsBreakdown::where('application_id', $oIncidences->id_application)->get()->pluck('id_application_breakdown')->toArray();
+        }else{
+            $appBreakDowns = [$oIncidences->id_application];
+        }
 
         $typeIncident = \DB::table('cat_incidence_tps')
                             ->where('id_incidence_tp', $oIncidences->type_incident_id)
@@ -37,8 +41,9 @@ class CapLinkUtils {
             'base_uri' => $config->urlSync,
             'timeout' => 30.0,
         ]);
+        $sArr = json_encode($arrJson);
 
-        $response = $client->request('GET', 'getCancel/' . json_encode($arrJson));
+        $response = $client->request('GET', 'getCancel/' . $sArr);
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
 
