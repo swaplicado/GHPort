@@ -228,4 +228,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('anniversaryColab', 'Pages\annUsersChildsController@employeesDirectAnn')->name('colab_ann');
     Route::get('anniversaryAllColab', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('all_colab_ann');
+
 });
+/**
+ * Rutas permisos 
+ */
+Route::get('permissionsToday', 'Pages\permissionsTodayController@index')->name('permissions_today');
+Route::get('permissionsToday/getPermissions', 'Pages\permissionsTodayController@getlPermissions')->name('permissions_today_get');
