@@ -41,9 +41,9 @@
             this.routeSeeLikeManager = <?php echo json_encode(route('requestPermission_seeLikeManager')) ?>;
             this.routePermission_cancel = <?php echo json_encode(route('requestPermission_cancel')) ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:solicitudesvacaciones" ); ?>;
-            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:gestionvacaciones" ); ?>;
-            this.manualRoute[2] = <?php echo json_encode( "http://192.168.1.233:8080/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos#gestion" ); ?>;
+            this.manualRoute[2] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:mispermisos" ); ?>;
             this.indexes_permission = {
                 'id': 0,
                 'request_status_id': 1,
