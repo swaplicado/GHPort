@@ -284,7 +284,7 @@ class UsersController extends Controller
                 $us->password = \Hash::make($request->username);
                 $us->is_active = $request->active; 
                 $us->vacation_plan_id = $request->selVac;
-                $us->org_chart_job_id = $request->selOrg;
+                $us->org_chart_job_id = $request->selArea;
                 $us->updated_by = \Auth::user()->id;
                 $us->changed_password = 0;
                 $us->update();
