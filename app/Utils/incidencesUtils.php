@@ -261,6 +261,7 @@ class incidencesUtils {
                 'anniversary' => 0,
                 'start_date' => $oApplication->start_date,
                 'end_date' => $oApplication->end_date,
+                'lDays' => json_decode($oApplication->ldays),
             ];
         }else{
             $row = [
@@ -271,6 +272,7 @@ class incidencesUtils {
                 'anniversary' => 0,
                 'start_date' => $oApplication->start_date,
                 'end_date' => $oApplication->end_date,
+                'lDays' => json_decode($oApplication->ldays),
             ];
         }
         $rows = [];
@@ -296,6 +298,7 @@ class incidencesUtils {
             'date_ini' => $oApplication->start_date,
             'date_end' => $oApplication->end_date,
             'total_days' => $oApplication->total_days,
+            // 'lDays' => $oApplication->ldays,
             'rows' => $rows,
         ];
 

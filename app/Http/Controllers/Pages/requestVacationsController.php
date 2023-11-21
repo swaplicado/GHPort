@@ -682,16 +682,20 @@ class requestVacationsController extends Controller
             $end_date = clone $start_date;
             $count = 0;
 
+            $rowDays = [];
             for($i=$indexlDays; $i < count($lDays); $i++){
                 if($lDays[$i]->taked){
                     $end_date = Carbon::parse($lDays[$i]->date);
                     $indexlDays = $i+1;
                     $count++;
+
+                    $rowDays[] = $lDays[$i];
                 }
                 if($count >= $br->days_effective){
                     break;
                 }
             }
+
             $row = [
                 'breakdown_id' => $br->id_application_breakdown,
                 'folio' => $oApplication->folio_n.'-'.$count,
@@ -700,6 +704,7 @@ class requestVacationsController extends Controller
                 'anniversary' => $year->id_anniversary,
                 'start_date' => $start_date->toDateString(),
                 'end_date' => $end_date->toDateString(),
+                'lDays' => $rowDays,
             ];
 
             array_push($rows, $row);
@@ -723,6 +728,7 @@ class requestVacationsController extends Controller
             'date_ini' => $oApplication->start_date,
             'date_end' => $oApplication->end_date,
             'total_days' => $oApplication->total_days,
+            // 'lDays' => $oApplication->ldays,
             'rows' => $rows,
         ];
         $config = \App\Utils\Configuration::getConfigurations();
