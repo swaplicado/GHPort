@@ -74,6 +74,12 @@ class permissionController extends Controller
 
         $now = Carbon::now();
         $initialCalendarDate = $now->subMonths(1)->toDateString();
+        $time_restriction = 0;
+        if($clase_permiso == SysConst::PERMISO_LABORAL){
+            $time_restriction = $config->permission_time_work;
+        }else{
+            $time_restriction = $config->permission_time;
+        }
 
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
@@ -83,7 +89,7 @@ class permissionController extends Controller
                                             ->with('lTemp', $lTemp_special)
                                             ->with('oPermission', null)
                                             ->with('oUser', \Auth::user())
-                                            ->with('permission_time', $config->permission_time)
+                                            ->with('permission_time', $time_restriction)
                                             ->with('lSuperviser', $lSuperviser)
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('clase_permiso', $clase_permiso);

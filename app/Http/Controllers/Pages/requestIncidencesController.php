@@ -169,11 +169,16 @@ class requestIncidencesController extends Controller
 
             $comments = str_replace(['"', "\\"], "", $request->comments);
 
+
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
             $application->sup_comments_n = $comments;
             $application->return_date = $request->returnDate;
+
+            // quitar caracteres especiales de los comentarios de empleado
+
+            $application->emp_comments_n = str_replace(['"', "\\"], "", $application->emp_comments_n);
             $application->update();
 
             $application_log = new ApplicationLog();
@@ -465,6 +470,7 @@ class requestIncidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 

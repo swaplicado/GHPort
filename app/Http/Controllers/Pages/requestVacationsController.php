@@ -297,11 +297,11 @@ class requestVacationsController extends Controller
     public function acceptRequest(Request $request){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
-        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        // delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
         $application = Application::findOrFail($request->id_application);
-        if(!$application->send_default){
-            delegationUtils::getIsMyEmployeeUser($request->id_user);
-        }
+        // if(!$application->send_default){
+        //     delegationUtils::getIsMyEmployeeUser($request->id_user);
+        // }
         try {
 
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
@@ -836,7 +836,7 @@ class requestVacationsController extends Controller
 
     public function cancelRequest(Request $request){
         try {
-            delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+            //delegationUtils::getAutorizeRolUser(SysConst::JEFE);
             
             \DB::beginTransaction();
 
@@ -846,7 +846,7 @@ class requestVacationsController extends Controller
 
             $oIncidence = Application::findOrFail($application_id);
 
-            delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
+            //delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
 
             $data = json_decode(CapLinkUtils::cancelIncidence($oIncidence));
 

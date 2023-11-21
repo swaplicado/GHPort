@@ -53,10 +53,10 @@ class Menu {
             array_push($incidencias,['route' => route('requestIncidences_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
         }
 
-        array_push($permisos,['route' => route('permission_index', ['id' => 2]), 'icon' => 'bx bx-file bx-xs', 'name' => 'Tema laboral hrs.']);
+        array_push($incidencias,['route' => route('permission_index', ['id' => 2]), 'icon' => 'bx bx-file bx-xs', 'name' => 'Tema laboral hrs.']);
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($permisos,['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Sol. tema laboral hrs.']);
+            array_push($incidencias,['route' => route('requestPermission_index'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Sol. tema laboral hrs.']);
         }
 
         array_push($lMenus,(object) ['type' => $list, 'list' =>$incidencias, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Incidencias', 'id' => 'Incidencias']);
@@ -67,13 +67,13 @@ class Menu {
         //arreglo paraa ingresar permisos
         $permisos = [];
 
-        array_push($incidencias,['route' => route('permission_index', ['id' => 1]), 'icon' => 'bx bx-file bx-xs', 'name' => 'Mis solicitudes']);
+        array_push($permisos,['route' => route('permission_index', ['id' => 1]), 'icon' => 'bx bx-file bx-xs', 'name' => 'Mis solicitudes']);
         
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($incidencias,['route' => route('requestPersonalPermission'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
+            array_push($permisos,['route' => route('requestPersonalPermission'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Solicitudes mis colabs.']);
         }
 
-        array_push($lMenus,(object) ['type' => $list, 'list' =>$permisos, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permiso laboral hrs.', 'id' => 'Permisos']);
+        array_push($lMenus,(object) ['type' => $list, 'list' =>$permisos, 'icon' => 'bx bx-shape-circle bx-sm', 'name' => 'Permiso personal hrs.', 'id' => 'Permisos']);
 
         //cierrar tercer grupo de menus
 
