@@ -29,6 +29,10 @@
     [type="date"]::-webkit-calendar-picker-indicator {
     display: none;
     }
+
+    .swal2-title {
+        font-size: 24px !important;
+    }
 </style>
 @endsection
 @section('headJs')

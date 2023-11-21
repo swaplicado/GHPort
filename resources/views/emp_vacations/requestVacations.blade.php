@@ -11,6 +11,12 @@
     <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bulma.min.css')}}" rel="stylesheet" />
     <!-- For Foundation -->
     <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-foundation.min.css')}}" rel="stylesheet" />
+
+    <style>
+        .swal2-title {
+            font-size: 24px !important;
+        }
+    </style>
 @endsection
 
 @section('headJs')

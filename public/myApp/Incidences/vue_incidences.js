@@ -121,7 +121,20 @@ var app = new Vue({
             if(this.endDate != null && this.endDate != undefined && this.endDate != "" && this.valid){
                 let res = this.checkSpecial();
                 if(res[0] && !this.arraysEqual(this.lSpecialTypes, oldlTypes)){
-                    SGui.showMessage('', res[1], 'warning');
+                    // SGui.showMessage('', res[1], 'warning');
+                    Swal.fire({
+                        title: "<b>Hay " + res[2].length + (res[2].length > 1 ? " cuestiones" : " cuestión")
+                            + " con esta solicitud que" + (res[2].length > 1 ? " pueden " : " puede ") + "afectar su procesamiento, favor de revisarla</b>",
+                        icon: "info",
+                        html: res[1],
+                        allowOutsideClick: false,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: `
+                          Aceptar
+                        `,
+                    });
                 }
             }
         },
@@ -772,33 +785,56 @@ var app = new Vue({
             this.is_normal = true;
             this.is_past = false;
             this.is_season_special = false;
+            let lMessages = [];
 
             if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
-                message = message + "Se tomarán días pasados.\n";
                 is_special = true;
                 this.is_normal = false;
                 this.is_past = true;
                 this.lSpecialTypes.push('Con días pasados');
+                lMessages.push("Se tomarán días pasados.");
             }
 
             for(let oSeason of this.lTemp){
                 for(let day of oSeason.lDates){
                     if(moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
-                        message = message + 'Estas tomando días en temporada especial ' + oSeason.name + "\n";
                         is_special = true;
                         this.is_normal = false;
                         this.is_season_special = true;
                         this.lSpecialTypes.push('Con días en temporada especial');
+                        lMessages.push('Estas tomando días en temporada especial ' + oSeason.name);
                         break;
                     }
                 }
+            }
+
+            if(this.lDays[0].bussinesDay == false && this.lDays[0].taked == false){
+                is_special = true;
+                this.is_normal = false;
+                this.lSpecialTypes.push('inicio de vacaciones');
+
+                lMessages.push("La fecha inicial del periodo de la incidencia es inhábil, si requieres la fecha puedes marcarla en el desglose de los días de calendario, si no, presiona limpiar");
+            }
+
+            if(this.lDays[this.lDays.length - 1].bussinesDay == false && this.lDays[this.lDays.length - 1].taked == false){
+                is_special = true;
+                this.is_normal = false;
+                this.lSpecialTypes.push('fin de vacaciones');
+
+                lMessages.push("La fecha final del periodo de la incidencia es inhábil, si requieres la fecha puedes marcarla en el desglose de los días de calendario, si no, presiona limpiar");
             }
 
             if(this.is_normal){
                 this.lSpecialTypes.push('Normal');
             }
 
-            return [is_special, message];
+            message = "<ol>";
+            for (let i = 0; i < lMessages.length; i++) {
+                message = message + "<li>" + lMessages[i] + "</li>";
+            }
+            message = message + "</ol>";
+
+            return [is_special, message, lMessages];
         },
 
         sendRegistry(data){

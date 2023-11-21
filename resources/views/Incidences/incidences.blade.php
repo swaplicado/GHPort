@@ -7,6 +7,13 @@
 <link href="myApp/Utils/SDatePicker/css/datepicker-bs4.min.css" rel="stylesheet" />
 <link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
 <link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
+
+<style>
+    .swal2-title {
+        font-size: 24px !important;
+    }
+</style>
+
 @endsection
 
 @section('headJs')

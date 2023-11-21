@@ -54,7 +54,21 @@ var appRequestVacation = new Vue({
             if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
                 let res = this.checkSpecial(this.oApplication);
                 if(res[0] && !this.arraysEqual(this.lTypes, oldlTypes)){
-                    SGui.showMessage('', res[1], 'warning');
+                    // SGui.showMessage('', res[1], 'warning');
+
+                    Swal.fire({
+                        title: "<b>Hay " + res[2].length + (res[2].length > 1 ? " cuestiones" : " cuestión")
+                            + " con esta solicitud que" + (res[2].length > 1 ? " pueden " : " puede ") + "afectar su procesamiento, favor de revisarla</b>",
+                        icon: "info",
+                        html: res[1],
+                        allowOutsideClick: false,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: `
+                          Aceptar
+                        `,
+                    });
                 }
             }
         },
@@ -664,36 +678,57 @@ var appRequestVacation = new Vue({
         checkSpecial(data){
             let message = "";
             let is_special = false;
+            let lMessages = [];
 
             if(data.is_proportional){
-                message = message + "Se utilizarán días proporcionales para la solicitud.\n";
                 is_special = true;
                 this.lTypes.push('Con días proporcionales');
+                lMessages.push("Se utilizarán días proporcionales para la solicitud.");
             }
 
             if(data.is_advanced){
-                message = message + "Se utilizarán más días de los proporcionales para la solicitud.\n";
                 is_special = true;
                 this.lTypes.push('Con más días de los proporcionales');
+                lMessages.push("Se utilizarán más días de los proporcionales para la solicitud.");
             }
 
             if(data.is_past){
-                message = message + "Se tomarán días pasados.\n";
                 is_special = true;
                 this.lTypes.push('Con días pasados');
+                lMessages.push("Se tomarán días pasados.");
             }
 
             if(data.is_season_special){
-                message = message + 'Estas tomando días en temporada especial ' + oSeason.name + "\n";
                 is_special = true;
                 this.lTypes.push('Con días en temporada especial');
+                lMessages.push('Estas tomando días en temporada especial ' + oSeason.name);
+            }
+
+            if(this.lDays[0].bussinesDay == false && this.lDays[0].taked == false){
+                is_special = true;
+                this.is_normal = false;
+                this.lTypes.push('inicio de vacaciones');
+                lMessages.push("La fecha inicial del periodo de la incidencia es inhábil");
+            }
+
+            if(this.lDays[this.lDays.length - 1].bussinesDay == false && this.lDays[this.lDays.length - 1].taked == false){
+                is_special = true;
+                this.is_normal = false;
+                this.lTypes.push('fin de vacaciones');
+                lMessages.push("La fecha final del periodo de la incidencia es inhábil");
             }
 
             if(data.is_normal){
                 this.lTypes.push('Normal');
             }
 
-            return [is_special, message];
+            message = "<ol>";
+            for (let i = 0; i < lMessages.length; i++) {
+                message = message + "<li>" + lMessages[i] + "</li>";
+            }
+            message = message + "</ol>";
+
+            return [is_special, message, lMessages];
         },
 
         async getReturnDate(){
