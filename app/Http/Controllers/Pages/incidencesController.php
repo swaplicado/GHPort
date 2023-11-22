@@ -140,7 +140,7 @@ class incidencesController extends Controller
 
             \DB::beginTransaction();
 
-            $comments = str_replace(['"', "\\"], "", $comments);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
 
             $application = new Application();
             $application->folio_n = folioUtils::makeFolio(Carbon::now(), $employee_id, $type_incident_id);
@@ -217,7 +217,7 @@ class incidencesController extends Controller
 
             \DB::beginTransaction();
 
-            $comments = str_replace(['"', "\\"], "", $comments);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
 
             $application->start_date = $start_date;
             $application->end_date = $end_date;

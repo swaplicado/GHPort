@@ -109,6 +109,8 @@ class permissionController extends Controller
 
             \DB::beginTransaction();
 
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
+
             $permission = new Permission();
             $permission->folio_n = folioUtils::makeFolio(Carbon::now(), $employee_id, SysConst::TYPE_PERMISO_HORAS);
             $permission->start_date = $startDate;
@@ -153,6 +155,8 @@ class permissionController extends Controller
             $interReturn = $request->interReturn;
 
             \DB::beginTransaction();
+
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
 
             $permission = Permission::findOrFail($permission_id);
             $permission->start_date = $startDate;

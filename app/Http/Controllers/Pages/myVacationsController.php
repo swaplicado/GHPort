@@ -118,7 +118,7 @@ class myVacationsController extends Controller
 
             \DB::beginTransaction();
 
-            $comments = str_replace(['"', "\\"], "", $comments);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
 
             $application = new Application();
             $application->folio_n = folioUtils::makeFolio(Carbon::now(), $employee_id);
@@ -251,7 +251,7 @@ class myVacationsController extends Controller
                 $ab->delete();
             }
 
-            $comments = str_replace(['"', "\\"], "", $comments);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
 
             $application->start_date = $startDate;
             $application->end_date = $endDate;

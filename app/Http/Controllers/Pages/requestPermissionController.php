@@ -226,10 +226,12 @@ class requestPermissionController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
             }
 
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
+
             $permission->request_status_id = SysConst::APPLICATION_APROBADO;
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->approved_date_n = Carbon::now()->toDateString();
-            $permission->sup_comments_n = $request->comments;
+            $permission->sup_comments_n = $comments;
             $permission->update();
 
             $config = \App\Utils\Configuration::getConfigurations();
@@ -321,10 +323,12 @@ class requestPermissionController extends Controller
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
             }
 
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
+
             $permission->request_status_id = SysConst::APPLICATION_RECHAZADO;
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->rejected_date_n = Carbon::now()->toDateString();
-            $permission->sup_comments_n = $request->comments;
+            $permission->sup_comments_n = $comments;
             $permission->update();
 
             // $data = incidencesUtils::sendToCAP($application);

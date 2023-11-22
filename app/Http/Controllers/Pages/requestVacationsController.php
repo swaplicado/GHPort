@@ -325,7 +325,7 @@ class requestVacationsController extends Controller
                                                                                             true);
             }
 
-            $comments = str_replace(['"', "\\"], "", $request->comments);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
 
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
@@ -449,7 +449,7 @@ class requestVacationsController extends Controller
                 $this->recalcApplicationsBreakdowns($request->id_user, $request->id_application, $arrRequestStatus, false);
             }
 
-            $comments = str_replace(['"', "\\"], "", $request->comments);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
             
             $application->request_status_id = SysConst::APPLICATION_RECHAZADO;
             // $application->user_apr_rej_id = \Auth::user()->id;
