@@ -73,6 +73,7 @@ class myVacationsController extends Controller
         try {
             $oApp = Application::find($request->id_application);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de días efectivos', 'error']);
         }
         return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
@@ -193,6 +194,7 @@ class myVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al guardar la solicitud', 'icon' => 'error']);
         }
 
@@ -312,6 +314,7 @@ class myVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al editar el registro', 'icon' => 'error']);
         }
         // $user = $this->getUserVacationsData();
@@ -324,6 +327,7 @@ class myVacationsController extends Controller
         try {
             $applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
         }
 
@@ -351,6 +355,7 @@ class myVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
         }
 
@@ -449,6 +454,7 @@ class myVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
         }
 
@@ -503,6 +509,7 @@ class myVacationsController extends Controller
             $lApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
             $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
         }
 
@@ -514,6 +521,7 @@ class myVacationsController extends Controller
             $config = \App\Utils\Configuration::getConfigurations();
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id, true);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
 
@@ -525,6 +533,7 @@ class myVacationsController extends Controller
             $config = \App\Utils\Configuration::getConfigurations();
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
 
@@ -630,6 +639,7 @@ class myVacationsController extends Controller
                 }
             }
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la fecha de regreso', 'icon' => 'error']);
         }
 

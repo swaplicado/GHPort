@@ -188,6 +188,7 @@ class incidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al crear la incidencia', 'icon' => 'error']);
         }
 
@@ -239,6 +240,7 @@ class incidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
         }
 
@@ -268,6 +270,7 @@ class incidencesController extends Controller
                                 ->first();
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
         }
 
@@ -289,6 +292,7 @@ class incidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
         }
 
@@ -328,6 +332,7 @@ class incidencesController extends Controller
                 }
             }
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
         }
 
@@ -511,6 +516,7 @@ class incidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al enviar y autorizar la solicitud', 'icon' => 'error']);
         }
 
@@ -589,6 +595,7 @@ class incidencesController extends Controller
             }
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener el año de aplicación']);
         }
 

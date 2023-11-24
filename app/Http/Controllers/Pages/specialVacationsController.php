@@ -130,6 +130,7 @@ class specialVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al guardar la solicitud', 'icon' => 'error']);
         }
 
@@ -223,6 +224,7 @@ class specialVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al editar el registro', 'icon' => 'error']);
         }
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
@@ -235,6 +237,7 @@ class specialVacationsController extends Controller
             $lApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
             $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
         }
 
@@ -261,6 +264,7 @@ class specialVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
         }
 
@@ -271,6 +275,7 @@ class specialVacationsController extends Controller
         try {
             $applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);
         }
 
@@ -319,6 +324,7 @@ class specialVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al aprobrar la solicitud', 'icon' => 'error']);
         }
 

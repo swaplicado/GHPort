@@ -211,6 +211,7 @@ class requestPermissionController extends Controller
             }
             
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
         }
 
@@ -370,6 +371,7 @@ class requestPermissionController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
         }
 
@@ -409,6 +411,7 @@ class requestPermissionController extends Controller
             $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de colaboradores directos', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lEmployees' => $lEmployees ]);
@@ -427,6 +430,7 @@ class requestPermissionController extends Controller
             $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
         }
 
@@ -452,6 +456,7 @@ class requestPermissionController extends Controller
             }
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener los permisos', 'icon' => 'error']);
         }
 
@@ -500,6 +505,7 @@ class requestPermissionController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 

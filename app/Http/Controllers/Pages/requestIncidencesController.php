@@ -152,6 +152,7 @@ class requestIncidencesController extends Controller
 
             $lIncidences = incidencesUtils::getUserIncidences($oUser->id);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
         }
 
@@ -245,6 +246,7 @@ class requestIncidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
         }
 
@@ -336,6 +338,7 @@ class requestIncidencesController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al rechazar la incidencia', 'icon' => 'error']);
         }
 
@@ -392,6 +395,7 @@ class requestIncidencesController extends Controller
                             ->get();
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
         }
 
@@ -417,6 +421,7 @@ class requestIncidencesController extends Controller
             }
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener las incidencias', 'icon' => 'error']);
         }
 

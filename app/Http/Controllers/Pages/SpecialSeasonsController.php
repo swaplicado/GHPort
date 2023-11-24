@@ -154,6 +154,7 @@ class SpecialSeasonsController extends Controller
 
             return json_encode(['success' => true, 'lSpecialSeason' => $lSpecialSeason, 'lSpecialSeasonType' => $lSpecialSeasonType]);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
     }
@@ -258,6 +259,7 @@ class SpecialSeasonsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'message' => 'Registros guardados con éxito', 'icon' => 'success']);
@@ -390,6 +392,7 @@ class SpecialSeasonsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
         }
 

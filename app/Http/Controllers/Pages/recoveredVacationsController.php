@@ -98,6 +98,7 @@ class recoveredVacationsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al recuperar los días de vacaciones', 'icon' => 'error']);
         }
 

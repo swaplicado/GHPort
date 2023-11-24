@@ -114,6 +114,7 @@ class delegationController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
         }
 
@@ -135,6 +136,7 @@ class delegationController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
         }
         
@@ -154,6 +156,7 @@ class delegationController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
         }
 

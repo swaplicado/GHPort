@@ -99,6 +99,7 @@ class configAuthController extends Controller
             }
         } catch (\Throwable $th) {
             \DB::rollback();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
         }
 
@@ -131,6 +132,7 @@ class configAuthController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rolback();
+            \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al actualizar el registro']);
         }
 
@@ -156,6 +158,7 @@ class configAuthController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al eliminar el registro']);
         }
 

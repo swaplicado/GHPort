@@ -24,6 +24,7 @@ class vacationManagementController extends Controller
             $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($user->org_chart_job_id, $user->id, $user->job_id);
 
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['succeess' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
         }
 
@@ -36,6 +37,7 @@ class vacationManagementController extends Controller
             $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob(delegationUtils::getOrgChartJobIdUser());
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de colaboradores directos', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lEmployees' => $lEmployees ]);
@@ -47,6 +49,7 @@ class vacationManagementController extends Controller
             $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob(delegationUtils::getOrgChartJobIdUser());
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de los colaboradores', 'icon' => 'error']);
         }
         return json_encode(['success'  => true, 'lEmployees' => $lEmployees]);
