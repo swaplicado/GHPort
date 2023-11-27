@@ -64,7 +64,10 @@ class incidencesUtils {
                                         'h.sup_comments_n',
                                         'h.emp_comments_n',
                                         'pt.permission_tp_name as name',
+                                        'h.type_permission_id as permission_type',
                                         'h.minutes',
+                                        'h.intermediate_out',
+                                        'h.intermediate_return',
                                     )
                                     ->selectRaw('"permission" as application_type')
                                     ->selectRaw('CONCAT(id_hours_leave, "p") as id_incidence')

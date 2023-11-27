@@ -98,15 +98,15 @@ class Vacations_report {
                             }
                         }
                     }
-
+                    $emp->lIncidences = $emp->lIncidences->sortBy('end_date')->values();
                     if(count($emp->lIncidences) > 0){
                         if(isset($emp->lIncidences[count($emp->lIncidences)-1]->return_date)){
                             $emp->returnDate = dateUtils::formatDate($emp->lIncidences[count($emp->lIncidences)-1]->return_date, 'ddd D-m-Y');
                         }else{
-                            $emp->returnDate = null;
+                            $emp->returnDate = '';
                         }
                     }else{
-                        $emp->returnDate = null;
+                        $emp->returnDate = '';
                     }
                     
                     foreach($emp->lIncidences as $inc){
@@ -116,8 +116,14 @@ class Vacations_report {
                                 if($incDay->date == $emp->myWeek[$i]['date']){
                                     if($incDay->taked){
                                         if($inc->application_type == 'permission'){
-                                            $res = permissionsUtils::convertMinutesToHours($inc->minutes);
-                                            array_push($emp->myWeek[$i]['incidences'], 'permiso: '. $inc->name.' '.$res[0].' hrs. '.$res[1].' min.');
+                                            if($inc->permission_type != SysConst::PERMISO_INTERMEDIO){
+                                                $res = permissionsUtils::convertMinutesToHours($inc->minutes);
+                                                array_push($emp->myWeek[$i]['incidences'], 'permiso: '. $inc->name.' '.$res[0].' hrs. '.$res[1].' min.');
+                                            }else{
+                                                $salida = Carbon::parse($inc->intermediate_out)->format('H:i');
+                                                $regreso = Carbon::parse($inc->intermediate_return)->format('H:i');
+                                                array_push($emp->myWeek[$i]['incidences'], 'permiso: '. $inc->name.' salida: '.$salida.' regreso: '.$regreso);
+                                            }
                                         }else{
                                             array_push($emp->myWeek[$i]['incidences'], $inc->name);
                                         }
