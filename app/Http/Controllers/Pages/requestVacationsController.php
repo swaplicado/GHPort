@@ -254,6 +254,9 @@ class requestVacationsController extends Controller
 
             if(count($myEmp) == 0){
                 $oApplication = null;
+            }else{
+                $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($oApplication->user_id);
+                $oApplication->tot_vacation_remaining = $oUser->tot_vacation_remaining;
             }
         }else{
             $oApplication = null;

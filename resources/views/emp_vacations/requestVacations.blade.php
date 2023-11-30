@@ -683,6 +683,7 @@
     <script>
         $(document).ready(function(){
             if (app.oApplication != null) {
+                app.tot_vacation_remaining = app.oApplication.tot_vacation_remaining;
                 app.showModal();
             }
         });
