@@ -602,7 +602,8 @@ class requestVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, true, 1);
 
             if($user->tot_vacation_remaining < $takedDays){
-                return json_encode(['success' => false, 'message' => 'El colaborador no cuenta con dias disponibles', 'icon' => 'warning']);
+                // return json_encode(['success' => false, 'message' => 'El colaborador no cuenta con dias disponibles', 'icon' => 'warning']);
+                throw new \Exception("El colaborador no cuenta con dias disponibles");
             }
 
             $vacations = collect($user->vacation)->sortBy('year');
