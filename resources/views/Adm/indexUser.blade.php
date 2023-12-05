@@ -19,6 +19,7 @@
             this.lUser = <?php echo json_encode($lUser); ?>;
             this.lOrgChart = <?php echo json_encode($lOrgChart); ?>;
             this.lPlan = <?php echo json_encode($lPlan); ?>;
+            this.lSchedules = <?php echo json_encode($schedules); ?>;
             this.updateRoute = <?php echo json_encode( route('update_user') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_user') ); ?>;
             this.manualRoute = [];
@@ -29,13 +30,14 @@
                 'username':1,
                 'fullname':2,
                 'mail':3,
-                'numUser':4,
-                'benDate':5,
-                'nameOrg':6,
-                'idOrg':7,
-                'nameVp':8,
-                'idPlan':9,
-                'active':10,
+                'scheduleId':4,
+                'schedule':5,
+                'benDate':6,
+                'nameOrg':7,
+                'idOrg':8,
+                'nameVp':9,
+                'idPlan':10,
+                'active':11,
             };
         }
         var oServerData = new GlobalData();
@@ -63,7 +65,8 @@
                         <th>Nombre usuario</th>
                         <th>Nombre completo</th>
                         <th>Correo</th>
-                        <th># usuario</th>
+                        <th>scheduleId</th>
+                        <th>Horario</th>
                         <th>Inicio beneficios</th>
                         <th>Organigrama</th>
                         <th>id_org</th>
@@ -79,7 +82,8 @@
                         <td>@{{user.username}}</td>
                         <td>@{{user.fullname}}</td>
                         <td>@{{user.mail}}</td>
-                        <td>@{{user.numUser}}</td>
+                        <td>@{{user.schedule_id}}</td>
+                        <td>@{{user.schedule_name != null ? user.schedule_name : 'NA'}}</td>
                         <td>@{{user.benDate}}</td>
                         <td>@{{user.nameOrg}}</td>
                         <td>@{{user.idOrg}}</td>
@@ -99,7 +103,7 @@
 @section('scripts')
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_user',
-                                            'colTargets' => [0,7,9,10],
+                                            'colTargets' => [0,4,8,10,11],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'edit_modal' => true,

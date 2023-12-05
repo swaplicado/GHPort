@@ -19,6 +19,8 @@
                 <select class="select2-class" id="selArea" name="selArea" v-model="selArea" style="width: 90%;"></select>
                 <label for="selArea">Plan vacaciones: <span title="Días de vacaciones correspondientes" class="bx bx-info-circle"></span></label>
                 <select class="select2-class" id="selVac" name="selVac" v-model="selVac" style="width: 90%;"></select>             
+                <label for="selSchedule">Horario: <span title="Horario" class="bx bx-info-circle"></span></label>
+                <select class="select2-class" id="selSchedule" name="selSchedule" v-model="selSchedule" style="width: 90%;"></select>             
                 <br><br>
 
                 <input type="checkbox" id="active" name="active" value="active" v-model="active">

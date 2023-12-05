@@ -10,7 +10,7 @@ var app = new Vue({
         username: '',
         fullname: '',
         mail: '',
-        numUser: 0,
+        scheduleId: null,
         benDate: '',
         nameOrg: '',
         nameVp: '',
@@ -18,16 +18,22 @@ var app = new Vue({
         passRess: 0,
         selArea: 0,
         selVac: 0,
+        lSchedules: oServerData.lSchedules,
+        selSchedule: null,
     },
     mounted() {
         let self = this;
         var datalAreas = [];
         var datalPlan = [];
+        var datalSchedules = [];
         for (var i = 0; i < self.lOrgChart.length; i++) {
             datalAreas.push({ id: self.lOrgChart[i].id_org_chart_job, text: self.lOrgChart[i].job_name_ui });
         }
         for (var i = 0; i < self.lPlan.length; i++) {
             datalPlan.push({ id: self.lPlan[i].id_vacation_plan, text: self.lPlan[i].vacation_plan_name });
+        }
+        for (var i = 0; i < self.lSchedules.length; i++) {
+            datalSchedules.push({ id: self.lSchedules[i].id, text: self.lSchedules[i].name });
         }
         $('#selArea')
             .select2({
@@ -46,6 +52,16 @@ var app = new Vue({
             });
         $('#selArea').val('').trigger('change');
         $('#selVac').val('').trigger('change');
+
+        $('#selSchedule')
+            .select2({
+                placeholder: 'selecciona horario',
+                data: datalSchedules,
+            }).on('select2:select', function(e) {
+                self.selSchedule = e.params.data.id;
+            });
+
+        $('#selSchedule').val('').trigger('change');
     },
     methods: {
         showModal(data = null) {
@@ -53,7 +69,7 @@ var app = new Vue({
             this.username = data[this.indexesUserTable.username];
             this.fullname = data[this.indexesUserTable.fullname];
             this.mail = data[this.indexesUserTable.mail];
-            this.numUser = data[this.indexesUserTable.numUser];
+            this.scheduleId = data[this.indexesUserTable.scheduleId];
             this.benDate = data[this.indexesUserTable.benDate];
             this.nameOrg = data[this.indexesUserTable.nameOrg];
             this.idOrg = parseInt(data[this.indexesUserTable.idOrg]);
@@ -65,6 +81,7 @@ var app = new Vue({
             this.selVac = this.idPlan;
             $('#selArea').val(this.idOrg).trigger('change');
             $('#selVac').val(this.idPlan).trigger('change');
+            $('#selSchedule').val(this.scheduleId).trigger('change');
 
             $('#editModal').modal('show');
 
@@ -90,6 +107,7 @@ var app = new Vue({
                     'passRess': this.passRess,
                     'selArea': this.selArea,
                     'selVac': this.selVac,
+                    'selSchedule': this.selSchedule,
                 })
                 .then(response => {
                     let res = response.data;
@@ -105,7 +123,8 @@ var app = new Vue({
                                     us.username,
                                     us.fullname,
                                     us.mail,
-                                    us.numUser,
+                                    us.schedule_id,
+                                    (us.schedule_name != null ? us.schedule_name : 'NA'),
                                     us.benDate,
                                     us.nameOrg,
                                     us.idOrg,

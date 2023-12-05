@@ -1,6 +1,7 @@
 @extends('layouts.principal')
 
 @section('headStyles')
+<link rel="stylesheet" href="{{asset("css/mdtimepicker.css")}}">
 <link rel="stylesheet" href="{{asset("daterangepicker/daterangepicker.min.css")}}">
 <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
 {{-- <link href="myApp/Utils/SDatePicker/css/datepicker.min.css" rel="stylesheet" />
@@ -10,12 +11,14 @@
 @endsection
 
 @section('headJs')
+<script type="text/javascript" src="{{ asset('timePicker/dayjs.min.js') }}"></script>
 <script src="{{ asset("daterangepicker/jquery.daterangepicker.min.js") }}" type="text/javascript"></script>
     <script src="{{ asset('select2js/js/select2.min.js') }}"></script>
     <script>
         function GlobalData(){
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.lPermissions = <?php echo json_encode($lPermissions); ?>;
+            this.lSchedule = <?php echo json_encode($lSchedule); ?>;
             this.oPermission = <?php echo json_encode($oPermission); ?>;
             this.constants = <?php echo json_encode($constants); ?>;
             this.permission_time = <?php echo json_encode($permission_time); ?>;
@@ -180,7 +183,9 @@
     function dateRangePickerSetValue(){
         if($('#date-range-001').val() && $('#date-range-002').val()){
             app.startDate = app.oDateUtils.formatDate($('#date-range-001').val(), 'ddd DD-MMM-YYYY');
+            app.numDay = moment($('#date-range-001').val()).day();
             app.endDate = app.oDateUtils.formatDate($('#date-range-002').val(), 'ddd DD-MMM-YYYY');
+            app.checkSchedule();
         }else{
             app.startDate = '';
             app.endDate = '';
@@ -195,7 +200,13 @@
     }
 
     function dateRangePickerClearValue(){
-        
+        app.totalTime = '';
+        app.interOut = '';
+        app.permissionOut = null;
+        app.interReturn = '';
+        app.permissionEntry = null;
+        app.hours = 0;
+        app.minutes = "00";
     }
 </script>
 
@@ -205,5 +216,5 @@
 </script>
 <script type="text/javascript" src="{{ asset('myApp/permissions/vue_permissions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
-
+<script type="text/javascript" src="{{ asset('timePicker/mdtimepicker.js') }}"></script>
 @endsection

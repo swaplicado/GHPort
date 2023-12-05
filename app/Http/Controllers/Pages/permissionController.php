@@ -81,6 +81,25 @@ class permissionController extends Controller
             $time_restriction = $config->permission_time;
         }
 
+        $lSchedule = \DB::table('schedule_template as st')
+                        ->join('schedule_day as sd', 'sd.schedule_template_id', '=', 'st.id')
+                        ->where('st.id', \Auth::user()->schedule_template_id)
+                        ->where('sd.is_working', 1)
+                        ->where('sd.is_deleted', 0)
+                        ->select(
+                            'st.name',
+                            'sd.day_name',
+                            'sd.day_num',
+                            \DB::raw("DATE_FORMAT(sd.entry, '%H:%i') as entry"),
+                            \DB::raw("DATE_FORMAT(sd.departure, '%H:%i') as departure")
+                        )
+                        ->get();
+
+        foreach($lSchedule as $sc){
+            $sc->entry = Carbon::parse($sc->entry)->format('g:i A');
+            $sc->departure = Carbon::parse($sc->departure)->format('g:i A');
+        }
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -92,7 +111,8 @@ class permissionController extends Controller
                                             ->with('permission_time', $time_restriction)
                                             ->with('lSuperviser', $lSuperviser)
                                             ->with('initialCalendarDate', $initialCalendarDate)
-                                            ->with('clase_permiso', $clase_permiso);
+                                            ->with('clase_permiso', $clase_permiso)
+                                            ->with('lSchedule', $lSchedule);
     }
 
     public function createPermission(Request $request){
@@ -104,8 +124,16 @@ class permissionController extends Controller
             $employee_id = $request->employee_id;
             $hours = $request->hours;
             $minutes = $request->minutes;
-            $interOut = $request->interOut;
-            $interReturn = $request->interReturn;
+            // $interOut = $request->interOut;
+            // $interReturn = $request->interReturn;
+
+            $interOut = null;
+            $interReturn = null;
+
+            if(!is_null($request->interOut) && !is_null($request->interReturn)){
+                $interOut = Carbon::createFromFormat('g:i A', $request->interOut)->format('H:i');
+                $interReturn = Carbon::createFromFormat('g:i A', $request->interReturn)->format('H:i');
+            }
 
             \DB::beginTransaction();
 
@@ -152,8 +180,16 @@ class permissionController extends Controller
             $hours = $request->hours;
             $minutes = $request->minutes;
             $employee_id = $request->employee_id;
-            $interOut = $request->interOut;
-            $interReturn = $request->interReturn;
+            // $interOut = $request->interOut;
+            // $interReturn = $request->interReturn;
+
+            $interOut = null;
+            $interReturn = null;
+
+            if(!is_null($request->interOut) && !is_null($request->interReturn)){
+                $interOut = Carbon::createFromFormat('g:i A', $request->interOut)->format('H:i');
+                $interReturn = Carbon::createFromFormat('g:i A', $request->interReturn)->format('H:i');
+            }
 
             \DB::beginTransaction();
 
@@ -208,11 +244,61 @@ class permissionController extends Controller
     public function getPermission(Request $request){
         try {
             $oPermission = permissionsUtils::getPermission($request->permission_id);
+
+            $numDay = Carbon::parse($oPermission->start_date)->dayOfWeek;
+
+            $schedule = \DB::table('users as u')
+                        ->join('schedule_template as st', 'st.id', '=', 'u.schedule_template_id')
+                        ->join('schedule_day as sd', 'sd.schedule_template_id', '=', 'st.id')
+                        ->where('u.id', $oPermission->user_id)
+                        ->where('sd.is_working', 1)
+                        ->where('sd.is_deleted', 0)
+                        // ->where('sd.day_num', $numDay)
+                        ->select(
+                            'st.name',
+                            'sd.day_name',
+                            'sd.day_num',
+                            \DB::raw("DATE_FORMAT(sd.entry, '%H:%i') as entry"),
+                            \DB::raw("DATE_FORMAT(sd.departure, '%H:%i') as departure")
+                        )
+                        ->get();
+
+            foreach($schedule as $sc){
+                $sc->entry = Carbon::parse($sc->entry)->format('g:i A');
+                $sc->departure = Carbon::parse($sc->departure)->format('g:i A');
+            }
+
+            $permission = "";
+            if(count($schedule) > 0){
+                if($oPermission->type_permission_id == SysConst::PERMISO_ENTRADA){
+                    $permission = Carbon::parse($schedule[0]->entry)->addMinutes($oPermission->minutes)->format('g:i A');
+                }else if($oPermission->type_permission_id == SysConst::PERMISO_SALIDA){
+                    $permission = Carbon::parse($schedule[0]->departure)->subMinutes($oPermission->minutes)->format('g:i A');
+                }
+            }
+
+            if($oPermission->type_permission_id == SysConst::PERMISO_INTERMEDIO){
+                $permission = new \stdClass;
+                $permission->inter_out = Carbon::parse($oPermission->intermediate_out)->format('g:i A');
+                $permission->inter_ret = Carbon::parse($oPermission->intermediate_return)->format('g:i A');
+
+                $hora1_24 = Carbon::parse($oPermission->intermediate_out)->format('H:i');
+                $hora2_24 = Carbon::parse($oPermission->intermediate_return)->format('H:i');
+
+                // Calcular la diferencia en minutos
+                $diferencia_minutos = Carbon::parse($hora1_24)->diffInMinutes(Carbon::parse($hora2_24));
+
+                // Convertir la diferencia de vuelta a formato de 12 horas si es necesario
+                $diferencia_horas = floor($diferencia_minutos / 60);
+                $diferencia_minutos_restantes = $diferencia_minutos % 60;
+                $oPermission->time = $diferencia_horas.' hrs. '.$diferencia_minutos_restantes.' minutos';
+            }
+
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
         }
-        return json_encode(['success' => true, 'oPermission' => $oPermission]);
+        return json_encode(['success' => true, 'oPermission' => $oPermission, 'schedule' => $schedule, 'permission' => $permission]);
     }
 
     public function gestionSendIncidence(Request $request){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
+use App\Models\Adm\ScheduleTemplate;
 use Illuminate\Http\Request;
 use \App\Utils\delegationUtils;
 use Carbon\Carbon;
@@ -234,17 +235,40 @@ class UsersController extends Controller
         $lUser = \DB::table('users as us')
                         ->join('cat_vacation_plans as vp', 'vp.id_vacation_plan', '=', 'us.vacation_plan_id')
                         ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
+                        ->leftJoin('schedule_template as st', 'st.id', '=', 'us.schedule_template_id')
                         ->where('us.is_delete', 0)
-                        ->select('us.id AS idUser','us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg', 'ocj.id_org_chart_job AS idOrg','vp.vacation_plan_name AS nameVp', 'vp.id_vacation_plan AS idPlan','us.is_active AS active')
+                        ->select(
+                            'us.id AS idUser',
+                            'us.username AS username',
+                            'us.full_name AS fullname',
+                            'us.email AS mail',
+                            'us.employee_num AS numUser',
+                            'us.benefits_date AS benDate',
+                            'ocj.job_code AS nameOrg',
+                            'ocj.id_org_chart_job AS idOrg',
+                            'vp.vacation_plan_name AS nameVp',
+                            'vp.id_vacation_plan AS idPlan',
+                            'us.is_active AS active',
+                            'st.id as schedule_id',
+                            'st.name as schedule_name'
+                        )
                         ->get();
+
         $orgChart = \DB::table('org_chart_jobs')
                         ->where('is_deleted', 0)
                         ->get();
+
         $planVacations = \DB::table('cat_vacation_plans')
                         ->where('is_deleted', 0)
                         ->get();
+
+        $schedules = \DB::table('schedule_template as t')
+                        // ->join('schedule_day as a', 'a.schedule_template_id', '=', 't.id')
+                        ->where('t.is_deleted', 0)
+                        // ->where('a.is_deleted', 0)
+                        ->get();
         
-        return view('Adm.indexUser')->with('lUser', $lUser)->with('lOrgChart',$orgChart)->with('lPlan',$planVacations);   
+        return view('Adm.indexUser')->with('lUser', $lUser)->with('lOrgChart',$orgChart)->with('lPlan',$planVacations)->with('schedules', $schedules);
     }
 
     public function update(Request $request){
@@ -264,6 +288,7 @@ class UsersController extends Controller
                 $us->is_active = $request->active; 
                 $us->vacation_plan_id = $request->selVac;
                 $us->org_chart_job_id = $request->selArea;
+                $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
                 $us->update();
             } catch (\Throwable $th) {
@@ -285,6 +310,7 @@ class UsersController extends Controller
                 $us->is_active = $request->active; 
                 $us->vacation_plan_id = $request->selVac;
                 $us->org_chart_job_id = $request->selArea;
+                $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
                 $us->changed_password = 0;
                 $us->update();
@@ -297,8 +323,9 @@ class UsersController extends Controller
         $lUser = \DB::table('users as us')
                         ->join('cat_vacation_plans as vp', 'vp.id_vacation_plan', '=', 'us.vacation_plan_id')
                         ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
+                        ->leftJoin('schedule_template as st', 'st.id', '=', 'us.schedule_template_id')
                         ->where('us.is_delete',0)
-                        ->select('us.id AS idUser','us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active','ocj.id_org_chart_job AS idOrg','vp.id_vacation_plan AS idPlan')
+                        ->select('us.id AS idUser', 'us.schedule_template_id as schedule_id', 'st.name as schedule_name', 'us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active','ocj.id_org_chart_job AS idOrg','vp.id_vacation_plan AS idPlan')
                         ->get();
 
         return json_encode(['success' => true, 'message' => 'Registro actualizado con exitó', 'lUser' => $lUser]);

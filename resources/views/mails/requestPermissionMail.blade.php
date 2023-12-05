@@ -63,10 +63,29 @@
                                 <td style="text-align: left;">Tipo:</td>
                                 <td style="text-align: left;">{{$permission->permission_tp_name}}</td>
                             </tr>
+                            @if($hasSchedule)
+                                <tr>
+                                    <td style="text-align: left;">Horario:</td>
+                                    <td style="text-align: left;">{{$schedule->entry}} a {{$schedule->departure}}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td style="text-align: left;">Tiempo:</td>
                                 <td style="text-align: left;">{{$permission->time}}</td>
                             </tr>
+                            @if($hasSchedule)
+                                @if($permission->type_permission_id != 3)
+                                <tr>
+                                    <td style="text-align: left;">{{$permission->permission_tp_name}}</td>
+                                    <td style="text-align: left;">{{$permissionSchedule}}</td>
+                                </tr>
+                                @endif
+                            @else
+                            <tr>
+                                <td style="text-align: left;">Horario:</td>
+                                <td style="text-align: left;">Sin horario asignado en PGH</td>
+                            </tr>
+                            @endif
                             <tr>
                                 <td style="text-align: left;">Fecha:</td>
                                 <td style="text-align: left;">{{$permission->start_date}}</td>

@@ -33,36 +33,94 @@
                                 </div>
                             </div>
                             <div class="myBreakLine"></div>
-                            <div class="row" v-if="type_id != 3">
-                                <div class="col-md-3">
-                                    <label for=""></label>
+                            <div v-if="(startDate != null && startDate != '') && type_id != null">
+                                <div class="row" v-if="type_id == 1">
+                                    <template v-if="!haveSchedule">
+                                        <div class="col-md-3">
+                                            <label for=""></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">Horas:</label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">Minutos:</label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="col-md-1">
+                                            <label for="">entrada:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" id="entryTime" class="form-control" ref="entryTime"
+                                                name="example" autocomplete="off" :placeholder="entry" style="background-color: white !important"/>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">salida:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" autocomplete="off" v-model="departure" disabled/>
+                                        </div>
+                                    </template>
                                 </div>
-                                <div class="col-md-1">
-                                    <label for="">Horas:</label>
+                                <div class="row" v-if="type_id == 2 && (startDate != null && startDate != '')">
+                                    <template v-if="!haveSchedule">
+                                        <div class="col-md-3">
+                                            <label for=""></label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">Horas:</label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">Minutos:</label>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="col-md-1">
+                                            <label for="">entrada:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" autocomplete="off" v-model="entry" disabled/>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <label for="">salida:</label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" id="outTime" class="form-control" ref="outTime"
+                                                name="example" autocomplete="off" :placeholder="departure" style="background-color: white !important"/>
+                                        </div>
+                                    </template>
                                 </div>
-                                <div class="col-md-1">
-                                    <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="">Minutos:</label>
-                                </div>
-                                <div class="col-md-1">
-                                    <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                <div class="row" v-if="type_id == 3 && (startDate != null && startDate != '')">
+                                    <div class="col-md-1">
+                                        <label for="">Salida:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" id="entryTime" class="form-control" ref="entryTime"
+                                                name="example" autocomplete="off" :placeholder="entry" style="background-color: white !important"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label for="">Regreso:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" id="outTime" class="form-control" ref="outTime"
+                                                name="example" autocomplete="off" :placeholder="departure" style="background-color: white !important"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row" v-if="type_id == 3">
-                                <div class="col-md-1">
-                                    <label for="">Salida:</label>
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="time" v-model="interOut" id="inputOut" v-on:blur="checkMaxPermissionTime()"/>
-                                </div>
-                                <div class="col-md-1">
-                                    <label for="">Regreso:</label>
-                                </div>
-                                <div class="col-md-5">
-                                    <input type="time" v-model="interReturn" id="inputReturn" v-on:blur="checkMaxPermissionTime()"/>
-                                </div>
+                            <div v-else>
+                                <span style="color: #4e73df">Seleccione un tipo y un dia del calendario para poder ingresar las horas</span>
                             </div>
                         </div>
                         <div v-if="isRevision">
@@ -122,7 +180,95 @@
                 </div>
                 <div class="card">
                     <div class="card-body card-body-small">
-                        <table>
+                        <template v-if="isRevision">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label for=""><b>Clase</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" v-model="class_name" readonly>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Tipo</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" v-model="type_name" readonly>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Tiempo</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" v-model="time" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label for=""><b>Fecha</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" v-model="startDate" readonly>
+                                </div>
+                                <template v-if="type_id != 3">
+                                    <div class="col-md-1" v-if="haveSchedule == true">
+                                        <label for=""><b>@{{ type_name }}</b></label>
+                                    </div>
+                                    <div class="col-md-3" v-if="haveSchedule == true">
+                                        <input class="form-control" readonly :value="permission">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label for=""><b>Horario</b></label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" readonly :value="haveSchedule == true ? (entry + ' a ' + departure) : 'Sin horario'">
+                                    </div>
+                                </template>
+                                <template v-if="type_id == 3">
+                                    <div class="col-md-1">
+                                        <label for=""><b>Salida</b></label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" readonly :value="permission.inter_out">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label for=""><b>Regreso</b></label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" readonly :value="permission.inter_ret">
+                                    </div>
+                                </template>
+                            </div>
+                            <div v-if="type_id == 3" class="row">
+                                <div class="col-md-1">
+                                    <label for=""><b>Horario</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" readonly :value="haveSchedule == true ? (entry + ' a ' + departure) : 'Sin horario'">
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <label for=""><b>Fecha</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" v-model="startDate" readonly>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Horario</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" readonly :value="haveSchedule == true ? (entry + ' a ' + departure) : 'Sin horario'">
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Tiempo</b></label>
+                                </div>
+                                <div class="col-md-3">
+                                    <input class="form-control" readonly :value="totalTime">
+                                </div>
+                            </div>
+                        </template>
+                        {{-- <table>
                             <thead></thead>
                             <tbody>
                                 <tr v-if="isRevision">
@@ -137,12 +283,12 @@
                                 <tr>
                                     <td style="vertical-align: top;"><b>Fecha</b></td>
                                     <td style="vertical-align: top;"><input class="form-control" v-model="startDate" readonly></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>Horario:</td>
+                                    <td><input class="form-control" readonly :value="entry + ' a ' + departure"></td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table> --}}
+                        
                         <div class="myBreakLine"></div>
                         <div v-if="isRevision">
                             <label for="comentarios_emp"><b>Comentarios del colaborador:</b></label>

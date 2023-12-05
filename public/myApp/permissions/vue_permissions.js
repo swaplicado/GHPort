@@ -41,9 +41,37 @@ var app = new Vue({
         clase_permiso: oServerData.clase_permiso,
         interOut: null,
         interReturn: null,
+        lSchedule: oServerData.lSchedule,
+        numDay: null,
+        entry: null,
+        departure: null,
+        haveSchedule: false,
+        permissionEntry: null,
+        permissionOut: null,
+        totalTime: null,
+        requestSchedule: null,
+        permission: null,
     },
     watch: {
-        
+        type_id:function(val){
+            if(typeof self.$refs.entryTime != 'undefined'){
+                self.permissionEntry = null;
+                self.hours = 0;
+                self.minutes = "00";
+                $('#entryTime').val('');
+                // $('#entryTime').mdtimepicker('destroy');
+                // $('#outTime').mdtimepicker('destroy');
+            }
+            if(typeof self.$refs.outTime != 'undefined'){
+                self.permissionOut = null;
+                self.hours = 0;
+                self.minutes = "00";
+                $('#outTime').val('');
+                // $('#entryTime').mdtimepicker('destroy');
+                // $('#outTime').mdtimepicker('destroy');
+            }
+            this.totalTime = '';
+        }
     },
     updated() {
         this.$nextTick(function() {
@@ -94,6 +122,93 @@ var app = new Vue({
                 });
 
                 $('#permission_cl').val(this.clase_permiso).trigger('change');
+            }
+
+            if(typeof self.$refs.entryTime != 'undefined' && self.permissionEntry == null){
+                $('#entryTime').mdtimepicker({});
+                $('#entryTime').mdtimepicker('setMinTime', self.entry);
+                $('#entryTime').mdtimepicker('setMaxTime', self.departure);
+                // $('#entryTime').mdtimepicker('setValue', self.entry);
+                $('#entryTime').on('timechanged', function() {
+                    self.permissionEntry = $(this).val();
+                    console.log('entry: ' + self.permissionEntry);
+                    self.checkTimeForSchedule();
+                });
+
+                if(this.isEdit && this.oPermission != null){
+                    let hora;
+                    switch (this.type_id) {
+                        case 1:
+                            hora = moment(this.entry, 'h:mm A');
+                            hora.add(this.oPermission.minutes, 'minutes');
+                            this.permissionEntry = hora.format('h:mm A');
+                            $('#entryTime').mdtimepicker('setValue', this.permissionEntry);
+
+                            this.hours = Math.floor(this.oPermission.minutes / 60);
+                            this.minutes = this.oPermission.minutes % 60;
+                            break;
+                        case 2:
+                            hora = moment(this.departure, 'h:mm A');
+                            hora.subtract(this.oPermission.minutes, 'minutes');
+                            this.permissionOut = hora.format('h:mm A');
+                            $('#outTime').mdtimepicker('setValue', this.permissionOut);
+
+                            this.hours = Math.floor(this.oPermission.minutes / 60);
+                            this.minutes = this.oPermission.minutes % 60;
+                            break;
+                        case 3:
+                            this.permissionEntry = moment(this.oPermission.intermediate_out, 'HH:mm').format('h:mm A');
+                            // this.permissionOut = moment(this.oPermission.intermediate_out, 'HH:mm').format('h:mm A');
+                            // $('#outTime').mdtimepicker('setValue', this.permissionOut);
+                            $('#entryTime').mdtimepicker('setValue', this.permissionEntry);
+                            this.interReturn = this.permissionEntry;
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
+            }
+            if(typeof self.$refs.outTime != 'undefined' && self.permissionOut == null){
+                $('#outTime').mdtimepicker({});
+                $('#outTime').mdtimepicker('setMinTime', self.entry);
+                $('#outTime').mdtimepicker('setMaxTime', self.departure);
+                // $('#entryTime').mdtimepicker('setValue', self.departure);
+                $('#outTime').on('timechanged', function() {
+                    self.permissionOut = $(this).val();
+                    console.log('out: ' + self.permissionOut);
+                    self.checkTimeForSchedule();
+                });
+
+                if(this.isEdit && this.oPermission != null){
+                    let hora;
+                    let permission;
+                    switch (this.type_id) {
+                        case 1:
+                            hora = moment(this.entry, 'h:mm A');
+                            hora.add(this.oPermission.minutes, 'minutes');
+                            this.permissionEntry = hora.format('h:mm A');
+                            $('#entryTime').mdtimepicker('setValue', this.permissionEntry);
+
+                            break;
+                        case 2:
+                            hora = moment(this.departure, 'h:mm A');
+                            hora.subtract(this.oPermission.minutes, 'minutes');
+                            this.permissionOut = hora.format('h:mm A');
+                            $('#outTime').mdtimepicker('setValue', this.permissionOut);
+                            break;
+                        case 3:
+                            // this.permissionEntry = moment(this.oPermission.intermediate_return, 'HH:mm').format('h:mm A');
+                            this.permissionOut = moment(this.oPermission.intermediate_return, 'HH:mm').format('h:mm A');
+                            $('#outTime').mdtimepicker('setValue', this.permissionOut);
+                            this.interOut = this.permissionOut;
+                            // $('#entryTime').mdtimepicker('setValue', this.permissionEntry);
+                            break;
+                    
+                        default:
+                            break;
+                    }
+                }
             }
         })
     },
@@ -351,6 +466,11 @@ var app = new Vue({
 
                     return false;
                 }
+
+                let horas = Math.floor(this.diferenciaEnMinutos / 60);
+                let minutosRestantes = this.diferenciaEnMinutos % 60;
+
+                this.totalTime = this.hours + " hrs. " + this.minutes + " minutos.";
             }else{
                 let time = (this.hours * 60) + parseInt(this.minutes);
     
@@ -368,6 +488,8 @@ var app = new Vue({
     
                     return false;
                 }
+
+                this.totalTime = this.hours + " hrs. " + this.minutes + " minutos.";
             }
             return true;
         },
@@ -455,6 +577,19 @@ var app = new Vue({
                         this.oPermission = data.oPermission;
                         this.type_name = this.oPermission.permission_tp_name;
                         this.class_name = this.oPermission.permission_cl_name;
+                        if(data.schedule.length > 0){
+                            this.lSchedule = data.schedule;
+                            this.requestSchedule = data.schedule[0];
+                            this.entry = this.requestSchedule.entry;
+                            this.departure = this.requestSchedule.departure;
+                            this.haveSchedule = true;
+                        }else{
+                            this.haveSchedule = false;
+                            this.entry = '';
+                            this.departure = '';
+                            this.lSchedule = [];
+                        }
+                        this.permission = data.permission;
                         resolve(data.oPermission);
                     } else {
                         SGui.showMessage('', data.message, data.icon);
@@ -481,6 +616,17 @@ var app = new Vue({
             this.isEdit = false;
             this.interOut = null;
             this.interReturn = null;
+            this.haveSchedule = false;
+            // this.entry = null;
+            // this.departure = null;
+            // this.requestSchedule = null;
+            // this.permission = '';
+            // this.totalTime = '';
+            // this.interOut = '';
+            // this.permissionOut = null;
+            // this.interReturn = '';
+            // this.permissionEntry = null;
+
         },
 
         async showModal(data = null) {
@@ -753,6 +899,7 @@ var app = new Vue({
                         this.lPermissions = data.lPermissions;
                         this.oCopylPermissions = data.lPermissions;
                         this.lTemp = data.lTemp;
+                        this.lSchedule = data.lSchedule;
                         SGui.showOk();
                     } else {
                         SGui.showMessage('', data.message, data.icon);
@@ -1129,5 +1276,138 @@ var app = new Vue({
                 }
             }
         },
+
+        /**
+         * Metodo que revisa el horario una vez se seleccione un dia del calendario
+         */
+        checkSchedule(){
+            if(this.lSchedule.length > 0){
+                let schedule = this.lSchedule.find(({ day_num }) => day_num == self.numDay);
+                if(schedule != undefined){
+                    this.entry = schedule.entry;
+                    this.departure = schedule.departure;
+                    this.haveSchedule = true;
+                }else{
+                    this.entry = null;
+                    this.departure = null;
+                    this.haveSchedule = false;
+                }
+            }else{
+                this.entry = '';
+                this.departure = '';
+                this.haveSchedule = false;
+            }
+        },
+
+        checkTimeForSchedule(){
+            if(this.type_id == 1){
+                let permissionEntry = moment(this.permissionEntry, 'h:mm A').minutes() + moment(this.permissionEntry, 'h:mm A').hours() * 60;
+                let entry = moment(this.entry, 'h:mm A').minutes() + moment(this.entry, 'h:mm A').hours() * 60;
+                let result = permissionEntry - entry;
+
+                if(result < 0){
+                    let inputEntry = document.getElementById('entryTime');
+                    inputEntry.value = '';
+                    this.permissionEntry = null;
+                    this.totalTime = '';
+                    SGui.showMessage('', 'No puedes ingresar tiempo antes de tu hora de entrada.');
+                    return;
+                }
+                if(result > this.permission_time){
+                    let inputEntry = document.getElementById('entryTime');
+                    inputEntry.value = '';
+                    this.permissionEntry = null;
+                    this.totalTime = '';
+                    let horas = Math.floor(this.permission_time / 60);
+                    let minutosRestantes = this.permission_time % 60;
+                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.');
+                    return;
+                }
+
+                let horas = Math.floor(result / 60);
+                let minutosRestantes = result % 60;
+
+                this.hours = horas;
+                this.minutes = minutosRestantes;
+
+                this.totalTime = this.hours + " hrs. " + this.minutes + " minutos";
+            }else if (this.type_id == 2){
+                let permissionOut = moment(this.permissionOut, 'h:mm A').minutes() + moment(this.permissionOut, 'h:mm A').hours() * 60;
+                let departure = moment(this.departure, 'h:mm A').minutes() + moment(this.departure, 'h:mm A').hours() * 60;
+                let result = departure - permissionOut;
+
+                if(result < 0){
+                    let inputOut = document.getElementById('outTime');
+                    inputOut.value = '';
+                    this.permissionOut = null;
+                    this.totalTime = '';
+                    SGui.showMessage('', 'No puedes ingresar tiempo después de tu hora de salida.');
+                    return;
+                }
+                if(result > this.permission_time){
+                    let inputOut = document.getElementById('outTime');
+                    inputOut.value = '';
+                    this.permissionOut = null;
+                    this.totalTime = '';
+                    let horas = Math.floor(this.permission_time / 60);
+                    let minutosRestantes = this.permission_time % 60;
+                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.');
+                    return;
+                }
+
+                let horas = Math.floor(result / 60);
+                let minutosRestantes = result % 60;
+
+                this.hours = horas;
+                this.minutes = minutosRestantes;
+                this.totalTime = this.hours + " hrs. " + this.minutes + " minutos";
+            }else if (this.type_id == 3){
+                if((this.permissionOut == null || this.permissionOut == "") || (this.permissionEntry == null || this.permissionEntry == "")){
+                    return;
+                }
+
+                // let permissionReturn = moment(this.permissionOut, 'h:mm A').minutes() + moment(this.permissionEntry, 'h:mm A').hours() * 60;
+                // let permissionOut = moment(this.permissionEntry, 'h:mm A').minutes() + moment(this.permissionOut, 'h:mm A').hours() * 60;
+                // let result = permissionReturn - permissionOut;
+
+                let permissionOut = moment(self.permissionEntry, 'h:mm A'); // Definir la primera hora en formato de 12 horas
+                let permissionReturn = moment(self.permissionOut, 'h:mm A'); // Definir la segunda hora en formato de 12 horas
+                let result = permissionReturn.diff(permissionOut, 'minutes'); // Obtener la diferencia en minutos
+
+                if(result < 0){
+                    let inputEntry = document.getElementById('entryTime');
+                    let inputOut = document.getElementById('outTime');
+
+                    inputEntry.value = '';
+                    inputOut.value = '';
+                    this.permissionOut = null;
+                    this.permissionEntry = null;
+                    this.totalTime = '';
+                    SGui.showMessage('', 'La hora de salida no puede ser mayor a la hora de regreso');
+                    return;
+                }
+                if(result > this.permission_time){
+                    let inputEntry = document.getElementById('entryTime');
+                    let inputOut = document.getElementById('outTime');
+
+                    inputEntry.value = '';
+                    inputOut.value = '';
+                    this.permissionOut = null;
+                    this.permissionEntry = null;
+                    this.totalTime = '';
+                    let horas = Math.floor(this.permission_time / 60);
+                    let minutosRestantes = this.permission_time % 60;
+                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.');
+                    return;
+                }
+
+                this.interOut = this.permissionEntry;
+                this.interReturn = this.permissionOut;
+
+                let horas = Math.floor(result / 60);
+                let minutosRestantes = result % 60;
+                this.totalTime = horas + " hrs. " + minutosRestantes + " minutos";
+            }
+        }
     }
 });

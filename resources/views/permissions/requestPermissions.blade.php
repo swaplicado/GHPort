@@ -7,6 +7,7 @@
 <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bs4.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-bulma.min.css') }}" rel="stylesheet" />
 <link href="{{ asset('myApp/Utils/SDatePicker/css/datepicker-foundation.min.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{asset("css/mdtimepicker.css")}}">
 @endsection
 
 @section('headJs')
@@ -303,7 +304,9 @@
     function dateRangePickerSetValue(){
         if($('#date-range-001').val() && $('#date-range-002').val()){
             app.startDate = app.oDateUtils.formatDate($('#date-range-001').val(), 'ddd DD-MMM-YYYY');
+            app.numDay = moment($('#date-range-001').val()).day();
             app.endDate = app.oDateUtils.formatDate($('#date-range-002').val(), 'ddd DD-MMM-YYYY');
+            app.checkSchedule();
         }else{
             app.startDate = '';
             app.endDate = '';
@@ -383,4 +386,5 @@
     app.isRevision = true;
 </script>
 <script type="text/javascript" src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('timePicker/mdtimepicker.js') }}"></script>
 @endsection

@@ -209,13 +209,32 @@ class requestPermissionController extends Controller
             }else{
                 $lPermissions = permissionsUtils::getUserPermissions($oUser->id);
             }
+
+            $lSchedule = \DB::table('schedule_template as st')
+                        ->join('schedule_day as sd', 'sd.schedule_template_id', '=', 'st.id')
+                        ->where('st.id', $oUser->schedule_template_id)
+                        ->where('sd.is_working', 1)
+                        ->where('sd.is_deleted', 0)
+                        ->select(
+                            'st.name',
+                            'sd.day_name',
+                            'sd.day_num',
+                            \DB::raw("DATE_FORMAT(sd.entry, '%H:%i') as entry"),
+                            \DB::raw("DATE_FORMAT(sd.departure, '%H:%i') as departure")
+                        )
+                        ->get();
+
+            foreach($lSchedule as $sc){
+                $sc->entry = Carbon::parse($sc->entry)->format('g:i A');
+                $sc->departure = Carbon::parse($sc->departure)->format('g:i A');
+            }
             
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lPermissions' => $lPermissions]);
+        return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lPermissions' => $lPermissions, 'lSchedule' => $lSchedule]);
     }
 
     public function approbePermission(Request $request){
