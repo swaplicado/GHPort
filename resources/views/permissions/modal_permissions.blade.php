@@ -304,13 +304,13 @@
             </div>
             <div class="modal-footer modal-footer-small">
                 <template v-if="!isRevision">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" v-on:click="save()" v-if="valid">Guardar</a>
                 </template>
                 <template v-else-if="isRevision">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" v-on:click="approbePermission()" v-if="valid && isRevision">Aprobar</a>
-                    <button type="button" class="btn btn-danger" v-on:click="rejectPermission()" v-if="valid && isRevision">Rechazar</a>
+                    <button type="button" class="btn btn-success" v-on:click="approbePermission()" v-if="valid && isRevision"><span class="bx bxs-like"></span>&nbsp Aprobar</a>
+                    <button type="button" class="btn btn-danger" v-on:click="rejectPermission()" v-if="valid && isRevision"><span class="bx bxs-dislike"></span>&nbsp Rechazar</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
                 </template>
             </div>
         </div>

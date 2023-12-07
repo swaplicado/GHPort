@@ -82,7 +82,7 @@
                 </div>
             </div>
             <div class="modal-footer" v-if="!onlyShow">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" :disabled="disabledSave" v-on:click="saveVacationPlan();">Guardar</a>
             </div>
             <div class="modal-footer" v-else>
