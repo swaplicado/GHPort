@@ -755,7 +755,7 @@ var appMyVacations = new Vue({
             if(this.idRequest == null){
                 var route = this.oData.requestVacRoute;
             }else{
-                if(this.status != 'CREADO'){
+                if(this.status != 'Nuevas'){
                     SGui.showMessage('','Solo se pueden editar solicitudes con el estatus CREADO', 'warning');
                     return;
                 }
@@ -936,7 +936,7 @@ var appMyVacations = new Vue({
         },
 
         deleteRegistry(data){
-            if(data[this.indexes.status] != 'CREADO'){
+            if(data[this.indexes.status] != 'Nuevas'){
                 SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
                 return;
             }
@@ -957,7 +957,7 @@ var appMyVacations = new Vue({
         },
 
         sendRegistry(data){
-            if(data[this.indexes.status] != 'CREADO'){
+            if(data[this.indexes.status] != 'Nuevas'){
                 SGui.showMessage('','Solo se pueden enviar solicitudes con el estatus CREADO', 'warning');
                 return
             }

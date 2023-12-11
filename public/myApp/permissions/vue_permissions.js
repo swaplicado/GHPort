@@ -776,7 +776,7 @@ var app = new Vue({
         },
 
         deleteRegistry(data) {
-            if (data[this.indexes_permission.Estatus] != 'CREADO') {
+            if (data[this.indexes_permission.Estatus] != 'Nuevas') {
                 SGui.showMessage('', 'Solo se pueden eliminar permisos con el estatus CREADO', 'warning');
                 return;
             }
@@ -946,7 +946,7 @@ var app = new Vue({
         },
 
         sendRegistry(data) {
-            if (data[this.indexes_permission.Estatus] != 'CREADO') {
+            if (data[this.indexes_permission.Estatus] != 'Nuevas') {
                 SGui.showMessage('', 'Solo se pueden enviar permisos con el estatus CREADO', 'warning');
                 return
             }

@@ -739,7 +739,7 @@ var app = new Vue({
         },
 
         deleteRegistry(data){
-            if(data[this.indexes_incidences.applications_st_name] != 'CREADO'){
+            if(data[this.indexes_incidences.applications_st_name] != 'Nuevas'){
                 SGui.showMessage('','Solo se pueden eliminar incidencias con el estatus CREADO', 'warning');
                 return;
             }
@@ -838,7 +838,7 @@ var app = new Vue({
         },
 
         sendRegistry(data){
-            if(data[this.indexes_incidences.applications_st_name] != 'CREADO'){
+            if(data[this.indexes_incidences.applications_st_name] != 'Nuevas'){
                 SGui.showMessage('','Solo se pueden enviar incidencias con el estatus CREADO', 'warning');
                 return
             }
