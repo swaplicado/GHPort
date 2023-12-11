@@ -19,7 +19,7 @@
 
     <div class="card-header">
         <h3>
-            <b> Aniversarios y cumpleaños de colaboradores directos</b>
+            <b> Aniversarios y cumpleaños de mis colaboradores directos</b>
         </h3>
     </div>
     <div class="card-body">

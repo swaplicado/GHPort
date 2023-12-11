@@ -74,7 +74,7 @@
 
     <div class="card-header">
         <h3>
-            <b>Mis incidencias</b>
+            <b>Mis solicitudes de incidencias</b>
             @include('layouts.manual_button')
         </h3>
     </div>

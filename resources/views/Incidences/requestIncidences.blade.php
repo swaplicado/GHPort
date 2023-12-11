@@ -78,9 +78,9 @@
 
 @section('content') 
 <a class="btn btn-outline-secondary focus" id="ReqIncidences" onclick="btnActive('ReqIncidences');" href="#home"
-        data-role="link">Solicitudes incidencias</a>
+        data-role="link">Solicitudes de incidencias</a>
 <a class="btn btn-outline-secondary" id="gestionIncidences" onclick="btnActive('gestionIncidences');" href="#other"
-    data-role="link">Gestión incidencias</a>
+    data-role="link">Gestión de incidencias</a>
     <div class="card shadow mb-4" id="incidencesApp">
         
     @include('Incidences.modal_incidences')
@@ -88,7 +88,7 @@
     <div data-page="home" id="home" class="active">
         <div class="card-header">
             <h3>
-                <b>Solicitudes incidencias</b>
+                <b>Solicitudes de incidencias de mis colaboradores directos</b>
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -136,7 +136,7 @@
     <div data-page="other" id="other">
         <div class="card-header">
             <h3>
-                <b>Solicitudes incidencias</b>
+                <b>Gestión de incidencias de mis colaboradores directos</b>
                 @include('layouts.manual_button')
             </h3>
         </div>

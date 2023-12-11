@@ -83,9 +83,9 @@
         <div class="card-header">
             <h3>
                 @if($clase_permiso == 1)
-                    <b>solicitudes permiso personal horas</b>
+                    <b>Solicitudes de permiso personal por horas de mis colaboradores directos</b>
                 @else
-                    <b>solicitudes tema laboral horas</b>
+                    <b>Solicitudes de tema laboral por horas de mis colaboradores directos</b>
                 @endif
 
                 @include('layouts.manual_button')
@@ -133,9 +133,9 @@
         <div class="card-header">
             <h3>
                 @if($clase_permiso == 1)
-                    <b>solicitudes permiso personal por horas</b>
+                    <b>Gestión de permiso personal por horas de mis colaboradores directos</b>
                 @else
-                    <b>solicitudes tema laboral por horas</b>
+                    <b>Gestión de tema laboral por horas de mis colaboradores directos</b>
                 @endif
                 @include('layouts.manual_button')
             </h3>

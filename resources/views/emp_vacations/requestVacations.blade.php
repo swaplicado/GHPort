@@ -134,7 +134,7 @@
             @include('emp_vacations.modal_requests')
             <div class="card-header">
                 <h3>
-                    <b>Solicitudes vacaciones</b>
+                    <b>Solicitudes de vacaciones de mis colaboradores directos</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>
@@ -269,7 +269,7 @@
         <div class="card shadow mb-4" id="myVacations">
             <div class="card-header">
                 <h3>
-                    <b>Gestión de vacaciones mis colaboradores</b>
+                    <b>Gestión de vacaciones mis colaboradores directos</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>

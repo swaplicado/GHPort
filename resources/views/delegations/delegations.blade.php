@@ -55,7 +55,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    <b>Delegaciones creadas</b>
+                    <b>Mis delegaciones creadas</b>
                     @include('layouts.manual_button')
                 </h3>
             </div>
@@ -99,7 +99,7 @@
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h3>
-                    Delegaciones asignadas
+                    Mis delegaciones asignadas
                 </h3>
             </div>
             <div class="card-body">

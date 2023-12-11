@@ -24,7 +24,7 @@ class Menu {
         $subVacaciones = [];
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($subVacaciones,['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colabs. direct.']);       
+            array_push($subVacaciones,['route' => route('myEmplVacations'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colabs. dir.']);       
         }
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
@@ -36,7 +36,7 @@ class Menu {
         }
         //cierra submenu
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($vacaciones,['route' => route('requestVacations'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'React. mis colabs.']);    
+            array_push($vacaciones,['route' => route('recoveredVacations'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'React. mis colabs.']);    
         }
 
 
@@ -99,7 +99,7 @@ class Menu {
         $festejos = [];
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($festejos,['route' => route('colab_ann'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colabs.']);       
+            array_push($festejos,['route' => route('colab_ann'), 'icon' => 'bx bxs-user-detail bx-xs', 'name' => 'Mis colabs. dir.']);       
         }
 
         if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
@@ -107,7 +107,7 @@ class Menu {
         }
 
         if( $oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($consultas,['type' => $list, 'list' => $festejos, 'icon' => 'bx bxs-cake bx-xs', 'name' => 'Festejos colabs.', 'id' => 'aniv_colabs']);       
+            array_push($consultas,['type' => $list, 'list' => $festejos, 'icon' => 'bx bxs-cake bx-xs', 'name' => 'Festejos mis colabs.', 'id' => 'aniv_colabs']);       
         }
         //cierra submenu
 

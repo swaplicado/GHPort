@@ -36,7 +36,7 @@
     @include('emp_vacations.modal_recover_vac')
     <div class="card-header">
         <h3>
-            <b>Vacaciones vencidas mis colaboradores directos</b>
+            <b>Vacaciones vencidas de mis colaboradores directos</b>
             @include('layouts.manual_button')
         </h3>
     </div>

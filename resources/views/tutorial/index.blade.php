@@ -4,7 +4,7 @@
 <div class="card shadow mb-4" id="allEmpVacationApp">
     <div class="card-header">
         <h3>
-            <b>Tutorial solicitud vacaciones</b>
+            <b>Tutorial de solicitud de vacaciones</b>
         </h3>
     </div>
     <div class="card-body">
