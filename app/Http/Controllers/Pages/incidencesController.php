@@ -101,6 +101,15 @@ class incidencesController extends Controller
         $now = Carbon::now();
         $initialCalendarDate = $now->subMonths(1)->toDateString();
 
+        $lStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->whereNotIn('id_applications_st', [SysConst::APPLICATION_CONSUMIDO])
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
         return view('Incidences.incidences')->with('lIncidences', $lIncidences)
                                             ->with('constants', $constants)
                                             ->with('lClass', $lClass)
@@ -109,7 +118,8 @@ class incidencesController extends Controller
                                             ->with('lHolidays', $lHolidays)
                                             ->with('oUser', \Auth::user())
                                             ->with('lSuperviser', $lSuperviser)
-                                            ->with('initialCalendarDate', $initialCalendarDate);
+                                            ->with('initialCalendarDate', $initialCalendarDate)
+                                            ->with('lStatus', $lStatus);
     }
 
     public function createIncidence(Request $request){

@@ -197,11 +197,18 @@
                     <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                         <label for="rqStatus">Filtrar por estatus: </label>
                         <select class="select2-class form-control inline" name="rqStatus" id="rqStatus" style="width: 30%;">
-                            <option value="0" selected>Creados</option>
+                            @foreach($lStatus as $st)
+                                @if($st->id == 1)
+                                    <option value="{{$st->id}}" selected>{{$st->name}}</option>
+                                @else
+                                    <option value="{{$st->id}}">{{$st->name}}</option>
+                                @endif
+                            @endforeach
+                            {{--<option value="0" selected>Creados</option>
                             <option value="1">Enviados</option>
                             <option value="2">Aprobados</option>
                             <option value="3">Rechazados</option>
-                            <option value="4">Cancelados</option>
+                            <option value="4">Cancelados</option>--}}
                         </select>&nbsp;&nbsp;
                         <label>Filtrar por año:</label>
                         <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style = "display: inline;">
@@ -240,7 +247,7 @@
                         </thead>
                         <tbody>
                             <template v-for="rec in oUser.applications">
-                                <tr :style="{ background: (rec.request_status_id == 3 ? '#E8F5E9' : (rec.request_status_id == 4 ? '#FCE4EC' : '')) }">
+                                <tr>
                                     <td>@{{rec.id_application}}</td>
                                     <td>@{{rec.request_status_id}}</td>
                                     <td>@{{rec.take_holidays}}</td>
@@ -295,23 +302,23 @@
                 let filter = 0;
 
                 switch (registerVal) {
-                    case 0:
+                    case 1:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 1;
                         
-                    case 1:
+                    case 2:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 2;
 
-                    case 2:
+                    case 3:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 3 || filter === 5;
 
-                    case 3:
+                    case 4:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 4;
 
-                    case 4:
+                    case 6:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 6;
 

@@ -158,19 +158,26 @@
                     <span class="bx bx-show-alt"></span>
                 </button>
                 
-                <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="rqStatus == 1">
+                <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="rqStatus == 3">
                     <span class="bx bx-x"></span>
                 </button>
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
                     &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
                     <select class="form-control inline" name="rqStatus" id="rqStatus" v-model="rqStatus" style="width: 30%;">
-                        <option value="0" selected>Nuevos</option>
+                        @foreach($lRequestStatus as $st)
+                            @if($st->id == 2)
+                                <option value="{{$st->id}}" selected="selected">{{$st->name}}</option>
+                            @else
+                                <option value="{{$st->id}}">{{$st->name}}</option>
+                            @endif
+                        @endforeach
+                        {{--<option value="0" selected>Nuevos</option>
                         <option value="1">Aprobados</option>
                         <option value="2">Rechazados</option>
-                        <option value="3">Cancelados</option>
+                        <option value="3">Cancelados</option>--}}
                     </select>&nbsp;&nbsp;
-                    <template v-if="rqStatus != 0">
+                    <template v-if="rqStatus != 2">
                         <label>Filtrar por año:</label>
                         <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button" style="display: inline;">
                             <span class="bx bx-minus"></span>
@@ -216,7 +223,7 @@
                     <tbody>
                         <template v-for="emp in lEmployees">
                             <template v-for="rec in emp.applications">
-                                <tr v-bind:class="[ checkIsSelectable(rec) ]" :style="{ background: (rec.request_status_id == 3 ? '#E8F5E9' : (rec.request_status_id == 4 ? '#FCE4EC' : '')) }">
+                                <tr v-bind:class="[ checkIsSelectable(rec) ]">
                                     <td>@{{ rec.id_application }}</td>
                                     <td>@{{ rec.user_id }}</td>
                                     <td>@{{ emp.birthday_n }}</td>
@@ -245,7 +252,7 @@
                                     <td>@{{ oDateUtils.formatDate(rec.return_date, 'ddd DD-MMM-YYYY') }}</td>
                                     <td>@{{ rec.total_days }}</td>
                                     <td>@{{ specialType(rec) }}</td>
-                                    <td>@{{ rec.request_status_id == 2 ? 'NUEVO' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name) }}</td>
+                                    <td>@{{ rec.request_status_id == 2 ? 'Por aprobar' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name) }}</td>
                                     <td>@{{ rec.emp_comments_n }}</td>
                                     <td>@{{ rec.date_send_n }}</td>
                                 </tr>
@@ -390,11 +397,18 @@
                             <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                                 <label for="myRqStatus">Filtrar por estatus: </label>
                                 <select class="form-control inline" v-on:change="filterMyVacationTable();" name="myRqStatus" id="myRqStatus" style="width: 30%;">
-                                    <option value="0" selected>Creados</option>
+                                    @foreach($lGestionStatus as $st)
+                                        @if($st->id == 1)
+                                            <option value="{{$st->id}}" selected>{{$st->name}}</option>
+                                        @else
+                                            <option value="{{$st->id}}">{{$st->name}}</option>
+                                        @endif
+                                    @endforeach
+                                    {{--<option value="0" selected>Creados</option>
                                     <option value="1">Enviados</option>
                                     <option value="2">Aprobados</option>
                                     <option value="3">Rechazados</option>
-                                    <option value="4">Cancelados</option>
+                                    <option value="4">Cancelados</option>--}}
                                 </select>&nbsp;&nbsp;
                                 <label>Filtrar por año:</label>
                                 <button v-on:click="year = year - 1;" class="btn btn-secondary" type="button"
@@ -454,19 +468,19 @@
                     let filter = 0;
                     if (settings.nTable.id == 'table_requestVac'){
                         switch (registerVal) {
-                            case 0:
+                            case 2:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 2;
     
-                            case 1:
+                            case 3:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 3 || filter === 5;
     
-                            case 2:
+                            case 4:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 4;
 
-                            case 3:
+                            case 6:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 6;
     
@@ -479,23 +493,23 @@
                     let myRqStatusfilter = 0;
                     if(settings.nTable.id == 'table_myRequest'){
                         switch (myRqStatusVal) {
-                            case 0:
+                            case 1:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                                 return myRqStatusfilter === 1;
                                 
-                            case 1:
+                            case 2:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                                 return myRqStatusfilter === 2;
 
-                            case 2:
+                            case 3:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                                 return myRqStatusfilter === 3 || myRqStatusfilter === 5;
 
-                            case 3:
+                            case 4:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                                 return myRqStatusfilter === 4;
 
-                            case 4:
+                            case 6:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                                 return myRqStatusfilter === 6;
 

@@ -104,7 +104,8 @@
                                                     'filterType' => 2,
                                                     'status_id' => 'status_incidence',
                                                     'status_name' => 'status_incidence',
-                                                    'width' => '20%'
+                                                    'width' => '20%',
+                                                    'lStatus' => $lRequestStatus
                                                     ])
             </div>
             <br>
@@ -183,10 +184,17 @@
                             &nbsp;&nbsp;
                             <label for="rqStatus">Filtrar por estatus: </label>
                             <select class="form-control inline" v-on:change="filterIncidenceTable();" name="status_myIncidence" id="status_myIncidence" style="width: 20%;">
-                                <option value="1" selected>Creados</option>
+                                @foreach($lGestionStatus as $st)
+                                    @if($st->id == 1)
+                                        <option value="{{$st->id}}" selected>{{$st->name}}</option>
+                                    @else
+                                        <option value="{{$st->id}}">{{$st->name}}</option>
+                                    @endif
+                                @endforeach
+                                {{--<option value="1" selected>Creados</option>
                                 <option value="2">Enviados</option>
                                 <option value="3">Aprobados</option>
-                                <option value="4">Rechazados</option>
+                                <option value="4">Rechazados</option>--}}
                             </select>&nbsp;&nbsp;
                         </div>
                         <br>

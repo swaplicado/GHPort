@@ -59,7 +59,7 @@
                 <td>SUBTIPO</td>
                 <td>@{{
                         !isRevision ? incident.applications_st_name : 
-                            (incident.request_status_id == 2 ? 'NUEVO' : incident.applications_st_name)
+                            (incident.request_status_id == 2 ? 'Por aprobar' : incident.applications_st_name)
                     }}
                 </td>
                 <td>

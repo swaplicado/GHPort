@@ -55,7 +55,7 @@
                 <td>@{{oDateUtils.formatDate(permission.start_date, 'ddd DD-MMM-YYYY')}}</td>
                 <td>@{{
                         !isRevision ? permission.applications_st_name : 
-                            (permission.request_status_id == 2 ? 'NUEVO' : permission.applications_st_name)
+                            (permission.request_status_id == 2 ? 'Por aprobar' : permission.applications_st_name)
                     }}
                 </td>
                 <td>

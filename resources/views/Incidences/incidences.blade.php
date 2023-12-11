@@ -90,7 +90,8 @@
                                                 'filterType' => 1,
                                                 'status_id' => 'status_myIncidence',
                                                 'status_name' => 'status_myIncidence',
-                                                'width' => '20%'
+                                                'width' => '20%',
+                                                'lStatus' => $lStatus
                                                 ])
         </div>
         <br>

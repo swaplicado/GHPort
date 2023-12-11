@@ -262,6 +262,24 @@ class requestVacationsController extends Controller
             $oApplication = null;
         }
 
+        $lRequestStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->whereNotIn('id_applications_st', [SysConst::APPLICATION_CONSUMIDO, SysConst::APPLICATION_CREADO])
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
+        $lGestionStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->where('id_applications_st', '!=', SysConst::APPLICATION_CONSUMIDO)
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
         return view('emp_vacations.requestVacations')->with('lEmployees', $data[1])
                                                     ->with('year', $data[0])
                                                     ->with('lHolidays', $data[2])
@@ -269,7 +287,9 @@ class requestVacationsController extends Controller
                                                     ->with('idApplication', $idApplication)
                                                     ->with('myManagers', $myManagers)
                                                     ->with('config', $config)
-                                                    ->with('oApplication', $oApplication);
+                                                    ->with('oApplication', $oApplication)
+                                                    ->with('lRequestStatus', $lRequestStatus)
+                                                    ->with('lGestionStatus', $lGestionStatus);
     }
 
     public function getDataManager(Request $request){

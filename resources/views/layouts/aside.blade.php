@@ -22,7 +22,7 @@
     <li class="nav-item">
         <a class="nav-link" href="{{ route('home') }}" onclick="showPageWaiting()">
         <i class="bx bxs-home bx-sm"></i>
-        <span>HOME</span></a>
+        <span>Inicio</span></a>
     </li>
 
     <!-- Divider -->

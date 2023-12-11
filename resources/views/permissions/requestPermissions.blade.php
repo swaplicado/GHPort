@@ -100,7 +100,8 @@
                                                     'filterType' => 2,
                                                     'status_id' => 'status_ReqPermission',
                                                     'status_name' => 'status_ReqPermission',
-                                                    'width' => '20%'
+                                                    'width' => '20%',
+                                                    'lStatus' => $lRequestStatus
                                                     ])
             </div>
             <br>
@@ -182,7 +183,8 @@
                                                                 'filterType' => 1,
                                                                 'status_id' => 'myStatus_myPermission',
                                                                 'status_name' => 'myStatus_myPermission',
-                                                                'width' => '20%'
+                                                                'width' => '20%',
+                                                                'lStatus' => $lGestionStatus
                                                                 ])
                         </div>
                         <br>

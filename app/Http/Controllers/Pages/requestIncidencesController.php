@@ -116,6 +116,24 @@ class requestIncidencesController extends Controller
         $now = Carbon::now();
         $initialCalendarDate = $now->subMonths(1)->toDateString();
 
+        $lRequestStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->whereNotIn('id_applications_st', [SysConst::APPLICATION_CONSUMIDO, SysConst::APPLICATION_CREADO])
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
+        $lGestionStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->where('id_applications_st', '!=', SysConst::APPLICATION_CONSUMIDO)
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
         return view('Incidences.requestIncidences')->with('constants', $constants)
                                                     ->with('myManagers', $myManagers)
                                                     ->with('lIncidences', $lIncidences)
@@ -127,7 +145,9 @@ class requestIncidencesController extends Controller
                                                     ->with('oApplication', $oApplication)
                                                     ->with('oUser', $oUser)
                                                     ->with('myManagers', $myManagers)
-                                                    ->with('initialCalendarDate', $initialCalendarDate);
+                                                    ->with('initialCalendarDate', $initialCalendarDate)
+                                                    ->with('lRequestStatus', $lRequestStatus)
+                                                    ->with('lGestionStatus', $lGestionStatus);
     }
 
     public function getEmployee(Request $request){

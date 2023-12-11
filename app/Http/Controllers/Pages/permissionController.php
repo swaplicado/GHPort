@@ -100,6 +100,15 @@ class permissionController extends Controller
             $sc->departure = Carbon::parse($sc->departure)->format('g:i A');
         }
 
+        $lStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->where('id_applications_st', '!=', SysConst::APPLICATION_CONSUMIDO)
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -112,7 +121,8 @@ class permissionController extends Controller
                                             ->with('lSuperviser', $lSuperviser)
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('clase_permiso', $clase_permiso)
-                                            ->with('lSchedule', $lSchedule);
+                                            ->with('lSchedule', $lSchedule)
+                                            ->with('lStatus', $lStatus);
     }
 
     public function createPermission(Request $request){

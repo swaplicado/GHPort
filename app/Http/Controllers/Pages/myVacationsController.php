@@ -58,6 +58,15 @@ class myVacationsController extends Controller
 
         $lSuperviser = orgChartUtils::getSupervisersToSend($user->org_chart_job_id);
 
+        $lStatus = \DB::table('sys_applications_sts')
+                        ->where('is_deleted', 0)
+                        ->where('id_applications_st', '!=', SysConst::APPLICATION_CONSUMIDO)
+                        ->select(
+                            'id_applications_st as id',
+                            'applications_st_name as name'
+                        )
+                        ->get();
+
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
@@ -66,7 +75,8 @@ class myVacationsController extends Controller
                                                 ->with('config', $config)
                                                 ->with('today', $today)
                                                 ->with('lTemp', $lTemp_special)
-                                                ->with('lSuperviser', $lSuperviser);
+                                                ->with('lSuperviser', $lSuperviser)
+                                                ->with('lStatus', $lStatus);
     }
 
     public function getlDays(Request $request){
