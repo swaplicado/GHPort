@@ -1,20 +1,20 @@
 @if(isset($crear))
-    <button id="btn_crear" type="button" class="btn3d btn-success" style="display: inline-block; margin-right: 5px" title="Nuevo registro">
+    <button id="btn_crear" type="button" class="btn3d btn-success" style="display: inline-block; margin-right: 5px" title="Crear solicitud">
         <span class="bx bx-plus"></span>
     </button>
 @endif
 @if(isset($editar))
-    <button id="btn_edit" type="button" class="btn3d btn-warning" style="display: inline-block; margin-right: 5px" title="Editar registro">
+    <button id="btn_edit" type="button" class="btn3d btn-warning" style="display: inline-block; margin-right: 5px" title="Modificar solicitud">
         <span class="bx bx-edit-alt"></span>
     </button>
 @endif
 @if(isset($delete))
-    <button id="btn_delete" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar registro">
+    <button id="btn_delete" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar solicitud">
         <span class="bx bxs-trash"></span>
     </button>
 @endif
 @if(isset($send))
-    <button id="btn_send" type="button" class="btn3d btn-info" style="display: inline-block; margin-right: 5px" title="Enviar">
+    <button id="btn_send" type="button" class="btn3d btn-info" style="display: inline-block; margin-right: 5px" title="Enviar solicitud">
         <span class="bx bx-paper-plane"></span>
     </button>
 @endif
@@ -29,12 +29,12 @@
     </button>
 @endif
 @if(isset($show))
-    <button id="btn_show" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 5px" title="Ver registro">
+    <button id="btn_show" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 5px" title="Ver solicitud">
         <span class="bx bx-show-alt"></span>
     </button>
 @endif
 @if(isset($cancel))
-    <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar">
+    <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar solicitud">
         <span class="bx bx-x"></span>
     </button>
 @endif
