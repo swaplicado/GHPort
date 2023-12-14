@@ -233,6 +233,9 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('directVac', 'Pages\directVacationsController@index')->name('directVacations');
     Route::post('directVac/approbe', 'Pages\requestVacationsController@acceptAutorizeRequest')->name('directVacations_approbe');
+    
+    Route::get('recoverVacationsManagment', 'Pages\recoveredVacationsController@indexManagment')->name('recoveredVacations_managment');
+    Route::post('recoverVacationsManagment/save', 'Pages\recoveredVacationsController@saveManagment')->name('recoveredVacations_managment_save');
 });
 /**
  * Rutas permisos 

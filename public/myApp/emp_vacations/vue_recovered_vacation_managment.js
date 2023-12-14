@@ -53,7 +53,7 @@ var app = new Vue({
                 SGui.showMessage('', 'No se pueden reactivar menos de 1 día');
                 return;
             }
-
+            SGui.showWaiting(15000);
             axios.post(this.oData.saveRoute, {
                 'user_id': this.oUser.id,
                 'daysToRecover': this.daysToRecover,
