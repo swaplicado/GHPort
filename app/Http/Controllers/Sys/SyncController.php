@@ -20,6 +20,8 @@ use App\Models\Adm\UsersPhotos;
 use App\User;
 use App\Constants\SysConst;
 
+use App\SReports\Vacations_report;
+
 class SyncController extends Controller
 {
     public static function toSynchronize($withRedirect = true)
@@ -42,6 +44,8 @@ class SyncController extends Controller
     public static function synchronizeWithERP($lastSyncDate = "")
     {
         $config = \App\Utils\Configuration::getConfigurations();
+        $lastSyncDate = Carbon::parse($lastSyncDate)->subDays($config->pastSyncDays)->startOfDay()->toDateTimeString();
+
         $client = new Client([
             'base_uri' => $config->urlSync,
             'timeout' => 30.0,
@@ -54,27 +58,71 @@ class SyncController extends Controller
             $data = json_decode($jsonString);
 
             $deptCont = new DepartmentsController();
-            $deptCont->saveDeptsFromJSON($data->departments);
+            $resDep = $deptCont->saveDeptsFromJSON($data->departments);
+            if(!$resDep){
+                return false;
+            }
             
             $jobCont = new JobsController();
-            $jobCont->saveJobsFromJSON($data->positions);
+            $resJob = $jobCont->saveJobsFromJSON($data->positions);
+            if(!$resJob){
+                return false;
+            }
             // $jobCont->insertJobVsOrgJob();
             
             $usrCont = new UsersController();
-            $usrCont->saveUsersFromJSON($data->employees);
+            $resUs = $usrCont->saveUsersFromJSON($data->employees);
+            if(!$resUs){
+                return false;
+            }
 
             // $usrCont->dumySetUserAdmissionLog();
 
             $holidaysCont = new holidaysController();
-            $holidaysCont->saveHolidaysFromJSON($data->holidays);
+            $resHol = $holidaysCont->saveHolidaysFromJSON($data->holidays);
+
+            if(!$resHol){
+                return false;
+            }
+
+            $lCompany = \DB::table('ext_company')
+                            ->select(
+                                'id_company',
+                                'external_id',
+                                'company_db_name'
+                            )
+                            ->get();
+
+            foreach($lCompany as $company){
+                $company->last_sync_date = \DB::table('synchronize_log as s')
+                                                ->join('users as u', 'u.id', '=', 's.user_id')
+                                                ->where('u.external_id_n', '!=', null)
+                                                ->where('company_id', $company->id_company)
+                                                ->select(
+                                                    'u.external_id_n',
+                                                    's.last_sync'
+                                                )->max(\DB::raw('DATE_FORMAT(s.last_sync, "%Y-%m-%d %H:%i:%s")'));
+
+                $company->last_sync_date = Carbon::parse($company->last_sync_date)->subDays($config->pastSyncDays)->startOfDay()->toDateTimeString();
+            }
+
+            $jsonUsers = json_encode($lCompany->toArray());
+
+            $responseVac = $client->request('GET', 'getPGHData/' . $jsonUsers);
+            $jsonStringVac = $responseVac->getBody()->getContents();
+            $dataVac = json_decode($jsonStringVac);
 
             $vacCont = new VacationsController();
-            // $newJsonString = json_encode($data->vacations, JSON_PRETTY_PRINT);
-            // file_put_contents(base_path('vac.json'), stripslashes($newJsonString));
-            $vacCont->saveVacFromJSON($data->vacations);
-            // $vacCont->dumySetVacationsUser();
+            $resVac = $vacCont->saveVacFromJSON($dataVac->vacations);
 
-            SyncController::setVacationsConsumed();
+            if(!$resVac){
+                return false;
+            }
+
+            $resCons = SyncController::setVacationsConsumed();
+            if(!$resCons){
+                return false;
+            }
         }
         catch (\Throwable $th) {
             return false;
@@ -127,6 +175,25 @@ class SyncController extends Controller
                 $oVac->update();
             }
         } catch (\Throwable $th) {
+            \Log::error($th);
+            return false;
         }
+        return true;
+    }
+
+    public function reSync(){
+        $config = \App\Utils\Configuration::getConfigurations();
+        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        $photos = SyncController::SyncPhotos();
+        $synchronized = true;
+
+        if($synchronized){
+             $newDate = Carbon::now();
+             $newDate->subMinutes(10);
+    
+             \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        }
+
+        return redirect()->back();
     }
 }

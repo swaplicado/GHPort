@@ -13,19 +13,22 @@ class DepartmentsController extends Controller
     {
         $lUnivDepts = Department::pluck('id_department', 'external_id_n');
 
-        foreach ($lSiieDepts as $jSiieDept) {
-            try {
+        try {
+            foreach ($lSiieDepts as $jSiieDept) {
                 if (isset($lUnivDepts[$jSiieDept->id_department])) {
-                    $idDeptUniv = $lUnivDepts[$jSiieDept->id_department];
-                    $this->updDepartment($jSiieDept, $idDeptUniv);
-                }
-                else {
-                    $this->insertDepartment($jSiieDept);
+                        $idDeptUniv = $lUnivDepts[$jSiieDept->id_department];
+                        $this->updDepartment($jSiieDept, $idDeptUniv);
+                    }
+                    else {
+                        $this->insertDepartment($jSiieDept);
+                    }
                 }
             }
-            catch (\Throwable $th) {
-            }
+        catch (\Throwable $th) {
+            \Log::error($th);
+            return false;
         }
+        return true;
     }
     
     private function updDepartment($jSiieDept, $idDeptUniv)

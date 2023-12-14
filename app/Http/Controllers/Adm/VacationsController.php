@@ -9,30 +9,32 @@ use App\Models\Adm\VacationAllocation;
 use App\Models\Adm\VacationUser;
 use App\Models\Vacations\Applications;
 use App\Models\Vacations\Programed;
+use App\Models\Vacations\SyncLog;
 use Carbon\Carbon;
 use App\User;
 use Illuminate\Support\Arr;
 use App\Utils\EmployeeVacationUtils;
+use App\Constants\SysConst;
 
 class VacationsController extends Controller
 {
     public function saveVacFromJSON($lSiieVacs)
     {
-        $arr_ids = [];
         try {
-            \DB::table('vacation_allocations')->delete();
-            \DB::table('programed_aux')->delete();
-            \DB::statement("ALTER TABLE vacation_allocations AUTO_INCREMENT =  1");
-            \DB::statement("ALTER TABLE programed_aux AUTO_INCREMENT =  1");
-        } catch (\Throwable $th) {
-        }
-        foreach($lSiieVacs as $rVac){
-            try {
+            \DB::beginTransaction();
+            foreach($lSiieVacs as $rVac){
                 $user = User::where('external_id_n', $rVac->employee_id)->first();
                 if(!is_null($user)){
-                    foreach($rVac->rows as $vac){
+                    $lIds = \DB::table('vacation_allocations')->where('user_id', $user->id)->get()->pluck('id_vacation_allocation')->toArray();
+                    \DB::table('vacation_allocations')->where('user_id', $user->id)->delete();
+                    // $lIdsProgrammed = \DB::table('programed_aux')->where('user_id', $user->id)->get()->pluck('id_vacation_allocation')->toArray();
+                    \DB::table('programed_aux')->where('employee_id', $user->id)->delete();
+                    foreach($rVac->rows as $index => $vac){
                         if($vac->vacation_consumed > 0){
                             $oVacAll = new VacationAllocation();
+                            if($index < count($lIds)){
+                                $oVacAll->id_vacation_allocation = $lIds[$index];
+                            }
                             $oVacAll->user_id = $user->id;
                             $oVacAll->day_consumption = $vac->vacation_consumed;
                             $oVacAll->is_deleted = 0;
@@ -47,29 +49,21 @@ class VacationsController extends Controller
                             $this->insertProgramed($vac, $user->id);
                         }
                     }
-    
-                    /**
-                     * Se quitó
-                     */
-                    // foreach($rVac->incidents as $inc){
-                    //     if($inc->day_consumed > 0){
-                    //         $oVacAll = new VacationAllocation();
-                    //         $oVacAll->user_id = $user->id;
-                    //         $oVacAll->day_consumption = $inc->day_consumed;
-                    //         $oVacAll->application_breakdown_id = $inc->id_breakdown;
-                    //         $oVacAll->is_deleted = 0;
-                    //         $oVacAll->created_by = 1;
-                    //         $oVacAll->updated_by = 1;
-                    //         $oVacAll->anniversary_count = $inc->anniversary;
-                    //         $oVacAll->id_anniversary = $inc->year;
-                    //         $oVacAll->save();
-                    //     }
-                    // }
                     EmployeeVacationUtils::syncVacConsumed($user->id);
+                    
+                    $oSyncLog = SyncLog::where('user_id', $user->id)->first();
+                    $oSyncLog->last_sync = Carbon::now()->toDateTimeString();
+                    $oSyncLog->update();
                 }
-            } catch (\Throwable $th) {
             }
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            \Log::error($th);
+            return false;
         }
+
+        return true;
     }
 
     public function insertProgramed($vac, $user_id){

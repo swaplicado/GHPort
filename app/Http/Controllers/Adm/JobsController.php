@@ -17,19 +17,22 @@ class JobsController extends Controller
         $lJobs = Job::pluck('id_job', 'external_id_n');
         $this->lDepartments = Department::pluck('id_department', 'external_id_n');
 
-        foreach ($lSiieJobs as $jSiieJob) {
-            try {
+        try {
+            foreach ($lSiieJobs as $jSiieJob) {
                 if (isset($lJobs[$jSiieJob->id_position])) {
-                    $idJob = $lJobs[$jSiieJob->id_position];
-                    $this->updJob($jSiieJob, $idJob);
-                }
-                else {
-                    $this->insertJob($jSiieJob);
+                        $idJob = $lJobs[$jSiieJob->id_position];
+                        $this->updJob($jSiieJob, $idJob);
+                    }
+                    else {
+                        $this->insertJob($jSiieJob);
+                    }
                 }
             }
-            catch (\Throwable $th) {
-            }
+        catch (\Throwable $th) {
+            \Log::error($th);
+            return false;
         }
+        return true;
     }
     
     private function updJob($jSiieJob, $idJob)

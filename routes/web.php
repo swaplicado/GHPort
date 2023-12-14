@@ -228,7 +228,11 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('anniversaryColab', 'Pages\annUsersChildsController@employeesDirectAnn')->name('colab_ann');
     Route::get('anniversaryAllColab', 'Pages\annAllUsersChildsController@employeesAllAnn')->name('all_colab_ann');
+    
+    Route::get('synchronize', 'Sys\SyncController@reSync')->name('synchronize');
 
+    Route::get('directVac', 'Pages\directVacationsController@index')->name('directVacations');
+    Route::post('directVac/approbe', 'Pages\requestVacationsController@acceptAutorizeRequest')->name('directVacations_approbe');
 });
 /**
  * Rutas permisos 

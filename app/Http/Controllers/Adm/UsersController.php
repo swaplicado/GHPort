@@ -30,19 +30,22 @@ class UsersController extends Controller
         $this->lJobs = Job::pluck('id_job', 'external_id_n');
         $this->lOrgChartJobs = \DB::table('ext_jobs_vs_org_chart_job')->get();
         
-        foreach ($lUsers as $jUser) {
-            try {
-                if (isset($lGhPortUsers[$jUser->id_employee])) {
-                    $id = $lGhPortUsers[$jUser->id_employee];
-                    $this->updUser($jUser, $id);
-                }
-                else {
-                    $this->insertUser($jUser);
+        try {
+            foreach ($lUsers as $jUser) {
+                    if (isset($lGhPortUsers[$jUser->id_employee])) {
+                        $id = $lGhPortUsers[$jUser->id_employee];
+                        $this->updUser($jUser, $id);
+                    }
+                    else {
+                        $this->insertUser($jUser);
+                    }
                 }
             }
-            catch (\Throwable $th) {
-            }
+        catch (\Throwable $th) {
+            \Log::error($th);
+            return false;
         }
+        return true;
     }
 
     private function updUser($jUser, $id)

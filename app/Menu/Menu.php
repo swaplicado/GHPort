@@ -126,7 +126,7 @@ class Menu {
         $administracion = [];
 
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($administracion,['route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Vac. directas']);    
+            array_push($administracion,['route' => route('directVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Vac. directas']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($administracion,['route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Reactivaciones']);    
@@ -193,6 +193,8 @@ class Menu {
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($lMenus,(object) ['type' => $list, 'list' =>$configuracion, 'icon' => 'bx bx-cog bx-sm', 'name' => 'Configuración', 'id' => 'Configuracion']);    
         }
+
+        array_push($lMenus, (object) ['type' => $element, 'route' => route('synchronize'), 'icon' => 'bx bx-sync bx-sm', 'name' => 'Sincronizar', 'id' => 'sync']);
 
         //cierra octavo grupo de menus
         

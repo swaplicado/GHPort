@@ -12,19 +12,23 @@ class holidaysController extends Controller
     {
         $lHolidays = Holiday::pluck('id', 'external_key');
 
-        foreach ($lSiieHolidays as $jSiieHoliday) {
-            try {
+        try {
+            foreach ($lSiieHolidays as $jSiieHoliday) {
                 if (isset($lHolidays[$jSiieHoliday->id_holiday])) {
-                    $idHoliday = $lHolidays[$jSiieHoliday->id_holiday];
-                    $this->updHoliday($jSiieHoliday, $idHoliday);
-                }
-                else {
-                    $this->insertHoliday($jSiieHoliday);
-                }
-            }
-            catch (\Throwable $th) {
+                        $idHoliday = $lHolidays[$jSiieHoliday->id_holiday];
+                        $this->updHoliday($jSiieHoliday, $idHoliday);
+                    }
+                    else {
+                        $this->insertHoliday($jSiieHoliday);
+                    }
             }
         }
+        catch (\Throwable $th) {
+            \Log::error($th);
+            return false;
+        }
+
+        return true;
     }
 
     private function updHoliday($jSiieHoliday, $idHoliday)
