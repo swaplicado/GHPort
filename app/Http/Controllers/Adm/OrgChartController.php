@@ -46,8 +46,8 @@ class OrgChartController extends Controller
                     'imageUrl' => count($ar->users) > 0 ? 
                         ($ar->users[0]['photo64'] != null ? 
                             "data:image/jpg;base64,".$ar->users[0]['photo64'] : 
-                                asset('img/avatar/profile2.png')) : 
-                                    asset('img/pregunta.png'),
+                                asset('img/sin_fotografia.png')) : 
+                                    asset('img/vacante.png'),
                     'positionName' => $ar->job_name,
                     'id' => $ar->id_org_chart_job,
                     'parentId' => $ar->top_org_chart_job_id_n,
@@ -58,7 +58,7 @@ class OrgChartController extends Controller
             }else{
                 $lAreas[] = [
                     'name' => '',
-                    'imageUrl' => count($ar->users) > 0 ? asset('img/multiple-users-silhouette.png') : asset('img/pregunta.png'),
+                    'imageUrl' => count($ar->users) > 0 ? asset('img/multiple-users-silhouette.png') : asset('img/vacante.png'),
                     'positionName' => $ar->job_name,
                     'id' => $ar->id_org_chart_job,
                     'parentId' => $ar->top_org_chart_job_id_n,
