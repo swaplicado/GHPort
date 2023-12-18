@@ -132,7 +132,7 @@ class Menu {
             array_push($administracion,['route' => route('recoveredVacations_managment'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Reactivaciones']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($administracion,['route' => route('specialVacations'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Delegaciones']);    
+            array_push($administracion,['route' => route('delegationManager'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Delegaciones']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($administracion,['route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Consulta estatus vacs.']);    

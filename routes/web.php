@@ -236,6 +236,11 @@ Route::middleware(['auth', 'menu'])->group( function () {
     
     Route::get('recoverVacationsManagment', 'Pages\recoveredVacationsController@indexManagment')->name('recoveredVacations_managment');
     Route::post('recoverVacationsManagment/save', 'Pages\recoveredVacationsController@saveManagment')->name('recoveredVacations_managment_save');
+
+    Route::get('delegationManager', 'Pages\delegationController@indexManager')->name('delegationManager');
+    Route::post('delegationManager/saveDelegation', 'Pages\delegationController@saveDelegationManager')->name('delegationManager_saveDelegation');
+    Route::post('delegationManager/updateDelegation', 'Pages\delegationController@updateDelegationManager')->name('delegationManager_updateDelegation');
+    Route::post('delegationManager/deleteDelegation', 'Pages\delegationController@deleteDelegationManager')->name('delegationManager_deleteDelegation');
 });
 /**
  * Rutas permisos 

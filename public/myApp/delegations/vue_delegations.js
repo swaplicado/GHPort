@@ -16,12 +16,12 @@ var app = new Vue({
         closeDelegation: false,
     },
     mounted(){
-        var datalUser = [{id: '', text: ''}];
+        var datalUser = [];
         for(var i = 0; i<this.lUsers.length; i++){
             datalUser.push({id: this.lUsers[i].id, text: this.lUsers[i].full_name_ui});
         }
 
-        var datalMyManagers = [{id: '', text: ''}];
+        var datalMyManagers = [];
         for(var i = 0; i<this.lMyManagers.length; i++){
             datalMyManagers.push({id: this.lMyManagers[i].id, text: this.lMyManagers[i].full_name_ui});
         }
@@ -43,6 +43,10 @@ var app = new Vue({
                 placeholder: 'selecciona',
                 data: datalUser,
             });
+
+        $('#user_delegated').val('').trigger('change');
+        $('#user_delegation_d').val('').trigger('change');
+        $('#user_delegation_n').val('').trigger('change');
     },
     methods: {
         showModal(data = null){
