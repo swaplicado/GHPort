@@ -29,6 +29,9 @@
                     },
                     // "scrollX": true,
                     "responsive": false,
+                    @if(isset($selectMulti))
+                        "select": "multi",
+                    @endif
                     @if(isset($noInfo))
                         "info": false,
                     @endif

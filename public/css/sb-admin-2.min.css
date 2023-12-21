@@ -13019,3 +13019,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     color: #e7e7e7;
     padding: 20px 20px;
   }
+
+.centerItem {
+    display: flex; justify-content: center; align-items: center;
+}

@@ -135,6 +135,12 @@ class Menu {
             array_push($administracion,['route' => route('delegationManager'), 'icon' => 'bx bxs-star bx-xs', 'name' => 'Delegaciones']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('groups'), 'icon' => 'bx bxs-group bx-xs', 'name' => 'Grupos']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('events'), 'icon' => 'bx bxs-calendar-event bx-xs', 'name' => 'Eventos']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($administracion,['route' => route('allVacations'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Consulta estatus vacs.']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){

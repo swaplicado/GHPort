@@ -241,6 +241,21 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('delegationManager/saveDelegation', 'Pages\delegationController@saveDelegationManager')->name('delegationManager_saveDelegation');
     Route::post('delegationManager/updateDelegation', 'Pages\delegationController@updateDelegationManager')->name('delegationManager_updateDelegation');
     Route::post('delegationManager/deleteDelegation', 'Pages\delegationController@deleteDelegationManager')->name('delegationManager_deleteDelegation');
+
+    Route::get('events', 'Pages\EventsController@index')->name('events');
+    Route::post('events/save', 'Pages\EventsController@store')->name('events_save');
+    Route::post('events/update', 'Pages\EventsController@updateEvent')->name('events_update');
+    Route::post('events/getAssigned', 'Pages\EventsController@getEventAssigned')->name('events_getAssigned');
+    Route::post('events/assignUser', 'Pages\EventsController@saveAssignUser')->name('events_saveAssignUser');
+    Route::post('events/assignGroup', 'Pages\EventsController@saveAssigngroup')->name('events_saveAssignGroup');
+
+
+    Route::get('groups', 'Pages\employeeGroupsController@index')->name('groups');
+    Route::post('groups/save', 'Pages\employeeGroupsController@saveGroup')->name('groups_save');
+    Route::post('groups/update', 'Pages\employeeGroupsController@updateGroup')->name('groups_update');
+    Route::post('groups/delete', 'Pages\employeeGroupsController@deleteGroup')->name('groups_delete');
+    Route::post('groups/getUsersAssign', 'Pages\employeeGroupsController@getUsersAssign')->name('groups_getUsersAssign');
+    Route::post('groups/assignUser', 'Pages\employeeGroupsController@setAssign')->name('groups_setAssign');
 });
 /**
  * Rutas permisos 
