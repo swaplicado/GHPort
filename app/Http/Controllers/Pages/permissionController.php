@@ -63,7 +63,7 @@ class permissionController extends Controller
                         ->pluck('fecha');
 
         $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial(delegationUtils::getOrgChartJobIdUser(), delegationUtils::getIdUser(), delegationUtils::getJobIdUser());
-
+        $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
         $config = \App\Utils\Configuration::getConfigurations();
 
         $superviser = orgChartUtils::getExistDirectSuperviserOrgChartJob(\Auth::user()->org_chart_job_id);
@@ -122,7 +122,8 @@ class permissionController extends Controller
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('clase_permiso', $clase_permiso)
                                             ->with('lSchedule', $lSchedule)
-                                            ->with('lStatus', $lStatus);
+                                            ->with('lStatus', $lStatus)
+                                            ->with('lEvents', $lEvents);
     }
 
     public function createPermission(Request $request){

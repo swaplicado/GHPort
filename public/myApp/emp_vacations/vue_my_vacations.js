@@ -45,12 +45,14 @@ var appMyVacations = new Vue({
         is_advanced: false,
         is_proportional: false,
         is_season_special: false,
+        is_event: false,
         newData: false,
         MyReturnDate: null,
         showDatePickerSimple: false,
         isGestionVac: false,
         lTypes: [],
         loadReturnDate: false,
+        lEvents: oServerData.lEvents,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -61,16 +63,6 @@ var appMyVacations = new Vue({
         startDate:function(val) {
             this.newData = true;
         },
-        // endDate:function(val) {
-        //     this.newData = true;
-        //     this.lTypes = [];
-        //     if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
-        //         let res = this.checkSpecial();
-        //         if(res[0]){
-        //             SGui.showMessage('', res[1], 'warning');
-        //         }
-        //     }
-        // },
         propertyAAndPropertyB(newVal, oldVal) {
             this.newData = true;
             let oldlTypes = structuredClone(this.lTypes);
@@ -180,6 +172,7 @@ var appMyVacations = new Vue({
                     this.year = data.year;
                     this.initialCalendarDate = data.initialCalendarDate;
                     this.isGestionVac = true;
+                    this.lEvents = data.lEvents;
                     this.initValuesForUser(data.oUser);
                     // this.initDatePicker();
                     SGui.showOk();
@@ -633,6 +626,7 @@ var appMyVacations = new Vue({
             this.is_advanced = false;
             this.is_proportional = false;
             this.is_season_special = false;
+            this.is_event = false;
             let lMessages = [];
 
             if(this.takedDays > this.oUser.tot_vacation_remaining && this.takedDays <= (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days)))){
@@ -671,6 +665,20 @@ var appMyVacations = new Vue({
                         this.lTypes.push('Con días en temporada especial');
 
                         lMessages.push('Estas tomando días en temporada especial ' + oSeason.name);
+                        break;
+                    }
+                }
+            }
+
+            for(let oEvent of this.lEvents) {
+                for (let day of oEvent.lDates) {
+                    if (moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')) {
+                        is_special = true;
+                        this.is_normal = false;
+                        this.is_event = true;
+                        this.lTypes.push('Con días en evento');
+
+                        lMessages.push('Estas tomando días en evento, ' + oEvent.name);
                         break;
                     }
                 }
@@ -730,6 +738,10 @@ var appMyVacations = new Vue({
             if(data.is_recover_vacation){
                 type = type + "Con días vencidos\n";
             }
+            
+            if(data.is_event){
+                type = type + "Días en evento\n";
+            }
 
             return type;
         },
@@ -784,6 +796,7 @@ var appMyVacations = new Vue({
                 'is_advanced': this.is_advanced,
                 'is_proportional': this.is_proportional,
                 'is_season_special': this.is_season_special,
+                'is_event': this.is_event,
                 'lDays': copylDays,
             })
             .then(response => {

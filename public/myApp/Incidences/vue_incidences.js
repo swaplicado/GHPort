@@ -52,6 +52,8 @@ var app = new Vue({
         emp_comments: null,
         status_incidence: 0,
         limit_days: null,
+        lEvents: oServerData.lEvents,
+        is_event: false,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -511,6 +513,7 @@ var app = new Vue({
                     let data = result.data;
                     if(data.success){
                         this.oApplication = data.oApplication;
+                        this.lEvents = data.lEvents;
                         // swal.close();
                         resolve(data.oApplication);
                     }else{
@@ -622,6 +625,7 @@ var app = new Vue({
                 'is_normal': this.is_normal,
                 'is_past': this.is_past,
                 'is_season_special': this.is_season_special,
+                'is_event': this.is_event,
                 'birthDayYear': this.birthDayYear,
             })
             .then( result => {
@@ -785,6 +789,7 @@ var app = new Vue({
             this.is_normal = true;
             this.is_past = false;
             this.is_season_special = false;
+            this.is_event = false;
             let lMessages = [];
 
             if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
@@ -803,6 +808,19 @@ var app = new Vue({
                         this.is_season_special = true;
                         this.lSpecialTypes.push('Con días en temporada especial');
                         lMessages.push('Estas tomando días en temporada especial ' + oSeason.name);
+                        break;
+                    }
+                }
+            }
+
+            for(let oEvent of this.lEvents) {
+                for (let day of oEvent.lDates) {
+                    if (moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')) {
+                        is_special = true;
+                        this.is_normal = false;
+                        this.is_event = true;
+                        this.lSpecialTypes.push('Con días en evento');
+                        lMessages.push('Estas tomando días en evento, ' + oEvent.name);
                         break;
                     }
                 }
@@ -902,6 +920,7 @@ var app = new Vue({
                     if(data.success){
                         this.oUser = data.oUser;
                         this.lTemp = data.lTemp;
+                        this.lEvents = data.lEvents;
                         resolve(data.oUser);
                     }else{
                         SGui.showMessage('', data.message, data.icon);
@@ -1081,6 +1100,7 @@ var app = new Vue({
                     this.lIncidences = data.lIncidences;
                     this.oCopylIncidences = data.lIncidences;
                     this.lTemp = data.lTemp;
+                    this.lEvents = data.lEvents;
                     SGui.showOk();
                 }else{
                     SGui.showMessage('', data.message, data.icon);

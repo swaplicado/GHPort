@@ -51,6 +51,7 @@ var app = new Vue({
         totalTime: null,
         requestSchedule: null,
         permission: null,
+        lEvents: oServerData.lEvents,
     },
     watch: {
         type_id:function(val){
@@ -899,6 +900,7 @@ var app = new Vue({
                         this.lPermissions = data.lPermissions;
                         this.oCopylPermissions = data.lPermissions;
                         this.lTemp = data.lTemp;
+                        this.lEvents = data.lEvents;
                         this.lSchedule = data.lSchedule;
                         SGui.showOk();
                     } else {
@@ -1011,6 +1013,7 @@ var app = new Vue({
                     if (data.success) {
                         this.oUser = data.oUser;
                         this.lTemp = data.lTemp;
+                        this.lEvents = data.lEvents;
                         resolve(data.oUser);
                     } else {
                         SGui.showMessage('', data.message, data.icon);
@@ -1078,6 +1081,20 @@ var app = new Vue({
                         this.oDateUtils.formatDate(this.oPermission.rejected_date_n, 'ddd DD-MMM-YYYY'),
                     icon: 'info',
                 });
+            } else{
+                let lMessages = [];
+                for(let oEvent of this.lEvents) {
+                    for (let day of oEvent.lDates) {
+                        if (moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')) {
+                            lMessages.push('Estas tomando días en evento, ' + oEvent.name);
+                            break;
+                        }
+                    }
+                }
+                if(lMessages.length > 0){
+                    SGui.showMessage('', lMessages.join('<br>'), 'warning');
+                    lMessages = [];
+                }
             }
             $('#modal_permission').modal('show');
         },
@@ -1296,6 +1313,20 @@ var app = new Vue({
                 this.entry = '';
                 this.departure = '';
                 this.haveSchedule = false;
+            }
+
+            let lMessages = [];
+            for(let oEvent of this.lEvents) {
+                for (let day of oEvent.lDates) {
+                    if (moment(day, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')) {
+                        lMessages.push('Estas tomando días en evento, ' + oEvent.name);
+                        break;
+                    }
+                }
+            }
+            if(lMessages.length > 0){
+                SGui.showMessage('', lMessages.join('<br>'), 'warning');
+                lMessages = [];
             }
         },
 

@@ -62,6 +62,7 @@ class requestIncidencesController extends Controller
 
         // $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial(delegationUtils::getOrgChartJobIdUser(), delegationUtils::getIdUser(), delegationUtils::getJobIdUser());
         $lTemp_special = [];
+        $lEvents = [];
 
         $lHolidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
@@ -110,6 +111,7 @@ class requestIncidencesController extends Controller
 
             if($oApplication != null){
                 $oUser = $lEmployees->where('id', $oApplication->user_id)->first();
+                $lEvents = EmployeeVacationUtils::getEmployeeEvents($oApplication->user_id);
             }
         }
 
@@ -147,7 +149,8 @@ class requestIncidencesController extends Controller
                                                     ->with('myManagers', $myManagers)
                                                     ->with('initialCalendarDate', $initialCalendarDate)
                                                     ->with('lRequestStatus', $lRequestStatus)
-                                                    ->with('lGestionStatus', $lGestionStatus);
+                                                    ->with('lGestionStatus', $lGestionStatus)
+                                                    ->with('lEvents', $lEvents);
     }
 
     public function getEmployee(Request $request){
@@ -169,14 +172,14 @@ class requestIncidencesController extends Controller
             $oUser->antiquity = $human;
 
             $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($oUser->org_chart_job_id, $oUser->id, $oUser->job_id);
-
+            $lEvents = EmployeeVacationUtils::getEmployeeEvents($request->user_id);
             $lIncidences = incidencesUtils::getUserIncidences($oUser->id);
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lIncidences' => $lIncidences]);
+        return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lIncidences' => $lIncidences, 'lEvents' => $lEvents]);
     }
 
     public function approbeIncidence(Request $request){

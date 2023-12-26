@@ -168,12 +168,12 @@ class EventsController extends Controller
         try {
             \DB::beginTransaction();
             $event = Event::findOrFail($idEvent);
-            $event->is_deleted = false;
+            $event->is_deleted = true;
             $event->update();
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al crear el evento', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')

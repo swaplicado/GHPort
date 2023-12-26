@@ -21,6 +21,7 @@
             this.constants = <?php echo json_encode($constants); ?>;
             this.eventSaveRoute = <?php echo json_encode(route('events_save')); ?>;
             this.eventUpdateRoute = <?php echo json_encode(route('events_update')); ?>;
+            this.eventDeleteRoute = <?php echo json_encode(route('events_delete')); ?>;
             this.getAssignedRoute = <?php echo json_encode(route('events_getAssigned')); ?>;
             this.saveAssignUserRoute = <?php echo json_encode(route('events_saveAssignUser')); ?>;
             this.saveAssignGroupRoute = <?php echo json_encode(route('events_saveAssignGroup')); ?>;

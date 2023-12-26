@@ -40,6 +40,7 @@ class incidencesController extends Controller
                             'at.is_normal',
                             'at.is_past',
                             'at.is_season_special',
+                            'at.is_event',
                             'tp.id_incidence_tp',
                             'tp.incidence_tp_name',
                             'tp.limit_days_n',
@@ -91,6 +92,8 @@ class incidencesController extends Controller
 
         $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial(delegationUtils::getOrgChartJobIdUser(), delegationUtils::getIdUser(), delegationUtils::getJobIdUser());
 
+        $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
+
         $lHolidays = \DB::table('holidays')
                         ->where('fecha', '>', Carbon::now()->subDays(30)->toDateString())
                         ->where('is_deleted', 0)
@@ -119,7 +122,8 @@ class incidencesController extends Controller
                                             ->with('oUser', \Auth::user())
                                             ->with('lSuperviser', $lSuperviser)
                                             ->with('initialCalendarDate', $initialCalendarDate)
-                                            ->with('lStatus', $lStatus);
+                                            ->with('lStatus', $lStatus)
+                                            ->with('lEvents', $lEvents);
     }
 
     public function createIncidence(Request $request){
@@ -138,6 +142,7 @@ class incidencesController extends Controller
         $is_normal = $request->is_normal;
         $is_past = $request->is_past;
         $is_season_special  = $request->is_season_special;
+        $is_event  = $request->is_event;
         try {
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
@@ -182,6 +187,7 @@ class incidencesController extends Controller
             $applicationVsType->application_id = $application->id_application;
             $applicationVsType->is_past = $is_past;
             $applicationVsType->is_season_special = $is_season_special;
+            $applicationVsType->is_event = $is_event;
             $applicationVsType->is_recover_vacation = 0;
             $applicationVsType->is_normal = !($request->is_past || $request->is_season_special);
             $applicationVsType->save();
@@ -278,13 +284,13 @@ class incidencesController extends Controller
                                     'u_rev.full_name_ui as revisor',
                                 )
                                 ->first();
-
+        $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'oApplication' => $oApplication]);
+        return json_encode(['success' => true, 'oApplication' => $oApplication, 'lEvents' => $lEvents]);
     }
 
     public function deleteIncidence(Request $request){

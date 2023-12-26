@@ -261,6 +261,7 @@ class EmployeeVacationUtils {
                             'at.is_proportional',
                             'at.is_season_special',
                             'at.is_recover_vacation',
+                            'at.is_event',
                             'u.full_name_ui as user_apr_rej_name',
                             'as.applications_st_name',
                             'as.applications_st_code',
@@ -1098,5 +1099,47 @@ class EmployeeVacationUtils {
         $customYear = $lastAniversary < $lastIncidentYear ? $lastIncidentYear - $lastAniversary : null;
 
         return $customYear;
+    }
+
+    public static function getEmployeeEvents($employee_id){
+        try {
+            $lGroups = \DB::table('groups_assigns as ga')
+                            ->join('groups as g', 'g.id_group', '=', 'ga.group_id_n')
+                            ->where('ga.user_id_n', $employee_id)
+                            ->where('g.is_deleted', 0)
+                            ->get()
+                            ->pluck('id_group')
+                            ->toArray();
+
+            $lEventsByGroups = \DB::table('events_assigns as ea')
+                                    ->join('cat_events as e', 'e.id_event', '=', 'ea.event_id')
+                                    ->whereIn('group_id_n', $lGroups)
+                                    ->where('e.is_deleted', 0)
+                                    ->where('ea.is_deleted', 0)
+                                    ->get();
+
+            $lEventsByEmployee = \DB::table('events_assigns as ea')
+                                    ->join('cat_events as e', 'e.id_event', '=', 'ea.event_id')
+                                    ->where('user_id_n', $employee_id)
+                                    ->where('e.is_deleted', 0)
+                                    ->where('ea.is_deleted', 0)
+                                    ->get();
+
+            $lEvents = $lEventsByGroups->merge($lEventsByEmployee);
+            
+            foreach ($lEvents as $event) {
+                $lDays = json_decode($event->ldays);
+                foreach ($lDays as $day) {
+                    if($day->taked){
+                        $event->lDates[] = $day->date;
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return [];
+        }
+
+        return $lEvents;
     }
 }

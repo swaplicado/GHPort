@@ -191,6 +191,7 @@ class requestVacationsController extends Controller
                                     'at.is_proportional',
                                     'at.is_season_special',
                                     'at.is_recover_vacation',
+                                    'at.is_event',
                                     'u.birthday_n',
                                     'u.benefits_date',
                                     'u.payment_frec_id',
@@ -200,12 +201,17 @@ class requestVacationsController extends Controller
                                 ->first();
 
         $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($oApplication->user_id);
+        $lEvents = EmployeeVacationUtils::getEmployeeEvents($oApplication->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Ocurrio un error al obtener la solicilitud', 'icon' => 'error']);
         }
         
-        return json_encode(['success' => true, 'oApplication' => $oApplication, 'tot_vacation_remaining' => $oUser->tot_vacation_remaining]);
+        return json_encode(['success' => true, 
+            'oApplication' => $oApplication, 
+            'tot_vacation_remaining' => $oUser->tot_vacation_remaining,
+            'lEvents' => $lEvents,
+        ]);
     }
 
     public function index($idApplication = null){
@@ -242,6 +248,7 @@ class requestVacationsController extends Controller
                                     'at.is_proportional',
                                     'at.is_season_special',
                                     'at.is_recover_vacation',
+                                    'at.is_event',
                                     'u.birthday_n',
                                     'u.benefits_date',
                                     'u.payment_frec_id',
@@ -254,12 +261,15 @@ class requestVacationsController extends Controller
 
             if(count($myEmp) == 0){
                 $oApplication = null;
+                $lEvents = [];
             }else{
                 $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($oApplication->user_id);
                 $oApplication->tot_vacation_remaining = $oUser->tot_vacation_remaining;
+                $lEvents = EmployeeVacationUtils::getEmployeeEvents($oApplication->user_id);
             }
         }else{
             $oApplication = null;
+            $lEvents = [];
         }
 
         $lRequestStatus = \DB::table('sys_applications_sts')
@@ -289,7 +299,8 @@ class requestVacationsController extends Controller
                                                     ->with('config', $config)
                                                     ->with('oApplication', $oApplication)
                                                     ->with('lRequestStatus', $lRequestStatus)
-                                                    ->with('lGestionStatus', $lGestionStatus);
+                                                    ->with('lGestionStatus', $lGestionStatus)
+                                                    ->with('lEvents', $lEvents);
     }
 
     public function getDataManager(Request $request){

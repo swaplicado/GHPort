@@ -21,6 +21,7 @@
         function GlobalData(){
             this.initialCalendarDate = <?php echo json_encode($initialCalendarDate); ?>;
             this.oApplication = <?php echo json_encode($oApplication); ?>;
+            this.lEvents = <?php echo json_encode($lEvents); ?>;
             this.lEmployees = <?php echo json_encode($lEmployees); ?>;
             this.myManagers = <?php echo json_encode($myManagers); ?>;
             this.lIncidences = <?php echo json_encode($lIncidences); ?>;

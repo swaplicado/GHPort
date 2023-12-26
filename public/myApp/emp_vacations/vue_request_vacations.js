@@ -40,6 +40,7 @@ var appRequestVacation = new Vue({
         showDatePickerSimple: false,
         lTypes: [],
         tot_vacation_remaining: null,
+        lEvents: oServerData.lEvents,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -250,6 +251,7 @@ var appRequestVacation = new Vue({
                 SGui.showError("Debe seleccionar un renglón");
                 return;
             }
+            SGui.showWaitingBlock(15000);
             this.endDate = null;
             let data = table['table_requestVac'].row('.selected').data();
 
@@ -261,6 +263,7 @@ var appRequestVacation = new Vue({
                 if(data.success){
                     this.oApplication = data.oApplication;
                     this.tot_vacation_remaining = data.tot_vacation_remaining;
+                    this.lEvents = data.lEvents;
                     this.showModal();
                 }else{
                     SGui.showMessage('', data.message, data.icon);
@@ -668,6 +671,10 @@ var appRequestVacation = new Vue({
                 type = type + "Temporada especial\n";
             }
 
+            if(data.is_event){
+                type = type + "Días en evento\n";
+            }
+
             if(data.is_recover_vacation){
                 type = type + "Con días vencidos\n";
             }
@@ -702,6 +709,12 @@ var appRequestVacation = new Vue({
                 is_special = true;
                 this.lTypes.push('Con días en temporada especial');
                 lMessages.push('Estas tomando días en temporada especial ' + oSeason.name);
+            }
+
+            if(data.is_event){
+                is_special = true;
+                this.lTypes.push('Con días en evento');
+                lMessages.push('Se están tomando días en evento');
             }
 
             if(this.lDays[0].bussinesDay == false && this.lDays[0].taked == false){

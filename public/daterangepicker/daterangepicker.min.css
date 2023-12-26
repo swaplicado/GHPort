@@ -513,6 +513,10 @@
     background-color: #9f55d4
 }
 
+.date-picker-wrapper .month-wrapper table .day.event {
+    background-color: #c97b3f
+}
+
 .date-picker-wrapper .month-wrapper table .day.birthDay {
     background: url('../img/birthday-cake.png');
     background-repeat:no-repeat;

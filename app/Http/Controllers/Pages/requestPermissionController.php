@@ -57,6 +57,7 @@ class requestPermissionController extends Controller
                         ->pluck('fecha');
 
         $lTemp_special = [];
+        $lEvents = [];
 
         $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
 
@@ -113,6 +114,7 @@ class requestPermissionController extends Controller
                                             ->with('lClass', $lClass)
                                             ->with('lHolidays', $lHolidays)
                                             ->with('lTemp', $lTemp_special)
+                                            ->with('lEvents', $lEvents)
                                             ->with('oPermission', $oPermission)
                                             ->with('oUser', $oUser)
                                             ->with('lEmployees', $lEmployees)
@@ -157,6 +159,7 @@ class requestPermissionController extends Controller
                         ->pluck('fecha');
 
         $lTemp_special = [];
+        $lEvents = [];
 
         $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
 
@@ -213,6 +216,7 @@ class requestPermissionController extends Controller
                                             ->with('lClass', $lClass)
                                             ->with('lHolidays', $lHolidays)
                                             ->with('lTemp', $lTemp_special)
+                                            ->with('lEvents', $lEvents)
                                             ->with('oPermission', $oPermission)
                                             ->with('oUser', $oUser)
                                             ->with('lEmployees', $lEmployees)
@@ -244,6 +248,7 @@ class requestPermissionController extends Controller
             $oUser->antiquity = $human;
 
             $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($oUser->org_chart_job_id, $oUser->id, $oUser->job_id);
+            $lEvents = EmployeeVacationUtils::getEmployeeEvents($oUser->id);
             if( isset($request->cl) ){
                 $lPermissions = permissionsUtils::getUserPermissions($oUser->id,$request->cl);    
             }else{
@@ -274,7 +279,13 @@ class requestPermissionController extends Controller
             return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
         }
 
-        return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lPermissions' => $lPermissions, 'lSchedule' => $lSchedule]);
+        return json_encode(['success' => true, 
+            'oUser' => $oUser, 
+            'lTemp' => $lTemp_special, 
+            'lEvents' => $lEvents, 
+            'lPermissions' => $lPermissions, 
+            'lSchedule' => $lSchedule
+        ]);
     }
 
     public function approbePermission(Request $request){

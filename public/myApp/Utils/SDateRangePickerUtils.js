@@ -77,6 +77,13 @@ class SDateRangePicker {
                             _class = 'priority_' + app.lTemp[index].priority;
                             _tooltip = _tooltip + app.lTemp[index].name + '. ';
                         }
+                        if(typeof app.lEvents !== 'undefined'){
+                            let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                            if(index > -1){
+                                _class = 'event';
+                                _tooltip = _tooltip + app.lEvents[index].name + '. ';
+                            }
+                        }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
@@ -117,6 +124,13 @@ class SDateRangePicker {
                         if(index > -1){
                             _class = 'priority_' + app.lTemp[index].priority;
                             _tooltip = _tooltip + app.lTemp[index].name + '. ';
+                        }
+                        if(typeof app.lEvents !== 'undefined'){
+                            let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                            if(index > -1){
+                                _class = 'event';
+                                _tooltip = _tooltip + app.lEvents[index].name + '. ';
+                            }
                         }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
@@ -146,6 +160,13 @@ class SDateRangePicker {
                             _class = 'priority_' + app.lTemp[index].priority;
                             _tooltip = _tooltip + app.lTemp[index].name + '. ';
                         }
+                        if(typeof app.lEvents !== 'undefined'){
+                            let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                            if(index > -1){
+                                _class = 'event';
+                                _tooltip = _tooltip + app.lEvents[index].name + '. ';
+                            }
+                        }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
@@ -186,6 +207,13 @@ class SDateRangePicker {
                         if(index > -1){
                             _class = 'priority_' + app.lTemp[index].priority;
                             _tooltip = _tooltip + app.lTemp[index].name + '. ';
+                        }
+                        if(typeof app.lEvents !== 'undefined'){
+                            let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                            if(index > -1){
+                                _class = 'event';
+                                _tooltip = _tooltip + app.lEvents[index].name + '. ';
+                            }
                         }
                         if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                             _class = 'holiday';
@@ -301,6 +329,13 @@ class SDateRangePicker {
                         _class = 'priority_' + app.lTemp[index].priority;
                         _tooltip = _tooltip + app.lTemp[index].name + '. ';
                     }
+                    if(typeof app.lEvents !== 'undefined'){
+                        let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                        if(index > -1){
+                            _class = 'event';
+                            _tooltip = _tooltip + app.lEvents[index].name + '. ';
+                        }
+                    }
                     if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
                         _tooltip = _tooltip + 'Festivo. ';
@@ -326,6 +361,13 @@ class SDateRangePicker {
                     if(index > -1){
                         _class = 'priority_' + app.lTemp[index].priority;
                         _tooltip = _tooltip + app.lTemp[index].name + '. ';
+                    }
+                    if(typeof app.lEvents !== 'undefined'){
+                        let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
+                        if(index > -1){
+                            _class = 'event';
+                            _tooltip = _tooltip + app.lEvents[index].name + '. ';
+                        }
                     }
                     if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';

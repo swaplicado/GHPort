@@ -27,6 +27,7 @@
             this.clase_permiso = <?php echo json_encode($clase_permiso); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.lTemp = <?php echo json_encode($lTemp); ?>;
+            this.lEvents = <?php echo json_encode($lEvents); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
             this.lSuperviser = <?php echo json_encode($lSuperviser); ?>;
             this.routeCreate = <?php echo json_encode(route('permission_create')) ?>;

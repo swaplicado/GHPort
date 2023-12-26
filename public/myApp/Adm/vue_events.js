@@ -127,12 +127,17 @@ var app = new Vue({
                 route = this.oData.eventSaveRoute;
             }
 
+            let copylDays = structuredClone(this.lDays);
+            for (let index = 0; index < copylDays.length; index++) {
+                copylDays[index].date = moment(copylDays[index].date, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD');
+            }
+
             axios.post(route, {
                 'idEvent': this.idEvent,
                 'name': this.eventName,
                 'startDate': moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'endDate': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
-                'lDays': this.lDays,
+                'lDays': copylDays,
                 'priority': this.priority,
                 'takedDays': this.totCalendarDays,
                 'returnDate': this.endDate,
@@ -160,6 +165,47 @@ var app = new Vue({
             let checked = $('#' + checkbox_id).is(":checked");
             this.lDays[index].taked = checked;
             checked ? this.takedDays++ : this.takedDays--;
+        },
+
+        /**Metodo para confirmar eliminar grupo */
+        deleteRegistry(data){
+            Swal.fire({
+                title: '¿Desea eliminar el evento?',
+                html: '<b>' + data[this.indexesEventsTable.event] + '</b> ',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.deleteEvent(data[this.indexesEventsTable.id_event]);
+                }
+            })
+        },
+
+        /**Metodo para eliminar un grupo */
+        deleteEvent(idEvent){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.eventDeleteRoute;
+            axios.post(route, {
+                'idEvent': idEvent,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.lEvents = data.lEvents;
+                    this.drawEventsTable('events_table', this.lEvents);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
         },
 
         /******************************************************************************************************************* */

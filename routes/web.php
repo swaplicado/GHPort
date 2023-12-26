@@ -245,6 +245,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('events', 'Pages\EventsController@index')->name('events');
     Route::post('events/save', 'Pages\EventsController@store')->name('events_save');
     Route::post('events/update', 'Pages\EventsController@updateEvent')->name('events_update');
+    Route::post('events/delete', 'Pages\EventsController@deleteEvent')->name('events_delete');
     Route::post('events/getAssigned', 'Pages\EventsController@getEventAssigned')->name('events_getAssigned');
     Route::post('events/assignUser', 'Pages\EventsController@saveAssignUser')->name('events_saveAssignUser');
     Route::post('events/assignGroup', 'Pages\EventsController@saveAssigngroup')->name('events_saveAssignGroup');

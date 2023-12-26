@@ -31,10 +31,8 @@ class myVacationsController extends Controller
     public function index(){
         $config = \App\Utils\Configuration::getConfigurations();
 
-        // $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(\Auth::user()->id);
         $user = EmployeeVacationUtils::getEmployeeDataForMyVacation(delegationUtils::getIdUser());
         $now = Carbon::now();
-        // $initialCalendarDate = $now->addDays(1)->toDateString();
         $initialCalendarDate = $now->subMonths(1)->toDateString();
 
         $holidays = \DB::table('holidays')
@@ -67,6 +65,8 @@ class myVacationsController extends Controller
                         )
                         ->get();
 
+        $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
+
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
@@ -76,7 +76,8 @@ class myVacationsController extends Controller
                                                 ->with('today', $today)
                                                 ->with('lTemp', $lTemp_special)
                                                 ->with('lSuperviser', $lSuperviser)
-                                                ->with('lStatus', $lStatus);
+                                                ->with('lStatus', $lStatus)
+                                                ->with('lEvents', $lEvents);
     }
 
     public function getlDays(Request $request){
@@ -154,6 +155,7 @@ class myVacationsController extends Controller
             $applicationVsType->is_advanced = $request->is_advanced;
             $applicationVsType->is_proportional = $request->is_proportional;
             $applicationVsType->is_season_special = $request->is_season_special;
+            $applicationVsType->is_event = $request->is_event;
             $applicationVsType->is_recover_vacation = 0;
 
             foreach($vacations as $vac){
