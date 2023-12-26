@@ -60,7 +60,7 @@ var app = new Vue({
                 dataEvents.push(
                     [
                         event.idEvent,
-                        event.nameEvent,
+                        event.name,
                         this.oDateUtils.formatDate(event.sDate, 'ddd DD-MMM-YYYY'),
                         this.oDateUtils.formatDate(event.eDate, 'ddd DD-MMM-YYYY'),
                         event.priority
@@ -140,7 +140,7 @@ var app = new Vue({
                 'lDays': copylDays,
                 'priority': this.priority,
                 'takedDays': this.totCalendarDays,
-                'returnDate': this.endDate,
+                'returnDate': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'tot_calendar_days': this.totCalendarDays,
             })
             .then( result => {

@@ -23,13 +23,22 @@ class EventsController extends Controller
                         ->orderBy('priority')
                         ->select(
                             'id_event AS idEvent',
-                            'name AS nameEvent',
+                            'name AS name',
                             'start_date AS sDate',
                             'end_date AS eDate',
-                            'priority AS priority'
+                            'priority AS priority',
+                            'ldays',
                         )
-                        ->get()
-                        ->toArray();
+                        ->get();
+
+        foreach ($lEvents as $event) {
+            $lDays = json_decode($event->ldays);
+            foreach ($lDays as $day) {
+                if($day->taked){
+                    $event->lDates[] = $day->date;
+                }
+            }
+        }
         
         $now = Carbon::now();
         $initialCalendarDate = $now->subMonths(1)->toDateString();
@@ -104,12 +113,22 @@ class EventsController extends Controller
                         ->orderBy('priority')
                         ->select(
                             'id_event AS idEvent',
-                            'name AS nameEvent',
+                            'name AS name',
                             'start_date AS sDate',
                             'end_date AS eDate',
-                            'priority AS priority'
+                            'priority AS priority',
+                            'ldays',
                         )
                         ->get();
+
+        foreach ($lEvents as $event) {
+            $lDays = json_decode($event->ldays);
+            foreach ($lDays as $day) {
+                if($day->taked){
+                    $event->lDates[] = $day->date;
+                }
+            }
+        }
 
         return json_encode(['success' => true, 'lEvents' => $lEvents]);
     }
@@ -153,12 +172,22 @@ class EventsController extends Controller
                         ->orderBy('priority')
                         ->select(
                             'id_event AS idEvent',
-                            'name AS nameEvent',
+                            'name AS name',
                             'start_date AS sDate',
                             'end_date AS eDate',
-                            'priority AS priority'
+                            'priority AS priority',
+                            'ldays',
                         )
                         ->get();
+
+        foreach ($lEvents as $event) {
+            $lDays = json_decode($event->ldays);
+            foreach ($lDays as $day) {
+                if($day->taked){
+                    $event->lDates[] = $day->date;
+                }
+            }
+        }
 
         return json_encode(['success' => true, 'lEvents' => $lEvents]);
     }
@@ -182,12 +211,22 @@ class EventsController extends Controller
                         ->orderBy('priority')
                         ->select(
                             'id_event AS idEvent',
-                            'name AS nameEvent',
+                            'name AS name',
                             'start_date AS sDate',
                             'end_date AS eDate',
-                            'priority AS priority'
+                            'priority AS priority',
+                            'ldays',
                         )
                         ->get();
+
+        foreach ($lEvents as $event) {
+            $lDays = json_decode($event->ldays);
+            foreach ($lDays as $day) {
+                if($day->taked){
+                    $event->lDates[] = $day->date;
+                }
+            }
+        }
                         
         return json_encode(['success' => true, 'lEvents' => $lEvents]);
     }
