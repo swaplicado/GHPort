@@ -257,6 +257,11 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('groups/delete', 'Pages\employeeGroupsController@deleteGroup')->name('groups_delete');
     Route::post('groups/getUsersAssign', 'Pages\employeeGroupsController@getUsersAssign')->name('groups_getUsersAssign');
     Route::post('groups/assignUser', 'Pages\employeeGroupsController@setAssign')->name('groups_setAssign');
+
+
+    Route::get('univCertificates', 'Pages\univCertificatesController@index')->name('univCertificates');
+    Route::post('univCertificates/getCuadrants', 'Pages\univCertificatesController@getCuadrants')->name('univCertificates_getCuadrants');
+    Route::post('univCertificates/getCertificates', 'Pages\univCertificatesController@getCertificates')->name('univCertificates_getCertificates');
 });
 /**
  * Rutas permisos 

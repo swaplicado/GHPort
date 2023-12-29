@@ -12860,7 +12860,8 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 .noSelectableRow {
-    background-color: #BDBDBD;
+    background-color: #dfdfdf;
+    /* color: white; */
 }
 
 .separator {

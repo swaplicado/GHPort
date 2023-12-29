@@ -94,6 +94,7 @@ class Menu {
         $consultas = [];
 
         array_push($consultas,['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-xs', 'name' => 'Organigrama']);
+        array_push($consultas,['route' => route('univCertificates'), 'icon' => 'bx bxs-certification bx-xs', 'name' => 'Certificados']);    
         
         //submenu de festejos
         $festejos = [];
