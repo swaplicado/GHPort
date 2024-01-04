@@ -25,7 +25,7 @@ use App\Utils\notificationsUtils;
 class requestPermissionController extends Controller
 {
     public function index($permission_id = null){
-        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
         $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         $lPermissions = permissionsUtils::getMyEmployeeslPermissions(2);
@@ -127,7 +127,7 @@ class requestPermissionController extends Controller
     }
 
     public function PersonalTheme($permission_id = null){
-        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
         $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         $lPermissions = permissionsUtils::getMyEmployeeslPermissions(1);

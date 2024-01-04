@@ -216,7 +216,7 @@ class requestVacationsController extends Controller
 
     public function index($idApplication = null){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
-        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
         $config = \App\Utils\Configuration::getConfigurations();
         $year = Carbon::now()->year;
         $data = $this->getData($year);
@@ -333,7 +333,7 @@ class requestVacationsController extends Controller
     public function acceptRequest(Request $request){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
-        // delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
         $application = Application::findOrFail($request->id_application);
         // if(!$application->send_default){
         //     delegationUtils::getIsMyEmployeeUser($request->id_user);
@@ -568,7 +568,7 @@ class requestVacationsController extends Controller
     public function rejectRequest(Request $request){
         // \Auth::user()->authorizedRole(SysConst::JEFE);
         // \Auth::user()->IsMyEmployee($request->id_user);
-        delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
         $application = Application::findOrFail($request->id_application);
         if(!$application->send_default){
             delegationUtils::getIsMyEmployeeUser($request->id_user);
@@ -991,7 +991,7 @@ class requestVacationsController extends Controller
 
     public function cancelRequest(Request $request){
         try {
-            //delegationUtils::getAutorizeRolUser(SysConst::JEFE);
+            delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
             
             \DB::beginTransaction();
 
