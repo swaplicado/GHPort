@@ -16,6 +16,9 @@
             this.getAllMyEmployeesRoute = <?php echo json_encode(route('univCertificates_getAllMyEmployees')) ?>;
             this.oUser = <?php echo json_encode($oUser) ?>;
             this.roles = <?php echo json_encode($roles) ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:certificadosuniv" ); ?>;
+            this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:certificadosuniv#mis_certificados" ); ?>;
 
             this.indexesEmployeesTable = {
                 'id_employee': 0,
@@ -54,7 +57,8 @@
     <div class="card shadow mb-4">
         <div class="card-header">
             <h3>
-                <b>Certificados de colaboradores</b>
+                <b v-if="viewMode == 'empCert'">Certificados de colaboradores</b>
+                <b v-else="viewMode == 'myCert'">Mis certificados</b>
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -182,6 +186,7 @@
         })
     });
 </script>
+@include('layouts.manual_jsControll')
 {{-- Tabla de empleados --}}
 @include('layouts.table_jsControll', [
                                         'table_id' => 'employees_table',

@@ -25,6 +25,13 @@
                         "oAria": {
                             "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
                             "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        },
+                        'select': {
+                            'rows': {
+                                _: "%d renglones seleccionados",
+                                0: "Haz clic en un renglón para seleccionarlo",
+                                1: "1 renglón seleccionado"
+                            }
                         }
                     },
                     // "scrollX": true,
