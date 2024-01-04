@@ -203,9 +203,10 @@
                                         'table_id' => 'cuadrants_table',
                                         'colTargets' => [0,1,3,4,5],
                                         'colTargetsSercheable' => [2,6],
-                                        'noPaging' => true,
+                                        // 'noPaging' => true,
                                         'noDom' => true,
                                         'selectMulti' => true,
+                                        'order' => [[7, 'asc'], [8, 'asc'], [9, 'asc'], [10, 'asc']],
                                     ] )
 
 <script type="text/javascript" src="{{ asset('myApp/univCertificates/vue_univCertificates.js') }}"></script>
