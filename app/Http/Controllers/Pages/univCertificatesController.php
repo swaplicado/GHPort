@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pages;
 
+use App\Constants\SysConst;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
@@ -14,9 +15,90 @@ class univCertificatesController extends Controller
 {
     public function index(){
         $lChildAreas = orgChartUtils::getAllChildsToRevice(delegationUtils::getOrgChartJobIdUser());
-        $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
+        $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas)->sortBy('full_name');
 
-        return view('univCertificates.univCertificates')->with('lEmployees', $lEmployees);
+        foreach($lEmployees as $employee){
+            $employee->area = \DB::table('org_chart_jobs')
+                                ->where('id_org_chart_job', $employee->org_chart_job_id)
+                                ->value('job_name');
+        }
+
+        $roles = [
+            'ADMIN' => SysConst::ADMINISTRADOR,
+            'GH' => SysConst::GH,
+            'JEFE' => SysConst::JEFE,
+            'ESTANDAR' => SysConst::ESTANDAR,
+        ];
+
+        return view('univCertificates.univCertificates')->with('lEmployees', $lEmployees)
+                                                        ->with('rol', delegationUtils::getRolIdUser())
+                                                        ->with('roles', $roles)
+                                                        ->with('oUser', delegationUtils::getUser());
+    }
+
+    public function getAllEmployees(){
+        try {
+            $lEmployees = \DB::table('users as u')
+                            ->leftJoin('org_chart_jobs as ocj', 'u.org_chart_job_id', 'ocj.id_org_chart_job')
+                            ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
+                            ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id')
+                            ->where('is_active', 1)
+                            ->where('is_delete', 0)
+                            ->where('id','!=', 1)
+                            ->select(
+                                'u.id',
+                                'u.full_name',
+                                'u.employee_num',
+                                'ocj.job_name as area',
+                                'd.department_name_ui',
+                                'j.job_name_ui',
+                            )
+                            ->orderBy('full_name')
+                            ->get()
+                            ->toArray();
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
+    }
+
+    public function getAllMyEmployees(){
+        try {
+            $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob(delegationUtils::getOrgChartJobIdUser());
+            $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+
+            foreach($lEmployees as $employee){
+                $employee->area = \DB::table('org_chart_jobs')
+                                    ->where('id_org_chart_job', $employee->org_chart_job_id)
+                                    ->value('job_name');
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        
+        }
+
+        return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
+    }
+
+    public function getMyEmployees(){
+        try {
+            $lChildAreas = orgChartUtils::getAllChildsToRevice(delegationUtils::getOrgChartJobIdUser());
+            $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
+
+            foreach($lEmployees as $employee){
+                $employee->area = \DB::table('org_chart_jobs')
+                                    ->where('id_org_chart_job', $employee->org_chart_job_id)
+                                    ->value('job_name');
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);            
+        }
+
+        return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 
     public function getCuadrants(Request $request){
@@ -63,7 +145,7 @@ class univCertificatesController extends Controller
             \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
-        return json_encode(['success' => true, 'lEmployeesCuadrants' => $oResponse->data, 'icon' => 'success']);
+        return json_encode(['success' => true, 'lEmployeesCuadrants' => $oResponse->data]);
     }
 
     public function getCertificates(Request $request){
@@ -93,11 +175,34 @@ class univCertificatesController extends Controller
             $jsonString = $response->getBody()->getContents();
 
             $oResponse = json_decode($jsonString);
+
+            $zip = new \ZipArchive;
+            $zipFile = 'archivos_temporales.zip';
+            foreach($oResponse->data as $data){
+                $arrPdf = json_decode($data);
+                file_put_contents($arrPdf->employee.'.pdf', base64_decode($arrPdf->pdf));
+                if ($zip->open($zipFile, \ZipArchive::CREATE) === TRUE) {
+                    // Agregar los archivos PDF al archivo zip
+                    $zip->addFile($arrPdf->employee.'.pdf', $arrPdf->employee.'.pdf');
+                }
+                // Cerrar el archivo zip
+                $zip->close();
+                
+                unlink($arrPdf->employee.'.pdf');
+            }
+
+            // Devolver el archivo zip como respuesta
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="archivos.zip"');
+            readfile($zipFile);
+
+            // Eliminar el archivo zip después de la descarga
+            unlink($zipFile);
+
         } catch (\Throwable $th) {
             \Log::error($th);
+            unlink($zipFile);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
-
-        return json_encode(['success' => true, 'lCertificates' => $oResponse->data, 'icon' => 'success']);
     }
 }

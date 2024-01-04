@@ -11,24 +11,34 @@
             this.lEmployees = <?php echo json_encode($lEmployees) ?>;
             this.getCuadrantsRoute = <?php echo json_encode(route('univCertificates_getCuadrants')) ?>;
             this.getCertificatesRoute = <?php echo json_encode(route('univCertificates_getCertificates')) ?>;
+            this.getAllEmployeesRoute = <?php echo json_encode(route('univCertificates_getAllEmployees')) ?>;
+            this.getMyEmployeesRoute = <?php echo json_encode(route('univCertificates_getMyEmployees')) ?>;
+            this.getAllMyEmployeesRoute = <?php echo json_encode(route('univCertificates_getAllMyEmployees')) ?>;
+            this.oUser = <?php echo json_encode($oUser) ?>;
+            this.roles = <?php echo json_encode($roles) ?>;
 
             this.indexesEmployeesTable = {
                 'id_employee': 0,
                 'employee': 1,
+                'employee_num': 2,
+                'area': 3,
+                'depto': 4,
+                'job': 5
             };
 
             this.indexesCuadrantsTable = {
-                'id_assigment': 0,
-                'id_type': 1,
-                'id_cuadrant': 2,
-                'id_module': 3,
-                'id_course': 4,
-                'withCertificate': 5,
-                'Colaborador': 6,
-                'Cuadrante': 7,
-                'Modulo': 8,
-                'Curso': 9,
-                'status': 10
+                'id_employee_univ': 0,
+                'id_assigment': 1,
+                'id_type': 2,
+                'id_cuadrant': 3,
+                'id_module': 4,
+                'id_course': 5,
+                'withCertificate': 6,
+                'Colaborador': 7,
+                'Cuadrante': 8,
+                'Modulo': 9,
+                'Curso': 10,
+                'status': 11
             }
         }
         var oServerData = new GlobalData();
@@ -37,6 +47,10 @@
 
 @section('content')
 <div id="certificatesApp">
+    
+    <a class="btn btn-outline-secondary focus" id="empCert" href="#" v-on:click="setViewMode('empCert');" v-show="oUser.rol_id != roles.ESTANDAR">Certificados mis colabs.</a>
+    <a class="btn btn-outline-secondary" id="myCert" href="#" v-on:click="setViewMode('myCert');">Mis certificados</a>
+
     <div class="card shadow mb-4">
         <div class="card-header">
             <h3>
@@ -45,19 +59,39 @@
             </h3>
         </div>
         <div class="card-body">
-            <table class="table table-bordered" id="employees_table">
-                <thead class="thead-light">
-                    <th>id_employee</th>
-                    <th>Colaborador</th>
-                    <tbody>
-                        <tr v-for="emp in lEmployees">
-                            <td>@{{emp.id}}</td>
-                            <td>@{{emp.full_name}}</td>
-                        </tr>
-                    </tbody>
-                </thead>
-            </table>
-            <button class="btn btn-primary" v-on:click="getCuadrants()">Obtener cursos</button>
+            <div v-show="viewMode == 'empCert'">
+                <div class="wrap">
+                    <div class="elem">
+                        <div class="ks-cboxtags">
+                            <div class="ks-cbox">
+                                <input type="checkbox" id="checkBoxAllEmployees" v-on:click="getAllEmployees();">
+                                <label for="checkBoxAllEmployees">Todos los colaboradores</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered" id="employees_table">
+                    <thead class="thead-light">
+                        <th>id_employee</th>
+                        <th>Colaborador</th>
+                        <th>Número colab.</th>
+                        <th>Área</th>
+                        <th>Departamento</th>
+                        <th>Puesto</th>
+                        <tbody>
+                            <tr v-for="emp in lEmployees">
+                                <td>@{{emp.id}}</td>
+                                <td>@{{emp.full_name}}</td>
+                                <td>@{{emp.employee_num}}</td>
+                                <td>@{{emp.area}}</td>
+                                <td>@{{emp.department_name_ui}}</td>
+                                <td>@{{emp.job_name_ui}}</td>
+                            </tr>
+                        </tbody>
+                    </thead>
+                </table>
+                <button class="btn btn-primary" v-on:click="getCuadrants()">Obtener cursos</button>
+            </div>
             <div>
                 <br>
                 <br>
@@ -95,6 +129,7 @@
                 <div>
                     <table class="table table-bordered" id="cuadrants_table">
                         <thead class="thead-light">
+                            <th>id_employee_univ</th>
                             <th>id_assigment</th>
                             <th>id_type</th>
                             <th>id_cuadrant</th>
@@ -144,7 +179,7 @@
 
         $('#filter_withCertificate').change( function() {
             table['cuadrants_table'].draw();
-        });
+        })
     });
 </script>
 {{-- Tabla de empleados --}}
@@ -152,15 +187,17 @@
                                         'table_id' => 'employees_table',
                                         'colTargets' => [0],
                                         'colTargetsSercheable' => [],
-                                        'noPaging' => true,
+                                        // 'noPaging' => true,
                                         'noDom' => true,
                                         'selectMulti' => true,
+                                        // 'noSort' => true,
+                                        'order' => [[1, 'asc']],
                                     ] )
 
 @include('layouts.table_jsControll', [
                                         'table_id' => 'cuadrants_table',
-                                        'colTargets' => [0,2,3,4],
-                                        'colTargetsSercheable' => [1,5],
+                                        'colTargets' => [0,1,3,4,5],
+                                        'colTargetsSercheable' => [2,6],
                                         'noPaging' => true,
                                         'noDom' => true,
                                         'selectMulti' => true,
