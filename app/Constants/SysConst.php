@@ -150,5 +150,11 @@ class SysConst {
     public const PENDIENTE = 1;
     public const SIIE = 2;
     public const CAP = 3;
+
+    /**
+     * Tipos de sanciones, (Actas, sanciones, etc)
+     */
+    public const ACTA = 1;
+    public const SANCION = 2;
 }
 ?>

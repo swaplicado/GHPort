@@ -13,6 +13,7 @@
             display: block;
             margin-top: 10px;
             margin-bottom: 0px;
+            font-weight: bold;
         }
     }
 
@@ -26,6 +27,7 @@
             display: block;
             margin-top: 10px;
             margin-bottom: 0px;
+            font-weight: bold;
         }
     }
 </style>
@@ -43,6 +45,8 @@
             this.lCivil = <?php echo json_encode($lCivil); ?>;
             this.lSchooling = <?php echo json_encode($lSchooling); ?>;
             this.lState = <?php echo json_encode($lStates); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:datapersonal" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -172,7 +176,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <h4>Datos domicilio del colaborador</h4>
+                            <h4>Datos del domicilio del colaborador</h4>
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
@@ -232,7 +236,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <h4>Datos cónyuge del colaborador</h4>
+                            <h4>Datos del cónyuge del colaborador</h4>
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
@@ -258,7 +262,7 @@
                         </div>
                         <br>
                         <div class="row">
-                            <h4 style="display: inline-block;">Datos hijos del colaborador</h4>
+                            <h4 style="display: inline-block;">Datos de hijos del colaborador</h4>
                             <button id="btn_crear" type="button" class="btnRound btn-success" 
                                 style="display: inline-block; margin-left: 10px" title="Crear solicitud" v-on:click="addChild();">
                                 <span class="bx bx-plus"></span>
@@ -280,6 +284,7 @@
 @endsection
 
 @section('scripts')
+@include('layouts.manual_jsControll')
 <script>
     var self;
     $(document).ready(function () {

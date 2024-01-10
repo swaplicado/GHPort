@@ -269,6 +269,12 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     Route::get('personalData', 'Pages\personalDataController@index')->name('personalData');
     Route::post('personalData\update', 'Pages\personalDataController@updatePersonalData')->name('personalData_updatePersonalData');
+    
+    Route::get('administrativeMinutes', 'Pages\sanctionsController@indexAdministrativeMinutes')->name('admMinutes');
+    Route::get('sanctions', 'Pages\sanctionsController@indexSanctions')->name('sanctions');
+    Route::post('sanctions/myEmployees', 'Pages\sanctionsController@getMyEmployees')->name('sanctions_myEmployees');
+    Route::post('sanctions/allEmployees', 'Pages\sanctionsController@getAllEmployees')->name('sanctions_allEmployees');
+    Route::post('sanctions/MySanction', 'Pages\sanctionsController@getMySanction')->name('sanctions_getMySanction');
 });
 /**
  * Rutas permisos 

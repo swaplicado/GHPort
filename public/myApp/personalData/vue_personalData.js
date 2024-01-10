@@ -42,6 +42,9 @@ var app = new Vue({
         insideNumber: oServerData.personalData.streetNumInt,
         spouse: oServerData.personalData.mate,
         birthdaySpouce: oServerData.personalData.dtBirMate,
+
+        id_add: oServerData.personalData.id_add,
+        id_con: oServerData.personalData.id_con,
     },
     mounted(){
         self = this;
@@ -190,6 +193,8 @@ var app = new Vue({
             this.setChilds();
             let route = this.oData.updateRoute;
             axios.post(route, {
+                'id_add': this.id_add,
+                'id_con': this.id_con,
                 'lastName': this.lastName,
                 'secondLastName': this.secondLastName,
                 'names': this.names,

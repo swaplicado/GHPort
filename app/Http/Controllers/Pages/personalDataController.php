@@ -138,7 +138,9 @@ class personalDataController extends Controller
         $lChilds = collect($request->childs);
 
         $body = [
-            'id_emp' => $oEmp->external_id_n,
+            'id_bp' => $oEmp->external_id_n,
+            'id_add' => $request->id_add,
+            'id_con' => $request->id_con,
             'lastname1' => $request->lastName,
             'lastname2' => $request->secondLastName,
             'names' => $request->names,
