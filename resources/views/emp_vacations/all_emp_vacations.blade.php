@@ -72,6 +72,10 @@
                                     <td>@{{emp.full_name}}</td>
                                 </tr>
                                 <tr>
+                                    <th>Fecha última alta:</th>
+                                    <td>@{{oDateUtils.formatDate(emp.last_admission_date)}}</td>
+                                </tr>
+                                <tr>
                                     <th>Fecha ingreso:</th>
                                     <td>@{{oDateUtils.formatDate(emp.benefits_date)}}</td>
                                 </tr>
