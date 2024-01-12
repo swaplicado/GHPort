@@ -67,7 +67,7 @@
                     <input type="text" name="daterange" id="daterange" class="form-control"/>
                 </div>
                 <div class="col-md-1">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary" onclick="filterMinutes();">
                         <span class="bx bx-search"></span>
                     </button>
                 </div>
@@ -102,8 +102,18 @@
 <script type="text/javascript" src="{{ asset('myApp/Utils/singleDateRangePicker/daterangepicker.js') }}"></script>
 <script>
     var self;
+    moment.locale('es');
     $(document).ready(function () {
-        
+        $.fn.dataTable.ext.search.push(
+            function( settings, data, dataIndex ) {
+                let colStartDate = data[oServerData.indexesSanctionsTable['date']];
+                let oStartDate = moment(app.startDate);
+                let oEndDate = moment(app.endDate);
+                let oColStartDate = moment(colStartDate);
+    
+                return oColStartDate.isBetween(oStartDate, oEndDate);
+            }
+        );
     });
 </script>
 
@@ -140,5 +150,10 @@
                                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                             });
     });
+</script>
+<script>
+    function filterMinutes(){
+        table['sanctions_table'].draw();
+    }
 </script>
 @endsection

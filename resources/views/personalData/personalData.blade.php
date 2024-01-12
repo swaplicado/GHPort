@@ -45,6 +45,7 @@
             this.lCivil = <?php echo json_encode($lCivil); ?>;
             this.lSchooling = <?php echo json_encode($lSchooling); ?>;
             this.lState = <?php echo json_encode($lStates); ?>;
+            this.lParentesco = <?php echo json_encode($lParentesco); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:datapersonal" ); ?>;
         }
@@ -70,13 +71,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="lastName" style="display: block; margin-top: 10px; margin-bottom: 0px;">Apellido paterno</label>
+                                <label for="lastName" style="display: block; margin-top: 10px; margin-bottom: 0px;">Apellido paterno:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="lastName" v-model="lastName" class="form-control" disabled>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="secondLastName">Apellido materno</label>
+                                <label for="secondLastName">Apellido materno:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="secondLastName" v-model="secondLastName" class="form-control" disabled>
@@ -84,13 +85,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="names" style="display: block; margin-top: 10px; margin-bottom: 0px;">Nombre(s)</label>
+                                <label for="names" style="display: block; margin-top: 10px; margin-bottom: 0px;">Nombre(s):</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="names" v-model="names" class="form-control" disabled>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="rfc" style="display: block; margin-top: 10px; margin-bottom: 0px;">RFC</label>
+                                <label for="rfc" style="display: block; margin-top: 10px; margin-bottom: 0px;">RFC:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="rfc" v-model="rfc" class="form-control" disabled>
@@ -98,13 +99,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="personalMail">Correo e personal</label>
+                                <label for="personalMail">Correo e personal:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="personalMail" v-model="personalMail" class="form-control">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="companyMail">Correo e empresa</label>
+                                <label for="companyMail">Correo e empresa:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="companyMail" v-model="companyMail" class="form-control">
@@ -112,13 +113,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selSex">Sexo</label>
+                                <label for="selSex">Sexo:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class form-control" name="selSex" id="selSex"></select>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="selBlood">Tipo sangre</label>
+                                <label for="selBlood">Tipo sangre:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class form-control" name="selBlood" id="selBlood"></select>
@@ -126,13 +127,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selCivl">Estado civil</label>
+                                <label for="selCivl">Estado civil:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class form-control" name="selCivl" id="selCivl"></select>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="selSchooling">Escolaridad</label>
+                                <label for="selSchooling">Escolaridad:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class form-control" name="selSchooling" id="selSchooling"></select>
@@ -140,13 +141,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="personalPhone">Teléfono personal</label>
+                                <label for="personalPhone">Teléfono personal:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="personalPhone" v-model="personalPhone" class="form-control">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="companyPhone">Teléfono empresa</label>
+                                <label for="companyPhone">Teléfono empresa:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="companyPhone" v-model="companyPhone" class="form-control">
@@ -154,13 +155,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="emergencyPhone">Teléfono emergencia</label>
+                                <label for="emergencyPhone">Teléfono emergencia:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="emergencyPhone" v-model="emergencyPhone" class="form-control">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="emergencyContac">Contacto emergencia</label>
+                                <label for="emergencyContac">Nombre contacto emergencia:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="emergencyContac" v-model="emergencyContac" class="form-control">
@@ -168,10 +169,24 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="beneficiary">Beneficiario</label>
+                                <label for="SelEmergencyContac">Contacto emergencia:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="select2-class form-control" name="SelEmergencyContac" id="SelEmergencyContac"></select>
+                            </div>
+                            <div class="col-md-2 label-container">
+                                <label for="beneficiary">Beneficiario:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="beneficiary" v-model="beneficiary" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 label-container">
+                                <label for="ext">Numero de extensión:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="ext" v-model="ext" class="form-control">
                             </div>
                         </div>
                         <br>
@@ -180,58 +195,72 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selState">Estado</label>
+                                <label for="selState">Estado:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class form-control" name="selState" id="selState"></select>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="postalCode">CP</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="postalCode" v-model="postalCode" class="form-control">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="municipality">Municipio</label>
+                                <label for="municipality">Municipio:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="municipality"  v-model="municipality" class="form-control">
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="locality">Localidad</label>
+                                <label for="locality">Localidad:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="locality" v-model="locality" class="form-control">
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="colony">Colonia</label>
+                                <label for="colony">Colonia:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="colony" v-model="colony" class="form-control">
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="street">Calle</label>
+                                <label for="street">Calle:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="street" v-model="street" class="form-control">
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="outsideNumber">Número exterior</label>
+                                <label for="outsideNumber">Número exterior:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="outsideNumber" v-model="outsideNumber" class="form-control">
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="insideNumber">Número interior</label>
+                                <label for="insideNumber">Número interior:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="insideNumber" v-model="insideNumber" class="form-control">
+                            </div>
+                            <div class="col-md-2 label-container">
+                                <label for="postalCode">CP fiscal:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="postalCode" v-model="postalCode" class="form-control" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 label-container">
+                                <label for="postalCode">CP actual:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="postalCode" v-model="postalCode" class="form-control" disabled>
+                            </div>
+                            <div class="col-md-2 label-container">
+                                <label for="reference">Referencia:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="reference" v-model="reference" class="form-control">
                             </div>
                         </div>
                         <br>
@@ -240,13 +269,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="spouse">Cónyuge</label>
+                                <label for="spouse">Cónyuge:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="spouse" v-model="spouse" class="form-control">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="birthdaySpouce">Nacimiento</label>
+                                <label for="birthdaySpouce">Nacimiento:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" name="birthdaySpouce" v-model="birthdaySpouce" class="form-control">
@@ -254,7 +283,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selSexSpouce">Sexo</label>
+                                <label for="selSexSpouce">Sexo:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class form-control" name="selSexSpouce" id="selSexSpouce"></select>

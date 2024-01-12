@@ -11,6 +11,7 @@ var app = new Vue({
         lCivil: oServerData.lCivil,
         lSchooling: oServerData.lSchooling,
         lState: oServerData.lState,
+        lParentesco: oServerData.lParentesco,
 
         lastName: oServerData.personalData.lastName,
         secondLastName: oServerData.personalData.secondLastName,
@@ -24,6 +25,8 @@ var app = new Vue({
         maritalStatus: oServerData.personalData.maritalId,
         schooling: oServerData.personalData.educationId,
         sexSpouce: oServerData.personalData.sexMateId,
+        parentesco: oServerData.personalData.parentescoId,
+        ext: oServerData.personalData.telExt02,
 
         personalPhone: oServerData.personalData.telNumber01,
         companyPhone: oServerData.personalData.telNumber02,
@@ -40,11 +43,13 @@ var app = new Vue({
         street: oServerData.personalData.street,
         outsideNumber: oServerData.personalData.streetNumExt,
         insideNumber: oServerData.personalData.streetNumInt,
+        reference: oServerData.personalData.reference,
         spouse: oServerData.personalData.mate,
         birthdaySpouce: oServerData.personalData.dtBirMate,
 
-        id_add: oServerData.personalData.id_add,
-        id_con: oServerData.personalData.id_con,
+        id_add: oServerData.personalData.idAdd,
+        id_con: oServerData.personalData.idCon,
+        id_bpb: oServerData.personalData.idBpb,
     },
     mounted(){
         self = this;
@@ -87,6 +92,15 @@ var app = new Vue({
 
         $('#selSchooling').val(self.schooling).trigger('change');
 
+        $('#SelEmergencyContac').select2({
+            data: self.lParentesco,
+            placeholder: 'Selecciona parentesco',
+        }).on('select2:select', function(e) {
+            self.parentesco = e.params.data.id;
+        });
+
+        $('#SelEmergencyContac').val(self.parentesco).trigger('change');
+
         $('#selSexSpouce').select2({
             data: self.lSex,
             placeholder: 'Selecciona sexo',
@@ -107,6 +121,18 @@ var app = new Vue({
 
         if(this.personalData.son1 != ""){
             this.addChild(this.personalData.son1, this.personalData.dtBirSon1, this.personalData.sexSonId1);
+        }
+        if(this.personalData.son2 != ""){
+            this.addChild(this.personalData.son2, this.personalData.dtBirSon2, this.personalData.sexSonId2);
+        }
+        if(this.personalData.son3 != ""){
+            this.addChild(this.personalData.son3, this.personalData.dtBirSon3, this.personalData.sexSonId3);
+        }
+        if(this.personalData.son4 != ""){
+            this.addChild(this.personalData.son4, this.personalData.dtBirSon4, this.personalData.sexSonId4);
+        }
+        if(this.personalData.son5 != ""){
+            this.addChild(this.personalData.son5, this.personalData.dtBirSon5, this.personalData.sexSonId5);
         }
     },
     methods: {
@@ -145,10 +171,18 @@ var app = new Vue({
                                 <label for="">Sexo</label>
                             </div>
                             <div class="col-md-4">
-                                <select name="sexo" id="selSexChild" class="form-control select2-class" style="width: 100%;">
-                                    <option value="2">Masculino</option>
-                                    <option value="3">Femenino</option>
-                                </select>
+                                <select name="sexo" id="selSexChild" class="form-control select2-class" style="width: 100%;">`;
+                                    if(sex == 2){
+                                        html = html +`<option value="2" selected>Masculino</option>
+                                                        <option value="3">Femenino</option>`
+                                    }else if(sex == 3){
+                                        html = html +`<option value="2">Masculino</option>
+                                                        <option value="3" selected>Femenino</option>`
+                                    }else{
+                                        html = html +`<option value="2">Masculino</option>
+                                                        <option value="3">Femenino</option>`
+                                    }
+                            html = html +`</select>
                             </div>
                         </div>
                     </div>
@@ -195,6 +229,7 @@ var app = new Vue({
             axios.post(route, {
                 'id_add': this.id_add,
                 'id_con': this.id_con,
+                'id_bpb': this.id_bpb,
                 'lastName': this.lastName,
                 'secondLastName': this.secondLastName,
                 'names': this.names,
@@ -209,15 +244,17 @@ var app = new Vue({
                 'companyPhone': this.companyPhone,
                 'emergencyPhone': this.emergencyPhone,
                 'emergencyContac': this.emergencyContac,
+                'parentesco': this.parentesco,
+                'ext': this.ext,
                 'beneficiary': this.beneficiary,
                 'state': this.state,
-                'postalCode': this.postalCode,
                 'municipality': this.municipality,
                 'locality': this.locality,
                 'colony': this.colony,
                 'street': this.street,
                 'outsideNumber': this.outsideNumber,
                 'insideNumber': this.insideNumber,
+                'reference': this.reference,
                 'spouse': this.spouse,
                 'birthdaySpouce': this.birthdaySpouce,
                 'sexSpouce': this.sexSpouce,
