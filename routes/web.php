@@ -242,6 +242,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('delegationManager/updateDelegation', 'Pages\delegationController@updateDelegationManager')->name('delegationManager_updateDelegation');
     Route::post('delegationManager/deleteDelegation', 'Pages\delegationController@deleteDelegationManager')->name('delegationManager_deleteDelegation');
 
+    /**Rutas eventos */
     Route::get('events', 'Pages\EventsController@index')->name('events');
     Route::post('events/save', 'Pages\EventsController@store')->name('events_save');
     Route::post('events/update', 'Pages\EventsController@updateEvent')->name('events_update');
@@ -250,13 +251,30 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('events/assignUser', 'Pages\EventsController@saveAssignUser')->name('events_saveAssignUser');
     Route::post('events/assignGroup', 'Pages\EventsController@saveAssigngroup')->name('events_saveAssignGroup');
 
-
+    /**Rutas grupos de empleados  */
     Route::get('groups', 'Pages\employeeGroupsController@index')->name('groups');
     Route::post('groups/save', 'Pages\employeeGroupsController@saveGroup')->name('groups_save');
     Route::post('groups/update', 'Pages\employeeGroupsController@updateGroup')->name('groups_update');
     Route::post('groups/delete', 'Pages\employeeGroupsController@deleteGroup')->name('groups_delete');
     Route::post('groups/getUsersAssign', 'Pages\employeeGroupsController@getUsersAssign')->name('groups_getUsersAssign');
     Route::post('groups/assignUser', 'Pages\employeeGroupsController@setAssign')->name('groups_setAssign');
+
+    /**Rutas certificados univ */
+    Route::get('univCertificates', 'Pages\univCertificatesController@index')->name('univCertificates');
+    Route::post('univCertificates/getCuadrants', 'Pages\univCertificatesController@getCuadrants')->name('univCertificates_getCuadrants');
+    Route::post('univCertificates/getCertificates', 'Pages\univCertificatesController@getCertificates')->name('univCertificates_getCertificates');
+    Route::get('univCertificates/getAllEmployees', 'Pages\univCertificatesController@getAllEmployees')->name('univCertificates_getAllEmployees');
+    Route::get('univCertificates/getMyEmployees', 'Pages\univCertificatesController@getMyEmployees')->name('univCertificates_getMyEmployees');
+    Route::get('univCertificates/getAllMyEmployees', 'Pages\univCertificatesController@getAllMyEmployees')->name('univCertificates_getAllMyEmployees');
+
+    Route::get('personalData', 'Pages\personalDataController@index')->name('personalData');
+    Route::post('personalData\update', 'Pages\personalDataController@updatePersonalData')->name('personalData_updatePersonalData');
+    
+    Route::get('administrativeMinutes', 'Pages\sanctionsController@indexAdministrativeMinutes')->name('admMinutes');
+    Route::get('sanctions', 'Pages\sanctionsController@indexSanctions')->name('sanctions');
+    Route::post('sanctions/myEmployees', 'Pages\sanctionsController@getMyEmployees')->name('sanctions_myEmployees');
+    Route::post('sanctions/allEmployees', 'Pages\sanctionsController@getAllEmployees')->name('sanctions_allEmployees');
+    Route::post('sanctions/MySanction', 'Pages\sanctionsController@getMySanction')->name('sanctions_getMySanction');
 });
 /**
  * Rutas permisos 

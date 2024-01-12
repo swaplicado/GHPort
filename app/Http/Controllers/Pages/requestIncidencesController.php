@@ -24,7 +24,7 @@ use App\Utils\CapLinkUtils;
 class requestIncidencesController extends Controller
 {
     public function index($idApplication = null){
-        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR]);
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
         $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         $lIncidences = incidencesUtils::getMyEmployeeslIncidences();

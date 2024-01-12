@@ -1,15 +1,25 @@
 class SGui {
     constructor() {}
 
-    static showWaiting(iTimer) {
-        Swal.fire({
-            title: 'Espera...',
-            timer: iTimer,
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
+    static showWaiting(iTimer = null) {
+        if (iTimer != null) {
+            Swal.fire({
+                title: 'Espera...',
+                timer: iTimer,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }else{
+            Swal.fire({
+                title: 'Espera...',
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        }
     }
 
     static showWaitingBlock(iTimer) {
