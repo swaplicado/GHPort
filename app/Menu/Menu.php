@@ -90,6 +90,20 @@ class Menu {
 
         //cierra cuarto grupo de menus
 
+        //Menu consulta datos personales
+        $datosPerosnales = [];
+
+        array_push($datosPerosnales,['route' => route('word_record_personal'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Constancia laboral']);
+        
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($datosPerosnales,['route' => route('word_record_personal_manager'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Constancia todos colabs.']);
+            array_push($datosPerosnales,['route' => route('word_record_log'), 'icon' => 'bx bx-book-reader bx-xs', 'name' => 'Logs constancia labor.']);
+        }
+        array_push($lMenus,(object) ['type' => $list, 'list' =>$datosPerosnales, 'icon' => 'bx bxs-food-menu bx-xs', 'name' => 'Constancias laborales', 'id' => 'DatosPersonales']); 
+
+
+        //Cierra menu consulta datos personales
+
         //quinto grupo de menus consultas
         $consultas = [];
 
@@ -125,6 +139,8 @@ class Menu {
         array_push($lMenus,(object) ['type' => $list, 'list' => [['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-xs', 'name' => 'Tutorial solicitudes'], ['route' => route('tutorialLideres'), 'icon' => 'bx bxs-book bx-xs', 'name' => 'Tutorial aprobación']],'icon' => 'bx bx-help-circle bx-sm', 'name' => 'Ayuda', 'id' => 'ayuda']);
 
         //cierra sexto grupo de menus
+        
+       
 
         //septimo grupo de menus administración
         $administracion = [];
@@ -207,7 +223,7 @@ class Menu {
         array_push($lMenus, (object) ['type' => $element, 'route' => route('synchronize'), 'icon' => 'bx bx-sync bx-sm', 'name' => 'Sincronizar', 'id' => 'sync']);
 
         //cierra octavo grupo de menus
-        
+
         /*prueba
         array_push($lMenus,(object) ['type' => $list, 'list' => [
             ['route' => route('tutorialUsuarios'), 'icon' => 'bx bxs-book bx-sm', 'name' => 'Tutorial solicitudes'],

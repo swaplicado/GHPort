@@ -10,6 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
     // return view('auth.login');
@@ -275,6 +278,12 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('sanctions/myEmployees', 'Pages\sanctionsController@getMyEmployees')->name('sanctions_myEmployees');
     Route::post('sanctions/allEmployees', 'Pages\sanctionsController@getAllEmployees')->name('sanctions_allEmployees');
     Route::post('sanctions/MySanction', 'Pages\sanctionsController@getMySanction')->name('sanctions_getMySanction');
+
+    Route::get('datePersonal', 'Pages\WorkRecordController@index')->name('word_record_personal');
+    Route::post('datePersonal/GetPDF', 'Pages\WorkRecordController@getWorkRecord')->name('get_word_record_personal');
+    Route::get('datePersonalManager', 'Pages\WorkRecordController@indexManager')->name('word_record_personal_manager');
+    Route::get('datePersonalLog', 'Pages\WorkRecordLogController@index')->name('word_record_log');
+
 });
 /**
  * Rutas permisos 
