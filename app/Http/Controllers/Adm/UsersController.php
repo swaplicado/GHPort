@@ -72,6 +72,12 @@ class UsersController extends Controller
                                 'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
                                 'full_name_ui' => $full_name_ui,
                                 'short_name' => $jUser->firstname,
+                                'email' => $jUser->email,
+                                'institutional_mail' => $jUser->emailEmp == null ? $jUser->email : $jUser->emailEmp,
+                                'email_directory' => $jUser->emailEmp,
+                                'tel_area' => $jUser->telArea,
+                                'tel_num' => $jUser->telNum,
+                                'tel_ext' => $jUser->ext,
                                 'benefits_date' => $jUser->benefit_date,
                                 'vacation_date' => $jUser->admission_date,
                                 'payment_frec_id' => $jUser->way_pay,
@@ -167,6 +173,11 @@ class UsersController extends Controller
 
         $oUser->username = $username;
         $oUser->email = $jUser->email;
+        $oUser->institutional_mail = $jUser->emailEmp == null ? $jUser->email : $jUser->emailEmp;
+        $oUser->email_directory = $jUser->emailEmp;
+        $oUser->tel_area = $jUser->telArea;
+        $oUser->tel_num  = $jUser->telNum;
+        $oUser->tel_ext = $jUser->ext;
         $oUser->password = bcrypt($username);
         $oUser->employee_num = $jUser->num_employee;
         $oUser->first_name = $jUser->lastname1;

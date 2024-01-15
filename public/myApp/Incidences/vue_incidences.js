@@ -656,6 +656,11 @@ var app = new Vue({
                 return;
             }
 
+            if(this.takedDays < 1){
+                SGui.showMessage('', 'No se puede crear una solicitud con cero días efectivos de incidencia', 'warning');
+                return;
+            }
+
             if(this.type_id == this.oData.constants.TYPE_CUMPLEAÑOS){
                 let aux = await this.checkBirthDaysTaked();
                 if(!aux){
