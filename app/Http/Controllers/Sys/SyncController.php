@@ -68,7 +68,7 @@ class SyncController extends Controller
             if(!$resJob){
                 return false;
             }
-            // $jobCont->insertJobVsOrgJob();
+            $jobCont->insertJobVsOrgJob();
             
             $usrCont = new UsersController();
             $resUs = $usrCont->saveUsersFromJSON($data->employees);
@@ -195,5 +195,32 @@ class SyncController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function initialSync(){
+        $config = \App\Utils\Configuration::getConfigurations();
+        $client = new Client([
+            'base_uri' => $config->urlSync,
+            'timeout' => 30.0,
+        ]);
+
+        try {
+            
+            $response = $client->request('GET', 'getInfoERP'  );
+            $jsonString = $response->getBody()->getContents();
+            $data = json_decode($jsonString);
+            
+            $usrCont = new UsersController();
+            $resUs = $usrCont->saveUsersFromJSON($data->employees);
+            if(!$resUs){
+                return false;
+            }
+
+        }
+        catch (\Throwable $th) {
+            return false;
+        }
+        
+        return true; 
     }
 }
