@@ -29,6 +29,7 @@ class EmployeeVacationUtils {
                         })
                         ->where('u.is_active', 1)
                         ->where('u.is_delete', 0)
+                        ->where('u.id', '!=', 1)
                         ->whereIn('u.org_chart_job_id', $arrOrgJobs)
                         ->select(
                             'u.id',

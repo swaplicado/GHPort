@@ -59,8 +59,8 @@
                         <td>@{{user.fullname}}</td>
                         <td>@{{user.nameOrg}}</td>
                         <td>@{{user.directoryMail}}</td>
-                        <td v-if="user.telArea == ''">@{{user.telNum}}</td>
-                        <td v-else="user.telArea != ''">@{{user.telArea}} - @{{user.telNum}}</td>
+                        <td>@{{user.telNum}}</td>
+                        {{--<td v-else="user.telArea != ''">@{{user.telArea}} - @{{user.telNum}}</td>--}}
                         <!--<td>@{{user.telArea}} - @{{user.telNum}}</td>-->
                         <td>@{{user.telExt}}</td>
                         <!--<td v-if="user.active == 0">No</td>-->
