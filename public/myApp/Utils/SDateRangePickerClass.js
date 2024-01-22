@@ -97,17 +97,6 @@ class SDateRangePicker {
                     _class = 'holiday';
                     _tooltip = _tooltip + 'Festivo. ';
                 }
-                // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                //     if(app.startDate && app.endDate){
-                //         if(!moment(t.getTime()).isBetween(moment(app.startDate, 'ddd DD-MMM-YYYY'), moment(app.endDate, 'ddd DD-MMM-YYYY'))){
-                //             _class = 'requestedVac';
-                //             _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                //         }
-                //     }else{
-                //         _class = 'requestedVac';
-                //         _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                //     }
-                // }
                 
                 if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                     _class = 'aniversary';
@@ -124,6 +113,24 @@ class SDateRangePicker {
                     _class = 'restDay';
                     _tooltip = _tooltip + 'Inhabil. ';
                 }
+
+                if(dateRangePickerArrayApplications.length > 0){
+                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _class = 'requestedVac';
+                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                    }
+                }
+
+                if(dateRangePickerArrayIncidences.length > 0){
+                    let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                        return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                    });
+                    if(indexIncidence > -1){
+                        _class = 'incidence';
+                        _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                    }
+                }
+
 
                 return [valid,_class,_tooltip];
             },

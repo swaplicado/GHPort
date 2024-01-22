@@ -522,6 +522,7 @@ var appMyVacations = new Vue({
         },
 
         async showModal(data = null){
+            SGui.showWaiting();
             $('#clear').trigger('click');
             await this.getEmpApplicationsEA(this.oUser.id);
             this.vacationUtils.createClass(this.lTemp);
@@ -582,6 +583,7 @@ var appMyVacations = new Vue({
                 // $('#clear').trigger('click');
                 $('#two-inputs-myRequest').data('dateRangePicker').redraw();
             }
+            Swal.close();
             $('#modal_Mysolicitud').modal('show');
         },
 
@@ -1084,23 +1086,48 @@ var appMyVacations = new Vue({
             return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
 
+        // getEmpApplicationsEA(user_id){
+        //     SGui.showWaiting(3000);
+        //     return new Promise((resolve) => 
+        //     axios.post(this.oData.applicationsEARoute, {
+        //         'user_id':  user_id
+        //     })
+        //     .then(response => {
+        //         let data = response.data;
+        //         if(data.success){
+        //             dateRangePickerArrayApplications = data.arrAplications;
+        //             // dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
+        //             this.applicationsEA = data.arrAplications;
+        //             swal.close();
+        //             resolve(dateRangePickerArrayApplications);
+        //         }else{
+        //             SGui.showMessage('', data.message, data.icon);
+        //             swal.close();
+        //             resolve(null);
+        //         }
+        //     })
+        //     .catch( function (error){
+        //         console.log(error);
+        //         swal.close()
+        //         resolve(error);
+        //     }));
+        // },
+
         getEmpApplicationsEA(user_id){
-            SGui.showWaiting(3000);
             return new Promise((resolve) => 
-            axios.post(this.oData.applicationsEARoute, {
+            axios.post(this.oData.routeGetEmpIncidencesEA, {
                 'user_id':  user_id
             })
             .then(response => {
                 let data = response.data;
                 if(data.success){
-                    dateRangePickerArrayApplications = data.arrAplications;
-                    // dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
-                    this.applicationsEA = data.arrAplications;
-                    swal.close();
-                    resolve(dateRangePickerArrayApplications);
+                    dateRangePickerArrayApplications = data.lVacations;
+                    dateRangePickerArrayIncidences = data.lIncidences;
+                    this.applicationsEA = data.lVacations;
+                    resolve(dateRangePickerArrayIncidences);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
-                    swal.close();
+                    // swal.close();
                     resolve(null);
                 }
             })

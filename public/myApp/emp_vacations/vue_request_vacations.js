@@ -561,29 +561,53 @@ var appRequestVacation = new Vue({
             return new Promise((resolve) => setTimeout(resolve, milliseconds));
         },
 
+        // getEmpApplicationsEA(user_id){
+        //     return new Promise((resolve) => 
+        //         axios.post(this.oData.applicationsEARoute, {
+        //             'user_id':  user_id
+        //         })
+        //         .then(response => {
+        //             let data = response.data;
+        //             if(data.success){
+        //                 this.applicationsEA = data.arrAplications;
+        //                 dateRangePickerArrayApplications = data.arrAplications;
+        //                 dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
+        //                 this.lTemp = data.lTemp;
+        //                 resolve(dateRangePickerArrayApplications);
+        //             }else{
+        //                 SGui.showMessage('', data.message, data.icon);
+        //                 resolve(null);
+        //             }
+        //         })
+        //         .catch( function (error){
+        //             console.log(error);
+        //             resolve(error);
+        //         })
+        //     );
+        // },
+
         getEmpApplicationsEA(user_id){
             return new Promise((resolve) => 
-                axios.post(this.oData.applicationsEARoute, {
-                    'user_id':  user_id
-                })
-                .then(response => {
-                    let data = response.data;
-                    if(data.success){
-                        this.applicationsEA = data.arrAplications;
-                        dateRangePickerArrayApplications = data.arrAplications;
-                        dateRangePickerArraySpecialSeasons = data.arrSpecialSeasons;
-                        this.lTemp = data.lTemp;
-                        resolve(dateRangePickerArrayApplications);
-                    }else{
-                        SGui.showMessage('', data.message, data.icon);
-                        resolve(null);
-                    }
-                })
-                .catch( function (error){
-                    console.log(error);
-                    resolve(error);
-                })
-            );
+            axios.post(this.oData.routeGetEmpIncidencesEA, {
+                'user_id':  user_id
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    dateRangePickerArrayApplications = data.lVacations;
+                    dateRangePickerArrayIncidences = data.lIncidences;
+                    this.applicationsEA = data.lVacations;
+                    resolve(dateRangePickerArrayIncidences);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                    resolve(null);
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close()
+                resolve(error);
+            }));
         },
 
         seeLikeManager(){

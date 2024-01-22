@@ -88,29 +88,6 @@ class SDateRangePicker {
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
                         }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            if(app.startDate && app.endDate){
-                                if(!moment(t.getTime()).isBetween(moment(app.startDate, 'ddd DD-MMM-YYYY'), moment(app.endDate, 'ddd DD-MMM-YYYY'))){
-                                    _class = 'requestedVac';
-                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                                }
-                            }else{
-                                _class = 'requestedVac';
-                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                            }
-                        }
-                        let indexlDays = app.lDays.findIndex(({ date }) => moment(date, 'ddd DD-MMM-YYYY').isSame(moment(t.getTime())));
-                        if(t.getDay() == 0 || t.getDay() == 6){
-                            if(indexlDays > -1){
-                                if(!app.lDays[indexlDays].taked){
-                                    _class = 'restDay';
-                                    _tooltip = _tooltip + 'Inhabil. ';
-                                }
-                            }else{
-                                _class = 'restDay';
-                                _tooltip = _tooltip + 'Inhabil. ';
-                            }
-                        }
                         if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                             _class = 'aniversary';
                             _tooltip = _tooltip + 'Aniversario. ';
@@ -118,6 +95,40 @@ class SDateRangePicker {
                         if(moment(birthday).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                             _class = 'birthDay';
                             _tooltip = _tooltip + 'Cumpleaños. ';
+                        }
+
+                        if(t.getDay() == 0 || t.getDay() == 6){
+                            _class = 'restDay';
+                            _tooltip = _tooltip + 'Inhabil. ';
+                        }
+
+                        if(dateRangePickerArrayApplications != undefined){
+                            if(dateRangePickerArrayApplications.length > 0){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                                    _class = 'requestedVac';
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                                }
+                            }
+                        }
+
+                        if(dateRangePickerArrayIncidences != undefined){
+                            if(dateRangePickerArrayIncidences.length > 0){
+                                let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                                });
+                                if(indexIncidence > -1){
+                                    _class = 'incidence';
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                                }
+                            }
+                        }
+
+                        let indexlDays = app.lDays.findIndex(({ date }) => moment(date, 'ddd DD-MMM-YYYY').isSame(moment(t.getTime())));
+                        if(indexlDays > -1){
+                            if(app.lDays[indexlDays].taked){
+                                _class = 'requestedVac';
+                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                            }
                         }
                     } else {
                         let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
@@ -136,14 +147,32 @@ class SDateRangePicker {
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
                         }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            _class = 'requestedVac';
-                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                        }
                         if(t.getDay() == 0){
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
                         }
+
+                        if(dateRangePickerArrayApplications != undefined){
+                            if(dateRangePickerArrayApplications.length > 0){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                                    _class = 'requestedVac';
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                                }
+                            }
+                        }
+
+                        if(dateRangePickerArrayIncidences != undefined){
+                            if(dateRangePickerArrayIncidences.length > 0){
+                                let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                                });
+                                if(indexIncidence > -1){
+                                    _class = 'incidence';
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                                }
+                            }
+                        }
+
                         if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                             _class = 'aniversary';
                             _tooltip = _tooltip + 'Aniversario. ';
@@ -171,17 +200,36 @@ class SDateRangePicker {
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
                         }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            if(app.startDate && app.endDate){
-                                if(!moment(t.getTime()).isBetween(moment(app.startDate, 'ddd DD-MMM-YYYY'), moment(app.endDate, 'ddd DD-MMM-YYYY'))){
+                        if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                            _class = 'aniversary';
+                            _tooltip = _tooltip + 'Aniversario. ';
+                        }
+                        if(moment(birthday).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
+                            _class = 'birthDay';
+                            _tooltip = _tooltip + 'Cumpleaños. ';
+                        }
+
+                        if(dateRangePickerArrayApplications != undefined){
+                            if(dateRangePickerArrayApplications.length > 0){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                                     _class = 'requestedVac';
                                     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                                 }
-                            }else{
-                                _class = 'requestedVac';
-                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                             }
                         }
+
+                        if(dateRangePickerArrayIncidences != undefined){
+                            if(dateRangePickerArrayIncidences.length > 0){
+                                let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                                });
+                                if(indexIncidence > -1){
+                                    _class = 'incidence';
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                                }
+                            }
+                        }
+
                         let indexlDays = app.lDays.findIndex(({ date }) => moment(date, 'ddd DD-MMM-YYYY').isSame(moment(t.getTime())));
                         if(t.getDay() == 0 || t.getDay() == 6){
                             if(indexlDays > -1){
@@ -193,14 +241,6 @@ class SDateRangePicker {
                                 _class = 'restDay';
                                 _tooltip = _tooltip + 'Inhabil. ';
                             }
-                        }
-                        if(moment(aniversaryDay).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
-                            _class = 'aniversary';
-                            _tooltip = _tooltip + 'Aniversario. ';
-                        }
-                        if(moment(birthday).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
-                            _class = 'birthDay';
-                            _tooltip = _tooltip + 'Cumpleaños. ';
                         }
                     } else {
                         let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
@@ -219,10 +259,7 @@ class SDateRangePicker {
                             _class = 'holiday';
                             _tooltip = _tooltip + 'Festivo. ';
                         }
-                        if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            _class = 'requestedVac';
-                            _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                        }
+                        
                         if(t.getDay() == 0){
                             _class = 'restDay';
                             _tooltip = _tooltip + 'Inhabil. ';
@@ -234,6 +271,27 @@ class SDateRangePicker {
                         if(birthday == moment(t.getTime()).format('YYYY-MM-DD')){
                             _class = 'birthDay';
                             _tooltip = _tooltip + 'Cumpleaños. ';
+                        }
+
+                        if(dateRangePickerArrayApplications != undefined){
+                            if(dateRangePickerArrayApplications.length > 0){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                                    _class = 'requestedVac';
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                                }
+                            }
+                        }
+
+                        if(dateRangePickerArrayIncidences != undefined){
+                            if(dateRangePickerArrayIncidences.length > 0){
+                                let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                                });
+                                if(indexIncidence > -1){
+                                    _class = 'incidence';
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                                }
+                            }
                         }
                     }
                 }
@@ -329,6 +387,7 @@ class SDateRangePicker {
                         _class = 'priority_' + app.lTemp[index].priority;
                         _tooltip = _tooltip + app.lTemp[index].name + '. ';
                     }
+                    
                     if(typeof app.lEvents !== 'undefined'){
                         let index = app.lEvents.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                         if(index > -1){
@@ -339,10 +398,6 @@ class SDateRangePicker {
                     if(lHolidays.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                         _class = 'holiday';
                         _tooltip = _tooltip + 'Festivo. ';
-                    }
-                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                        _class = 'requestedVac';
-                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
                     if(t.getDay() == 0 || t.getDay() == 6){
                         _class = 'restDay';
@@ -355,6 +410,27 @@ class SDateRangePicker {
                     if(moment(birthday).format('MM-DD') == moment(t.getTime()).format('MM-DD')){
                         _class = 'birthDay';
                         _tooltip = _tooltip + 'Cumpleaños. ';
+                    }
+
+                    if(dateRangePickerArrayApplications != undefined){
+                        if(dateRangePickerArrayApplications.length > 0){
+                            if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                                _class = 'requestedVac';
+                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                            }
+                        }
+                    }
+
+                    if(dateRangePickerArrayIncidences != undefined){
+                        if(dateRangePickerArrayIncidences.length > 0){
+                            let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                                return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                            });
+                            if(indexIncidence > -1){
+                                _class = 'incidence';
+                                _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                            }
+                        }
                     }
                 } else {
                     let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
@@ -373,10 +449,6 @@ class SDateRangePicker {
                         _class = 'holiday';
                         _tooltip = _tooltip + 'Festivo. ';
                     }
-                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                        _class = 'requestedVac';
-                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                    }
                     if(t.getDay() == 0){
                         _class = 'restDay';
                         _tooltip = _tooltip + 'Inhabil. ';
@@ -388,6 +460,26 @@ class SDateRangePicker {
                     if(birthday == moment(t.getTime()).format('MM-DD')){
                         _class = 'birthDay';
                         _tooltip = _tooltip + 'Cumpleaños. ';
+                    }
+                    if(dateRangePickerArrayApplications != undefined){
+                        if(dateRangePickerArrayApplications.length > 0){
+                            if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                                _class = 'requestedVac';
+                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                            }
+                        }
+                    }
+
+                    if(dateRangePickerArrayIncidences != undefined){
+                        if(dateRangePickerArrayIncidences.length > 0){
+                            let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                                return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                            });
+                            if(indexIncidence > -1){
+                                _class = 'incidence';
+                                _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
+                            }
+                        }
                     }
                 }
     

@@ -41,6 +41,7 @@
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:gestionvacaciones" ); ?>;
             this.manualRoute[2] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#solicitud_de_vacaciones" ); ?>;
             this.lEvents = <?php echo json_encode($lEvents); ?>;
+            this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
 
         //data para la vista requestVacations
             this.myManagers = <?php echo json_encode($myManagers); ?>;
@@ -647,6 +648,7 @@
             app.setMyReturnDate();
         });
 
+        var dateRangePickerArrayIncidences = [];
         var oDateRangePicker = new SDateRangePicker();
         var oDateRangePickerForMyRequest;
         var dateRangePickerArrayApplications = [];
