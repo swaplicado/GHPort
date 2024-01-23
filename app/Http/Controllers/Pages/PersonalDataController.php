@@ -209,6 +209,8 @@ class personalDataController extends Controller
             'locality' => $request->locality,
             'fid_sta_n' => $request->state,
             // 'zip_code' => $request->postalCode,
+            // 'zip_code_fiscal' => $request->zip_code_fiscal,
+            'zip_code' => $request->zip_code,
             'county' => $request->municipality,
             'reference' => $request->reference,
 

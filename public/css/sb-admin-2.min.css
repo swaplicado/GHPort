@@ -13054,3 +13054,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .centerItem {
     display: flex; justify-content: center; align-items: center;
 }
+
+.cuadrantColor {
+    background-color: #A2F1A0;
+    color: black;
+}
+
+.moduleColor {
+    background-color: #A0EEF1;
+    color: black;
+}
+
+.courseColor {
+    background-color: #F1BFA0;
+    color: black;
+}

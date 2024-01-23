@@ -60,11 +60,46 @@
                 <b v-if="viewMode == 'empCert'">Certificados de colaboradores</b>
                 <b v-else="viewMode == 'myCert'">Mis certificados</b>
                 @include('layouts.manual_button')
+                <button style="float: right" class="btn btn-info" onclick="document.getElementById('guia').style.display == 'none' ? document.getElementById('guia').style.display = 'block' : document.getElementById('guia').style.display = 'none';">
+                    Ayuda rápida
+                </button>
             </h3>
         </div>
+
+<div class="inline">
+    <div class="col-xs-12 col-md-8" id="guia" style="display: none; z-index: 2; position: absolute; background-color: white; border: solid 1px black;">
+        <label><b>Guía rápida:</b></label>
+        <a href="#" style="float: right; color: black;" onclick="document.getElementById('guia').style.display = 'none'"><b>X</b></a>
+        <div>
+            <ol>
+                <li>
+                    Colaboradores:
+                    <ul>
+                        <li>Por defecto se muestran solo tus colaboradores directos, si deseas ver todos tus colaboradores presiona el botón "Todos los colaboradores"</li>
+                        <li>Seleccionar a los colaboradores para obtener sus certificados</li>
+                        <li>Presionar el botón "Obtener cursos"</li>
+                        <li>Ir a la sección Certificados</li>
+                    </ul>
+                </li>
+                <li>
+                    Certificados:
+                    <ul>
+                        <li>De la parte superior seleccionar lo que se desee mostrar (Cuadrantes, Módulos, Cursos)</li>
+                        <li>Seleccionar los renglones correspondientes a los cuadrantes, módulos y/o cursos que se desee 
+                            (Se pueden seleccionar varios renglones de diferentes colaboradores, 
+                            al hacer la descarga los certificados se agruparán por colaborador)</li>
+                        <li>Presionar el botón "Descargar certificados" para descargar un ZIP con todos los certificados adjuntos</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+
         <div class="card-body">
             <div v-show="viewMode == 'empCert'">
-                <div class="wrap">
+                <h4 style="text-align:center; background-color: #e9ecef">Colaboradores</h4>
+                <div class="wrap" style="height: 0; padding: 0;">
                     <div class="elem">
                         <div class="ks-cboxtags">
                             <div class="ks-cbox">
@@ -98,7 +133,7 @@
             </div>
             <div>
                 <br>
-                <br>
+                <h4 style="text-align:center; background-color: #e9ecef">Certificados</h4>
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-check">
@@ -110,6 +145,7 @@
                             <input class="form-check-input" type="checkbox" value="" id="checkCuadrants" v-on:change="filterCuadrantTable()" checked>
                             <label class="form-check-label" for="checkCuadrants">
                                 Cuadrantes
+                                <span style="background-color: #A2F1A0">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </label>
                         </div>
                     </div>
@@ -117,7 +153,8 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="checkModules" v-on:change="filterCuadrantTable()">
                             <label class="form-check-label" for="checkModules">
-                                Modulos
+                                Módulos
+                                <span style="background-color: #A0EEF1">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </label>
                         </div>
                     </div>
@@ -126,10 +163,12 @@
                             <input class="form-check-input" type="checkbox" value="" id="checkCourses" v-on:change="filterCuadrantTable()">
                             <label class="form-check-label" for="checkCourses">
                                 Cursos
+                                <span style="background-color: #F1BFA0">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             </label>
                         </div>
                     </div>
                 </div>
+                <br>
                 <div>
                     <table class="table table-bordered" id="cuadrants_table">
                         <thead class="thead-light">
@@ -142,13 +181,13 @@
                             <th>withCertificate</th>
                             <th>Colaborador</th>
                             <th>Cuadrante</th>
-                            <th>Modulo</th>
+                            <th>Módulo</th>
                             <th>Curso</th>
                             <th>Estatus</th>
                         </thead>
                         <tbody></tbody>
                     </table>
-                    <button class="btn btn-primary" v-on:click="getCertificates();">Imprimir certificados</button>
+                    <button class="btn btn-primary" v-on:click="getCertificates();">Descargar certificados</button>
                 </div>
             </div>
         </div>
