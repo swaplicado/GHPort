@@ -137,23 +137,23 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="personalMail">Correo e personal:</label>
+                                <label for="personalMail">Correo-e personal:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="personalMail" v-model="personalMail" class="my-form-control"
                                     placeholder="Correo electronico personal">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="companyMail">Correo e empresa:</label>
+                                <label for="companyMail">Correo-e empresa:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="companyMail" v-model="companyMail" class="my-form-control"
-                                    placeholder="correp electronico de la empresa">
+                                    placeholder="correo electronico de la empresa">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selBlood">Tipod sangre:</label>
+                                <label for="selBlood">Tipo sangre:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class my-form-control" name="selBlood" id="selBlood"></select>
@@ -191,7 +191,7 @@
                                     placeholder="Teléfono de la empresa">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="ext">Número de extensión:</label>
+                                <label for="ext">Ext. conmutador:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="ext" v-model="ext" class="my-form-control"
@@ -238,7 +238,7 @@
                                     placeholder="RFC">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="postalCode">CP fiscal:</label>
+                                <label for="postalCode">CP domicilio fiscal:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="postalCode" v-model="postalCodeFiscal" class="my-form-control"
@@ -251,13 +251,13 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selState">Estado domicilio:</label>
+                                <label for="selState">Estado:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class my-form-control" name="selState" id="selState"></select>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="municipality">Municipio domicilio:</label>
+                                <label for="municipality">Municipio:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="municipality"  v-model="municipality" class="my-form-control"
@@ -266,14 +266,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="locality">Localidad domicilio:</label>
+                                <label for="locality">Localidad:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="locality" v-model="locality" class="my-form-control"
                                     placeholder="Nombre de la localidad">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="colony">Colonia domicilio:</label>
+                                <label for="colony">Colonia:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="colony" v-model="colony" class="my-form-control"
@@ -282,14 +282,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="street">Calle domicilio:</label>
+                                <label for="street">Calle:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="street" v-model="street" class="my-form-control"
                                     placeholder="Nombre de la calle">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="outsideNumber">Número exterior domicilio:</label>
+                                <label for="outsideNumber">Número exterior:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="outsideNumber" v-model="outsideNumber" class="my-form-control"
@@ -298,14 +298,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="insideNumber">Número interior domicilio:</label>
+                                <label for="insideNumber">Número interior:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="insideNumber" v-model="insideNumber" class="my-form-control"
                                     placeholder="Número interior, solo en caso de ser necesario">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="postalCode">CP domicilio actual:</label>
+                                <label for="postalCode">CP actual:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="postalCode" v-model="postalCode" class="my-form-control"
@@ -314,7 +314,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="reference">Referencia domicilio:</label>
+                                <label for="reference">Referencia:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="reference" v-model="reference" class="my-form-control"
@@ -327,14 +327,14 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="spouse">Nombre completo cónyuge:</label>
+                                <label for="spouse">Cónyuge:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="spouse" v-model="spouse" class="my-form-control"
                                     placeholder="Nombre completo del(la) cónyuge">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="birthdaySpouce">Fecha nacimiento cónyuge:</label>
+                                <label for="birthdaySpouce">Nacimiento:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" name="birthdaySpouce" v-model="birthdaySpouce" class="my-form-control">
@@ -342,7 +342,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="selSexSpouce">Sexo cónyuge:</label>
+                                <label for="selSexSpouce">Sexo:</label>
                             </div>
                             <div class="col-md-4">
                                 <select class="select2-class my-form-control" name="selSexSpouce" id="selSexSpouce"></select>
