@@ -529,6 +529,11 @@
     color: white;
 }
 
+.date-picker-wrapper .month-wrapper table .day.incidence {
+    background-color: #ffad72;
+    color: white;
+}
+
 .date-picker-wrapper .month-wrapper table .day.aniversary {
     background: url('../img/confetti.png');
     background-repeat:no-repeat;
