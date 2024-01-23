@@ -106,12 +106,14 @@ class Menu {
 
         //quinto grupo de menus consultas
         $consultas = [];
-
+        array_push($consultas,['route'=> route('directory'), 'icon' => 'bx bx-book-open bx-xs', 'name' => 'Directorio']);
         array_push($consultas,['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-xs', 'name' => 'Organigrama']);
-        array_push($consultas,['route' => route('personalData'), 'icon' => 'bx bxs-user-circle bx-xs', 'name' => 'Mis datos personales']);    
-        array_push($consultas,['route' => route('univCertificates'), 'icon' => 'bx bxs-certification bx-xs', 'name' => 'Certificados']);    
-        array_push($consultas,['route' => route('admMinutes'), 'icon' => 'bx bxs-cabinet bx-xs', 'name' => 'Actas administrativas']);    
-        array_push($consultas,['route' => route('sanctions'), 'icon' => 'bx bxs-box bx-xs', 'name' => 'Sanciones']);    
+        array_push($consultas,['route' => route('personalData'), 'icon' => 'bx bxs-user-circle bx-xs', 'name' => 'Mis datos personales']); 
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){   
+            array_push($consultas,['route' => route('univCertificates'), 'icon' => 'bx bxs-certification bx-xs', 'name' => 'Certificados']);    
+            array_push($consultas,['route' => route('admMinutes'), 'icon' => 'bx bxs-cabinet bx-xs', 'name' => 'Actas administrativas']);    
+            array_push($consultas,['route' => route('sanctions'), 'icon' => 'bx bxs-box bx-xs', 'name' => 'Sanciones']);  
+        }  
         
         //submenu de festejos
         $festejos = [];

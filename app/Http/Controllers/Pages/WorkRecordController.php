@@ -47,7 +47,7 @@ class WorkRecordController extends Controller
                         ->first();
         $Salary = $request->isSalary;
         $config = \App\Utils\Configuration::getConfigurations();
-        $name = PersonalDataController::getDataEmployees($lEmployeesID->id);
+        $name = self::getDataEmployees($lEmployeesID->id);
         switch ($lEmployeesID->id_company) {
             case '1':
                 $ruta=asset('img/aeth_carta.jpg');
@@ -141,7 +141,7 @@ class WorkRecordController extends Controller
         // $base64 = base64_encode($mpdf->Output(' ', 'S'));
 
         
-        PersonalDataController::registrarClic($request->employee_id, $request->isSalary, $lEmployeesID->id_company);
+        self::registrarClic($request->employee_id, $request->isSalary, $lEmployeesID->id_company);
 
         return json_encode(['success' => true, "pdf"=> $base64]);
         
