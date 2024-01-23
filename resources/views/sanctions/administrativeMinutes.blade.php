@@ -41,7 +41,7 @@
 <div id="admMinutesApp">
 
     <a class="btn btn-outline-secondary focus" id="empMinutes" href="#" v-on:click="setViewMode('empMinutes');" v-show="oUser.rol_id != lRoles.ESTANDAR">Actas administrativas mis colaboradores</a>
-    <a class="btn btn-outline-secondary" id="myMinutes" href="#" v-on:click="setViewMode('myMinutes');" v-show="oUser.rol_id != lRoles.ESTANDAR">Mis actas administrativas</a>
+    {{--<a class="btn btn-outline-secondary" id="myMinutes" href="#" v-on:click="setViewMode('myMinutes');" v-show="oUser.rol_id != lRoles.ESTANDAR">Mis actas administrativas</a>--}}
 
     <div class="card shadow mb-4">
         <div class="card-header">
@@ -72,6 +72,15 @@
                         <span class="bx bx-search"></span>
                     </button>
                 </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary" onclick="showAll();">
+                        Quitar filtro de fecha
+                    </button>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                *Sí, se requiere mayor información acerca de las actas administrativas, favor de acercarse con gestión humana.
             </div>
             <br>
             <table class="table table-bordered" id="minutes_table" style="width: 100%;">
@@ -113,7 +122,11 @@
                 let oEndDate = moment(app.endDate);
                 let oColStartDate = moment(colStartDate);
 
-                return oColStartDate.isBetween(oStartDate, oEndDate);
+                if(!app.showAll){
+                    return oColStartDate.isBetween(oStartDate, oEndDate);
+                }else{
+                    return true;
+                }
             }
         );
     });
@@ -129,8 +142,9 @@
 @include('layouts.manual_jsControll')
 <script type="text/javascript" src="{{ asset('myApp/Utils/singleDateRangePicker/daterangepicker.js') }}"></script>
 <script>
+    var oDatePicker;
     $(function() {
-        var oDatePicker = $('input[name="daterange"]').daterangepicker({
+        oDatePicker = $('input[name="daterange"]').daterangepicker({
                                 opens: 'left',
                                 locale: {
                                     format: 'DD [de] MMMM [de] YYYY',
@@ -151,12 +165,20 @@
                                 app.endDate = end.format('YYYY-MM-DD');
                                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                             });
+        oDatePicker.val('');
     });
 </script>
 <script type="text/javascript" src="{{ asset('myApp/sanctions/vue_sanctions.js') }}"></script>
 <script>
     function filterMinutes(){
+        app.showAll = false;
         table['minutes_table'].draw();
+    }
+
+    function showAll(){
+        app.showAll = true;
+        oDatePicker.val('');
+        table['sanctions_table'].draw();
     }
 </script>
 @endsection
