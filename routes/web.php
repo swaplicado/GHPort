@@ -190,6 +190,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('incidences/gestionSendIncidence', 'Pages\incidencesController@gestionSendIncidence')->name('incidences_gestionSendIncidence');
     Route::post('incidences/getBirdthDayIncidences', 'Pages\incidencesController@getBirdthDayIncidences')->name('incidences_getBirdthDayIncidences');
     Route::post('incidences/checkMail', 'Pages\incidencesController@checkMail')->name('incidences_checkMail');
+    Route::post('incidences/getEmpIncidencesEA', 'Pages\incidencesController@getEmpIncidencesEA')->name('incidences_getEmpIncidencesEA');
 
     Route::get('requestIncidences/{id?}', 'Pages\requestIncidencesController@index')->name('requestIncidences_index');
     Route::post('requestIncidences/incidences/getEmployee', 'Pages\requestIncidencesController@getEmployee')->name('requestIncidences_getEmployee');

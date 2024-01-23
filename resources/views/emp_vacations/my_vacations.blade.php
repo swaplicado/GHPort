@@ -55,6 +55,7 @@
             this.sendRequestRoute = <?php echo json_encode(route('myVacations_send_requestVac')); ?>;
             this.checkMailRoute = <?php echo json_encode(route('myVacations_checkMail')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
+            this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
             this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
@@ -395,6 +396,7 @@
 
     var oDateRangePickerForMyRequest  = new SDateRangePicker();
     var dateRangePickerArrayApplications = [];
+    var dateRangePickerArrayIncidences = [];
     // var dateRangePickerArraySpecialSeasons = [];
     var dateRangePickerValid = true;
     // var selfDatePicker = oDateRangePickerForMyRequest

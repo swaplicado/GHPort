@@ -126,6 +126,18 @@ class incidencesController extends Controller
                                             ->with('lEvents', $lEvents);
     }
 
+    public function getEmpIncidencesEA(Request $request){
+        try {
+            $lVacationsEA = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+            $lIncidencesEA = incidencesUtils::getEmpIncidencesEA($request->user_id);
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
+        }
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidencesEA, 'lVacations' => $lVacationsEA]);
+    }
+
     public function createIncidence(Request $request){
         $start_date = $request->startDate;
         $end_date = $request->endDate;

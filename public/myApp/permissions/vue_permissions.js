@@ -630,9 +630,35 @@ var app = new Vue({
 
         },
 
+        getEmpApplicationsEA(user_id){
+            return new Promise((resolve) => 
+            axios.post(this.oData.routeGetEmpIncidencesEA, {
+                'user_id':  user_id
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    dateRangePickerArrayApplications = data.lVacations;
+                    dateRangePickerArrayIncidences = data.lIncidences;
+                    resolve(dateRangePickerArrayIncidences);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                    swal.close();
+                    resolve(null);
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close()
+                resolve(error);
+            }));
+        },
+
         async showModal(data = null) {
+            SGui.showWaiting();
             $('#clear').trigger('click');
             this.cleanData();
+            await this.getEmpApplicationsEA(this.oUser.id);
             if (data != null) {
                 this.isEdit = true;
                 this.permission_id = data[this.indexes_permission.id];
@@ -654,7 +680,6 @@ var app = new Vue({
                 this.comments = this.oPermission.emp_comments_n;
                 this.interOut = this.oPermission.intermediate_out;
                 this.interReturn = this.oPermission.intermediate_return;
-                Swal.close();
             } else {
                 if (this.HasPermissionsCreated()) {
                     SGui.showMessage('', 'No puede crear otra incidencia si tiene incidencias creadas pendientes de enviar', 'warning');
@@ -662,6 +687,7 @@ var app = new Vue({
                 }
                 this.createCalendar();
             }
+            Swal.close();
             $('#modal_permission').modal('show');
         },
 
@@ -1033,11 +1059,13 @@ var app = new Vue({
          * @param {*} data 
          */
         async showDataModal(data) {
+            SGui.showWaiting();
             $('#clear').trigger('click');
             this.cleanData();
             this.isRevision = true;
             this.permission_id = data[this.indexes_permission.id];
             await this.getPermission();
+            await this.getEmpApplicationsEA(this.oPermission.user_id);
             await this.getEmployee(this.oPermission.user_id);
             this.hours = this.oPermission.hours;
             this.minutes = this.oPermission.min;

@@ -36,6 +36,7 @@
             this.routeDelete = <?php echo json_encode(route('permission_delete')) ?>;
             this.routeGestionSendIncidence = <?php echo json_encode(route('permission_gestionSendIncidence')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
+            this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:mispermisos" ); ?>;
             this.indexes_permission = {
@@ -146,6 +147,8 @@
 </script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
 <script>
+    var dateRangePickerArrayApplications = [];
+    var dateRangePickerArrayIncidences = [];
     var oDateRangePicker = null;
     function initCalendar(
         sStart_date,
