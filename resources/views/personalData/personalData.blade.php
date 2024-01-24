@@ -242,6 +242,16 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-2 label-container">
+                                        <label for="SelEmergencyContac">Parentesco:</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="SelEmergencyContac" id="SelEmergencyContac"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2 label-container">
                                         <label for="beneficiary">Beneficiario(s):</label>
                                     </div>
                                     <div class="col-md-4">
