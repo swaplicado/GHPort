@@ -152,6 +152,20 @@ var app = new Vue({
             table['cuadrants_table'].rows.add(datalEmployeesToCuadrants).draw();
 
             for(let i = 0; i < datalEmployeesToCuadrants.length; i++){
+                switch (datalEmployeesToCuadrants[i][this.indexesCuadrantsTable.id_type]) {
+                    case 1:
+                        table['cuadrants_table'].row(i).nodes().to$().addClass('cuadrantColor');
+                        break;
+                    case 2:
+                        table['cuadrants_table'].row(i).nodes().to$().addClass('moduleColor');
+                        break;
+                    case 3:
+                        table['cuadrants_table'].row(i).nodes().to$().addClass('courseColor');
+                        break;
+                    default:
+                        break;
+                }
+                
                 if(!datalEmployeesToCuadrants[i][this.indexesCuadrantsTable.withCertificate]){
                     table['cuadrants_table'].row(i).nodes().to$().addClass('noSelectableRow');
                 }

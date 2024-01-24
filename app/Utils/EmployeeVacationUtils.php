@@ -29,6 +29,7 @@ class EmployeeVacationUtils {
                         })
                         ->where('u.is_active', 1)
                         ->where('u.is_delete', 0)
+                        ->where('u.id', '!=', 1)
                         ->whereIn('u.org_chart_job_id', $arrOrgJobs)
                         ->select(
                             'u.id',
@@ -627,16 +628,17 @@ class EmployeeVacationUtils {
                                     ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO, sysConst::APPLICATION_CONSUMIDO])
                                     ->where('is_deleted', 0)
                                     ->where('type_incident_id', SysConst::TYPE_VACACIONES)
-                                    ->select('start_date', 'end_date')
+                                    ->select('start_date', 'end_date', 'ldays')
                                     ->get();
         
         $arrDatesApplications = [];
         foreach($applicationsEA as $app){
-            $date = Carbon::parse($app->start_date);
-            $arrDatesApplications[] = $date->toDateString();
-            $diff = Carbon::parse($app->start_date)->diffInDays(Carbon::parse($app->end_date));
-            for($i = 0; $i < $diff; $i++){
-                $arrDatesApplications[] = $date->addDay()->toDateString();
+            $lDays = json_decode($app->ldays);
+            foreach($lDays as $day){
+                if($day->taked){
+                    $date = Carbon::parse($day->date);
+                    $arrDatesApplications[] = $date->toDateString();
+                }
             }
         }
 

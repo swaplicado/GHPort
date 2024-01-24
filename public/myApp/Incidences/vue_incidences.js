@@ -54,6 +54,7 @@ var app = new Vue({
         limit_days: null,
         lEvents: oServerData.lEvents,
         is_event: false,
+        lIncidencesEA: [],
     },
     computed: {
         propertyAAndPropertyB() {
@@ -503,8 +504,35 @@ var app = new Vue({
             this.totCalendarDays = result[3];
         },
 
+        getEmpApplicationsEA(user_id){
+            // SGui.showWaiting(3000);
+            return new Promise((resolve) => 
+            axios.post(this.oData.routeGetEmpIncidencesEA, {
+                'user_id':  user_id
+            })
+            .then(response => {
+                let data = response.data;
+                if(data.success){
+                    dateRangePickerArrayApplications = data.lVacations;
+                    dateRangePickerArrayIncidences = data.lIncidences;
+                    this.applicationsEA = data.arrAplications;
+                    // swal.close();
+                    resolve(dateRangePickerArrayIncidences);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                    swal.close();
+                    resolve(null);
+                }
+            })
+            .catch( function (error){
+                console.log(error);
+                swal.close()
+                resolve(error);
+            }));
+        },
+
         getApplication(){
-            SGui.showWaiting(15000);
+            // SGui.showWaiting(15000);
             return new Promise((resolve) =>
                 axios.post(this.oData.routeGetIncidence, {
                     'application_id': this.idApplication,
@@ -539,10 +567,12 @@ var app = new Vue({
         },
 
         async showModal(data = null){
+            SGui.showWaiting();
             $('#clear').trigger('click');
             // $('#incident_class').val('').trigger('change');
             $('#incident_type').empty().trigger("change");
             this.cleanData();
+            await this.getEmpApplicationsEA(this.oUser.id);
             this.class_id = this.lClass[0].id_incidence_cl;
             this.setClass(this.class_id);
             if(data != null){
@@ -577,6 +607,7 @@ var app = new Vue({
                     return;
                 }
             }
+            Swal.close();
             $('#modal_incidences').modal('show');
         },
 
@@ -1003,12 +1034,13 @@ var app = new Vue({
          * @param {*} data 
          */
         async showDataModal(data){
-            // SGui.showWaiting(15000);
+            SGui.showWaiting();
             this.cleanData();
             $('#clear').trigger('click');
             this.isRevision = true;
             this.idApplication = data[this.indexes_incidences.id_application];
             await this.getApplication();
+            await this.getEmpApplicationsEA(this.oApplication.user_id);
             await this.getEmployee(this.oApplication.user_id);
             this.class_id = this.oApplication.id_incidence_cl;
             this.type_id = this.oApplication.id_incidence_tp;

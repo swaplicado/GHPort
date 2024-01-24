@@ -40,6 +40,8 @@
             this.routeGestionSendIncidence = <?php echo json_encode(route('incidences_gestionSendIncidence')); ?>;
             this.routeGetBirdthDayIncidences = <?php echo json_encode(route('incidences_getBirdthDayIncidences')); ?>;
             this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
+            this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
+            this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misincidencias" ); ?>;
             this.indexes_incidences = {
@@ -159,6 +161,8 @@
 </script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
 <script>
+    var dateRangePickerArrayApplications = [];
+    var dateRangePickerArrayIncidences = [];
     var oDateRangePicker = null;
     function initCalendar(
         sStart_date,

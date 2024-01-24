@@ -37,6 +37,7 @@ var app = new Vue({
         country: oServerData.personalData.country,
         state: oServerData.personalData.fidSta,
         postalCode: oServerData.personalData.zipCode,
+        postalCodeFiscal: oServerData.personalData.zipCodeFiscal,
         municipality: oServerData.personalData.county,
         locality: oServerData.personalData.locality,
         colony: oServerData.personalData.neighborhood,
@@ -154,10 +155,10 @@ var app = new Vue({
             let html = `
                 <div class="row hijoColab" id="hijo`+this.childIds+`">
                     <div class="col-md-2 label-container">
-                        <label for="">Nombre</label>
+                        <label for="">Nombre completo</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="text" name="nombre" value="`+name+`" class="form-control">
+                        <input type="text" name="nombre" value="`+name+`" class="my-form-control" placeholder="Nombre completo del hijo(a)">
                     </div>
                     <div class="col-md-5">
                         <div class="row">
@@ -165,13 +166,13 @@ var app = new Vue({
                                 <label for="">Nacimiento</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="date" name="edad" value="`+birthday+`" class="form-control">
+                                <input type="date" name="edad" value="`+birthday+`" class="my-form-control">
                             </div>
                             <div class="col-md-2 label-container">
                                 <label for="">Sexo</label>
                             </div>
                             <div class="col-md-4">
-                                <select name="sexo" id="selSexChild" class="form-control select2-class" style="width: 100%;">`;
+                                <select name="sexo" id="selSexChild" class="my-form-control select2-class" style="width: 100%;">`;
                                     if(sex == 2){
                                         html = html +`<option value="2" selected>Masculino</option>
                                                         <option value="3">Femenino</option>`
@@ -234,6 +235,8 @@ var app = new Vue({
                 'secondLastName': this.secondLastName,
                 'names': this.names,
                 'rfc': this.rfc,
+                'zip_code_fiscal': this.postalCodeFiscal,
+                'zip_code': this.postalCode,
                 'personalMail': this.personalMail,
                 'companyMail': this.companyMail,
                 'sex': this.sex,

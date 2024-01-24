@@ -190,6 +190,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('incidences/gestionSendIncidence', 'Pages\incidencesController@gestionSendIncidence')->name('incidences_gestionSendIncidence');
     Route::post('incidences/getBirdthDayIncidences', 'Pages\incidencesController@getBirdthDayIncidences')->name('incidences_getBirdthDayIncidences');
     Route::post('incidences/checkMail', 'Pages\incidencesController@checkMail')->name('incidences_checkMail');
+    Route::post('incidences/getEmpIncidencesEA', 'Pages\incidencesController@getEmpIncidencesEA')->name('incidences_getEmpIncidencesEA');
 
     Route::get('requestIncidences/{id?}', 'Pages\requestIncidencesController@index')->name('requestIncidences_index');
     Route::post('requestIncidences/incidences/getEmployee', 'Pages\requestIncidencesController@getEmployee')->name('requestIncidences_getEmployee');
@@ -282,7 +283,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('datePersonal', 'Pages\WorkRecordController@index')->name('word_record_personal');
     Route::post('datePersonal/GetPDF', 'Pages\WorkRecordController@getWorkRecord')->name('get_word_record_personal');
     Route::get('datePersonalManager', 'Pages\WorkRecordController@indexManager')->name('word_record_personal_manager');
-    Route::get('datePersonalLog', 'Pages\WorkRecordLogController@index')->name('word_record_log');
+    Route::get('datePersonalLog', 'Pages\PersonalDataLogController@index')->name('word_record_log');
     //directorio
     Route::get('directory', 'Pages\DirectoryController@index')->name('directory');
 

@@ -10,6 +10,7 @@ var app = new Vue({
         lRoles: oServerData.lRoles,
         startDate: oServerData.startDate,
         endDate: oServerData.endDate,
+        showAll: true,
     },
     mounted(){
         self = this;

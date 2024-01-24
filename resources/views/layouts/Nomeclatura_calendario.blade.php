@@ -22,6 +22,10 @@
                     <td style="text-align: left;">&nbsp (Día de vacaciones de otras solicitudes)</td>
                 </tr>
                 <tr>
+                    <td style="background-color: #ffad72"></td>
+                    <td style="text-align: left;">&nbsp (Día con incidencia)</td>
+                </tr>
+                <tr>
                     <td style="background-color: #e0e0e0b1"></td>
                     <td style="text-align: left;">&nbsp (Día inhábil)</td>
                 </tr>

@@ -41,6 +41,7 @@
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
             this.routeSeeLikeManager = <?php echo json_encode(route('requestPermission_seeLikeManager')) ?>;
             this.routePermission_cancel = <?php echo json_encode(route('requestPermission_cancel')) ?>;
+            this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos#gestion" ); ?>;
@@ -268,6 +269,8 @@
 </script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
 <script>
+    var dateRangePickerArrayApplications = [];
+    var dateRangePickerArrayIncidences = [];
     var oDateRangePicker = null;
     function initCalendar(
         sStart_date,
