@@ -52,9 +52,40 @@ var app = new Vue({
         id_add: oServerData.personalData.idAdd,
         id_con: oServerData.personalData.idCon,
         id_bpb: oServerData.personalData.idBpb,
+
+        withEmergency: false,
+        withConyuge: false,
+    },
+    watch: {
+        emergencyContac: function(val){
+            if(val != ''){
+                this.withEmergency = true;
+            }else{
+                this.withEmergency = false;
+            }
+        },
+        spouse: function(val){
+            if(val != ''){
+                this.withConyuge = true;
+            }else{
+                this.withConyuge = false;
+            }
+        }
     },
     mounted(){
         self = this;
+
+        if(this.emergencyContac != ''){
+            this.withEmergency = true;
+        }else{
+            this.withEmergency = false;
+        }
+
+        if(this.spouse != ''){
+            this.withConyuge = true;
+        }else{
+            this.withConyuge = false;
+        }
 
         $('.select2-class').select2({});
         
@@ -170,7 +201,7 @@ var app = new Vue({
                                 <input type="date" name="edad" value="`+birthday+`" class="my-form-control">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="">Sexo</label>
+                                <label for="">Sexo*</label>
                             </div>
                             <div class="col-md-4">
                                 <select name="sexo" id="selSexChild" class="my-form-control select2-class" style="width: 100%;">`;
@@ -227,7 +258,44 @@ var app = new Vue({
 
         },
 
+        checkInputs(){
+            if(!this.sex) {
+                SGui.showMessage('', 'El campo de Sexo es obligatorio', 'info');
+                return;
+            }
+
+            if (!this.bloodType) {
+                SGui.showMessage('', 'El campo de Tipo sangre es obligatorio', 'info');
+                return;
+            }
+
+            if (!this.schooling) {
+                SGui.showMessage('', 'El campo de Escolaridad es obligatorio', 'info');
+                return;
+            }
+
+            if(!this.maritalStatus) {
+                SGui.showMessage('', 'El campo de Estado civil es obligatorio', 'info');
+                return;
+            }
+
+            if (this.withConyuge) {
+                if (!this.sexSpouce) {
+                    SGui.showMessage('', 'El campo de Sexo en el conyuge es obligatorio', 'info');
+                    return;
+                }
+            }
+
+            if (this.withEmergency) {
+                if (!this.parentesco) {
+                    SGui.showMessage('', 'El campo de Parentesco en contacto para emergencias es obligatorio', 'info');
+                    return;
+                }
+            }
+        },
+
         update(){
+            this.checkInputs();
             SGui.showWaiting();
             this.setChilds();
             let route = this.oData.updateRoute;

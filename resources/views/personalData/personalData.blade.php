@@ -135,7 +135,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selSex">Sexo:</label>
+                                        <label for="selSex">Sexo*:</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selSex" id="selSex"></select>
@@ -143,7 +143,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selBlood">Tipo sangre:</label>
+                                        <label for="selBlood">Tipo sangre*:</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selBlood" id="selBlood"></select>
@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selSchooling">Escolaridad:</label>
+                                        <label for="selSchooling">Escolaridad*:</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selSchooling" id="selSchooling"></select>
@@ -162,7 +162,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selCivl">Estado civil:</label>
+                                        <label for="selCivl">Estado civil*:</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selCivl" id="selCivl"></select>
@@ -218,20 +218,20 @@
 
                        <br>
                         <div class="row">
-                            <h4><b>Contacto de emergencia</b></h4>
+                            <h4><b>Mi contacto para emergencias y beneficiario(s)</b></h4>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-2 label-container">
-                                        <label for="emergencyContac">Nombre</label>
+                                        <label for="emergencyContac">Nombre contacto:</label>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" name="emergencyContac" v-model="emergencyContac" class="my-form-control"
                                             placeholder="Nombre del contacto de emergencia">
                                     </div>
                                     <div class="col-md-2 label-container">
-                                        <label for="emergencyContac">Teléfono contacto</label>
+                                        <label for="emergencyContac">Teléfono contacto:</label>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" name="emergencyPhone" v-model="emergencyPhone" class="my-form-control"
@@ -242,7 +242,7 @@
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-2 label-container">
-                                        <label for="SelEmergencyContac">Parentesco:</label>
+                                        <label for="SelEmergencyContac">Parentesco contacto@{{withEmergency ? '*' : ''}}:</label>
                                     </div>
                                     <div class="col-md-4">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="SelEmergencyContac" id="SelEmergencyContac"></select>
@@ -258,18 +258,21 @@
                                         <input type="text" name="beneficiary" v-model="beneficiary" class="my-form-control"
                                             placeholder="Ej: 'Nombre de la persona beneficiaria' - 100%">
                                     </div>
+                                    <div class="col-md-6" style="padding-left: 0;">
+                                        <span style="color: #787878">(si son varios, indicar % individuales)</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <h4><b>Domicilio actual</b></h4>
+                            <h4><b>Mi domicilio actual</b></h4>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selState">Estado:</label>
+                                        <label for="selState">Estado*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selState" id="selState"></select>
@@ -343,7 +346,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="reference">Referencia:</label>
+                                        <label for="reference">Referencia domicilio:</label>
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="reference" v-model="reference" class="my-form-control"
@@ -355,7 +358,7 @@
 
                         <br>
                         <div class="row">
-                            <h4><b>Datos familiares</b></h4>
+                            <h4><b>Mis datos familiares</b></h4>
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
@@ -374,7 +377,7 @@
                                         <input type="date" name="birthdaySpouce" v-model="birthdaySpouce" class="my-form-control">
                                     </div>
                                     <div class="col-md-2 label-container">
-                                        <label for="selSexSpouce">Sexo:</label>
+                                        <label for="selSexSpouce">Sexo@{{withConyuge ? '*' : ''}}:</label>
                                     </div>
                                     <div class="col-md-4">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selSexSpouce" id="selSexSpouce"></select>
