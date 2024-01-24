@@ -281,7 +281,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="municipality"  v-model="municipality" class="my-form-control"
-                                            placeholder="Nombre del municipio">
+                                            placeholder="Nombre del municipio" maxlength="50">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -290,7 +290,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="locality" v-model="locality" class="my-form-control"
-                                            placeholder="Nombre de la localidad">
+                                            placeholder="Nombre de la localidad" maxlength="50">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -308,7 +308,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="colony" v-model="colony" class="my-form-control"
-                                            placeholder="Nombre de la colonia">
+                                            placeholder="Nombre de la colonia" maxlength="100">
                                     </div>
                                 </div>
                             </div>
@@ -320,7 +320,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="street" v-model="street" class="my-form-control"
-                                            placeholder="Nombre de la calle">
+                                            placeholder="Nombre de la calle" maxlength="100">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -347,7 +347,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="reference" v-model="reference" class="my-form-control"
-                                            placeholder="Ej: Entre calles 'Nombre de la calle 1' y 'Nombre de la calle 2'">
+                                            placeholder="Ej: Entre calles 'Nombre de la calle 1' y 'Nombre de la calle 2'" maxlength="50">
                                     </div>
                                 </div>
                             </div>
