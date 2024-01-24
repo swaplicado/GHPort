@@ -16,6 +16,7 @@ var app = new Vue({
         lastName: oServerData.personalData.lastName,
         secondLastName: oServerData.personalData.secondLastName,
         names: oServerData.personalData.names,
+        fullName: oServerData.personalData.fullName,
         rfc: oServerData.personalData.rfc,
         personalMail: oServerData.personalData.email01,
         companyMail: oServerData.personalData.email02,
@@ -155,7 +156,7 @@ var app = new Vue({
             let html = `
                 <div class="row hijoColab" id="hijo`+this.childIds+`">
                     <div class="col-md-2 label-container">
-                        <label for="">Nombre completo</label>
+                        <label for="">Hijo(a)</label>
                     </div>
                     <div class="col-md-4">
                         <input type="text" name="nombre" value="`+name+`" class="my-form-control" placeholder="Nombre completo del hijo(a)">
@@ -174,13 +175,16 @@ var app = new Vue({
                             <div class="col-md-4">
                                 <select name="sexo" id="selSexChild" class="my-form-control select2-class" style="width: 100%;">`;
                                     if(sex == 2){
-                                        html = html +`<option value="2" selected>Masculino</option>
+                                        html = html +`<option value="1">(N/A)</option>
+                                                        <option value="2" selected>Masculino</option>
                                                         <option value="3">Femenino</option>`
                                     }else if(sex == 3){
-                                        html = html +`<option value="2">Masculino</option>
+                                        html = html +`<option value="1">(N/A)</option>
+                                                        <option value="2">Masculino</option>
                                                         <option value="3" selected>Femenino</option>`
                                     }else{
-                                        html = html +`<option value="2">Masculino</option>
+                                        html = html +`<option value="1">(N/A)</option>
+                                                        <option value="2">Masculino</option>
                                                         <option value="3">Femenino</option>`
                                     }
                             html = html +`</select>

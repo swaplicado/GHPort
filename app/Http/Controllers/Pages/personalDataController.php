@@ -21,7 +21,7 @@ class personalDataController extends Controller
         for ($i=3; $i < count($tokens); $i++) {
             $personalData->names = $personalData->names.' '.$tokens[$i];
         }
-
+        $personalData->fullName = $name;
         $config = \App\Utils\Configuration::getConfigurations();
 
         $hrsClass = $config->dataPersonalHrsClass;
@@ -40,6 +40,8 @@ class personalDataController extends Controller
                                         'text' => $item->name,
                                     ];
                                 })->toArray();
+
+                    $arrSex = array_values($hrsType->where('class', $class->id)->toArray());
                     break;
                 case "BLOOD":
                     $lBlood = $hrsType->where('class', $class->id)->map(function ($item, $key){
@@ -50,6 +52,7 @@ class personalDataController extends Controller
                                 })->toArray();
 
                     $lBlood = array_combine(range(0, count($lBlood) - 1), array_values($lBlood));
+                    $arrBlood = array_values($hrsType->where('class', $class->id)->toArray());
                     break;
                 case "CIVIL":
                     $lCivil = $hrsType->where('class', $class->id)->map(function ($item, $key){
@@ -60,6 +63,7 @@ class personalDataController extends Controller
                                 })->toArray();
 
                     $lCivil = array_combine(range(0, count($lCivil) - 1), array_values($lCivil));
+                    $arrCivil = array_values($hrsType->where('class', $class->id)->toArray());
                     break;
                 case "SCHOOLING":
                     $lSchooling = $hrsType->where('class', $class->id)->map(function ($item, $key){
@@ -70,6 +74,7 @@ class personalDataController extends Controller
                                     })->toArray();
 
                     $lSchooling = array_combine(range(0, count($lSchooling) - 1), array_values($lSchooling));
+                    $arrSchooling = array_values($hrsType->where('class', $class->id)->toArray());
                     break;
                 case "PARENTESCO":
                     $lParentesco = $hrsType->where('class', $class->id)->map(function ($item, $key){
@@ -80,6 +85,7 @@ class personalDataController extends Controller
                                     })->toArray();
 
                     $lParentesco = array_combine(range(0, count($lParentesco) - 1), array_values($lParentesco));
+                    $arrParentesco = array_values($hrsType->where('class', $class->id)->toArray());
             }
         }
 
@@ -90,28 +96,28 @@ class personalDataController extends Controller
                         ];
                     })->toArray();
 
-        $personalData->sexCl = $personalData->sexCl != '' ? $personalData->sexCl : $lSex[0]['class'];
-        $personalData->sexTp = $personalData->sexTp != '' ? $personalData->sexTp : $lSex[0]['type'];    
-        $personalData->maritalCl = $personalData->maritalCl != '' ? $personalData->maritalCl : $lCivil[0]['class'];
-        $personalData->maritalTp = $personalData->maritalTp != '' ? $personalData->maritalTp : $lCivil[0]['type'];
-        $personalData->educationCl = $personalData->educationCl != '' ? $personalData->educationCl : $lSchooling[0]['class'];
-        $personalData->educationTp = $personalData->educationTp != '' ? $personalData->educationTp : $lSchooling[0]['type'];
-        $personalData->bloodCl = $personalData->bloodCl != '' ? $personalData->bloodCl : $lBlood[0]['class'];
-        $personalData->bloodTp = $personalData->bloodTp != '' ? $personalData->bloodTp : $lBlood[0]['type'];
-        $personalData->emergCl = $personalData->emergCl != '' ? $personalData->emergCl : $lParentesco[0]['class'];
-        $personalData->emergTp = $personalData->emergTp != '' ? $personalData->emergTp : $lParentesco[0]['type'];
-        $personalData->sexMateCl = $personalData->sexMateCl != '' ? $personalData->sexMateCl : $lSex[0]['class'];
-        $personalData->sexMateTp = $personalData->sexMateTp != '' ? $personalData->sexMateTp : $lSex[0]['type'];
-        $personalData->sexSonCl1 = $personalData->sexSonCl1 != '' ? $personalData->sexSonCl1 : $lSex[0]['class'];
-        $personalData->sexSonTp1 = $personalData->sexSonTp1 != '' ? $personalData->sexSonTp1 : $lSex[0]['type'];
-        $personalData->sexSonCl2 = $personalData->sexSonCl2 != '' ? $personalData->sexSonCl2 : $lSex[0]['class'];
-        $personalData->sexSonTp2 = $personalData->sexSonTp2 != '' ? $personalData->sexSonTp2 : $lSex[0]['type'];
-        $personalData->sexSonCl3 = $personalData->sexSonCl3 != '' ? $personalData->sexSonCl3 : $lSex[0]['class'];
-        $personalData->sexSonTp3 = $personalData->sexSonTp3 != '' ? $personalData->sexSonTp3 : $lSex[0]['type'];
-        $personalData->sexSonCl4 = $personalData->sexSonCl4 != '' ? $personalData->sexSonCl4 : $lSex[0]['class'];
-        $personalData->sexSonTp4 = $personalData->sexSonTp4 != '' ? $personalData->sexSonTp4 : $lSex[0]['type'];
-        $personalData->sexSonCl5 = $personalData->sexSonCl5 != '' ? $personalData->sexSonCl5 : $lSex[0]['class'];
-        $personalData->sexSonTp5 = $personalData->sexSonTp5 != '' ? $personalData->sexSonTp5 : $lSex[0]['type'];
+        $personalData->sexCl = $personalData->sexCl != '' ? $personalData->sexCl : $arrSex[0]->class;
+        $personalData->sexTp = $personalData->sexTp != '' ? $personalData->sexTp : $arrSex[0]->type;    
+        $personalData->maritalCl = $personalData->maritalCl != '' ? $personalData->maritalCl : $arrCivil[0]->class;
+        $personalData->maritalTp = $personalData->maritalTp != '' ? $personalData->maritalTp : $arrCivil[0]->type;
+        $personalData->educationCl = $personalData->educationCl != '' ? $personalData->educationCl : $arrSchooling[0]->class;
+        $personalData->educationTp = $personalData->educationTp != '' ? $personalData->educationTp : $arrSchooling[0]->type;
+        $personalData->bloodCl = $personalData->bloodCl != '' ? $personalData->bloodCl : $arrBlood[0]->class;
+        $personalData->bloodTp = $personalData->bloodTp != '' ? $personalData->bloodTp : $arrBlood[0]->type;
+        $personalData->emergCl = $personalData->emergCl != '' ? $personalData->emergCl : $arrParentesco[0]->class;
+        $personalData->emergTp = $personalData->emergTp != '' ? $personalData->emergTp : $arrParentesco[0]->type;
+        $personalData->sexMateCl = $personalData->sexMateCl != '' ? $personalData->sexMateCl : $arrSex[0]->class;
+        $personalData->sexMateTp = $personalData->sexMateTp != '' ? $personalData->sexMateTp : $arrSex[0]->type;
+        $personalData->sexSonCl1 = $personalData->sexSonCl1 != '' ? $personalData->sexSonCl1 : $arrSex[0]->class;
+        $personalData->sexSonTp1 = $personalData->sexSonTp1 != '' ? $personalData->sexSonTp1 : $arrSex[0]->type;
+        $personalData->sexSonCl2 = $personalData->sexSonCl2 != '' ? $personalData->sexSonCl2 : $arrSex[0]->class;
+        $personalData->sexSonTp2 = $personalData->sexSonTp2 != '' ? $personalData->sexSonTp2 : $arrSex[0]->type;
+        $personalData->sexSonCl3 = $personalData->sexSonCl3 != '' ? $personalData->sexSonCl3 : $arrSex[0]->class;
+        $personalData->sexSonTp3 = $personalData->sexSonTp3 != '' ? $personalData->sexSonTp3 : $arrSex[0]->type;
+        $personalData->sexSonCl4 = $personalData->sexSonCl4 != '' ? $personalData->sexSonCl4 : $arrSex[0]->class;
+        $personalData->sexSonTp4 = $personalData->sexSonTp4 != '' ? $personalData->sexSonTp4 : $arrSex[0]->type;
+        $personalData->sexSonCl5 = $personalData->sexSonCl5 != '' ? $personalData->sexSonCl5 : $arrSex[0]->class;
+        $personalData->sexSonTp5 = $personalData->sexSonTp5 != '' ? $personalData->sexSonTp5 : $arrSex[0]->type;
         $personalData->fidSta = $personalData->fidSta != 0 ? $personalData->fidSta : collect($oData->locuSta)->where('nameSta', 'Michoacán')->first()->idSta;
 
         $personalData->sexId = $hrsType->where('class', $personalData->sexCl)->where('type', $personalData->sexTp)->first()->id;
@@ -251,14 +257,16 @@ class personalDataController extends Controller
                                 if(is_null($item)){
                                     return '';
                                 }else{
-                                    $acentos = array('á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú');
-                                    $sinAcentos = array('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U');
-                                    $item = strtr($item, array_combine($acentos, $sinAcentos));
+                                    // $acentos = array('á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú');
+                                    // $sinAcentos = array('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U');
+                                    // $item = strtr($item, array_combine($acentos, $sinAcentos));
                                     return $item;
                                 }
                             });
     
-            $strBody = json_encode($body);
+            $strBody = json_encode($body, JSON_UNESCAPED_UNICODE);
+
+            $strBody64 = base64_encode($strBody);
     
             $config = \App\Utils\Configuration::getConfigurations();
             $client = new Client([
@@ -269,7 +277,7 @@ class personalDataController extends Controller
                 ],
             ]);
     
-            $response = $client->request('GET', 'insertPersonalInfo/' . $strBody);
+            $response = $client->request('GET', 'insertPersonalInfo/' . $strBody64);
             $jsonString = $response->getBody()->getContents();
             $data = json_decode($jsonString);
     
