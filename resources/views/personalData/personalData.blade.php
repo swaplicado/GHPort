@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="fullName" v-model="fullName" class="my-form-control" disabled
-                                            placeholder="Nombre completo">
+                                            placeholder="Nombre completo" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -121,7 +121,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="rfc" v-model="rfc" class="my-form-control" disabled
-                                            placeholder="RFC">
+                                            placeholder="RFC" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -130,12 +130,12 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="postalCode" v-model="postalCodeFiscal" class="my-form-control"
-                                            placeholder="Codigo postal registrado ante el SAT" disabled>
+                                            placeholder="Codigo postal registrado ante el SAT" disabled style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selSex">Sexo*:</label>
+                                        <label for="selSex">Sexo:*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selSex" id="selSex"></select>
@@ -143,7 +143,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selBlood">Tipo sangre*:</label>
+                                        <label for="selBlood">Tipo sangre:*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selBlood" id="selBlood"></select>
@@ -151,7 +151,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selSchooling">Escolaridad*:</label>
+                                        <label for="selSchooling">Escolaridad:*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selSchooling" id="selSchooling"></select>
@@ -162,7 +162,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selCivl">Estado civil*:</label>
+                                        <label for="selCivl">Estado civil:*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selCivl" id="selCivl"></select>
@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="personalPhone" v-model="personalPhone" class="my-form-control"
-                                            placeholder="Teléfono personal">
+                                            placeholder="del empleado" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -183,7 +183,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="companyPhone" v-model="companyPhone" class="my-form-control"
-                                            placeholder="Teléfono de la empresa">
+                                            placeholder="línea asignada" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -192,7 +192,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="ext" v-model="ext" class="my-form-control"
-                                            placeholder="Número de extensión de la empresa">
+                                            placeholder="de la empresa" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -201,7 +201,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="personalMail" v-model="personalMail" class="my-form-control"
-                                            placeholder="Correo electronico personal">
+                                            placeholder="CORREO ELECTRÓNICO DEL EMPLEADO">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -210,7 +210,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="companyMail" v-model="companyMail" class="my-form-control"
-                                            placeholder="correo electronico de la empresa">
+                                            placeholder="CORREO ELECTRÓNICO DE LA EMPRESA">
                                     </div>
                                 </div>
                             </div>
@@ -228,21 +228,21 @@
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" name="emergencyContac" v-model="emergencyContac" class="my-form-control"
-                                            placeholder="Nombre del contacto de emergencia">
+                                            placeholder="Nombre del contacto para emergencias" style="text-transform:uppercase;">
                                     </div>
                                     <div class="col-md-2 label-container">
                                         <label for="emergencyContac">Teléfono contacto:</label>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" name="emergencyPhone" v-model="emergencyPhone" class="my-form-control"
-                                            placeholder="Teléfono en caso de emergencia">
+                                            placeholder="Teléfono del contacto para emergencias" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="row">
                                     <div class="col-md-2 label-container">
-                                        <label for="SelEmergencyContac">Parentesco contacto@{{withEmergency ? '*' : ''}}:</label>
+                                        <label for="SelEmergencyContac">Parentesco contacto:*</label>
                                     </div>
                                     <div class="col-md-4">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="SelEmergencyContac" id="SelEmergencyContac"></select>
@@ -256,7 +256,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" name="beneficiary" v-model="beneficiary" class="my-form-control"
-                                            placeholder="Ej: 'Nombre de la persona beneficiaria' - 100%">
+                                            placeholder="p. ej. Nombre de la persona beneficiaria - 100%"  style="text-transform:uppercase;">
                                     </div>
                                     <div class="col-md-6" style="padding-left: 0;">
                                         <span style="color: #787878">(si son varios, indicar % individuales)</span>
@@ -272,7 +272,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="selState">Estado*</label>
+                                        <label for="selState">Estado:*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selState" id="selState"></select>
@@ -284,7 +284,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="municipality"  v-model="municipality" class="my-form-control"
-                                            placeholder="Nombre del municipio" maxlength="50">
+                                            placeholder="Nombre del municipio" maxlength="50" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -293,16 +293,16 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="locality" v-model="locality" class="my-form-control"
-                                            placeholder="Nombre de la localidad" maxlength="50">
+                                            placeholder="Nombre de la localidad" maxlength="50" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 label-container">
-                                        <label for="postalCode">CP:</label>
+                                        <label for="postalCode">CP:*</label>
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="postalCode" v-model="postalCode" class="my-form-control"
-                                            placeholder="Codigo postal actual">
+                                            placeholder="Codigo postal actual" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -311,7 +311,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="colony" v-model="colony" class="my-form-control"
-                                            placeholder="Nombre de la colonia" maxlength="100">
+                                            placeholder="Nombre de la colonia" maxlength="100" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                             </div>
@@ -323,7 +323,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="street" v-model="street" class="my-form-control"
-                                            placeholder="Nombre de la calle" maxlength="100">
+                                            placeholder="Nombre de la calle" maxlength="100" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -332,7 +332,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="outsideNumber" v-model="outsideNumber" class="my-form-control"
-                                            placeholder="Número exterior">
+                                            placeholder="Número exterior" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -341,7 +341,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="insideNumber" v-model="insideNumber" class="my-form-control"
-                                            placeholder="Número interior, solo en caso de ser necesario">
+                                            placeholder="Número interior, solo en caso de ser necesario" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -350,7 +350,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <input type="text" name="reference" v-model="reference" class="my-form-control"
-                                            placeholder="Ej: Entre calles 'Nombre de la calle 1' y 'Nombre de la calle 2'" maxlength="50">
+                                            placeholder="p. ej. Entre calles Nombre de la calle 1 y Nombre de la calle 2" maxlength="50" style="text-transform:uppercase;">
                                     </div>
                                 </div>
                             </div>
@@ -366,18 +366,18 @@
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="spouse" v-model="spouse" class="my-form-control"
-                                    placeholder="Nombre completo del(la) cónyuge">
+                                    placeholder="Nombre completo del(la) cónyuge" style="text-transform:uppercase;">
                             </div>
                             <div class="col-md-5">
                                 <div class="row">
                                     <div class="col-md-2 label-container">
-                                        <label for="birthdaySpouce">Nacimiento:</label>
+                                        <label for="birthdaySpouce" style="white-space: nowrap;">Nacimiento:*</label>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="date" name="birthdaySpouce" v-model="birthdaySpouce" class="my-form-control">
                                     </div>
                                     <div class="col-md-2 label-container">
-                                        <label for="selSexSpouce">Sexo@{{withConyuge ? '*' : ''}}:</label>
+                                        <label for="selSexSpouce">Sexo:*</label>
                                     </div>
                                     <div class="col-md-4">
                                         <select class="select2-class my-form-control" style="width: 100%;" name="selSexSpouce" id="selSexSpouce"></select>
@@ -391,6 +391,11 @@
                             <button id="btn_crear" type="button" class="btnRound btn-success" 
                                 style="display: inline-block; margin-left: 10px" title="Crear solicitud" v-on:click="addChild();">
                                 <span class="bx bx-plus"></span>
+                            </button>
+                            &nbsp;&nbsp;
+                            <button id="btn_eliminar" type="button" class="btnRound btn-danger" 
+                                style="display: inline-block;" title="Eliminar renglon" onclick="app.delChild()">
+                                <span class="bx bx-minus"></span>
                             </button>
                         </div>
                         <br>

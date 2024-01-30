@@ -187,21 +187,21 @@ var app = new Vue({
             let html = `
                 <div class="row hijoColab" id="hijo`+this.childIds+`">
                     <div class="col-md-2 label-container">
-                        <label for="">Hijo(a)</label>
+                        <label for="">Hijo(a)`+this.childIds+`:*</label>
                     </div>
                     <div class="col-md-4">
-                        <input type="text" name="nombre" value="`+name+`" class="my-form-control" placeholder="Nombre completo del hijo(a)">
+                        <input type="text" name="nombre" value="`+name+`" class="my-form-control" placeholder="Nombre completo del hijo(a)" style="text-transform:uppercase;">
                     </div>
                     <div class="col-md-5">
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="">Nacimiento</label>
+                                <label for="" style="white-space: nowrap;">Nacimiento:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" name="edad" value="`+birthday+`" class="my-form-control">
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="">Sexo*</label>
+                                <label for="">Sexo:*</label>
                             </div>
                             <div class="col-md-4">
                                 <select name="sexo" id="selSexChild" class="my-form-control select2-class" style="width: 100%;">`;
@@ -222,12 +222,6 @@ var app = new Vue({
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-1">
-                        <button id="btn_eliminar" type="button" class="btnRound btn-danger" 
-                            style="display: inline-block;" title="Eliminar renglon" onclick="app.delChild('hijo`+this.childIds+`')">
-                            <span class="bx bx-minus"></span>
-                        </button>
-                    </div>
                 </div>
             `;
 
@@ -235,9 +229,10 @@ var app = new Vue({
             contenedor.insertAdjacentHTML('beforeend', html);
         },
 
-        delChild(id){
-            let child = document.getElementById(id);
+        delChild(){
+            let child = document.getElementById("hijo"+this.childIds);
             child.remove();
+            this.childIds--;
         },
 
         setChilds(){
@@ -258,46 +253,137 @@ var app = new Vue({
 
         },
 
+        validarSoloNumeros(input) {
+            const regex = /^[0-9]+$/;
+            return regex.test(input);
+        },
+
         checkInputs(){
-            if(!this.sex) {
-                SGui.showMessage('', 'El campo de Sexo es obligatorio', 'info');
-                return;
+            if(this.sex == 1) {
+                SGui.showMessage('', 'El campo de Sexo en mis datos personales es obligatorio', 'info');
+                return false;
             }
 
-            if (!this.bloodType) {
-                SGui.showMessage('', 'El campo de Tipo sangre es obligatorio', 'info');
-                return;
+            if (this.bloodType == 4) {
+                SGui.showMessage('', 'El campo de Tipo sangre en mis datos personales es obligatorio', 'info');
+                return false;
             }
 
-            if (!this.schooling) {
-                SGui.showMessage('', 'El campo de Escolaridad es obligatorio', 'info');
-                return;
+            if (this.schooling == 21) {
+                SGui.showMessage('', 'El campo de Escolaridad en mis datos personales es obligatorio', 'info');
+                return false;
             }
 
-            if(!this.maritalStatus) {
-                SGui.showMessage('', 'El campo de Estado civil es obligatorio', 'info');
-                return;
+            if(this.maritalStatus == 14) {
+                SGui.showMessage('', 'El campo de Estado civil en mis datos personales es obligatorio', 'info');
+                return false;
+            }
+
+            if(this.personalPhone){
+                if(!this.validarSoloNumeros(this.personalPhone)){
+                    SGui.showMessage('', 'El campo de Teléfono personal no es un número valido', 'info');
+                    return false;
+                }
+            }
+
+            if(this.companyPhone){
+                if(!this.validarSoloNumeros(this.companyPhone)){
+                    SGui.showMessage('', 'El campo de Teléfono empresa no es un número valido', 'info');
+                    return false;
+                }
+            }
+
+            if(this.ext){
+                if(!this.validarSoloNumeros(this.ext)){
+                    SGui.showMessage('', 'El campo de Ext. conmutador no es un número valido', 'info');
+                    return false;
+                }
+            }
+
+            if(this.emergencyPhone){
+                if(!this.validarSoloNumeros(this.emergencyPhone)){
+                    SGui.showMessage('', 'El campo de Teléfono contacto no es un número valido', 'info');
+                    return false;
+                }
             }
 
             if (this.withConyuge) {
                 if (!this.sexSpouce) {
                     SGui.showMessage('', 'El campo de Sexo en el conyuge es obligatorio', 'info');
-                    return;
+                    return false;
+                }
+
+                if (!this.birthdaySpouce) {
+                    SGui.showMessage('', 'El campo de Sexo en el conyuge es obligatorio', 'info');
+                    return false;
+                }
+            }else{
+                if (this.sexSpouce != 1) {
+                    SGui.showMessage('', 'Para ingresar el campo de Sexo en mis datos familiares es necesario ingresar el campo de Cónyuge', 'info');
+                    return false;
+                }
+
+                if (this.birthdaySpouce) {
+                    SGui.showMessage('', 'Para ingresar el campo de Nacimiento en mis datos familiares es necesario ingresar el campo de Cónyuge', 'info');
+                    return false;
                 }
             }
 
             if (this.withEmergency) {
                 if (!this.parentesco) {
                     SGui.showMessage('', 'El campo de Parentesco en contacto para emergencias es obligatorio', 'info');
-                    return;
+                    return false;
+                }
+
+                if (!this.emergencyPhone) {
+                    SGui.showMessage('', 'El campo de Teléfono contacto en contacto para emergencias es obligatorio', 'info');
+                    return false;
+                }
+            }else{
+                if (this.parentesco != 31) {
+                    SGui.showMessage('', 'Para ingresar el campo Parentesco contacto en contacto para emergencias es necesario ingresar el campo Nombre contacto', 'info');
+                    return false;
+                }
+
+                if (this.emergencyPhone) {
+                    SGui.showMessage('', 'Para ingresar el campo Teléfono contacto en contacto para emergencias es necesario ingresar el campo Nombre contacto', 'info');
+                    return false;
                 }
             }
+
+            if(this.childs.length > 0){
+                for (let child of this.childs) {
+                    if(!child.name){
+                        SGui.showMessage('', 'El campo de Hijo(a)' + (child.id+1) + ' en datos de mis hijos es obligatorio', 'info');
+                        return false;
+                    }
+
+                    if(!child.birthday){
+                        SGui.showMessage('', 'El campo de Nacimiento en datos de mis hijos de Hijo(a)' + (child.id+1) + ' es obligatorio', 'info');
+                        return false;
+                    }
+
+                    if(child.sex == 1){
+                        SGui.showMessage('', 'El campo de Sexo en datos de mis hijos de Hijo(a)' + (child.id+1) + ' es obligatorio', 'info');
+                        return false;
+                    }
+                }
+            }
+
+            if (!this.postalCode) {
+                SGui.showMessage('', 'El campo de CP en mi domicilio actual es obligatorio', 'info');
+                return false;
+            }
+
+            return true;
         },
 
         update(){
-            this.checkInputs();
-            SGui.showWaiting();
             this.setChilds();
+            if(!this.checkInputs()){
+                return;
+            }
+            SGui.showWaiting();
             let route = this.oData.updateRoute;
             axios.post(route, {
                 'id_add': this.id_add,
