@@ -283,11 +283,12 @@ var app = new Vue({
 
             $('#selManager').val('').trigger('change');
         }
-        i
 
         $('#status_ReqPermission').on('change', function() {
             self.status_incidence = this.value;
         });
+
+        $('#status_ReqPermission').trigger('change');
     },
     methods: {
         initGestionPermissions() {
@@ -1197,7 +1198,7 @@ var app = new Vue({
                                 SGui.showMessage('', 'E-mail enviado con éxito', 'success');
                             } else if (data.status == 3) {
                                 checked = true;
-                                SGui.showMessage('', 'Ocurrio un error al enviar el e-mail, notifique a su colaborador', 'error');
+                                SGui.showMessage('', data.message, 'warning');
                             }
                         })
                         .catch(function(error) {
@@ -1467,6 +1468,49 @@ var app = new Vue({
                 let minutosRestantes = result % 60;
                 this.totalTime = horas + " hrs. " + minutosRestantes + " minutos";
             }
+        },
+
+        deleteSendRegistry(){
+            let data = table['table_ReqPermissions'].row('.selected').data()
+            if(data[this.indexes_permission.request_status_id] != 2){
+                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus POR APROBAR', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: '¿Desea eliminar la solicitud de?',
+                html: '<b>' + data[this.indexes_permission.empleado] + '</b><br>Para la fecha:<br>'  + data[this.indexes_permission.Fecha],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.deleteSendRequest(data[this.indexes_permission.id]);
+                }
+            })
+        },
+
+        deleteSendRequest(request_id){
+            SGui.showWaiting();
+            let route = this.oData.routeDeletePermission;
+            axios.post(route,{
+                'permission_id': request_id,
+                'manager_id': this.selectedmanager,
+            }).then(result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylPermissions = data.lPermissions;
+                    this.reDrawTablePermissions('table_ReqPermissions', data.lPermissions);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            }).catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
         }
     }
 });
