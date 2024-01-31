@@ -97,6 +97,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestVacations/vacations/quickData', 'Pages\requestVacationsController@quickData')->name('requestVacations_quickData');
     Route::post('requestVacations/vacations/getApplication', 'Pages\requestVacationsController@getApplication')->name('requestVacations_getApplication');
     Route::post('requestVacations/vacations/cancelRequest', 'Pages\requestVacationsController@cancelRequest')->name('requestVacations_cancelRequest');
+    Route::post('requestVacations/vacations/deleteRequest', 'Pages\requestVacationsController@deleteRequest')->name('requestVacations_deleteRequest');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');
@@ -201,6 +202,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestIncidences/incidences/sendAndAuthorize', 'Pages\incidencesController@sendAndAuthorize')->name('requestIncidences_sendAndAuthorize');
     Route::post('requestIncidences/incidences/seeLikeManager', 'Pages\requestIncidencesController@seeLikeManager')->name('requestIncidences_seeLikeManager');
     Route::post('requestIncidences/incidences/cancelIncidence', 'Pages\requestIncidencesController@cancelIncidence')->name('requestIncidences_cancel');
+    Route::post('requestIncidences/incidences/deleteRequest', 'Pages\requestIncidencesController@deleteRequest')->name('requestIncidences_delete');
 
     Route::get('permission/{id?}', 'Pages\permissionController@index')->name('permission_index');
     Route::post('permission/save', 'Pages\permissionController@createPermission')->name('permission_create');
@@ -220,6 +222,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestPermission/permission/sendAndAuthorize', 'Pages\permissionController@sendAndAuthorize')->name('requestPermission_sendAndAuthorize');
     Route::post('requestPermission/permission/seeLikeManager', 'Pages\requestPermissionController@seeLikeManager')->name('requestPermission_seeLikeManager');
     Route::post('requestPermission/permission/cancelPermission', 'Pages\requestPermissionController@cancelPermission')->name('requestPermission_cancel');
+    Route::post('requestPermission/permission/deletePermission', 'Pages\requestPermissionController@deletePermission')->name('requestPermission_delete');
     
     Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
     Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');
@@ -289,6 +292,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     //carga inicial de empleados
     Route::get('SyncIni', 'Adm\SyncController@initialSync')->name('initial_sync');
+
+    /**Rutas allApplications */
+    Route::get('allApplications', 'Pages\allApplicationsController@index')->name('allApplications');
+    Route::post('allApplications/getApplication', 'Pages\allApplicationsController@getApplication')->name('allApplications_getApplication');
 
 });
 /**

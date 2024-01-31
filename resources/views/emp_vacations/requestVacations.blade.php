@@ -54,6 +54,7 @@
             this.getDataManagerRoute = <?php echo json_encode(route('requestVacations_getDataManager')); ?>;
             this.getRequestlDaysRoute = <?php echo json_encode(route('requestVacations_getlDays')); ?>;
             this.cancelRequestRoute = <?php echo json_encode(route('requestVacations_cancelRequest')); ?>;
+            this.deleteSendRequestRoute = <?php echo json_encode(route('requestVacations_deleteRequest')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             this.oApplication = <?php echo json_encode($oApplication); ?>;
             this.getApplicationRoute = <?php echo json_encode(route('requestVacations_getApplication')); ?>;
@@ -138,6 +139,10 @@
                 <h3>
                     <b>Solicitudes de vacaciones de mis colaboradores directos</b>
                     @include('layouts.manual_button')
+                    <a href="{{route('allApplications')}}" type="button" class="btn btn-info" style="float: right;" 
+                        title="Ir a la vista global de incidencias" onclick="SGui.showWaiting();">
+                        <span>Ir a la vista global de incidencias</span>
+                    </a>
                 </h3>
             </div>
             <div class="card-body">
@@ -162,6 +167,10 @@
                 
                 <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="rqStatus == 3">
                     <span class="bx bx-x"></span>
+                </button>
+
+                <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar" v-show="rqStatus == 2" v-on:click="deleteRegistry()">
+                    <span class="bx bxs-trash"></span>
                 </button>
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
                     &nbsp;&nbsp;
