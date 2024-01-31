@@ -633,6 +633,19 @@ class incidencesController extends Controller
     public function checkMail(Request $request){
         $mailLog = MailLog::find($request->mail_log_id);
 
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
+        $message = '';
+        if($mailLog->sys_mails_st_id == SysConst::MAIL_NO_ENVIADO){
+            $user = \DB::table('users')
+                        ->where('id', $mailLog->to_user_id)
+                        ->first();
+
+            if(is_null($user->institutional_mail)){
+                $message = 'En este momento no es posible enviar el correo electrónico porque el solicitante no cuenta con una dirección registrada en el sistema. Solicita una dirección de correo electrónico a GH para fines de comunicación.';
+            }else{
+                $message = 'El correo electrónico no pudo ser enviado. Te recomendamos verificar tu conexión a internet para resolver el problema (de ser necesario comunícate con el área de sistemas).';
+            }
+        }
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
     }
 }

@@ -156,5 +156,13 @@ class SysConst {
      */
     public const ACTA = 1;
     public const SANCION = 2;
+
+    /**
+     * Constantes para la vista general de incidencias (VACACIONES, INCIDENCIA, PERMISO HORAS)
+     */
+    public const VACACIONES = 1;
+    public const INCIDENCIA = 2;
+    public const PERMISO_PERSONAL_HORAS = 3;
+    public const PERMISO_LABORAL_HORAS = 4;
 }
 ?>
