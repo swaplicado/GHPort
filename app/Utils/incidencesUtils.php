@@ -8,6 +8,8 @@ use App\Models\Vacations\requestVacationLog;
 use GuzzleHttp\Client;
 use GuzzleHttp\Request;
 use GuzzleHttp\Exception\RequestException;
+use App\Models\Vacations\Application;
+use Carbon\Carbon;
 
 class incidencesUtils {
     public static function getUserIncidencesAndPermissions($user_id, $date_ini = null, $date_end = null, $lDays = null){
@@ -415,5 +417,63 @@ class incidencesUtils {
                                 ->value('ext_tp_incident_id');
 
         return $capIncidence_id;
+    }
+
+    public static function getEmpIncidencesEA($user_id){
+        $applicationsEA = Application::join('cat_incidence_tps as c', 'c.id_incidence_tp', '=', 'applications.type_incident_id')
+                                    ->where('user_id', $user_id)
+                                    ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO, sysConst::APPLICATION_CONSUMIDO])
+                                    ->where('applications.is_deleted', 0)
+                                    ->where('type_incident_id', '!=', SysConst::TYPE_VACACIONES)
+                                    ->select('start_date', 'end_date', 'ldays', 'c.incidence_tp_name')
+                                    ->get();
+        
+        $arrDatesApplications = [];
+        foreach($applicationsEA as $app){
+            $lDays = json_decode($app->ldays);
+            foreach($lDays as $day){
+                if($day->taked){
+                    $date = Carbon::parse($day->date);
+                    $arrDatesApplications[] = ['name' => $app->incidence_tp_name, 'date' => $date->toDateString()];
+                }
+            }
+        }
+
+        return $arrDatesApplications;
+    }
+
+    public static function checkIncidenceCAP($oApplication){
+        $data = incidencesUtils::loginToCAP();
+        $config = \App\Utils\Configuration::getConfigurations();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $data->token_type.' '.$data->access_token
+        ];
+        
+        $client = new Client([
+            'base_uri' => $config->urlSyncCAP,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $external_employee_id = \DB::table('users')
+                                    ->where('id', $oApplication->user_id)
+                                    ->value('external_id_n');
+
+        $oApplication->type_incident_id = incidencesUtils::matchCapIncidence($oApplication->type_incident_id);
+
+        $body = '{
+            "employee_id": '.$external_employee_id.',
+            "ini_date": "'.$oApplication->start_date.'",
+            "end_date": "'.$oApplication->end_date.'"
+        }';
+        
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'checkincidence', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
     }
 }

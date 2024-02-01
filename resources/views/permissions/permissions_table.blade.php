@@ -13,10 +13,10 @@
             <th>Clase</th>
             <th>Tiempo</th>
             <th>Folio</th>
-            <th>Fecha solicitud</th>
+            <th>Fecha envío</th>
             <th>Revisor</th>
             <th style="max-width: 20%;">Fecha revisión</th>
-            <th>Fecha</th>
+            <th>Fecha aplicación</th>
             <th>Estatus</th>
             <th>Fecha envío</th>
         </thead>
