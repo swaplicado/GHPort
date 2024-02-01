@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use \App\Utils\delegationUtils;
+use Carbon\Carbon;
 
 class personalDataController extends Controller
 {
@@ -131,6 +132,7 @@ class personalDataController extends Controller
         $personalData->sexSonId3 = $hrsType->where('class', $personalData->sexSonCl3)->where('type', $personalData->sexSonTp3)->first()->id;
         $personalData->sexSonId4 = $hrsType->where('class', $personalData->sexSonCl4)->where('type', $personalData->sexSonTp4)->first()->id;
         $personalData->sexSonId5 = $hrsType->where('class', $personalData->sexSonCl5)->where('type', $personalData->sexSonTp5)->first()->id;
+        $infoDates = self::close_dates();
 
         return view('personalData.personalData')->with('personalData', $personalData)
                                                 ->with('config', $config->dataPersonal)
@@ -139,7 +141,8 @@ class personalDataController extends Controller
                                                 ->with('lCivil', $lCivil)
                                                 ->with('lSchooling', $lSchooling)
                                                 ->with('lStates', $lStates)
-                                                ->with('lParentesco', $lParentesco);
+                                                ->with('lParentesco', $lParentesco)
+                                                ->with('infoDates',$infoDates);
     }
 
     public static function getPersonalData($id_employee){
@@ -290,5 +293,53 @@ class personalDataController extends Controller
             \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
+    }
+
+    public function close_dates(){
+        $tipo = 0;  // 1 actuales 2 futuros 3 no existen
+        $days = 0;
+        $start = '';
+        $end = '';
+        $diaActual = Carbon::now();
+        $diaActual = $diaActual->format('Y-m-d');
+        //fechas actuales
+        $datesPassing = \DB::table('closing_dates')
+                ->where('start_date','<=',$diaActual)
+                ->where('end_date','>=',$diaActual)
+                ->where('is_delete',0)
+                ->get();
+        
+        if(count($datesPassing) < 1){
+            //fechas por pasar
+            $datesPassing = \DB::table('closing_dates')
+                ->where('start_date','>=',$diaActual)
+                ->where('is_delete',0)
+                ->get();
+            if(count($datesPassing) < 1){
+                $tipo = 3;
+                $days = 0;
+            }else{
+                $fechaActual = Carbon::now();
+                $fechaComparacion = Carbon::parse($datesPassing[0]->start_date)->endOfDay();
+                $days = $fechaActual->diffInDays($fechaComparacion);
+                $tipo = 2;
+
+                $start = $fechaComparacion->format('d-m-Y');
+            }    
+        }else{
+            $fechaActual = Carbon::now();
+            $fechaComparacion = Carbon::parse($datesPassing[0]->end_date)->endOfDay();
+            $days = $fechaActual->diffInDays($fechaComparacion);
+            $tipo = 1;
+
+            $end = $fechaComparacion->format('d-m-Y');
+        }
+
+
+        
+        $coleccionDates = collect(['start_date' => $start, 'end_date' => $end, 'type' => $tipo, 'days' => $days]);
+
+        return $coleccionDates;
+        
     }
 }

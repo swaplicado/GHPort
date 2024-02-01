@@ -53,6 +53,8 @@ var app = new Vue({
         id_con: oServerData.personalData.idCon,
         id_bpb: oServerData.personalData.idBpb,
 
+        infoDates: oServerData.infoDates,
+
         withEmergency: false,
         withConyuge: false,
     },
@@ -176,15 +178,59 @@ var app = new Vue({
         addChild(name = "", birthday = "", sex = ""){
             let hijos = document.getElementsByClassName('hijoColab');
             let cantidad = hijos.length;
-
+            var html
             if(cantidad >= this.config.limitChilds){
                 return;
             }
 
             this.childIds++;
             let contenedor = document.getElementById('contenedor_hijos'); // Reemplaza 'contenedor' con el ID real del contenedor
-
-            let html = `
+            if(this.infoDates.type == 2 || this.infoDates.type == 3){
+                 html = `
+                <div class="row hijoColab" id="hijo`+this.childIds+`">
+                    <div class="col-md-2 label-container">
+                        <label for="">Hijo(a)</label>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="nombre" value="`+name+`" class="my-form-control" placeholder="Nombre completo del hijo(a)" readonly>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-2 label-container">
+                                <label for="">Nacimiento</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="date" name="edad" value="`+birthday+`" class="my-form-control" readonly>
+                            </div>
+                            <div class="col-md-2 label-container">
+                                <label for="">Sexo*</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="sexo" id="selSexChild" class="my-form-control select2-class" style="width: 100%;" disabled>`;
+                                    if(sex == 2){
+                                        html = html +`<option value="1">(N/A)</option>
+                                                        <option value="2" selected>Masculino</option>
+                                                        <option value="3">Femenino</option>`
+                                    }else if(sex == 3){
+                                        html = html +`<option value="1">(N/A)</option>
+                                                        <option value="2">Masculino</option>
+                                                        <option value="3" selected>Femenino</option>`
+                                    }else{
+                                        html = html +`<option value="1">(N/A)</option>
+                                                        <option value="2">Masculino</option>
+                                                        <option value="3">Femenino</option>`
+                                    }
+                            html = html +`</select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        
+                    </div>
+                </div>
+            `;
+            }else{
+                html = `
                 <div class="row hijoColab" id="hijo`+this.childIds+`">
                     <div class="col-md-2 label-container">
                         <label for="">Hijo(a)`+this.childIds+`:*</label>
@@ -224,6 +270,8 @@ var app = new Vue({
                     </div>
                 </div>
             `;
+            }
+            
 
             // Insertar el HTML en el contenedor
             contenedor.insertAdjacentHTML('beforeend', html);
