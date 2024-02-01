@@ -140,10 +140,18 @@ class UsersController extends Controller
             }
 
             if ($usr != null) {
-                if (count($lastname2s) > 0) {
-                    $usernameTmp = strtolower(str::slug($names[0]).'.'.str::slug($lastname2s[0]));
+                if (count($names) > 1) {
+                    $usernameTmp = strtolower(str::slug($names[0]).'.'.str::slug($names[0][0]).'.'.str::slug($lastname1s[0]));
                     $username = $this->getUserName($usernameTmp);
                     $usr = User::where('username', $username)->first();
+                }
+
+                if ($usr != null) {
+                    if (count($lastname2s) > 0) {
+                        $usernameTmp = strtolower(str::slug($names[0]).'.'.str::slug($lastname1s[0]).'.'.str::slug($lastname2s[0][0]));
+                        $username = $this->getUserName($usernameTmp);
+                        $usr = User::where('username', $username)->first();
+                    }
                 }
             }
 
