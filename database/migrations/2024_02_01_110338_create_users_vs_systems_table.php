@@ -20,8 +20,8 @@ class CreateUsersVsSystemsTable extends Migration
             $table->unsignedBigInteger('user_system_id'); //el id de usuario en el sistema
             $table->timestamps();
 
-            $table->foreign('global_user_id')->references('id_global_user')->on('global_users');
-            $table->foreign('system_id')->references('id_system')->on('systems');
+            $table->foreign('global_user_id')->references('id_global_user')->on('global_users')->onDelete('cascade');
+            $table->foreign('system_id')->references('id_system')->on('systems')->onDelete('cascade');
         });
     }
 

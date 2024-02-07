@@ -164,5 +164,18 @@ class SysConst {
     public const INCIDENCIA = 2;
     public const PERMISO_PERSONAL_HORAS = 3;
     public const PERMISO_LABORAL_HORAS = 4;
+
+    /**
+     * Constantes de los id de los sistemas para global users
+     */
+    public const SYSTEM_PORTALPROVEEDORES = 1;
+    public const SYSTEM_PORTALAUTORIZACIONES = 2;
+    public const SYSTEM_APPSMANAGER = 3;
+    public const SYSTEM_SIIE = 4;
+    public const SYSTEM_PGH = 5;
+    public const SYSTEM_UNIVAETH = 6;
+    public const SYSTEM_CAP = 7;
+    public const SYSTEM_EVALUACIONDESEMPENO = 8;
+
 }
 ?>

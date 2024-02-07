@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Sys;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vacations\Application;
+use App\Utils\GlobalUsersUtils;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
@@ -19,17 +20,18 @@ use App\Http\Controllers\Adm\UsersPhotosController;
 use App\Models\Adm\UsersPhotos;
 use App\User;
 use App\Constants\SysConst;
-
 use App\SReports\Vacations_report;
+use App\Models\GlobalUsers\globalUser;
+use App\Models\GlobalUsers\userVsSystem;
 
 class SyncController extends Controller
 {
     public static function toSynchronize($withRedirect = true)
     {
         $config = \App\Utils\Configuration::getConfigurations();
-        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        $photos = SyncController::SyncPhotos();
-        // $synchronized = true;
+        // $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        // $photos = SyncController::SyncPhotos();
+        $synchronized = true;
 
         if($synchronized){
              $newDate = Carbon::now();
@@ -222,5 +224,215 @@ class SyncController extends Controller
         }
         
         return true; 
+    }
+
+    /**
+     * Metodo que se encarga de llenar y actualizar los usuarios de la base de datos global
+     * a partir de los usuarios de la base de datos especificada en el archivo de configuracion "getUsersToFillGlobalUsersFromConnection"
+     */
+    public static function fillGlobalUsers(){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $connection = $config->getUsersToFillGlobalUsersFromConnection;
+            $fillFromSystemId = $config->fillGlobalUsersFromSystemId;
+            $fieldToFindUserInUniv = $config->fieldToFindUserInUniv;
+            $lUsersToFindInUniv = [];
+            $fieldToFindUserInCAP = $config->fieldToFindUserInCAP;
+            $lUsersToFindInCAP = [];
+            $fieldToFindUserInEval = $config->fieldToFindUserInEval;
+            $lUsersToFindInEval = [];
+    
+//-------------------------SINCRONIZACION CON PGH-------------------------
+            //lista de usuarios de pgh
+            $lUsers = \DB::table('users')
+                            ->where('id', '!=', 1)
+                            ->where('is_delete', 0)
+                            ->where('is_active', 1)
+                            ->where('external_id_n', '!=', null)
+                            ->select(
+                                'id',
+                                'username',
+                                'password',
+                                'institutional_mail as email',
+                                'full_name',
+                                'external_id_n as external_id',
+                                'employee_num'
+                            )
+                            ->get();
+    
+            \DB::connection('mysqlGlobalUsers')->beginTransaction();
+            foreach($lUsers as $user){
+                $globalUser = null;
+                //Se revisa si ya existe el usuario de pgh en global users
+                $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $user->full_name, $user->external_id, $user->employee_num));
+                if($result->success){
+                    $globalUser = $result->globalUser;
+                }else{
+                    \Log::error($result->message);
+                    continue;
+                }
+                
+                //si el usuario existe en global users se hace update si no se inserta
+                if(is_null($globalUser)){
+                    $globalUser = GlobalUsersUtils::insertNewGlobalUser(SysConst::SYSTEM_PGH, $user->id, $user->username, $user->password, $user->email, $user->full_name, $user->external_id, $user->employee_num);
+                }else{
+                    GlobalUsersUtils::updateGlobalUser($globalUser->id_global_user, $user->username, $user->password, $user->email, $user->full_name, $user->external_id, $user->employee_num);
+                }
+
+                //se añade a la lista de usuarios a buscar en la univ
+                $lUsersToFindInUniv[] = [
+                    'pgh_id' => $user->id,
+                    'username' => $fieldToFindUserInUniv->username ? $user->username : null,
+                    'full_name' => $fieldToFindUserInUniv->full_name ? $user->full_name : null,
+                    'external_id' => $fieldToFindUserInUniv->external_id ? $user->external_id : null,
+                    'employee_num' => $fieldToFindUserInUniv->employee_num ? $user->employee_num : null,
+                ];
+
+                //se añade a la lista de usuarios a buscar en el cap
+                $lUsersToFindInCAP[] = [
+                    'pgh_id' => $user->id,
+                    'username' => $fieldToFindUserInCAP->username ? $user->username : null,
+                    'full_name' => $fieldToFindUserInCAP->full_name ? $user->full_name : null,
+                    'external_id' => $fieldToFindUserInCAP->external_id ? $user->external_id : null,
+                    'employee_num' => $fieldToFindUserInCAP->employee_num ? $user->employee_num : null,
+                ];
+
+                //se añade a la lista de usuarios a buscar en el eval
+                $lUsersToFindInEval[] = [
+                    'pgh_id' => $user->id,
+                    'username' => $fieldToFindUserInEval->username ? $user->username : null,
+                    'full_name' => $fieldToFindUserInEval->full_name ? $user->full_name : null,
+                    'external_id' => $fieldToFindUserInEval->external_id ? $user->external_id : null,
+                    'employee_num' => $fieldToFindUserInEval->employee_num ? $user->employee_num : null,
+                ];
+            }
+            
+//-------------------------SINCRONIZACION CON UNIV-------------------------
+            //Login a la universidad virtual
+            $loginUnivData = globalUsersUtils::loginToUniv();
+            if($loginUnivData->status == 'success'){
+                //se envia la lista de usuarios a buscar a la universidad virtual y obtenemos el resultado
+                $data = globalUsersUtils::getListUsersFromUnivAeth($loginUnivData->token_type, $loginUnivData->access_token, $lUsersToFindInUniv);
+                if($data->status != 'error'){
+                    //se recorre la lista de usuarios obtenidos de univ
+                    foreach($data->data as $dataUser){
+                        if($dataUser->status != 'error'){
+                            if(!is_null($dataUser->user)){
+                                $userUniv = $dataUser->user;
+                                $globalUser = null;
+                                //Se revisa si ya existe el usuario de univ en global users
+                                $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $userUniv->full_name, $userUniv->external_id, $userUniv->num_employee));
+                                if($result->success){
+                                    $globalUser = $result->globalUser;
+                                }else{
+                                    \Log::error($result->message);
+                                    continue;
+                                }
+                                
+                                if(!is_null($globalUser)){
+                                    //si el usuario existe en global users se busca en usuario vs system
+                                    $result = json_decode(GlobalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id));
+                                    $userSystem = null;
+                                    if($result->success){
+                                        $userSystem = $result->userSystem;
+                                    }
+                                    //si el usuario no existe en users vs system se inserta
+                                    if(is_null($userSystem)){
+                                        GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+//-------------------------SINCRONIZACION CON CAP-------------------------
+            //Login a CAP
+            $loginCAPData = globalUsersUtils::loginToCAP();
+            if(isset($loginCAPData->access_token)){ //este se valida asi porque es lo que cap regresa (si le movia luego se descomponia algo :p)
+                //se envia la lista de usuarios a buscar a la universidad virtual y obtenemos el resultado
+                $data = globalUsersUtils::getListUsersFromCAP($loginCAPData->token_type, $loginCAPData->access_token, $lUsersToFindInCAP);
+                if($data->status != 'error'){
+                    //se recorre la lista de usuarios obtenidos de univ
+                    foreach($data->data as $dataUser){
+                        if($dataUser->status != 'error'){
+                            if(!is_null($dataUser->user)){
+                                $userCAP = $dataUser->user;
+                                $globalUser = null;
+                                //Se revisa si ya existe el usuario de univ en global users
+                                $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $userCAP->name, $userCAP->external_id, $userCAP->num_employee));
+                                if($result->success){
+                                    $globalUser = $result->globalUser;
+                                }else{
+                                    \Log::error($result->message);
+                                    continue;
+                                }
+
+                                if(!is_null($globalUser)){
+                                    //si el usuario existe en global users se busca en usuario vs system
+                                    $result = json_decode(GlobalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_CAP, $userCAP->id));
+                                    $userSystem = null;
+                                    if($result->success){
+                                        $userSystem = $result->userSystem;
+                                    }
+                                    //si el usuario no existe en users vs system se inserta
+                                    if(is_null($userSystem)){
+                                        GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_CAP, $userCAP->id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+//-------------------------SINCRONIZACION CON EVALUACION-------------------------
+            //Login a evaluacion
+            $loginEvalData = globalUsersUtils::loginToEval();
+            if($loginEvalData->status == 'success'){
+                //se envia la lista de usuarios a buscar a evaluacion desempeño y obtenemos el resultado
+                $data = globalUsersUtils::getListUsersFromEval($loginEvalData->token_type, $loginEvalData->access_token, $lUsersToFindInEval);
+                if($data->status != 'error'){
+                    //se recorre la lista de usuarios obtenidos de eval
+                    foreach($data->data as $dataUser){
+                        if($dataUser->status != 'error'){
+                            if(!is_null($dataUser->user)){
+                                $userEval = $dataUser->user;
+                                $globalUser = null;
+                                //Se revisa si ya existe el usuario de eval en global users
+                                $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $userEval->full_name, null, $userEval->num_employee));
+                                if($result->success){
+                                    $globalUser = $result->globalUser;
+                                }else{
+                                    \Log::error($result->message);
+                                    continue;
+                                }
+                                if(!is_null($globalUser)){
+                                    //si el usuario existe en global users se busca en usuario vs system
+                                    $result = json_decode(GlobalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_EVALUACIONDESEMPENO, $userEval->id));
+                                    $userSystem = null;
+                                    if($result->success){
+                                        $userSystem = $result->userSystem;
+                                    }
+                                    //si el usuario no existe en users vs system se inserta
+                                    if(is_null($userSystem)){
+                                        GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_EVALUACIONDESEMPENO, $userEval->id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            \DB::connection('mysqlGlobalUsers')->commit();
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            \DB::connection('mysqlGlobalUsers')->rollBack();
+            return false;
+        }
+
+        return true;
     }
 }

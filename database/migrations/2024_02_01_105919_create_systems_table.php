@@ -23,35 +23,69 @@ class CreateSystemsTable extends Migration
 
         \DB::connection('mysqlGlobalUsers')->table('systems')->insert(
             [
-                ['system' => 'SIIE',
-                'url' => 'XXXXXXXXXXXXXXXXXXXXX',
-                'is_deleted' => false,
-                'created_at' => now(),
-                'updated_at' => now(),],
+                [
+                    'system' => 'PortalProveedores',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
 
-                ['system' => 'PGH',
-                'url' => 'XXXXXXXXXXXXXXXXXXXXX',
-                'is_deleted' => false,
-                'created_at' => now(),
-                'updated_at' => now(),],
+                [
+                    'system' => 'PortalAutorizaciones',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
 
-                ['system' => 'UnivAETH',
-                'url' => 'XXXXXXXXXXXXXXXXXXXXX',
-                'is_deleted' => false,
-                'created_at' => now(),
-                'updated_at' => now(),],
+                [
+                    'system' => 'AppsManager',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
 
-                ['system' => 'CAP',
-                'url' => 'XXXXXXXXXXXXXXXXXXXXX',
-                'is_deleted' => false,
-                'created_at' => now(),
-                'updated_at' => now(),],
+                [
+                    'system' => 'SIIE',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
 
-                ['system' => 'EvaluacionDesempeno',
-                'url' => 'XXXXXXXXXXXXXXXXXXXXX',
-                'is_deleted' => false,
-                'created_at' => now(),
-                'updated_at' => now(),],
+                [
+                    'system' => 'PGH',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'system' => 'UnivAETH',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'system' => 'CAP',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+
+                [
+                    'system' => 'EvaluacionDesempeno',
+                    'url' => 'XXXXXXXXXXXXXXXXXXXXX',
+                    'is_deleted' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
             ],
         );
 
