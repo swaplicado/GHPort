@@ -275,7 +275,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('univCertificates/getAllMyEmployees', 'Pages\univCertificatesController@getAllMyEmployees')->name('univCertificates_getAllMyEmployees');
 
     Route::get('personalData', 'Pages\personalDataController@index')->name('personalData');
-    Route::post('personalData\update', 'Pages\personalDataController@updatePersonalData')->name('personalData_updatePersonalData');
+    Route::post('personalData/update', 'Pages\personalDataController@updatePersonalData')->name('personalData_updatePersonalData');
     
     Route::get('administrativeMinutes', 'Pages\sanctionsController@indexAdministrativeMinutes')->name('admMinutes');
     Route::get('sanctions', 'Pages\sanctionsController@indexSanctions')->name('sanctions');
