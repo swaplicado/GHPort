@@ -19,8 +19,8 @@ class CreateGlobalUsersTable extends Migration
             $table->string('password');
             $table->string('email')->nullable();
             $table->string('full_name');
-            $table->string('external_id');
-            $table->string('employee_num');
+            $table->string('external_id')->nullable();
+            $table->string('employee_num')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
