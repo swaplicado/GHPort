@@ -194,4 +194,44 @@ class permissionsUtils {
 
         return $diferencia;
     }
+
+    public static function checkExistPermission($oPermission){
+        try {
+            $data = incidencesUtils::loginToCAP();
+            $config = \App\Utils\Configuration::getConfigurations();
+            $headers = [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => $data->token_type.' '.$data->access_token
+            ];
+            
+            $client = new Client([
+                'base_uri' => $config->urlSyncCAP,
+                'timeout' => 30.0,
+                'headers' => $headers
+            ]);
+
+            $adjus_type_id = $oPermission->type_permission_id == 1 ? 3 : 8;
+
+            $external_employee_id = \DB::table('users')
+                                        ->where('id', $oPermission->user_id)
+                                        ->value('external_id_n');
+
+            $body = '{
+                "employee_id": '.$external_employee_id.',
+                "adjust_type_id": '.$adjus_type_id.',
+                "dt_date": "'.$oPermission->start_date.'"
+            }';
+            
+            $request = new \GuzzleHttp\Psr7\Request('POST', 'checkadjust', $headers, $body);
+            $response = $client->sendAsync($request)->wait();
+            $jsonString = $response->getBody()->getContents();
+
+            $data = json_decode($jsonString);
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'message' => $th->getMessage()]);
+        }
+
+        return json_encode(['success' => true, 'data' => $data]);
+    }
 }

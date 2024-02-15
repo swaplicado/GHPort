@@ -49,6 +49,7 @@
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.cancelIncidenceRoute = <?php echo json_encode(route('requestIncidences_cancel')); ?>;
+            this.deleteSendIncidenceRoute = <?php echo json_encode(route('requestIncidences_delete')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
@@ -93,6 +94,10 @@
             <h3>
                 <b>Solicitudes de incidencias de mis colaboradores directos</b>
                 @include('layouts.manual_button')
+                <a href="{{route('allApplications')}}" type="button" class="btn btn-info" style="float: right;" 
+                    title="Ir a la vista global de incidencias" onclick="SGui.showWaiting();">
+                    <span>Ir a la vista global de incidencias</span>
+                </a>
             </h3>
         </div>
         <div class="card-body">
@@ -130,6 +135,10 @@
             @include('layouts.table_buttons', ['show' => true])
             <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="status_incidence == 3">
                 <span class="bx bx-x"></span>
+            </button>
+
+            <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar" v-show="status_incidence == 2" v-on:click="deleteSendRegistry()">
+                <span class="bx bxs-trash"></span>
             </button>
             <br>
             <br>

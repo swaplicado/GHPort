@@ -12,6 +12,11 @@ class Menu {
         }
         $lMenus = [];
         
+
+        if($oUser->rol_id == 2 || $oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($lMenus, (object) ['type' => $element, 'route' => route('allApplications'), 'icon' => 'bx bxs-cabinet bx-sm', 'name' => 'Incidencias globales', 'id' => 'allIncidences']);
+        }
+
         // primer grupo de menus vacaciones 
         // arreglo para ingresar submenus
         $vacaciones = [];
@@ -39,8 +44,7 @@ class Menu {
             array_push($vacaciones,['route' => route('recoveredVacations'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'React. mis colabs.']);    
         }
 
-
-        $lMenus = [(object) ['type' => $list, 'list' => $vacaciones, 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations']];
+        array_push($lMenus, (object) ['type' => $list, 'list' => $vacaciones, 'icon' => 'bx bxs-user-detail bx-sm', 'name' => 'Vacaciones', 'id' => 'vacations']);
         // cierra primer grupo de menus
 
         //segundo grupo de menus incidencias

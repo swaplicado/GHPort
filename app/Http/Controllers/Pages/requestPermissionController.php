@@ -623,4 +623,57 @@ class requestPermissionController extends Controller
 
         return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
+
+    public function deletePermission(Request $request){
+        try {
+            $permission_id = $request->permission_id;
+            $oPermission = Permission::findOrFail($permission_id);
+
+            \DB::beginTransaction();
+    
+            if($oPermission->type_permission_id != SysConst::PERMISO_INTERMEDIO){
+                $oPer = clone $oPermission;
+                $result = json_decode(permissionsUtils::checkExistPermission($oPer));
+        
+                if($result->success){
+                    $data = $result->data;
+                    if($data->code == 550){
+                        $oPermission->is_deleted = 1;
+                        $oPermission->update();
+                    }else{
+                        return json_encode(['success' => false, 'message' => 'No se encontró el permiso en el sistema CAP, 
+                        el proceso siguiente es rechazar o aprobar la solicitud, no eliminarla', 'icon' => 'info']);
+                    }
+                }
+            }else{
+                $oPermission->is_deleted = 1;
+                $oPermission->update();
+            }
+
+            $org_chart_job_id = null;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+
+                $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+            }
+
+            if(is_null($org_chart_job_id)){
+                $lPermissions = permissionsUtils::getMyEmployeeslPermissions($oPermission->cl_permission_id);
+            }else{
+                $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id,$oPermission->cl_permission_id);
+            }
+
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
+    }
 }

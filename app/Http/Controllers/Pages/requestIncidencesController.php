@@ -394,7 +394,20 @@ class requestIncidencesController extends Controller
     public function checkMail(Request $request){
         $mailLog = MailLog::find($request->mail_log_id);
 
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id]);
+        $message = '';
+        if($mailLog->sys_mails_st_id == SysConst::MAIL_NO_ENVIADO){
+            $user = \DB::table('users')
+                        ->where('id', $mailLog->to_user_id)
+                        ->first();
+
+            if(is_null($user->institutional_mail)){
+                $message = 'En este momento no es posible enviar el correo electrónico porque el solicitante no cuenta con una dirección registrada en el sistema. Solicita una dirección de correo electrónico a GH para fines de comunicación.';
+            }else{
+                $message = 'El correo electrónico no pudo ser enviado. Te recomendamos verificar tu conexión a internet para resolver el problema (de ser necesario comunícate con el área de sistemas).';
+            }
+        }
+
+        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
     }
 
     public function getAllEmployees(){
@@ -544,5 +557,67 @@ class requestIncidencesController extends Controller
         });
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
+    }
+
+    public function deleteRequest(Request $request){
+        delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
+        $application = Application::findOrFail($request->id_application);
+        if(!$application->send_default){
+            delegationUtils::getIsMyEmployeeUser($application->user_id);
+        }
+
+        try {
+            \DB::beginTransaction();
+            if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
+                return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas', 'icon' => 'warning']);
+            }
+
+            $system = \DB::table('cat_incidence_tps')
+                                ->where('id_incidence_tp', $application->type_incident_id)
+                                ->first();
+    
+            $message = '';
+            $oApp = clone $application;
+            if($system->interact_system_id == 3){
+                $result = incidencesUtils::checkIncidenceCAP($oApp);
+                $message = 'No se encontró la incidencia en sistema CAP, 
+                                el proceso siguiente es rechazar o aprobar la incidencia, no eliminarla';
+            }else{
+                $result = json_decode(incidencesUtils::checkExternalIncident($oApp));
+                $message = 'No se encontró la incidencia en sistema SIIE, 
+                                el proceso siguiente es rechazar o aprobar la incidencia, no eliminarla';
+            }
+            
+            if($result->code == 550){
+                $application->is_deleted = 1;
+                $application->update();
+            }else{
+                return json_encode(['success' => false, 'message' => $message, 'icon' => 'warning']);
+            }
+            
+            $org_chart_job_id = null;
+            if(!is_null($request->manager_id)){
+                $oManager = \DB::table('users')
+                                ->where('id', $request->manager_id)
+                                ->where('is_delete', 0)
+                                ->where('is_active', 1)
+                                ->first();
+
+                $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
+            }
+
+            if(is_null($org_chart_job_id)){
+                $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+            }else{
+                $lIncidences = incidencesUtils::getMyManagerlIncidences($oManager->org_chart_job_id);
+            }
+
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
 }

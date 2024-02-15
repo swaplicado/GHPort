@@ -42,6 +42,7 @@
             this.routeSeeLikeManager = <?php echo json_encode(route('requestPermission_seeLikeManager')) ?>;
             this.routePermission_cancel = <?php echo json_encode(route('requestPermission_cancel')) ?>;
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
+            this.routeDeletePermission = <?php echo json_encode(route('requestPermission_delete')); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos#gestion" ); ?>;
@@ -90,6 +91,11 @@
                 @endif
 
                 @include('layouts.manual_button')
+
+                <a href="{{route('allApplications')}}" type="button" class="btn btn-info" style="float: right;" 
+                    title="Ir a la vista global de incidencias" onclick="SGui.showWaiting();">
+                    <span>Ir a la vista global de incidencias</span>
+                </a>
             </h3>
         </div>
         <div class="card-body">
@@ -124,6 +130,10 @@
             @include('layouts.table_buttons', ['show' => true ])
             <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="status_incidence == 3">
                 <span class="bx bx-x"></span>
+            </button>
+
+            <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar" v-show="status_incidence == 2" v-on:click="deleteSendRegistry()">
+                <span class="bx bxs-trash"></span>
             </button>
             <br>
             <br>

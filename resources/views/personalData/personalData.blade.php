@@ -73,6 +73,7 @@
     <script>
         function GlobalData(){
             this.personalData = <?php echo json_encode($personalData); ?>;
+            this.infoDates = <?php echo json_encode($infoDates); ?>;
             this.config = <?php echo json_encode($config); ?>;
             this.updateRoute = <?php echo json_encode(route('personalData_updatePersonalData')); ?>;
             this.lSex = <?php echo json_encode($lSex); ?>;
@@ -95,6 +96,17 @@
             <h3>
                 <b>Datos personales @{{personalData.name}}</b>
                 @include('layouts.manual_button')
+                @if($infoDates['type'] == 1)
+                    @if($infoDates['days'] > 0)
+                        <h5>Faltan @{{infoDates.days}} días para que se cierre la actualización de datos, la fecha limite es <b>@{{infoDates.end_date}}</b>.</h5>     
+                    @else
+                        <h5>Hoy es cierre de la actualización de datos, la fecha limite es <b>@{{infoDates.end_date}}</b>.</h5>
+                    @endif  
+                @elseif($infoDates['type'] == 2)
+                    <h5>La siguiente fecha para actualizar tus datos es <b>@{{infoDates.start_date}}</b>.</h5> 
+                @else
+                    <h5>No existe siguiente fecha para actualizar tus datos.</h5> 
+                @endif
             </h3>
         </div>
         <div class="card-body">
@@ -105,225 +117,262 @@
                             <h4><b>Mis datos personales</b></h4>
                         </div>
                         <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="lastName">Apellido paterno:</label>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="fullNmae">Nombre completo:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="fullName" v-model="fullName" class="my-form-control" disabled
+                                            placeholder="Nombre completo" style="text-transform:uppercase;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="rfc">RFC:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="rfc" v-model="rfc" class="my-form-control" disabled
+                                            placeholder="RFC" style="text-transform:uppercase;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="postalCode">CP domicilio fiscal:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="postalCode" v-model="postalCodeFiscal" class="my-form-control"
+                                            placeholder="Codigo postal registrado ante el SAT" disabled style="text-transform:uppercase;">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="selSex">Sexo:*</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="selSex" id="selSex" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="selBlood">Tipo sangre:*</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="selBlood" id="selBlood" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="selSchooling">Escolaridad:*</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="selSchooling" id="selSchooling" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <input type="text" name="lastName" v-model="lastName" class="my-form-control" disabled
-                                    placeholder="Apellido paterno">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="secondLastName">Apellido materno:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="secondLastName" v-model="secondLastName" class="my-form-control" disabled
-                                    placeholder="Apellido materno">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="names">Nombre(s):</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="names" v-model="names" class="my-form-control" disabled
-                                    placeholder="Nombre(s)">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="selSex">Sexo:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="selSex" id="selSex"></select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="personalMail">Correo-e personal:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="personalMail" v-model="personalMail" class="my-form-control"
-                                    placeholder="Correo electronico personal">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="companyMail">Correo-e empresa:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="companyMail" v-model="companyMail" class="my-form-control"
-                                    placeholder="correo electronico de la empresa">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="selBlood">Tipo sangre:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="selBlood" id="selBlood"></select>
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="selCivl">Estado civil:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="selCivl" id="selCivl"></select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            
-                            <div class="col-md-2 label-container">
-                                <label for="selSchooling">Escolaridad:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="selSchooling" id="selSchooling"></select>
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="personalPhone">Teléfono personal:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="personalPhone" v-model="personalPhone" class="my-form-control"
-                                    placeholder="Teléfono personal">
-                            </div>
-                        </div>
-                        <div class="row">
-                            
-                            <div class="col-md-2 label-container">
-                                <label for="companyPhone">Teléfono empresa:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="companyPhone" v-model="companyPhone" class="my-form-control"
-                                    placeholder="Teléfono de la empresa">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="ext">Ext. conmutador:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="ext" v-model="ext" class="my-form-control"
-                                    placeholder="Número de extensión de la empresa">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="emergencyPhone">Teléfono emergencia:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="emergencyPhone" v-model="emergencyPhone" class="my-form-control"
-                                    placeholder="Teléfono en caso de emergencia">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="emergencyContac">Nombre contacto emergencia:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="emergencyContac" v-model="emergencyContac" class="my-form-control"
-                                    placeholder="Nombre del contacto de emergencia">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="SelEmergencyContac">Relación contacto emergencia:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="SelEmergencyContac" id="SelEmergencyContac"></select>
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="beneficiary">Beneficiario(s):</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="beneficiary" v-model="beneficiary" class="my-form-control"
-                                    placeholder="Ej: 'Nombre de la persona beneficiaria' - 100%">
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="selCivl">Estado civil:*</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="selCivl" id="selCivl" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="personalPhone">Teléfono personal:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="personalPhone" v-model="personalPhone" class="my-form-control"
+                                            placeholder="del empleado" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="companyPhone">Teléfono empresa:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="companyPhone" v-model="companyPhone" class="my-form-control"
+                                            placeholder="línea asignada" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="ext">Ext. conmutador:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="ext" v-model="ext" class="my-form-control"
+                                            placeholder="de la empresa" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="personalMail">Correo-e personal:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="personalMail" v-model="personalMail" class="my-form-control"
+                                            placeholder="CORREO ELECTRÓNICO DEL EMPLEADO" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="companyMail">Correo-e empresa:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="companyMail" v-model="companyMail" class="my-form-control"
+                                            placeholder="CORREO ELECTRÓNICO DE LA EMPRESA" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                       <br>
                         <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="rfc">RFC:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="rfc" v-model="rfc" class="my-form-control" disabled
-                                    placeholder="RFC">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="postalCode">CP domicilio fiscal:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="postalCode" v-model="postalCodeFiscal" class="my-form-control"
-                                    placeholder="Codigo postal registrado ante el SAT" disabled>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <h4><b>Datos de mi domicilio</b></h4>
+                            <h4><b>Mi contacto para emergencias y beneficiario(s)</b></h4>
                         </div>
                         <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="selState">Estado:</label>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2 label-container">
+                                        <label for="emergencyContac">Nombre contacto:</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="emergencyContac" v-model="emergencyContac" class="my-form-control"
+                                            placeholder="Nombre del contacto para emergencias" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                    <div class="col-md-2 label-container">
+                                        <label for="emergencyContac">Teléfono contacto:</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="emergencyPhone" v-model="emergencyPhone" class="my-form-control"
+                                            placeholder="Teléfono del contacto para emergencias" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="selState" id="selState"></select>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2 label-container">
+                                        <label for="SelEmergencyContac">Parentesco contacto:*</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="SelEmergencyContac" id="SelEmergencyContac" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-2 label-container">
-                                <label for="municipality">Municipio:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="municipality"  v-model="municipality" class="my-form-control"
-                                    placeholder="Nombre del municipio">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="locality">Localidad:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="locality" v-model="locality" class="my-form-control"
-                                    placeholder="Nombre de la localidad">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="colony">Colonia:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="colony" v-model="colony" class="my-form-control"
-                                    placeholder="Nombre de la colonia">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="street">Calle:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="street" v-model="street" class="my-form-control"
-                                    placeholder="Nombre de la calle">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="outsideNumber">Número exterior:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="outsideNumber" v-model="outsideNumber" class="my-form-control"
-                                    placeholder="Número exterior">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="insideNumber">Número interior:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="insideNumber" v-model="insideNumber" class="my-form-control"
-                                    placeholder="Número interior, solo en caso de ser necesario">
-                            </div>
-                            <div class="col-md-2 label-container">
-                                <label for="postalCode">CP actual:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="postalCode" v-model="postalCode" class="my-form-control"
-                                    placeholder="Codigo postal actual">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="reference">Referencia:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="reference" v-model="reference" class="my-form-control"
-                                    placeholder="Ej: Entre calles 'Nombre de la calle 1' y 'Nombre de la calle 2'">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2 label-container">
+                                        <label for="beneficiary">Beneficiario(s):</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="beneficiary" v-model="beneficiary" class="my-form-control"
+                                            placeholder="p. ej. Nombre de la persona beneficiaria - 100%"  style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                    <div class="col-md-6" style="padding-left: 0;">
+                                        <span style="color: #787878">(si son varios, indicar % individuales)</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <h4><b>Datos de mi cónyuge</b></h4>
+                            <h4><b>Mi domicilio actual</b></h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="selState">Estado:*</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="selState" id="selState" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="municipality">Municipio:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="municipality"  v-model="municipality" class="my-form-control"
+                                            placeholder="Nombre del municipio" maxlength="50" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="locality">Localidad:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="locality" v-model="locality" class="my-form-control"
+                                            placeholder="Nombre de la localidad" maxlength="50" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="postalCode">CP:*</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="postalCode" v-model="postalCode" class="my-form-control"
+                                            placeholder="Codigo postal actual" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="colony">Colonia:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="colony" v-model="colony" class="my-form-control"
+                                            placeholder="Nombre de la colonia" maxlength="100" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="street">Calle:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="street" v-model="street" class="my-form-control"
+                                            placeholder="Nombre de la calle" maxlength="100" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="outsideNumber">Número exterior:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="outsideNumber" v-model="outsideNumber" class="my-form-control"
+                                            placeholder="Número exterior" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="insideNumber">Número interior:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="insideNumber" v-model="insideNumber" class="my-form-control"
+                                            placeholder="Número interior, solo en caso de ser necesario" style="text-transform:uppercase;"
+                                             :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 label-container">
+                                        <label for="reference">Referencia domicilio:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" name="reference" v-model="reference" class="my-form-control"
+                                            placeholder="p. ej. Entre calles Nombre de la calle 1 y Nombre de la calle 2" maxlength="50" style="text-transform:uppercase;"
+                                             :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="row">
+                            <h4><b>Mis datos familiares</b></h4>
                         </div>
                         <div class="row">
                             <div class="col-md-2 label-container">
@@ -331,30 +380,42 @@
                             </div>
                             <div class="col-md-4">
                                 <input type="text" name="spouse" v-model="spouse" class="my-form-control"
-                                    placeholder="Nombre completo del(la) cónyuge">
+                                    placeholder="Nombre completo del(la) cónyuge" style="text-transform:uppercase;"
+                                     :readonly="infoDates.type == 2 || infoDates.type == 3">
                             </div>
-                            <div class="col-md-2 label-container">
-                                <label for="birthdaySpouce">Nacimiento:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="date" name="birthdaySpouce" v-model="birthdaySpouce" class="my-form-control">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2 label-container">
-                                <label for="selSexSpouce">Sexo:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <select class="select2-class my-form-control" name="selSexSpouce" id="selSexSpouce"></select>
+                            <div class="col-md-5">
+                                <div class="row">
+                                    <div class="col-md-2 label-container">
+                                        <label for="birthdaySpouce" style="white-space: nowrap;">Nacimiento:*</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" name="birthdaySpouce" v-model="birthdaySpouce" class="my-form-control" :readonly="infoDates.type == 2 || infoDates.type == 3">
+                                    </div>
+                                    <div class="col-md-2 label-container">
+                                        <label for="selSexSpouce">Sexo:*</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select class="select2-class my-form-control" style="width: 100%;" name="selSexSpouce" id="selSexSpouce" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <h4 style="display: inline-block;">Datos de mis hijos</b></h4>
-                            <button id="btn_crear" type="button" class="btnRound btn-success" 
-                                style="display: inline-block; margin-left: 10px" title="Crear solicitud" v-on:click="addChild();">
-                                <span class="bx bx-plus"></span>
-                            </button>
+                            <h4 style="display: inline-block;"><b>Datos de mis hijos</b></h4>
+                            @if($infoDates['type'] == 2 || $infoDates['type'] == 3 )
+                                
+                            @else
+                                <button id="btn_crear" type="button" class="btnRound btn-success" 
+                                    style="display: inline-block; margin-left: 10px" title="Crear solicitud" v-on:click="addChild();">
+                                    <span class="bx bx-plus"></span>
+                                </button>
+                                &nbsp;&nbsp;
+                                <button id="btn_eliminar" type="button" class="btnRound btn-danger" 
+                                    style="display: inline-block;" title="Eliminar renglon" onclick="app.delChild()">
+                                    <span class="bx bx-minus"></span>
+                                </button>
+                            @endif
                         </div>
                         <br>
                         <div id="contenedor_hijos">
@@ -362,7 +423,7 @@
                         </div>
 
                         <br>
-                        <button type="button" class="btn btn-primary" v-on:click="update()" style="float: right;">Actualizar datos</button>
+                        <button type="button" class="btn btn-primary" v-on:click="update()" style="float: right;" :disabled="infoDates.type == 2 || infoDates.type == 3">Actualizar datos</button>
                     </form>
                 </div>
             </div>

@@ -1068,7 +1068,7 @@ var appMyVacations = new Vue({
                             SGui.showMessage('', 'E-mail enviado con éxito', 'success');
                         }else if(data.status == 3){
                             checked = true;
-                            SGui.showMessage('', 'Ocurrio un error al enviar el e-mail, notifique a su supervisor', 'error');
+                            SGui.showMessage('', data.message, 'warning');
                         }
                     })
                     .catch(function(error) {

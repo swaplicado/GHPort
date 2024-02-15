@@ -543,7 +543,7 @@ var appRequestVacation = new Vue({
                             SGui.showMessage('', 'E-mail enviado con éxito', 'success');
                         }else if(data.status == 3){
                             checked = true;
-                            SGui.showMessage('', 'Ocurrio un error al enviar el e-mail, notifique a su colaborador', 'error');
+                            SGui.showMessage('', data.message, 'warning');
                         }
                     })
                     .catch(function(error) {
@@ -792,5 +792,48 @@ var appRequestVacation = new Vue({
                 this.loadReturnDate = false;
             });
         },
+
+        deleteRegistry(){
+            let data = table['table_requestVac'].row('.selected').data()
+            if(data[this.indexes.request_status_id] != 2){
+                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus POR APROBAR', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: '¿Desea eliminar la solicitud de?',
+                html: '<b>' + data[this.indexes.employee] + '</b><br>Con fechas:<br>'  + '<b>Inicio:</b> ' + data[this.indexes.start_date] + '<br>' + '<b>Fin:</b> ' +  data[this.indexes.end_date],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.deleteRequest(data[this.indexes.id], data[this.indexes.user_id]);
+                }
+            })
+        },
+
+        deleteRequest(request_id, user_id){
+            SGui.showWaiting();
+            let route = this.oData.deleteSendRequestRoute;
+            axios.post(route,{
+                'id_application': request_id,
+                'id_user': user_id,
+                'manager_id': this.selectedmanager,
+            }).then(result => {
+                let data = result.data;
+                if(data.success){
+                    this.reDrawRequestTable(data.lEmployees);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            }).catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        }
     },
 })
