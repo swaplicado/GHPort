@@ -31,6 +31,12 @@ class CreateTaskTypesTable extends Migration
             ['task' => 'Actualizar usuario en UNIV', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
             ['task' => 'Actualizar usuario en CAP', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
             ['task' => 'Actualizar usuario en EVAL', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['task' => 'Insertar usuario en Sistemas vs Usuarios', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['task' => 'Actualizar contraseña de usuario en Usuarios Globales', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['task' => 'Actualizar contraseña de usuario en PGH', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['task' => 'Actualizar contraseña de usuario en UNIV', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['task' => 'Actualizar contraseña de usuario en CAP', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
+            ['task' => 'Actualizar contraseña de usuario en EVAL', 'is_deleted' => 0, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 

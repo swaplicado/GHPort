@@ -198,7 +198,11 @@ class SysConst {
     public const TASK_UPDATE_CAP = 9;
     public const TASK_UPDATE_EVAL = 10;
     public const TASK_INSERT_SYSTEM_VS_USER = 11;
-
+    public const TASK_UPDATE_PASSWORD_USERGLOBAL = 12;
+    public const TASK_UPDATE_PASSWORD_PGH = 13;
+    public const TASK_UPDATE_PASSWORD_UNIV = 14;
+    public const TASK_UPDATE_PASSWORD_CAP = 15;
+    public const TASK_UPDATE_PASSWORD_EVAL = 16;
     /**
      * Constantes de la tabla task_status
      */

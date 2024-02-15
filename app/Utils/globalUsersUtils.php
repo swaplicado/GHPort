@@ -531,6 +531,34 @@ class GlobalUsersUtils {
         return $data;
     }
 
+    public static function syncListUserToUniv($token_type, $access_token, $lUser, $type){
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token_type.' '.$access_token
+        ];
+
+        $url = \DB::connection('mysqlGlobalUsers')
+                    ->table('systems')
+                    ->where('id_system', SysConst::SYSTEM_UNIVAETH)
+                    ->value('url');
+        
+        $client = new Client([
+            'base_uri' => $url,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $body = json_encode(['lUser' => $lUser, 'type' => $type]);
+
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'syncListUser', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+        
+        return $data;
+    }
+
     /**
      * The function syncs a user to a CAP system using a token and user data.
      * 
@@ -671,7 +699,7 @@ class GlobalUsersUtils {
                             if($loginUniv->status == 'success'){
                                 $resultUniv = GlobalUsersUtils::syncUserToUniv($loginUniv->token_type, $loginUniv->access_token, $oUser, SysConst::USERGLOBAL_UPDATE);
                                 if($resultUniv->status != 'success'){
-                                    throw new Exception('Prueba de falla en update univ');
+                                    programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_UNIV, $oUser, SysConst::SYSTEM_PGH);
                                 }
                             }
                         }
@@ -694,7 +722,10 @@ class GlobalUsersUtils {
                             $oUser->id_user_system = $userCAPId;
                             $loginCAP = GlobalUsersUtils::loginToCAP();
                             if($loginCAP->status == 'success'){
-                                GlobalUsersUtils::syncUserToCAP($loginCAP->token_type, $loginCAP->access_token, $oUser, SysConst::USERGLOBAL_UPDATE);
+                                $resultCAP = GlobalUsersUtils::syncUserToCAP($loginCAP->token_type, $loginCAP->access_token, $oUser, SysConst::USERGLOBAL_UPDATE);
+                                if($resultCAP->status != 'success'){
+                                    programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_CAP, $oUser, SysConst::SYSTEM_PGH);
+                                }
                             }
                         }
                     } catch (\Throwable $th) {
@@ -788,6 +819,278 @@ class GlobalUsersUtils {
             $data = json_decode($jsonString);
     
             return $data;
+        }
+    }
+
+    /**
+     * Metodo solo para aplicaciones externas, si es desde pgh usar globalUpdateFromSystem
+     */
+    public static function updateUserGlobalPassword($user, $fromSystem){
+        try {
+            $globalUser = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                    ->where('users_vs_systems.user_system_id', $user->user_system_id)
+                                    ->where('users_vs_systems.system_id', $fromSystem)
+                                    ->first();
+            
+            $globalUser->username = $user->username;
+            $globalUser->email = $user->email;                        
+            $globalUser->password = $user->pass;
+            $globalUser->update();
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            $globalUser->id_user_system = $user->user_system_id;
+            programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_USERGLOBAL, $globalUser, SysConst::SYSTEM_UNIVAETH);
+            throw new Exception($th->getMessage());
+        }
+
+        if($fromSystem != SysConst::SYSTEM_PGH){
+            try {
+                $userPghId = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                        ->where('users_vs_systems.global_user_id', $globalUser->id_global_user)
+                                        ->where('users_vs_systems.system_id', SysConst::SYSTEM_PGH)
+                                        ->value('users_vs_systems.user_system_id');
+
+                self::updatePGHPassword($user, $userPghId);
+            } catch (\Throwable $th) {
+                \Log::error($th);
+                $globalUser->id_user_system = null;
+                programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_PGH, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+            }
+        }
+
+        if($fromSystem != SysConst::SYSTEM_UNIVAETH){
+            try {
+                $loginUniv = self::loginToUniv();
+                if($loginUniv->status == 'success'){
+                    $userUnivId = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                        ->where('users_vs_systems.global_user_id', $globalUser->id_global_user)
+                                        ->where('users_vs_systems.system_id', SysConst::SYSTEM_UNIVAETH)
+                                        ->value('users_vs_systems.user_system_id');
+
+                    $user->user_system_id = $userUnivId;
+                    $resultUniv = self::updateUnivPassword($loginUniv->token_type, $loginUniv->access_token, $user);
+                    if($resultUniv->status != 'success'){
+                        $globalUser->id_user_system = null;
+                        programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_UNIV, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+                    }
+                }
+            } catch (\Throwable $th) {
+                \Log::error($th);
+                $globalUser->id_user_system = null;
+                programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_UNIV, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+            }
+        }
+
+        if($fromSystem != SysConst::SYSTEM_CAP){
+            try {
+                $loginCAP = self::loginToCAP();
+                if($loginCAP->status == 'success'){
+                    $userCapId = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                        ->where('users_vs_systems.global_user_id', $globalUser->id_global_user)
+                                        ->where('users_vs_systems.system_id', SysConst::SYSTEM_CAP)
+                                        ->value('users_vs_systems.user_system_id');
+
+                    $user->user_system_id = $userCapId;
+                    $resultCAP = self::updateCAPPassword($loginCAP->token_type, $loginCAP->access_token, $user);
+                    if($resultCAP->status != 'success'){
+                        $globalUser->id_user_system = null;
+                        programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_CAP, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+                    }
+                }
+            } catch (\Throwable $th) {
+                \Log::error($th);
+                $globalUser->id_user_system = null;
+                programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_CAP, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+            }
+        }
+
+        if($fromSystem != SysConst::SYSTEM_EVALUACIONDESEMPENO){
+            try {
+                $loginEval = self::loginToEval();
+                if($loginEval->status == 'success'){
+                    $userEvalId = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                        ->where('users_vs_systems.global_user_id', $globalUser->id_global_user)
+                                        ->where('users_vs_systems.system_id', SysConst::SYSTEM_EVALUACIONDESEMPENO)
+                                        ->value('users_vs_systems.user_system_id');
+
+                    $user->user_system_id = $userEvalId;
+                    $resultEval = self::updateEvalPassword($loginEval->token_type, $loginEval->access_token, $user);
+                    if($resultEval->status != 'success'){
+                        $globalUser->id_user_system = null;
+                        programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_EVAL, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+                    }
+                }
+            } catch (\Throwable $th) {
+                \Log::error($th);
+                $globalUser->id_user_system = null;
+                programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_EVAL, $globalUser, SysConst::SYSTEM_GLOBAL_USERS);
+            }
+        }
+    }
+
+    public static function updatePGHPassword($userExt, $user_id){
+        $user = User::find($user_id);
+        $user->username = $userExt->username;
+        $user->institutional_mail = $userExt->email;
+        $user->password = $userExt->pass;
+        $user->update();
+    }
+
+    public static function updateUnivPassword($token_type, $access_token, $user){
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token_type.' '.$access_token
+        ];
+
+        $url =  \DB::connection('mysqlGlobalUsers')
+                    ->table('systems')
+                    ->where('id_system', SysConst::SYSTEM_UNIVAETH)
+                    ->value('url');
+
+        $client = new Client([
+            'base_uri' => $url,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $body = json_encode(['user' => $user]);
+
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updatePass', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
+
+    public static function updateCAPPassword($token_type, $access_token, $user){
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token_type.' '.$access_token
+        ];
+
+        $url =  \DB::connection('mysqlGlobalUsers')
+                    ->table('systems')
+                    ->where('id_system', SysConst::SYSTEM_CAP)
+                    ->value('url');
+
+        $client = new Client([
+            'base_uri' => $url,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $body = json_encode(['user' => $user]);
+
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updatePass', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
+
+    public static function updateEvalPassword($token_type, $access_token, $user){
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $token_type.' '.$access_token
+        ];
+
+        $url =  \DB::connection('mysqlGlobalUsers')
+                    ->table('systems')
+                    ->where('id_system', SysConst::SYSTEM_EVALUACIONDESEMPENO)
+                    ->value('url');
+
+        $client = new Client([
+            'base_uri' => $url,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $body = json_encode(['user' => $user]);
+
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updatePass', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
+
+    public static function syncExternalWithGlobalUsers(){
+        $lUsersIds = User::pluck('id');
+
+        $lGlobalUsersIds = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                    ->whereIn('users_vs_systems.user_system_id', $lUsersIds)
+                                    ->where('users_vs_systems.system_id', SysConst::SYSTEM_PGH)
+                                    ->pluck('id_global_user');
+
+        $lUsersUnivIds = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                ->where('users_vs_systems.system_id', SysConst::SYSTEM_UNIVAETH)
+                                ->whereIn('global_users.id_global_user', $lGlobalUsersIds)
+                                ->select('users_vs_systems.user_system_id', 'users_vs_systems.global_user_id')
+                                ->get();
+
+        $lUsersCap = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                ->where('users_vs_systems.system_id', SysConst::SYSTEM_CAP)
+                                ->whereIn('global_users.id_global_user', $lGlobalUsersIds)
+                                ->get();
+
+        $lUsersEval = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                ->where('users_vs_systems.system_id', SysConst::SYSTEM_EVALUACIONDESEMPENO)
+                                ->whereIn('global_users.id_global_user', $lGlobalUsersIds)
+                                ->get();
+
+        try {
+            //sync con univ
+            $lGlobalUsersPghIds = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                    ->whereIn('users_vs_systems.global_user_id', $lUsersUnivIds->pluck('global_user_id'))
+                                    ->where('users_vs_systems.system_id', SysConst::SYSTEM_PGH)
+                                    ->select('users_vs_systems.user_system_id', 'users_vs_systems.global_user_id')
+                                    ->get();
+
+            $lUsers = [];
+            foreach($lUsersUnivIds as $user){
+                $globalUser = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
+                                            ->where('users_vs_systems.global_user_id', $user->global_user_id)
+                                            ->where('users_vs_systems.system_id', SysConst::SYSTEM_PGH)
+                                            ->select('users_vs_systems.user_system_id', 'users_vs_systems.global_user_id')
+                                            ->first();
+
+                $userPgh = User::where('id', $globalUser->user_system_id)
+                                ->select(
+                                    'id',
+                                    'username',
+                                    'password',
+                                    'institutional_mail',
+                                    'first_name',
+                                    'last_name',
+                                    'full_name',
+                                    'is_active',
+                                    'is_delete'
+                                    )
+                                ->first();
+
+                $userCap = $lUsersCap->where('global_user_id', $user->global_user_id)->first();
+                $userEval = $lUsersEval->where('global_user_id', $user->global_user_id)->first();
+
+                $userPgh->user_univ_id = $user->user_system_id;
+                $userPgh->user_cap_id = !is_null($userCap) ? $userCap->user_system_id : null;
+                $userPgh->user_eval_id = !is_null($userEval) ? $userEval->user_system_id : null;
+                $userPgh->pass = $userPgh->password;
+                $lUsers[] = $userPgh;
+            }
+
+            // Convierte el array en una cadena JSON
+            $jsonDatos = json_encode($lUsers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+            // Guarda la cadena JSON en un archivo
+            \Storage::disk('local')->put('datosUNIV.json', $jsonDatos);            
+        } catch (\Throwable $th) {
+            \Log::error($th);
         }
     }
 }

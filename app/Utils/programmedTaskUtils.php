@@ -64,6 +64,25 @@ class programmedTaskUtils {
                 break;
             case SysConst::TASK_UPDATE_EVAL:
                 $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
+            case SysConst::TASK_INSERT_SYSTEM_VS_USER:
+                $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
+            case SysConst::TASK_UPDATE_PASSWORD_USERGLOBAL:
+                $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
+            case SysConst::TASK_UPDATE_PASSWORD_PGH:
+                $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
+            case SysConst::TASK_UPDATE_PASSWORD_UNIV:
+                $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
+            case SysConst::TASK_UPDATE_PASSWORD_CAP:
+                $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
+            case SysConst::TASK_UPDATE_PASSWORD_EVAL:
+                $cfg = json_encode(array('global_user_id' => $oUser->id_global_user, 'user_system_id' => $oUser->id_user_system, 'fromSystem' => $fromSystem));
+                break;
             default:
                 # code...
                 break;
@@ -193,7 +212,7 @@ class programmedTaskUtils {
                                                 ->where('system_id', SysConst::SYSTEM_PGH)
                                                 ->first();
                         $oUser = User::find($userGlobal->user_system_id);
-                        $userCAPId = GlobalUsersUtils::getSystemUserId($oUser->id_global_user, SysConst::SYSTEM_CAP);
+                        $userCAPId = GlobalUsersUtils::getSystemUserId($cfg->global_user_id, SysConst::SYSTEM_CAP);
                         if(!is_null($userCAPId)){
                             $oUser->id_user_system = $userCAPId;
                             $loginCAP = GlobalUsersUtils::loginToCAP();
@@ -211,7 +230,7 @@ class programmedTaskUtils {
                                                 ->where('system_id', SysConst::SYSTEM_PGH)
                                                 ->first();
                         $oUser = User::find($userGlobal->user_system_id);
-                        $userEvalId = GlobalUsersUtils::getSystemUserId($oUser->id_global_user, SysConst::SYSTEM_EVALUACIONDESEMPENO);
+                        $userEvalId = GlobalUsersUtils::getSystemUserId($cfg->global_user_id, SysConst::SYSTEM_EVALUACIONDESEMPENO);
                         if(!is_null($userEvalId)){
                             $oUser->id_user_system = $userEvalId;
                             $loginEval = GlobalUsersUtils::loginToEval();
@@ -227,6 +246,49 @@ class programmedTaskUtils {
                         $oUser = globalUser::find($cfg->global_user_id);
                         $oUser->id_user_system = $cfg->id_user_system;
                         GlobalUsersUtils::insertSystemUser($oUser->id_global_user, $cfg->fromSystem, $oUser->id_user_system);
+                        break;
+                    case SysConst::TASK_UPDATE_PASSWORD_USERGLOBAL:
+                        $oUser = GlobalUsersUtils::getUserFromSystem($cfg->user_system_id, $cfg->fromSystem);
+                        $newPassword = $oUser->pass;
+                        GlobalUsersUtils::updateUserGlobalPassword($newPassword, $oUser->id, $cfg->fromSystem);
+                        break;
+                    case SysConst::TASK_UPDATE_PASSWORD_PGH:
+                        $oUser = GlobalUsersUtils::getUserFromSystem($cfg->user_system_id, $cfg->fromSystem);
+                        $newPassword = $oUser->password;
+                        GlobalUsersUtils::updatePGHPassword($newPassword, $cfg->user_system_id);
+                        break;
+                    case SysConst::TASK_UPDATE_PASSWORD_UNIV:
+                        $oUser = GlobalUsersUtils::getUserFromSystem($cfg->user_system_id, $cfg->fromSystem);
+                        $loginUniv = GlobalUsersUtils::loginToUniv();
+                        if($loginUniv->status == 'success'){
+                            $newPassword = $oUser->password;
+                            $result = GlobalUsersUtils::updateUnivPassword($loginUniv->token_type, $loginUniv->access_token, $newPassword, $cfg->user_system_id);
+                            if($result->status != 'success'){
+                                throw new Exception($result->message);
+                            }
+                        }
+                        break;
+                    case SysConst::TASK_UPDATE_PASSWORD_CAP:
+                        $oUser = GlobalUsersUtils::getUserFromSystem($cfg->user_system_id, $cfg->fromSystem);
+                        $loginCAP = GlobalUsersUtils::loginToCAP();
+                        if($loginCAP->status == 'success'){
+                            $newPassword = $oUser->password;
+                            $result = GlobalUsersUtils::updateCAPPassword($loginCAP->token_type, $loginCAP->access_token, $newPassword, $cfg->user_system_id);
+                            if($result->status != 'success'){
+                                throw new Exception($result->message);
+                            }
+                        }
+                        break;
+                    case SysConst::TASK_UPDATE_PASSWORD_EVAL:
+                        $oUser = GlobalUsersUtils::getUserFromSystem($cfg->user_system_id, $cfg->fromSystem);
+                        $loginEval = GlobalUsersUtils::loginToEval();
+                        if($loginEval->status == 'success'){
+                            $newPassword = $oUser->password;
+                            $result = GlobalUsersUtils::updateEvalPassword($loginEval->token_type, $loginEval->access_token, $newPassword, $cfg->user_system_id);
+                            if($result->status != 'success'){
+                                throw new Exception($result->message);
+                            }
+                        }
                         break;
                     default:
                         # code...

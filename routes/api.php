@@ -18,3 +18,17 @@ Route::post('login', 'api\\AuthController@login');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('syncUser', [
+        'uses' => 'api\\apiGlobalUsersController@syncUser'
+    ]);
+
+    Route::post('updateGlobalPassword', [
+        'uses' => 'api\\apiGlobalUsersController@updateGlobalPassword'
+    ]);
+
+    Route::post('insertUserVsSystem', [
+        'uses' => 'api\\apiGlobalUsersController@insertUserVsSystem'
+    ]);
+});
