@@ -23,7 +23,7 @@
         function GlobalData(){
            //rutas
             this.users = <?php echo json_encode($dataUser); ?>;
-            this.rute_get_work_personal = <?php echo json_encode(route("get_word_record_personal")); ?>;
+            this.rute_get_work_personal_low = <?php echo json_encode(route("get_word_record_personal_low")); ?>; 
         }
         var oServerData = new GlobalData();
     </script>
@@ -34,13 +34,13 @@
     
     <div class="card-header">
         <h3>
-            <b>Constancia laboral</b>
+            <b>Constancia laboral empleados dados de baja</b>
             @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
         <br>
-        @include('data_personal.record_table', ['table_id' => 'table_Incidences', 'table_ref' => 'table_Incidences'])
+        @include('data_personal.record_table_low', ['table_id' => 'table_Incidences', 'table_ref' => 'table_Incidences'])
     </div>
 </div>
 @endsection

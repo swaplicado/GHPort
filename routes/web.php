@@ -283,6 +283,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('datePersonal', 'Pages\WorkRecordController@index')->name('word_record_personal');
     Route::post('datePersonal/GetPDF', 'Pages\WorkRecordController@getWorkRecord')->name('get_word_record_personal');
     Route::get('datePersonalManager', 'Pages\WorkRecordController@indexManager')->name('word_record_personal_manager');
+    Route::get('datePersonalManagerLow', 'Pages\WorkRecordController@indexManagerLow')->name('get_word_record_personal_manager_low');
+     Route::post('datePersonal/GetPDFLow', 'Pages\WorkRecordController@getWorkRecordLow')->name('get_word_record_personal_low');
     Route::get('datePersonalLog', 'Pages\PersonalDataLogController@index')->name('word_record_log');
     //directorio
     Route::get('directory', 'Pages\DirectoryController@index')->name('directory');
