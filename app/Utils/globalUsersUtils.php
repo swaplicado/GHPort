@@ -193,6 +193,28 @@ class GlobalUsersUtils {
      * 
      * @return $ the data received from the login request to the university system.
      */
+    public static function findGlobalUserWithCompany($company){
+        $globalUser = null;
+        
+        $usersCompany = \DB::connection('mysqlGlobalUsers')
+                ->table('users_vs_systems')
+                ->where('system_id', $company)
+                ->get();
+        $arrUsersCompany = [];
+
+        for($i = 0 ; count($usersCompany) > $i ; $i++){
+            $arrUsersCompany[$i] = $usersCompany[$i]->global_user_id;
+        }
+
+        $pendingUser = \DB::connection('mysqlGlobalUsers')
+                ->table('global_users')
+                ->whereNotIn('id_global_user',$arrUsersCompany)
+                ->get();
+        
+        return $pendingUser;
+              
+    }
+
     public static function loginToUniv(){
         $config = \App\Utils\Configuration::getConfigurations();
         $headers = [

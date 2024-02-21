@@ -32,3 +32,9 @@ Route::group(['middleware' => 'auth:api'], function() {
         'uses' => 'api\\apiGlobalUsersController@insertUserVsSystem'
     ]);
 });
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('getPendingUser', [
+        'uses' => 'api\\GlobalComunicationController@getPendingUser'
+    ]);
+});

@@ -34,7 +34,7 @@ class apiGlobalUsersController extends Controller
             $oUser = (object)$request->user;
             GlobalUsersUtils::updateUserGlobalPassword($oUser, $request->fromSystem);
         } catch (\Throwable $th) {
-            \Log::error($th);
+           \Log::error($th);
             return response()->json([
                 'status' => 'error',
                 'message' => $th->getMessage(),
@@ -56,8 +56,8 @@ class apiGlobalUsersController extends Controller
     public function insertUserVsSystem(Request $request){
         try {
             $oUser = (object)$request->user;
-            $global_id = $request->global_id;
-            $fromSystem = $request->fromSystem;
+            $global_id = $request->id_global;
+            $fromSystem = $request->id_system;
 
             $systemUser = GlobalUsersUtils::getSystemUserId($global_id, $fromSystem);
             if(is_null($systemUser)){
