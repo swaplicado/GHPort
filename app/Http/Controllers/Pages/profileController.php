@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use \App\Utils\delegationUtils;
+use App\Utils\GlobalUsersUtils;
 
 class profileController extends Controller
 {
@@ -85,6 +86,9 @@ class profileController extends Controller
             $user->changed_password = 1;
             $user->update();
             \DB::commit();
+            $user->pass = $user->password;
+            $user->external_id = $user->external_id_n;
+            GlobalUsersUtils::globalUpdateFromSystem($user, SysConst::SYSTEM_PGH);
         } catch (\Throwable $th) {
             \DB::rollback();
             return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);

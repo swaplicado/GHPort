@@ -299,6 +299,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('allApplications', 'Pages\allApplicationsController@index')->name('allApplications');
     Route::post('allApplications/getApplication', 'Pages\allApplicationsController@getApplication')->name('allApplications_getApplication');
 
+    /**Sincronizacion de usuarios con sitemas exterenos */
+    Route::get('firstSyncWithExternalSystem', 'Api\apiGlobalUsersController@firstSyncWithExternalSystem')->name('firstSyncWithExternalSystem');
 });
 /**
  * Rutas permisos 

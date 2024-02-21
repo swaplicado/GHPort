@@ -164,5 +164,51 @@ class SysConst {
     public const INCIDENCIA = 2;
     public const PERMISO_PERSONAL_HORAS = 3;
     public const PERMISO_LABORAL_HORAS = 4;
+
+    /**
+     * Constantes de los id de los sistemas para global users
+     */
+    public const SYSTEM_GLOBAL_USERS = 0;
+    public const SYSTEM_PORTALPROVEEDORES = 1;
+    public const SYSTEM_PORTALAUTORIZACIONES = 2;
+    public const SYSTEM_APPSMANAGER = 3;
+    public const SYSTEM_SIIE = 4;
+    public const SYSTEM_PGH = 5;
+    public const SYSTEM_UNIVAETH = 6;
+    public const SYSTEM_CAP = 7;
+    public const SYSTEM_EVALUACIONDESEMPENO = 8;
+
+    /**
+     * Constantes para los metodos de sincronizacion con los demas sistemas
+     */
+    public const USERGLOBAL_INSERT = 1;
+    public const USERGLOBAL_UPDATE = 2;
+
+    /**
+     * Constantes de la tabla task_types
+     */
+    public const TASK_INSERT_USERGLOBAL = 1;
+    public const TAKS_INSERT_PGH = 2;
+    public const TASK_INSERT_UNIV = 3;
+    public const TASK_INSERT_CAP = 4;
+    public const TASK_INSERT_EVAL = 5;
+    public const TASK_UPDATE_USERGLOBAL = 6;
+    public const TASK_UPDATE_PGH = 7;
+    public const TASK_UPDATE_UNIV = 8;
+    public const TASK_UPDATE_CAP = 9;
+    public const TASK_UPDATE_EVAL = 10;
+    public const TASK_INSERT_SYSTEM_VS_USER = 11;
+    public const TASK_UPDATE_PASSWORD_USERGLOBAL = 12;
+    public const TASK_UPDATE_PASSWORD_PGH = 13;
+    public const TASK_UPDATE_PASSWORD_UNIV = 14;
+    public const TASK_UPDATE_PASSWORD_CAP = 15;
+    public const TASK_UPDATE_PASSWORD_EVAL = 16;
+    /**
+     * Constantes de la tabla task_status
+     */
+    public const TASK_STATUS_PENDIENTE = 1;
+    public const TASK_STATUS_REALIZADO = 2;
+    public const TASK_STATUS_CANCELADO = 3;
+    public const TASK_STATUS_ERROR = 4;
 }
 ?>

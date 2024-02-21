@@ -13,6 +13,28 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('login', 'api\\AuthController@login');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::post('syncUser', [
+        'uses' => 'api\\apiGlobalUsersController@syncUser'
+    ]);
+
+    Route::post('updateGlobal', [
+        'uses' => 'api\\apiGlobalUsersController@updateGlobalPassword'
+    ]);
+
+    Route::post('insertUserVsSystem', [
+        'uses' => 'api\\apiGlobalUsersController@insertUserVsSystem'
+    ]);
+});
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('getPendingUser', [
+        'uses' => 'api\\GlobalComunicationController@getPendingUser'
+    ]);
 });

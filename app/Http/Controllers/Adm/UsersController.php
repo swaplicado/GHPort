@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
 use App\Models\Adm\ScheduleTemplate;
+use Exception;
 use Illuminate\Http\Request;
 use \App\Utils\delegationUtils;
 use Carbon\Carbon;
@@ -13,15 +14,21 @@ use App\Models\Adm\UserAdmissionLog;
 use Illuminate\Support\Str;
 use App\Models\Adm\UsersPhotos;
 use App\Constants\SysConst;
+use App\Utils\GlobalUsersUtils;
+use App\Utils\programmedTaskUtils;
 
 class UsersController extends Controller
 {
     private $lJobs;
     private $lOrgChartJobs;
     private $lCompanies;
+    private $loginUnivData = null;
+    private $loginCAPData = null;
+    private $loginEvalData = null;
 
     public function saveUsersFromJSON($lUsers)
     {
+        ini_set('max_execution_time', 300);
         $lGhPortUsers = User::pluck('id', 'external_id_n');
         $this->lCompanies = \DB::table('ext_company')
                         ->where('is_deleted', 0)
@@ -29,9 +36,15 @@ class UsersController extends Controller
 
         $this->lJobs = Job::pluck('id_job', 'external_id_n');
         $this->lOrgChartJobs = \DB::table('ext_jobs_vs_org_chart_job')->get();
-        
+
         try {
+            $this->loginUnivData = globalUsersUtils::loginToUniv();
+            $this->loginCAPData = globalUsersUtils::loginToCAP();
+            $this->loginEvalData = globalUsersUtils::loginToEval();
             foreach ($lUsers as $jUser) {
+                try {
+                    \DB::beginTransaction();
+                    \DB::connection('mysqlGlobalUsers')->beginTransaction();
                     if (isset($lGhPortUsers[$jUser->id_employee])) {
                         $id = $lGhPortUsers[$jUser->id_employee];
                         $this->updUser($jUser, $id);
@@ -39,9 +52,15 @@ class UsersController extends Controller
                     else {
                         $this->insertUser($jUser);
                     }
+                    \DB::connection('mysqlGlobalUsers')->commit();
+                    \DB::commit();
+                } catch (\Throwable $th) { 
+                    \Log::error($th);
+                    \DB::connection('mysqlGlobalUsers')->rollBack();
+                    \DB::rollBack();
                 }
             }
-        catch (\Throwable $th) {
+        }catch (\Throwable $th) {
             \Log::error($th);
             return false;
         }
@@ -108,6 +127,22 @@ class UsersController extends Controller
             $oUsersPhotos->updated_by = 1;
             $oUsersPhotos->save();
         }
+
+        if(!is_null($oUser)){
+            $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $oUser->full_name, $oUser->external_id, $oUser->employee_num));
+            
+            if($result->success){
+                $globalUser = $result->globalUser;
+                if(!is_null($globalUser)){
+                    //updateGlobal
+                    $oUser->pass = $oUser->password;
+                    $oUser->external_id = $oUser->external_id_n;
+                    GlobalUsersUtils::globalUpdateFromSystem($oUser, SysConst::SYSTEM_PGH, $this->loginUnivData, $this->loginCAPData, $this->loginEvalData);
+                }
+            }else{
+                throw new Exception($result->message);
+            }
+        }
     }
 
     private function insertUser($jUser)
@@ -140,10 +175,18 @@ class UsersController extends Controller
             }
 
             if ($usr != null) {
-                if (count($lastname2s) > 0) {
-                    $usernameTmp = strtolower(str::slug($names[0]).'.'.str::slug($lastname2s[0]));
+                if (count($names) > 1) {
+                    $usernameTmp = strtolower(str::slug($names[0]).'.'.str::slug($names[0][0]).'.'.str::slug($lastname1s[0]));
                     $username = $this->getUserName($usernameTmp);
                     $usr = User::where('username', $username)->first();
+                }
+
+                if ($usr != null) {
+                    if (count($lastname2s) > 0) {
+                        $usernameTmp = strtolower(str::slug($names[0]).'.'.str::slug($lastname1s[0]).'.'.str::slug($lastname2s[0][0]));
+                        $username = $this->getUserName($usernameTmp);
+                        $usr = User::where('username', $username)->first();
+                    }
                 }
             }
 
@@ -214,6 +257,60 @@ class UsersController extends Controller
         $oUsersPhotos->created_by = 1;
         $oUsersPhotos->updated_by = 1;
         $oUsersPhotos->save();
+
+        $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $oUser->full_name, $oUser->external_id, $oUser->employee_num));
+        $globalUser = $result->globalUser;
+        if(is_null($globalUser)){
+            //global user
+            try {
+                $globalUser = GlobalUsersUtils::insertNewGlobalUser(SysConst::SYSTEM_PGH, $oUser->id, $oUser->username, $oUser->password, $oUser->email, $oUser->full_name, $oUser->external_id_n, $oUser->employee_num, $oUser->is_active, $oUser->is_delete);
+            } catch (\Throwable $th) {
+                \DB::beginTransaction();
+                    try {
+                        $oUser->id_user_system = $oUser->id;
+                        $oUser->id_global_user = null;
+                        programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_INSERT_USERGLOBAL, $oUser, SysConst::SYSTEM_PGH);
+                    } catch (\Throwable $th) {
+                        \Log::error($th);
+                        \DB::rollBack();
+                    }
+                \DB::commit();
+                return;
+            }
+            $userUnivId = GlobalUsersUtils::getSystemUserId($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH);
+            $oUser->id_user_system = $userUnivId;
+            //univ
+            try {
+                $resultUniv = globalUsersUtils::syncUserToUniv($this->loginUnivData->token_type, $this->loginUnivData->access_token, $oUser, SysConst::USERGLOBAL_INSERT);
+                if($resultUniv->status != 'success'){
+                    throw new Exception($resultUniv->message);
+                }
+            } catch (\Throwable $th) {
+                \DB::beginTransaction();
+                    try {
+                        $oUser->id_user_system = $globalUser->id_global_user;
+                        $oUser->id_global_user = null;
+                        programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_INSERT_UNIV, $oUser, null);
+                    } catch (\Throwable $th) {
+                        \Log::error($th);
+                        \DB::rollBack();
+                    }
+                \DB::commit();
+            }
+
+            $userUniv = $resultUniv->data;
+            try {
+                $resultFind = json_decode(globalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id));
+                if($resultFind->success){
+                    //insertar en user_vs_system
+                    GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id);
+                }
+            } catch (\Throwable $th) {
+                $oUser->id_user_system = $userUniv->id;
+                $oUser->id_global_user = $globalUser->id_global_user;
+                programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_INSERT_SYSTEM_VS_USER, $oUser, null);
+            }
+        }
     }
 
     private function getUserName($usernameTmp)
@@ -305,6 +402,10 @@ class UsersController extends Controller
                 $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
                 $us->update();
+
+                $us->pass = $us->password;
+                $us->external_id = $us->external_id_n;
+                GlobalUsersUtils::globalUpdateFromSystem($us, SysConst::SYSTEM_PGH);
             } catch (\Throwable $th) {
                 \DB::rollback();
                 return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
@@ -328,6 +429,8 @@ class UsersController extends Controller
                 $us->updated_by = \Auth::user()->id;
                 $us->changed_password = 0;
                 $us->update();
+
+                GlobalUsersUtils::globalUpdateFromSystem($us, SysConst::SYSTEM_PGH);
             } catch (\Throwable $th) {
                 \DB::rollback();
                 return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
