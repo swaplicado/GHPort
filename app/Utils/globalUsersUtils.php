@@ -9,6 +9,8 @@ use App\Models\GlobalUsers\userVsSystem;
 use App\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\updateGlobalUserMail;
 
 class GlobalUsersUtils {
 
@@ -31,6 +33,13 @@ class GlobalUsersUtils {
      * @return $globalUser the newly created globalUser object.
      */
     public static function insertNewGlobalUser($systemId, $userSystemId, $username, $password, $email, $full_name, $external_id, $employee_num, $is_active = 1, $is_deleted = 0){
+        $oUser = new \stdClass;
+        $oUser->username = $username;
+        $oUser->email = $email;
+        $oUser->full_name = $full_name;
+        Mail::to('adrian.aviles@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_INSERT));
+        Mail::to('cesar.orozco@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_INSERT));
+        
         $globalUser = new globalUser();
         $globalUser->username = $username;
         $globalUser->password = $password;
@@ -339,7 +348,7 @@ class GlobalUsersUtils {
 
         $CAPUser = $config->CAPUser;
         $body = '{
-                "email": "'.$CAPUser->user.'",
+                "name": "'.$CAPUser->user.'",
                 "password": "'.$CAPUser->password.'"
         }';
 
@@ -592,9 +601,11 @@ class GlobalUsersUtils {
             'headers' => $headers
         ]);
 
-        $body = json_encode(['user' => $oUser]);
+        $oUser->user_system_id = $oUser->id_user_system;
+        $sUser = json_encode($oUser);
+        $body = json_encode(['user' => $sUser]);
 
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'syncUser', $headers, $body);
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updateGlobal', $headers, $body);
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
@@ -635,9 +646,12 @@ class GlobalUsersUtils {
             'headers' => $headers
         ]);
 
-        $body = json_encode(['user' => $oUser]);
+        $oUser->user_system_id = $oUser->id_user_system;
+        $oUser->name = $oUser->username;
+        $sUser = json_encode($oUser);
+        $body = json_encode(['user' => $sUser]);
 
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'syncUser', $headers, $body);
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updateGlobal', $headers, $body);
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
@@ -653,7 +667,10 @@ class GlobalUsersUtils {
         $userPGH->update();
     }
 
-    public static function globalUpdateFromSystem($oUser, $fromSystem){
+    public static function globalUpdateFromSystem($oUser, $fromSystem, $loginUniv = null, $loginCAP = null, $loginEval = null){
+        // Mail::to('adrian.aviles@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_UPDATE));
+        // Mail::to('cesar.orozco@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_UPDATE));
+
         $result = json_decode(GlobalUsersUtils::findGlobalUserByIdSystem($oUser->id, $fromSystem));
 
         $globalUser = null;
@@ -682,6 +699,7 @@ class GlobalUsersUtils {
                         $userPGHId = GlobalUsersUtils::getSystemUserId($globalUser->id_global_user, SysConst::SYSTEM_PGH);
                         if(!is_null($userPGHId)){
                             $oUser->id_user_system = $userPGHId;
+                            $oUser->user_system_id = $userPGHId;
                             GlobalUsersUtils::syncToPGH($oUser);
                         }
                     } catch (\Throwable $th) {
@@ -695,7 +713,10 @@ class GlobalUsersUtils {
                         $userUnivId = GlobalUsersUtils::getSystemUserId($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH);
                         if(!is_null($userUnivId)){
                             $oUser->id_user_system = $userUnivId;
-                            $loginUniv = GlobalUsersUtils::loginToUniv();
+                            $oUser->user_system_id = $userUnivId;
+                            if(is_null($loginUniv)){
+                                $loginUniv = GlobalUsersUtils::loginToUniv();
+                            }
                             if($loginUniv->status == 'success'){
                                 $resultUniv = GlobalUsersUtils::syncUserToUniv($loginUniv->token_type, $loginUniv->access_token, $oUser, SysConst::USERGLOBAL_UPDATE);
                                 if($resultUniv->status != 'success'){
@@ -720,7 +741,10 @@ class GlobalUsersUtils {
                         $userCAPId = GlobalUsersUtils::getSystemUserId($globalUser->id_global_user, SysConst::SYSTEM_CAP);
                         if(!is_null($userCAPId)){
                             $oUser->id_user_system = $userCAPId;
-                            $loginCAP = GlobalUsersUtils::loginToCAP();
+                            $oUser->user_system_id = $userCAPId;
+                            if(is_null($loginCAP)){
+                                $loginCAP = GlobalUsersUtils::loginToCAP();
+                            }
                             if($loginCAP->status == 'success'){
                                 $resultCAP = GlobalUsersUtils::syncUserToCAP($loginCAP->token_type, $loginCAP->access_token, $oUser, SysConst::USERGLOBAL_UPDATE);
                                 if($resultCAP->status != 'success'){
@@ -739,7 +763,10 @@ class GlobalUsersUtils {
                         $userEvalId = GlobalUsersUtils::getSystemUserId($globalUser->id_global_user, SysConst::SYSTEM_EVALUACIONDESEMPENO);
                         if(!is_null($userEvalId)){
                             $oUser->id_user_system = $userEvalId;
-                            $loginEval = GlobalUsersUtils::loginToEval();
+                            $oUser->user_system_id = $userEvalId;
+                            if(is_null($loginEval)){
+                                $loginEval = GlobalUsersUtils::loginToEval();
+                            }
                             if($loginEval->status == 'success'){
                                 GlobalUsersUtils::syncUserToEval($loginEval->token_type, $loginEval->access_token, $oUser, SysConst::USERGLOBAL_UPDATE);
                             }
@@ -828,17 +855,17 @@ class GlobalUsersUtils {
     public static function updateUserGlobalPassword($user, $fromSystem){
         try {
             $globalUser = globalUser::join('users_vs_systems', 'users_vs_systems.global_user_id', '=', 'global_users.id_global_user')
-                                    ->where('users_vs_systems.user_system_id', $user->user_system_id)
+                                    ->where('users_vs_systems.user_system_id', $user->id)
                                     ->where('users_vs_systems.system_id', $fromSystem)
                                     ->first();
             
-            $globalUser->username = $user->username;
+            $globalUser->username = isset($user->username) ? $user->username : $user->name;
             $globalUser->email = $user->email;                        
             $globalUser->password = $user->pass;
             $globalUser->update();
         } catch (\Throwable $th) {
             \Log::error($th);
-            $globalUser->id_user_system = $user->user_system_id;
+            $globalUser->id_user_system = $user->id;
             programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_UPDATE_PASSWORD_USERGLOBAL, $globalUser, SysConst::SYSTEM_UNIVAETH);
             throw new Exception($th->getMessage());
         }
@@ -956,7 +983,7 @@ class GlobalUsersUtils {
 
         $body = json_encode(['user' => $user]);
 
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'updatePass', $headers, $body);
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updateUser', $headers, $body);
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
@@ -982,9 +1009,11 @@ class GlobalUsersUtils {
             'headers' => $headers
         ]);
 
-        $body = json_encode(['user' => $user]);
+        // $user->user_system_id = $user->id_user_system;
+        $sUser = json_encode($user);
+        $body = json_encode(['user' => $sUser]);
 
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'updatePass', $headers, $body);
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updateGlobal', $headers, $body);
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
@@ -1010,9 +1039,12 @@ class GlobalUsersUtils {
             'headers' => $headers
         ]);
 
-        $body = json_encode(['user' => $user]);
+        // $user->user_system_id = $user->id_user_system;
+        $user->name = $user->username;
+        $sUser = json_encode($user);
+        $body = json_encode(['user' => $sUser]);
 
-        $request = new \GuzzleHttp\Psr7\Request('POST', 'updatePass', $headers, $body);
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'updateGlobal', $headers, $body);
         $response = $client->sendAsync($request)->wait();
         $jsonString = $response->getBody()->getContents();
         $data = json_decode($jsonString);
@@ -1088,7 +1120,7 @@ class GlobalUsersUtils {
             $jsonDatos = json_encode($lUsers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
             // Guarda la cadena JSON en un archivo
-            \Storage::disk('local')->put('datosUNIV.json', $jsonDatos);            
+            \Storage::disk('local')->put('datosUNIV.json', $jsonDatos);
         } catch (\Throwable $th) {
             \Log::error($th);
         }

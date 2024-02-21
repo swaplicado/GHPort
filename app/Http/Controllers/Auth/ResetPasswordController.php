@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Constants\SysConst;
+use App\Utils\GlobalUsersUtils;
 
 class ResetPasswordController extends Controller
 {
@@ -125,11 +127,21 @@ class ResetPasswordController extends Controller
      */
     protected function resetPassword($user, $password)
     {
-        $this->setUserPassword($user, $password);
-
-        $user->setRememberToken(Str::random(60));
-
-        $user->save();
+        \DB::beginTransaction();
+        try {
+            $this->setUserPassword($user, $password);
+            $user->setRememberToken(Str::random(60));
+            $user->save();
+    
+            $user->pass = $user->password;
+            $user->external_id = $user->external_id_n;
+            GlobalUsersUtils::globalUpdateFromSystem($user, SysConst::SYSTEM_PGH);
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            \DB::rollBack();
+            throw new \Exception('Error en el reinicio de contraseña. Por favor, inténtalo de nuevo más tarde.');
+        }
 
         event(new PasswordReset($user));
 

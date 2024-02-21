@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         'uses' => 'api\\apiGlobalUsersController@syncUser'
     ]);
 
-    Route::post('updateGlobalPassword', [
+    Route::post('updateGlobal', [
         'uses' => 'api\\apiGlobalUsersController@updateGlobalPassword'
     ]);
 

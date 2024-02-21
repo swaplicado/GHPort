@@ -43,6 +43,26 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
+        'mysqlEvaluacion' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL_EVALUACION'),
+            'host' => env('DB_HOST_EVALUACION', '127.0.0.1'),
+            'port' => env('DB_PORT_EVALUACION', '3306'),
+            'database' => env('DB_DATABASE_EVALUACION', 'forge'),
+            'username' => env('DB_USERNAME_EVALUACION', 'forge'),
+            'password' => env('DB_PASSWORD_EVALUACION', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => 'InnoDB',
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mysqlGlobalUsers' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL_GLOBAL_USERS'),
