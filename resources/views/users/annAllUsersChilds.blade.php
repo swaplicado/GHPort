@@ -75,6 +75,8 @@
                     <th>Área funcional</th>
                     <th>Aniversario</th>
                     <th>Cumpleaños</th>
+                    <th>Aniversario</th>
+                    <th>Cumpleaños</th>
                 </thead>
                 <tbody>
                     <tr v-for="ann in lannUsersChilds">
@@ -82,6 +84,8 @@
                         <td>@{{ann.area}}</td>
                         <td>@{{ann.ann}}</td>
                         <td>@{{ann.birth}}</td>
+                        <td>@{{oDateUtils.formatDate(ann.ann, 'DD-MMM-YYYY')}}</td>
+                        <td>@{{oDateUtils.formatDate(ann.birth, 'DD-MMM-YYYY')}}</td>
                 </tbody>
             </table>
         </div>
@@ -234,7 +238,7 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_annUsers',
                                         'colTargets' => [],
-                                        'colTargetsSercheable' => [],
+                                        'colTargetsSercheable' => [2,3],
                                         // 'noSearch' => true,
                                         // 'noDom' => true,
                                         // 'noPaging' => true,
