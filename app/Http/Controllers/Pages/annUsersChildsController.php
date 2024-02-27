@@ -15,8 +15,14 @@ class annUsersChildsController extends Controller
     public function employeesDirectAnn() {
         $config = \App\Utils\Configuration::getConfigurations();
         $lannUsersChilds = $this->getDirectEmployees(delegationUtils::getOrgChartJobIdUser());
+
+        $startDate = Carbon::now()->startOfMonth()->toDateString();
+        $endDate = Carbon::now()->endOfMonth()->toDateString();
+
         return view('users.annUsersChilds')->with('lannUsersChilds', $lannUsersChilds)
-                                            ->with('config', $config);
+                                            ->with('config', $config)
+                                            ->with('startDate', $startDate)
+                                            ->with('endDate', $endDate);
     }
 
     /**

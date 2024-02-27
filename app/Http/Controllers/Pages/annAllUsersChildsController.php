@@ -15,8 +15,14 @@ class annAllUsersChildsController extends Controller
     public function employeesAllAnn() {
         $config = \App\Utils\Configuration::getConfigurations();
         $lannUsersChilds = $this->getAlllEmployees(delegationUtils::getOrgChartJobIdUser());
+
+        $startDate = Carbon::now()->startOfMonth()->toDateString();
+        $endDate = Carbon::now()->endOfMonth()->toDateString();
+
         return view('users.annAllUsersChilds')->with('lannUsersChilds', $lannUsersChilds)
-                                            ->with('config', $config);
+                                            ->with('config', $config)
+                                            ->with('startDate', $startDate)
+                                            ->with('endDate', $endDate);
     }
 
     public function getAlllEmployees($orgJobId){
