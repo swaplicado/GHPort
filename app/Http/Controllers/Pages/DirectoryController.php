@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Sys\SyncController;
 use Illuminate\Http\Request;
 
 class DirectoryController extends Controller
 {
     public function index(){
+        $SyncController = new SyncController();
+        $result = $SyncController->syncOnlyUsers();
+        
         $lUser = \DB::table('users as us')
                         ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
                         ->where('us.is_delete', 0)

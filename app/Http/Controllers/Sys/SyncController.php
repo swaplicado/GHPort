@@ -199,6 +199,33 @@ class SyncController extends Controller
         return redirect()->back();
     }
 
+    public function syncOnlyUsers(){
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            $lastSyncDate = $config->lastSyncDateTime;
+            $lastSyncDate = Carbon::parse($lastSyncDate)->subDays($config->pastSyncDays)->startOfDay()->toDateTimeString();
+            $client = new Client([
+                'base_uri' => $config->urlSync,
+                'timeout' => 30.0,
+            ]);
+
+            $response = $client->request('GET', 'getInfoERP/' . $lastSyncDate);
+            $jsonString = $response->getBody()->getContents();
+            $data = json_decode($jsonString);
+
+            $usrCont = new UsersController();
+            $resUs = $usrCont->saveUsersFromJSON($data->employees);
+            if(!$resUs){
+                return false;
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return false;
+        }
+
+        return true;
+    }
+
     public function initialSync(){
         $config = \App\Utils\Configuration::getConfigurations();
         $client = new Client([
