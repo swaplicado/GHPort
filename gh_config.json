@@ -1,5 +1,6 @@
 {
-    "lastSyncDateTime": "2023-11-16 11:16:32",
+    "lastSyncDateTime": "2024-02-27 15:08:26",
+    "pastSyncDays": 1,
     "expiration_vacations": {
         "years": 100,
         "months": 0,
@@ -93,5 +94,336 @@
             "type_id": 3,
             "sys_id": 0
         }
-    ]
+    ],
+    "dataPersonal": {
+        "limitChilds": 5
+    },
+    "dataPersonalHrsClass": [
+        {
+            "id": 1,
+            "name": "SEXO",
+            "key": "SEX"
+        },
+        {
+            "id": 2,
+            "name": "GRUPO SANGUINEO",
+            "key": "BLOOD"
+        },
+        {
+            "id": 3,
+            "name": "ESTADO CIVIL",
+            "key": "CIVIL"
+        },
+        {
+            "id": 4,
+            "name": "ESCOLARIDAD",
+            "key": "SCHOOLING"
+        },
+        {
+            "id": 5,
+            "name": "PARENTESCO",
+            "key": "PARENTESCO"
+        }
+    ],
+    "dataPersonalHrsType": [
+        {
+            "id": 1,
+            "class": 1,
+            "type": 1,
+            "name": "(N/A)"
+        },
+        {
+            "id": 2,
+            "class": 1,
+            "type": 2,
+            "name": "MASCULINO"
+        },
+        {
+            "id": 3,
+            "class": 1,
+            "type": 3,
+            "name": "FEMENINO"
+        },
+        {
+            "id": 4,
+            "class": 2,
+            "type": 1,
+            "name": "(N/A)"
+        },
+        {
+            "id": 5,
+            "class": 2,
+            "type": 2,
+            "name": "O+"
+        },
+        {
+            "id": 6,
+            "class": 2,
+            "type": 3,
+            "name": "O-"
+        },
+        {
+            "id": 7,
+            "class": 2,
+            "type": 4,
+            "name": "A+"
+        },
+        {
+            "id": 8,
+            "class": 2,
+            "type": 5,
+            "name": "A-"
+        },
+        {
+            "id": 9,
+            "class": 2,
+            "type": 6,
+            "name": "B+"
+        },
+        {
+            "id": 10,
+            "class": 2,
+            "type": 7,
+            "name": "B-"
+        },
+        {
+            "id": 11,
+            "class": 2,
+            "type": 8,
+            "name": "AB+"
+        },
+        {
+            "id": 12,
+            "class": 2,
+            "type": 9,
+            "name": "AB-"
+        },
+        {
+            "id": 13,
+            "class": 2,
+            "type": 99,
+            "name": "OTRO"
+        },
+        {
+            "id": 14,
+            "class": 3,
+            "type": 1,
+            "name": "(N/A)"
+        },
+        {
+            "id": 15,
+            "class": 3,
+            "type": 2,
+            "name": "SOLTERO(A)"
+        },
+        {
+            "id": 16,
+            "class": 3,
+            "type": 3,
+            "name": "CASADO(A)"
+        },
+        {
+            "id": 17,
+            "class": 3,
+            "type": 4,
+            "name": "DIVORCIADO(A)"
+        },
+        {
+            "id": 18,
+            "class": 3,
+            "type": 5,
+            "name": "VIUDO(A)"
+        },
+        {
+            "id": 19,
+            "class": 3,
+            "type": 6,
+            "name": "UNION LIBRE"
+        },
+        {
+            "id": 20,
+            "class": 3,
+            "type": 99,
+            "name": "OTRO"
+        },
+        {
+            "id": 21,
+            "class": 4,
+            "type": 1,
+            "name": "(N/A)"
+        },
+        {
+            "id": 22,
+            "class": 4,
+            "type": 2,
+            "name": "PRIMARIA"
+        },
+        {
+            "id": 23,
+            "class": 4,
+            "type": 3,
+            "name": "SECUNDARIA (O EQUIV.)"
+        },
+        {
+            "id": 24,
+            "class": 4,
+            "type": 4,
+            "name": "PREPARATORIA (O EQUIV.)"
+        },
+        {
+            "id": 25,
+            "class": 4,
+            "type": 5,
+            "name": "CARRERA TECNICA"
+        },
+        {
+            "id": 26,
+            "class": 4,
+            "type": 6,
+            "name": "LICENCIATURA"
+        },
+        {
+            "id": 27,
+            "class": 4,
+            "type": 7,
+            "name": "MAESTRIA"
+        },
+        {
+            "id": 28,
+            "class": 4,
+            "type": 8,
+            "name": "DOCTORADO"
+        },
+        {
+            "id": 29,
+            "class": 4,
+            "type": 9,
+            "name": "POSTDOCTORADO"
+        },
+        {
+            "id": 30,
+            "class": 4,
+            "type": 99,
+            "name": "OTRO"
+        },
+        {
+            "id": 31,
+            "class": 5,
+            "type": 1,
+            "name": "(N/A)"
+        },
+        {
+            "id": 32,
+            "class": 5,
+            "type": 11,
+            "name": "Cu00d3NYUGE O PAREJA"
+        },
+        {
+            "id": 33,
+            "class": 5,
+            "type": 12,
+            "name": "HIJO(A)"
+        },
+        {
+            "id": 34,
+            "class": 5,
+            "type": 21,
+            "name": "PADRE/MADRE"
+        },
+        {
+            "id": 35,
+            "class": 5,
+            "type": 22,
+            "name": "HERMANO(A)"
+        },
+        {
+            "id": 36,
+            "class": 5,
+            "type": 31,
+            "name": "Tu00cdO(A)"
+        },
+        {
+            "id": 37,
+            "class": 5,
+            "type": 32,
+            "name": "SOBRINO(A)"
+        },
+        {
+            "id": 38,
+            "class": 5,
+            "type": 41,
+            "name": "ABUELO(A)"
+        },
+        {
+            "id": 39,
+            "class": 5,
+            "type": 42,
+            "name": "NIETO(A)"
+        },
+        {
+            "id": 40,
+            "class": 5,
+            "type": 81,
+            "name": "AMIGO(A)"
+        },
+        {
+            "id": 41,
+            "class": 5,
+            "type": 99,
+            "name": "OTRO"
+        }
+    ],
+    "work_record": {
+        "encabezado1": "A quien Corresponda:",
+        "encabezado2": "Presente:",
+        "paragraph1": "Por medio de la presente hacemos constar que el",
+        "paragraph2": "C.",
+        "paragraph3": "con",
+        "paragraph4": "RFC",
+        "paragraph5": "y",
+        "paragraph6": "NSS",
+        "paragraph7": "labora en la empresa",
+        "paragraph8": "Registro Patronal",
+        "paragraph9": "RFC:",
+        "paragraph10": "Ubicada en",
+        "paragraph11": "con un ingreso mensual bruto de $",
+        "paragraph12": "Se extiende la presente a solicitud de la interesada, para los fines y usos legales que juzgue convenientes.",
+        "paragraph13": "Atentamente:",
+        "paragraph14": "L.A.E."
+    },
+    "fillGlobalUsersFromSystemId": 5,
+    "getUsersToFillGlobalUsersFromConnection": "mysql",
+    "univUser": {
+        "user": "admin",
+        "password": "Super2023!"
+    },
+    "fieldToFindUserInUniv": {
+        "username": false,
+        "full_name": true,
+        "email": false,
+        "external_id": true,
+        "employee_num": true
+    },
+    "CAPUser": {
+        "user": "Api",
+        "password": "Super2023!"
+    },
+    "fieldToFindUserInCAP": {
+        "username": false,
+        "full_name": true,
+        "email": false,
+        "external_id": true,
+        "employee_num": true
+    },
+    "evalUser": {
+        "user": "cesar.orozco",
+        "password": "12345678"
+    },
+    "fieldToFindUserInEval": {
+        "username": false,
+        "full_name": true,
+        "email": false,
+        "external_id": false,
+        "employee_num": true
+    }
 }
