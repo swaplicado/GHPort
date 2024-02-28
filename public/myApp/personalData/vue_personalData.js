@@ -90,69 +90,68 @@ var app = new Vue({
         }
 
         $('.select2-class').select2({});
-        
-        $('#selSex').select2({
-            data: self.lSex,
-            placeholder: 'Selecciona sexo',
-        }).on('select2:select', function(e) {
-            self.sex = e.params.data.id;
-        });
+        // $('#selSex').select2({
+        //     data: self.lSex,
+        //     placeholder: 'Selecciona sexo',
+        // }).on('select2:select', function(e) {
+        //     self.sex = e.params.data.id;
+        // });
 
-        $('#selSex').val(self.sex).trigger('change');
+        // $('#selSex').val(self.sex).trigger('change');
 
-        $('#selBlood').select2({
-            data: self.lBlood,
-            placeholder: 'Selecciona tipo de sangre',
-        }).on('select2:select', function(e) {
-            self.bloodType = e.params.data.id;
-        });
+        // $('#selBlood').select2({
+        //     data: self.lBlood,
+        //     placeholder: 'Selecciona tipo de sangre',
+        // }).on('select2:select', function(e) {
+        //     self.bloodType = e.params.data.id;
+        // });
 
-        $('#selBlood').val(self.bloodType).trigger('change');
+        // $('#selBlood').val(self.bloodType).trigger('change');
 
-        $('#selCivl').select2({
-            data: self.lCivil,
-            placeholder: 'Selecciona estado civil',
-        }).on('select2:select', function(e) {
-            self.maritalStatus = e.params.data.id;
-        });
+        // $('#selCivl').select2({
+        //     data: self.lCivil,
+        //     placeholder: 'Selecciona estado civil',
+        // }).on('select2:select', function(e) {
+        //     self.maritalStatus = e.params.data.id;
+        // });
 
-        $('#selCivl').val(self.maritalStatus).trigger('change');
+        // $('#selCivl').val(self.maritalStatus).trigger('change');
 
-        $('#selSchooling').select2({
-            data: self.lSchooling,
-            placeholder: 'Selecciona nivel de estudios',
-        }).on('select2:select', function(e) {
-            self.schooling = e.params.data.id;
-        });
+        // $('#selSchooling').select2({
+        //     data: self.lSchooling,
+        //     placeholder: 'Selecciona nivel de estudios',
+        // }).on('select2:select', function(e) {
+        //     self.schooling = e.params.data.id;
+        // });
 
-        $('#selSchooling').val(self.schooling).trigger('change');
+        // $('#selSchooling').val(self.schooling).trigger('change');
 
-        $('#SelEmergencyContac').select2({
-            data: self.lParentesco,
-            placeholder: 'Selecciona parentesco',
-        }).on('select2:select', function(e) {
-            self.parentesco = e.params.data.id;
-        });
+        // $('#SelEmergencyContac').select2({
+        //     data: self.lParentesco,
+        //     placeholder: 'Selecciona parentesco',
+        // }).on('select2:select', function(e) {
+        //     self.parentesco = e.params.data.id;
+        // });
 
-        $('#SelEmergencyContac').val(self.parentesco).trigger('change');
+        // $('#SelEmergencyContac').val(self.parentesco).trigger('change');
 
-        $('#selSexSpouce').select2({
-            data: self.lSex,
-            placeholder: 'Selecciona sexo',
-        }).on('select2:select', function(e) {
-            self.sexSpouce = e.params.data.id;
-        });
+        // $('#selSexSpouce').select2({
+        //     data: self.lSex,
+        //     placeholder: 'Selecciona sexo',
+        // }).on('select2:select', function(e) {
+        //     self.sexSpouce = e.params.data.id;
+        // });
 
-        $('#selSexSpouce').val(self.sexSpouce).trigger('change');
+        // $('#selSexSpouce').val(self.sexSpouce).trigger('change');
 
-        $('#selState').select2({
-            data: self.lState,
-            placeholder: 'Selecciona estado',
-        }).on('select2:select', function(e) {
-            self.state = e.params.data.id;
-        });
+        // $('#selState').select2({
+        //     data: self.lState,
+        //     placeholder: 'Selecciona estado',
+        // }).on('select2:select', function(e) {
+        //     self.state = e.params.data.id;
+        // });
 
-        $('#selState').val(self.state).trigger('change');
+        // $('#selState').val(self.state).trigger('change');
 
         if(this.personalData.son1 != ""){
             this.addChild(this.personalData.son1, this.personalData.dtBirSon1, this.personalData.sexSonId1);
