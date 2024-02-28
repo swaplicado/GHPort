@@ -150,7 +150,9 @@
                                         <label for="selSex">Sexo:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="selSex" id="selSex" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="selSex" id="selSex" v-model="sex" style="width: 100%">
+                                            <option v-for="sex in lSex" :value="sex.id">@{{sex.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -158,7 +160,9 @@
                                         <label for="selBlood">Tipo sangre:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="selBlood" id="selBlood" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="selBlood" id="selBlood" v-model="bloodType" style="width: 100%">
+                                            <option v-for="blood in lBlood" :value="blood.id">@{{blood.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -166,7 +170,9 @@
                                         <label for="selSchooling">Escolaridad:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="selSchooling" id="selSchooling" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="selSchooling" id="selSchooling" v-model="schooling" style="width: 100%">
+                                            <option v-for="school in lSchooling" :value="school.id">@{{school.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -177,7 +183,9 @@
                                         <label for="selCivl">Estado civil:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="selCivl" id="selCivl" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="selCivl" id="selCivl" v-model="maritalStatus" style="width: 100%">
+                                            <option v-for="civil in lCivil" :value="civil.id">@{{civil.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -212,7 +220,7 @@
                                         <label for="personalMail">Correo-e personal:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" name="personalMail" v-model="personalMail" class="my-form-control"
+                                        <input type="email" name="personalMail" v-model="personalMail" class="my-form-control"
                                             placeholder="CORREO ELECTRÓNICO DEL EMPLEADO" :readonly="infoDates.type == 2 || infoDates.type == 3">
                                     </div>
                                 </div>
@@ -221,7 +229,7 @@
                                         <label for="companyMail">Correo-e empresa:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" name="companyMail" v-model="companyMail" class="my-form-control"
+                                        <input type="email" name="companyMail" v-model="companyMail" class="my-form-control"
                                             placeholder="CORREO ELECTRÓNICO DE LA EMPRESA" :readonly="infoDates.type == 2 || infoDates.type == 3">
                                     </div>
                                 </div>
@@ -257,7 +265,9 @@
                                         <label for="SelEmergencyContac">Parentesco contacto:*</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="SelEmergencyContac" id="SelEmergencyContac" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="SelEmergencyContac" id="SelEmergencyContac" v-model="parentesco" style="width: 100%">
+                                            <option v-for="par in lParentesco" :value="par.id">@{{par.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -287,7 +297,9 @@
                                         <label for="selState">Estado:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="selState" id="selState" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="selState" id="selState" v-model="state" style="width: 100%">
+                                            <option v-for="st in lState" :value="st.id">@{{st.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -395,7 +407,9 @@
                                         <label for="selSexSpouce">Sexo:*</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <select class="select2-class my-form-control" style="width: 100%;" name="selSexSpouce" id="selSexSpouce" :disabled="infoDates.type == 2 || infoDates.type == 3"></select>
+                                        <select name="selSexSpouce" id="selSexSpouce" v-model="sexSpouce" style="width: 100%">
+                                            <option v-for="sexSp in lSex" :value="sexSp.id">@{{sexSp.text}}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
