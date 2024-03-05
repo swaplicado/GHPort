@@ -291,6 +291,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('datePersonalLog', 'Pages\PersonalDataLogController@index')->name('word_record_log');
     //directorio
     Route::get('directory', 'Pages\DirectoryController@index')->name('directory');
+    //fechas de cierre de modificaciones de información
+    Route::get('closeDates', 'Pages\ClosingDatesController@index')->name('closing_dates_index');
+    Route::post('closeDates/guardar', 'Pages\ClosingDatesController@createClosing')->name('create_closingDates');
+    Route::post('close/borrar', 'Pages\ClosingDatesController@deleteClosing')->name('delete_closingDates');
 
     //carga inicial de empleados
     Route::get('SyncIni', 'Adm\SyncController@initialSync')->name('initial_sync');
@@ -298,6 +302,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     /**Rutas allApplications */
     Route::get('allApplications', 'Pages\allApplicationsController@index')->name('allApplications');
     Route::post('allApplications/getApplication', 'Pages\allApplicationsController@getApplication')->name('allApplications_getApplication');
+    //ruta prueba
+    Route::get('prueba','Pages\personalDataController@close_dates')->name('close_dates');
 
     /**Sincronizacion de usuarios con sitemas exterenos */
     Route::get('firstSyncWithExternalSystem', 'Api\apiGlobalUsersController@firstSyncWithExternalSystem')->name('firstSyncWithExternalSystem');
