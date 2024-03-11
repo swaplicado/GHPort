@@ -181,17 +181,23 @@ class Vacations_report {
                     $org->lEmployees = $lEmployees->where('org_chart_job_id', $org->id_org_chart_job)->sortBy('full_name');
                 }
 
-                if(!$config->incidents_report->always_send){
-                    if($conf->always_send){
-                        Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
-                    }elseif (count($lEmployees) > 0) {
+                try {
+                    if(!$config->incidents_report->always_send){
+                        if($conf->always_send){
+                            Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
+                        }elseif (count($lEmployees) > 0) {
+                            Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
+                        }
+                    }else{
                         Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
                     }
-                }else{
-                    Mail::to($conf->institutional_mail)->send(new incidencesReportMail($lEmployees, $week, $ini, $end, $lOrgCharts, $sDate, $sDateHead));
+                    $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+                    $output->writeln("Reporte enviado a ".$conf->institutional_mail);
+                } catch (\Throwable $th) {
+                    \Log::error($th);
+                    $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+                    $output->writeln($th->getMessage());
                 }
-                $output = new \Symfony\Component\Console\Output\ConsoleOutput();
-                $output->writeln("Reporte enviado a ".$conf->institutional_mail);
             }
 
         } catch (\Throwable $th) {
