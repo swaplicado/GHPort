@@ -62,7 +62,7 @@ class cancelIncidenceMail extends Mailable
                         ->where('id', $this->idSuperviser)
                         ->first();
 
-        $subject = '[PGH] Solicitud ' . $oApplication->type_name . ' cancelada';
+        $subject = '[Portal GH] Solicitud ' . $oApplication->type_name . ' cancelada';
 
         $email = "Portalgh@aeth.mx";
         return $this->from($email)

@@ -54,7 +54,7 @@ class authorizeVacationMail extends Mailable
 
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
-                        ->subject('[PGH] Solicitud vacaciones '.$employee->short_name)
+                        ->subject('[Portal GH] Solicitud vacaciones '.$employee->short_name)
                         ->view('mails.authorizedVacationMail')
                         ->with('application', $application)
                         ->with('employee', $employee)

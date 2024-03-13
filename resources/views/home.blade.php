@@ -20,10 +20,10 @@
             <blockquote class="blockquote">
               <h1>Bienvenido</h1>
               <h1>{{\App\Utils\delegationUtils::getFullNameUser()}}</h1>
-              <h1> a PGH</h1>
+              <h1> a Portal GH</h1>
             </blockquote>
             <figcaption class="blockquote-footer" style="padding-left: 7%">
-                Bienvenido {{\App\Utils\delegationUtils::getFullNameUser()}} a Portal Gestión Humana
+                Bienvenido {{\App\Utils\delegationUtils::getFullNameUser()}} a Portal de Gestión Humana
             </figcaption>
           </figure>
         </div>

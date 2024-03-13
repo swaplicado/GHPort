@@ -52,7 +52,7 @@ class authorizeIncidenceMail extends Mailable
 
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
-                        ->subject('[PGH] Solicitud incidencia '.$employee->short_name)
+                        ->subject('[Portal GH] Solicitud incidencia '.$employee->short_name)
                         ->view('mails.authorizedIncidenceMail')
                         ->with('application', $application)
                         ->with('employee', $employee)

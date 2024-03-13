@@ -61,14 +61,14 @@ class authorizePermissionMail extends Mailable
 
         if( $permission->class == 1 ){
             return $this->from($email)
-                        ->subject('[PGH] Solicitud permiso personal por horas '.$employee->short_name)
+                        ->subject('[Portal GH] Solicitud permiso personal por horas '.$employee->short_name)
                         ->view('mails.authorizedPermissionMail')
                         ->with('permission', $permission)
                         ->with('employee', $employee)
                         ->with('sup_comments_n', $permission->sup_comments_n);
         }else{
             return $this->from($email)
-                        ->subject('[PGH] Solicitud tema laboral por horas '.$employee->short_name)
+                        ->subject('[Portal GH] Solicitud tema laboral por horas '.$employee->short_name)
                         ->view('mails.authorizedPermissionMail')
                         ->with('permission', $permission)
                         ->with('employee', $employee)

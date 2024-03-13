@@ -97,7 +97,7 @@ class requestPermissionMail extends Mailable
         $email = "Portalgh@aeth.mx";
         if( $permission->class == 1 ){
             return $this->from($email)
-                        ->subject('[PGH] Solicitud permiso personal por horas '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
+                        ->subject('[Portal GH] Solicitud permiso personal por horas '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
                         ->view('mails.requestPermissionMail')
                         ->with('permission', $permission)
                         ->with('employee', $employee)
@@ -107,7 +107,7 @@ class requestPermissionMail extends Mailable
                         ->with('permissionSchedule', $permissionSchedule);
         }else{
             return $this->from($email)
-                        ->subject('[PGH] Solicitud tema laboral por horas '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
+                        ->subject('[Portal GH] Solicitud tema laboral por horas '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
                         ->view('mails.requestPermissionMail')
                         ->with('permission', $permission)
                         ->with('employee', $employee)

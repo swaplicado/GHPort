@@ -52,13 +52,13 @@ class requestVacationMail extends Mailable
                         ->first();
 
         if(!is_null($this->superviser)){
-            $subject = (!$this->superviser->is_delegation ? '[PGH] Solicitud vacaciones '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name : '[PGH] Solicitud vacaciones '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name.' (por delegación)');
+            $subject = (!$this->superviser->is_delegation ? '[Portal GH] Solicitud vacaciones '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name : '[Portal GH] Solicitud vacaciones '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name.' (por delegación)');
             $is_delegation = $this->superviser->is_delegation;
             $delegated = $this->superviser->delegated;
             $delegation_start_date = $this->superviser->delegation_start_date;
             $delegation_end_date = $this->superviser->delegation_end_date;
         }else{
-            $subject = '[PGH] Solicitud vacaciones '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name;
+            $subject = '[Portal GH] Solicitud vacaciones '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name;
             $is_delegation = false;
             $delegated = null;
             $delegation_start_date = null;

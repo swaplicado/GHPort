@@ -37,7 +37,7 @@ class incidencesReportMail extends Mailable
         // $email = env('MAIL_FROM_ADDRESS');
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
-                        ->subject('[PGH] Reporte incidencias del '.$this->sDateHead)
+                        ->subject('[Portal GH] Reporte incidencias del '.$this->sDateHead)
                         ->view('mails.incidencesReportMailFormat2')
                         ->with('lEmployees', $this->lEmployees)
                         ->with('week', $this->week)

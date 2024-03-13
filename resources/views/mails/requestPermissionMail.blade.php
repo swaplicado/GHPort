@@ -83,7 +83,7 @@
                             @else
                             <tr>
                                 <td style="text-align: left;">Horario:</td>
-                                <td style="text-align: left;">Sin horario asignado en PGH</td>
+                                <td style="text-align: left;">Sin horario asignado en Portal GH</td>
                             </tr>
                             @endif
                             <tr>
@@ -140,9 +140,9 @@
                 <div>
                     <p style="transform: scale(0.6);">
                     Favor de no responder este mail, fue generado de forma automática.<br>
-                    PGH 1.0 © Software Aplicado SA de CV<br>
+                    Portal GH 1.0 © Software Aplicado SA de CV<br>
                     www.swaplicado.com.mx<br>
-                    PGH 1.0 086.0
+                    Portal GH 1.0 086.0
                     </p>
                 </div>
             </div>

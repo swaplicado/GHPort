@@ -55,7 +55,7 @@ class cancelPermissionMail extends Mailable
                         ->where('id', $this->idSuperviser)
                         ->first();
 
-        $subject = '[PGH] Solicitud ' . $oPermission->permission_tp_name . ' cancelada';
+        $subject = '[Portal GH] Solicitud ' . $oPermission->permission_tp_name . ' cancelada';
 
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
