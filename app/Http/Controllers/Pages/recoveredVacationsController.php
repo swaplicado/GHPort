@@ -10,6 +10,7 @@ use App\Utils\EmployeeVacationUtils;
 use App\Models\Vacations\RecoveredVacation;
 use App\Utils\recoveredVacationsUtils;
 use Carbon\Carbon;
+use App\Utils\usersInSystemUtils;
 
 class recoveredVacationsController extends Controller
 {
@@ -23,6 +24,7 @@ class recoveredVacationsController extends Controller
                     ->orderBy('full_name_ui')
                     ->get();
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
         foreach($lUsers as $user){
             $user = recoveredVacationsUtils::getExpiredVacations($user);
         }
@@ -104,6 +106,7 @@ class recoveredVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al recuperar los días de vacaciones', 'icon' => 'error']);
         }
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
         return json_encode(['success' => true, 'lUsers' => $lUsers]);
     }
 
@@ -119,6 +122,7 @@ class recoveredVacationsController extends Controller
             $user = recoveredVacationsUtils::getExpiredVacations($user);
         }
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
         return view('emp_vacations.recovered_vacations_managment')->with('lUsers', $lUsers);
     }
 
@@ -194,6 +198,7 @@ class recoveredVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al recuperar los días de vacaciones', 'icon' => 'error']);
         }
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
         return json_encode(['success' => true, 'lUsers' => $lUsers]);
     }
 }

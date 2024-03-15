@@ -21,6 +21,7 @@ use App\Mail\authorizePermissionMail;
 use App\Models\Vacations\MailLog;
 use \App\Utils\incidencesUtils;
 use App\Utils\notificationsUtils;
+use App\Utils\usersInSystemUtils;
 
 class requestPermissionController extends Controller
 {
@@ -108,6 +109,9 @@ class requestPermissionController extends Controller
                         )
                         ->get();
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
+        $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -210,6 +214,9 @@ class requestPermissionController extends Controller
                         )
                         ->get();
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
+        $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -382,6 +389,7 @@ class requestPermissionController extends Controller
             
         });
 
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
@@ -468,6 +476,7 @@ class requestPermissionController extends Controller
             
         });
 
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
@@ -484,6 +493,8 @@ class requestPermissionController extends Controller
             \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de colaboradores directos', 'icon' => 'error']);
         }
+
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return json_encode(['success' => true, 'lEmployees' => $lEmployees ]);
     }
 
@@ -504,6 +515,7 @@ class requestPermissionController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
         }
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 
@@ -530,6 +542,7 @@ class requestPermissionController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener los permisos', 'icon' => 'error']);
         }
 
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
 
@@ -621,6 +634,7 @@ class requestPermissionController extends Controller
             
         });
 
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
@@ -674,6 +688,7 @@ class requestPermissionController extends Controller
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
 }

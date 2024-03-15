@@ -10,6 +10,7 @@ use \App\Utils\delegationUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Utils\orgChartUtils;
 use Carbon\Carbon;
+use App\Utils\usersInSystemUtils;
 
 class sanctionsController extends Controller
 {
@@ -112,6 +113,7 @@ class sanctionsController extends Controller
                 $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
             }
 
+            $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
             $arrEmployes = self::makeArraylEmployees($lEmployees);
             $lSanctions = self::getSanctions($arrEmployes, $request->type);
         } catch (\Throwable $th) {
@@ -126,6 +128,7 @@ class sanctionsController extends Controller
         try {
             $lChildAreas = orgChartUtils::getAllChildsToRevice(delegationUtils::getOrgChartJobIdUser());
             $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
+            $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
             $arrEmployes = self::makeArraylEmployees($lEmployees);
             $lSanctions = self::getSanctions($arrEmployes, $request->type);
         } catch (\Throwable $th) {
@@ -173,6 +176,7 @@ class sanctionsController extends Controller
         }else{
             $lEmployees = [$oUser];
         }
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         $lData = self::makeArraylEmployees($lEmployees);
         $lSanctions = self::getSanctions($lData, SysConst::ACTA);
 
@@ -209,6 +213,7 @@ class sanctionsController extends Controller
         }else{
             $lEmployees = [$oUser];
         }
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         $lData = self::makeArraylEmployees($lEmployees);
         $lSanctions = self::getSanctions($lData, SysConst::SANCION);
 

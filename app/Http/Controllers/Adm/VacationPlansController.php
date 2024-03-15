@@ -13,6 +13,7 @@ use App\Models\Vacations\VacationPlan;
 use App\Models\Vacations\VacationPlanDay;
 use App\Models\Vacations\VacationPlanDayLog;
 use \App\Utils\delegationUtils;
+use App\Utils\usersInSystemUtils;
 
 class VacationPlansController extends Controller
 {
@@ -212,6 +213,8 @@ class VacationPlansController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
         }
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
+        $lUsersAssigned = usersInSystemUtils::FilterUsersInSystem($lUsersAssigned, 'id');
         return json_encode(['success' => true, 'lUsers' => $lUsers, 'lUsersAssigned' => $lUsersAssigned]);
     }
 

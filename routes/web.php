@@ -307,6 +307,10 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     /**Sincronizacion de usuarios con sitemas exterenos */
     Route::get('firstSyncWithExternalSystem', 'Api\apiGlobalUsersController@firstSyncWithExternalSystem')->name('firstSyncWithExternalSystem');
+
+    /**Rutas de mostrar usuarios en sistema */
+    Route::get('showUsers', 'Adm\UsersShowInSystemController@index')->name('showUsers');
+    Route::post('showUsers/update', 'Adm\UsersShowInSystemController@updateShowInSystem')->name('showUsers_updateShowInSystem');
 });
 /**
  * Rutas permisos 

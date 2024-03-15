@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use \App\Utils\delegationUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Utils\orgChartUtils;
+use App\Utils\usersInSystemUtils;
 
 class univCertificatesController extends Controller
 {
@@ -30,6 +31,7 @@ class univCertificatesController extends Controller
             'ESTANDAR' => SysConst::ESTANDAR,
         ];
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return view('univCertificates.univCertificates')->with('lEmployees', $lEmployees)
                                                         ->with('rol', delegationUtils::getRolIdUser())
                                                         ->with('roles', $roles)
@@ -61,6 +63,7 @@ class univCertificatesController extends Controller
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 
@@ -80,6 +83,7 @@ class univCertificatesController extends Controller
         
         }
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 
@@ -98,6 +102,7 @@ class univCertificatesController extends Controller
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);            
         }
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 

@@ -9,6 +9,7 @@ use App\Models\Seasons\SpecialSeason;
 use App\Models\Adm\OrgChartJob;
 use Carbon\Carbon;
 use \App\Utils\delegationUtils;
+use App\Utils\usersInSystemUtils;
 
 class SpecialSeasonsController extends Controller
 {
@@ -73,6 +74,7 @@ class SpecialSeasonsController extends Controller
                                     )
                                     ->get();
 
+        $lEmp = usersInSystemUtils::FilterUsersInSystem($lEmp, 'id');
         return view('seasons.seasons')->with('lDeptos', $lDeptos)
                                     ->with('lAreas', $lAreas)
                                     ->with('lEmp', $lEmp)

@@ -8,6 +8,7 @@ use \App\Utils\delegationUtils;
 use App\Utils\orgChartUtils;
 use Carbon\Carbon;
 use App\Utils\EmployeeVacationUtils;
+use App\Utils\usersInSystemUtils;
 
 class annAllUsersChildsController extends Controller
 {
@@ -19,6 +20,7 @@ class annAllUsersChildsController extends Controller
         $startDate = Carbon::now()->startOfMonth()->toDateString();
         $endDate = Carbon::now()->endOfMonth()->toDateString();
 
+        $lannUsersChilds = usersInSystemUtils::FilterUsersInSystem($lannUsersChilds, 'id');
         return view('users.annAllUsersChilds')->with('lannUsersChilds', $lannUsersChilds)
                                             ->with('config', $config)
                                             ->with('startDate', $startDate)

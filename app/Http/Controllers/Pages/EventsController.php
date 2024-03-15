@@ -12,6 +12,7 @@ use App\User;
 use App\Utils\EmployeeVacationUtils;
 use Carbon\Carbon;
 use App\Models\Adm\Event;
+use App\Utils\usersInSystemUtils;
 
 class EventsController extends Controller
 {
@@ -261,6 +262,8 @@ class EventsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
         }
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
+        $lUsersAssigned = usersInSystemUtils::FilterUsersInSystem($lUsersAssigned, 'id');
         return json_encode(['success' => true, 'lUsers' => $lUsers, 'lUsersAssigned' => $lUsersAssigned]);
     }
 
@@ -422,6 +425,8 @@ class EventsController extends Controller
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
+        $lUserAssigned = usersInSystemUtils::FilterUsersInSystem($lUserAssigned, 'id_employee');
+        $lUsersNoAssigned = usersInSystemUtils::FilterUsersInSystem($lUsersNoAssigned, 'id_employee');
         return json_encode([
             'success' => true,
             'lEmployeesAssigned' => $lUserAssigned,

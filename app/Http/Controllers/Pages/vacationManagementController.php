@@ -8,6 +8,7 @@ use App\Utils\EmployeeVacationUtils;
 use App\Utils\orgChartUtils;
 use Carbon\Carbon;
 use \App\Utils\delegationUtils;
+use App\Utils\usersInSystemUtils;
 
 class vacationManagementController extends Controller
 {
@@ -43,6 +44,8 @@ class vacationManagementController extends Controller
             // $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob(\Auth::user()->org_chart_job_id);
             $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob(delegationUtils::getOrgChartJobIdUser());
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+
+            $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de colaboradores directos', 'icon' => 'error']);
@@ -55,6 +58,8 @@ class vacationManagementController extends Controller
             // $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob(\Auth::user()->org_chart_job_id);
             $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob(delegationUtils::getOrgChartJobIdUser());
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+
+            $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al obtener la lista de los colaboradores', 'icon' => 'error']);

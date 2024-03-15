@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Carbon\Translator;
 use App\Constants\SysConst;
 use \App\Utils\delegationUtils;
+use App\Utils\usersInSystemUtils;
 
 class EmployeesVacationsController extends Controller
 {
@@ -24,6 +25,7 @@ class EmployeesVacationsController extends Controller
         // $lEmployees = $this->getDirectEmployees(\Auth::user()->org_chart_job_id);
         $lEmployees = $this->getDirectEmployees(delegationUtils::getOrgChartJobIdUser());
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         // return view('emp_vacations.my_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
         return view('emp_vacations.my_direct_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }
@@ -37,6 +39,7 @@ class EmployeesVacationsController extends Controller
         // $lEmployees = $this->getAlllEmployees(\Auth::user()->org_chart_job_id, $config);
         $lEmployees = $this->getAlllEmployees(delegationUtils::getOrgChartJobIdUser(), $config);
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return view('emp_vacations.all_emp_vacations')->with('lEmployees', $lEmployees)->with('config', $config);
     }
 

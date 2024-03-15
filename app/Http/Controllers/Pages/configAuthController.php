@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Models\Adm\ConfigAuth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Utils\usersInSystemUtils;
 
 class configAuthController extends Controller
 {
@@ -44,6 +45,7 @@ class configAuthController extends Controller
                     ->where('is_deleted', 0)
                     ->get();
 
+        $users = usersInSystemUtils::FilterUsersInSystem($users, 'id');
         return view('Adm.configAuth')->with('lconfigAuth', $lconfigAuth)
                                     ->with('lAreas', $areas)
                                     ->with('lUsers', $users)

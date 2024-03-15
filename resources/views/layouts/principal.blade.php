@@ -74,6 +74,7 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <div id="toasts"></div>
                     @include('delegations.modal_select_delegations')
                     <!-- Contenido de la pagina -->
                     @yield('content')

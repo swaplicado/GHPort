@@ -9,22 +9,28 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
-
+use App\Utils\usersInSystemUtils;
 
 class WorkRecordController extends Controller
 {
     public function index(){
         $dateEmployees = $this->getDataEmployees(Auth::user()->id);
+
+        $dateEmployees = usersInSystemUtils::FilterUsersInSystem($dateEmployees, 'id');
         return view('data_personal.work_record') -> with ('dataUser', $dateEmployees);
     }
 
     public function indexManager(){
         $dateEmployees = $this->getDataEmployees();
+
+        $dateEmployees = usersInSystemUtils::FilterUsersInSystem($dateEmployees, 'id');
         return view('data_personal.work_record') -> with ('dataUser', $dateEmployees);
     }
 
     public function indexManagerLow(){
         $dateEmployees = $this->getDataEmployeesLow();
+
+        $dateEmployees = usersInSystemUtils::FilterUsersInSystem($dateEmployees, 'id');
         return view('data_personal.work_record_low') -> with ('dataUser', $dateEmployees);
     }
 

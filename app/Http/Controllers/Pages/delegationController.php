@@ -8,6 +8,7 @@ use App\Models\Adm\Delegation;
 use App\Utils\OrgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use \App\Utils\delegationUtils;
+use \App\Utils\usersInSystemUtils;
 
 class delegationController extends Controller
 {
@@ -76,6 +77,8 @@ class delegationController extends Controller
         $arrExcept = [delegationUtils::getIdUser()];
         $data = $this->getData($arrExcept);
 
+        $data[0] = usersInSystemUtils::FilterUsersInSystem($data[0], 'id');
+        $data[3] = usersInSystemUtils::FilterUsersInSystem($data[3], 'id');
         return view('delegations.delegations')->with('lUsers', $data[0])
                                             ->with('lDelegations_created', $data[1])
                                             ->with('lDelegations_asigned', $data[2])
@@ -212,6 +215,7 @@ class delegationController extends Controller
         $lDelegations_created = $data[1];
         $lMyManagers = $data[2];
         
+        $lMyManagers = usersInSystemUtils::FilterUsersInSystem($lMyManagers, 'id');
         return view('delegations.delegationsManager')->with('lUsers', $lUsers)
                                                     ->with('lDelegations_created', $lDelegations_created)
                                                     ->with('lDelegations_asigned', [])

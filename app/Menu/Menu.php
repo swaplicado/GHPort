@@ -190,6 +190,9 @@ class Menu {
             array_push($configuracion,['route' => route('index_user'), 'icon' => 'bx bxs-user bx-xs', 'name' => 'Usuarios']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('showUsers'), 'icon' => 'bx bxs-user-voice bx-xs', 'name' => 'Mostrar usuarios']);
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-xs', 'name' => 'Áreas func.']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){

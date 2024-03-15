@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Adm\GroupAssign;
 use Illuminate\Http\Request;
 use App\Models\Adm\Group;
+use App\Utils\usersInSystemUtils;
 
 class employeeGroupsController extends Controller
 {
@@ -106,6 +107,9 @@ class employeeGroupsController extends Controller
                                     )
                                     ->orderBy('employee')
                                     ->get();
+
+        $lEmpAssgined = usersInSystemUtils::FilterUsersInSystem($lEmpAssgined, 'id_employee');
+        $lEmpNoAssigned = usersInSystemUtils::FilterUsersInSystem($lEmpNoAssigned, 'id_employee');
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);

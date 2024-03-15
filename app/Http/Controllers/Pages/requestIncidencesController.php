@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\authorizeIncidenceMail;
 use App\Utils\notificationsUtils;
 use App\Utils\CapLinkUtils;
+use App\Utils\usersInSystemUtils;
 
 class requestIncidencesController extends Controller
 {
@@ -136,6 +137,9 @@ class requestIncidencesController extends Controller
                         )
                         ->get();
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
+        $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
         return view('Incidences.requestIncidences')->with('constants', $constants)
                                                     ->with('myManagers', $myManagers)
                                                     ->with('lIncidences', $lIncidences)
@@ -146,7 +150,6 @@ class requestIncidencesController extends Controller
                                                     ->with('lEmployees', $lEmployees)
                                                     ->with('oApplication', $oApplication)
                                                     ->with('oUser', $oUser)
-                                                    ->with('myManagers', $myManagers)
                                                     ->with('initialCalendarDate', $initialCalendarDate)
                                                     ->with('lRequestStatus', $lRequestStatus)
                                                     ->with('lGestionStatus', $lGestionStatus)
@@ -296,6 +299,7 @@ class requestIncidencesController extends Controller
             
         });
 
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
@@ -388,6 +392,7 @@ class requestIncidencesController extends Controller
             
         });
 
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
@@ -435,6 +440,7 @@ class requestIncidencesController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
         }
 
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
     }
 
@@ -461,6 +467,7 @@ class requestIncidencesController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al obtener las incidencias', 'icon' => 'error']);
         }
 
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
 
@@ -556,6 +563,7 @@ class requestIncidencesController extends Controller
             
         });
 
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
@@ -618,6 +626,7 @@ class requestIncidencesController extends Controller
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
 }

@@ -27,6 +27,7 @@ use \App\Utils\folioUtils;
 use App\Utils\recoveredVacationsUtils;
 use App\Utils\notificationsUtils;
 use App\Utils\incidencesUtils;
+use App\Utils\usersInSystemUtils;
 
 class requestVacationsController extends Controller
 {
@@ -291,6 +292,9 @@ class requestVacationsController extends Controller
                         )
                         ->get();
 
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
+        $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
+
         return view('emp_vacations.requestVacations')->with('lEmployees', $data[1])
                                                     ->with('year', $data[0])
                                                     ->with('lHolidays', $data[2])
@@ -328,6 +332,7 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'error al obtener los registros del supervisor '.$oManager->full_name_ui, 'icon' => 'error']);
         }
 
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'lEmployees' => $data[1], 'year' => $data[0], 'lHolidays' => $data[2]]);
     }
 
@@ -452,6 +457,7 @@ class requestVacationsController extends Controller
             
         });
 
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'mail_log_id' => $mailLog->id_mail_log, 'message' => 'Solicitud aprobada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
 
@@ -681,6 +687,7 @@ class requestVacationsController extends Controller
             
         });
 
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'mail_log_id' => $mailLog->id_mail_log, 'message' => 'Solicitud rechazada con éxito', 'icon' => 'success', 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
 
@@ -705,6 +712,7 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
         }
 
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'lEmployees' => $data[1], 'holidays' => $data[2]]);
     }
 
@@ -1086,7 +1094,7 @@ class requestVacationsController extends Controller
         })->timeout(function ($mailLog) {
             
         });
-        
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'lEmployees' => $data[1], 'mail_log_id' => $mailLog->id_mail_log]);
     }
 
@@ -1130,6 +1138,7 @@ class requestVacationsController extends Controller
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
         }
 
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'lEmployees' => $data[1]]);
     }
 }

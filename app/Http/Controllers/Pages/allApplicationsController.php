@@ -11,6 +11,7 @@ use App\Utils\orgChartUtils;
 use App\Utils\EmployeeVacationUtils;
 use App\Utils\applicationsUtils;
 use App\Utils\dateUtils;
+use App\Utils\usersInSystemUtils;
 
 class allApplicationsController extends Controller
 {
@@ -155,6 +156,9 @@ class allApplicationsController extends Controller
         ];
 
         $lApplications = collect($lApplications)->sortBy('start_date');
+
+        $lApplications = usersInSystemUtils::FilterUsersInSystem($lApplications, 'employee_id');
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
 
         return view('allApplications.allApplications')->with('lApplications', $lApplications)
                                                         ->with('lClases', $lClases)

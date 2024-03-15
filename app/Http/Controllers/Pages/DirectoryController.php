@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Sys\SyncController;
 use Illuminate\Http\Request;
+use App\Utils\usersInSystemUtils;
 
 class DirectoryController extends Controller
 {
@@ -20,6 +21,7 @@ class DirectoryController extends Controller
                         ->select('us.id AS idUser', 'us.full_name AS fullname', 'us.email AS personalMail', 'us.institutional_mail AS institutionalMail', 'us.email_directory AS directoryMail', 'us.tel_area AS telArea', 'us.tel_num AS telNum', 'us.tel_ext AS telExt', 'ocj.job_name_ui AS nameOrg')
                         ->get();
         
+        $lUser = usersInSystemUtils::FilterUsersInSystem($lUser, 'idUser');
         return view('directory.index')->with('lUser', $lUser);
 
     }

@@ -13069,3 +13069,143 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     background-color: #F1BFA0;
     color: black;
 }
+
+/* CSS para el switch utilizado en la vista usersShowInSystem */
+.checkbox-wrapper-22 .switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+  }
+
+  .checkbox-wrapper-22 .switch input {
+    display:none;
+  }
+
+  .checkbox-wrapper-22 .slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+  }
+
+  .checkbox-wrapper-22 .slider:before {
+    background-color: #fff;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+  }
+
+  .checkbox-wrapper-22 input:checked + .slider {
+    background-color: #66bb6a;
+  }
+
+  .checkbox-wrapper-22 input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+
+  .checkbox-wrapper-22 .slider.round {
+    border-radius: 34px;
+  }
+
+  .checkbox-wrapper-22 .slider.round:before {
+    border-radius: 50%;
+  }
+
+  /* CSS para las notificaciones toast usadas en la vista usersShowInSystem*/
+  .toast {
+    flex-basis: 350px;
+    max-width: 350px;
+    font-size: 0.875rem;
+    background-color: rgba(255, 255, 255, 0.85);
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    border-radius: 0.25rem;
+  }
+  
+  .toast:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+  
+  .toast.showing {
+    opacity: 1;
+  }
+  
+  .toast.show {
+    display: flex;
+    opacity: 1;
+  }
+  
+  .toast.hide {
+    display: none;
+  }
+  
+  .toast-header {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    color: #6c757d;
+    background-color: rgba(255, 255, 255, 0.85);
+    background-clip: padding-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-top-left-radius: calc(0.25rem - 1px);
+    border-top-right-radius: calc(0.25rem - 1px);
+  }
+  
+  .toast-body {
+    padding: 0.75rem;
+  }
+
+  #toasts {
+    position: fixed;
+    bottom: 10px;
+    /* right: 10px; */
+    /* display: flex; */
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 9999;
+    max-height: 50%;
+    overflow-y: scroll;
+  }
+  
+  .toast {
+    width: 400px;
+    height: 70px;
+    border-radius: 5px;
+    margin: 0.5rem;
+    color: #ffffff;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row-reverse;
+    opacity: 0.7;
+    flex-basis: 0.2rem;
+    text-align: center;
+  }
+
+  .toast.success {
+    background-color: #28B463;
+  }
+  
+  .toast.info {
+    background-color: #248AFD;
+  }
+  
+  .toast.warning {
+    background-color: #FFC100;
+  }
+  
+  .toast.error {
+    background-color: #FF4747;
+  }

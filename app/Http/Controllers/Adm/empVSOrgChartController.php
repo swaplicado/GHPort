@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
+use App\Utils\usersInSystemUtils;
 use Illuminate\Http\Request;
 use App\User;
 use App\Models\Adm\OrgChartJob;
@@ -34,6 +35,7 @@ class empVSOrgChartController extends Controller
         $lUsers = $this->getlUsers();
         $lOrgChart = OrgChartJob::where('is_deleted', 0)->get();
 
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
         return view('Adm.empVSOrgChart')->with('lUsers', $lUsers)
                                         ->with('lOrgChart', $lOrgChart);
     }

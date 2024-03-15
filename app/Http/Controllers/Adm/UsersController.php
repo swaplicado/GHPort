@@ -16,6 +16,7 @@ use App\Models\Adm\UsersPhotos;
 use App\Constants\SysConst;
 use App\Utils\GlobalUsersUtils;
 use App\Utils\programmedTaskUtils;
+use App\Utils\usersInSystemUtils;
 
 class UsersController extends Controller
 {
@@ -379,6 +380,7 @@ class UsersController extends Controller
                         // ->where('a.is_deleted', 0)
                         ->get();
         
+        $lUser = usersInSystemUtils::FilterUsersInSystem($lUser, 'idUser');
         return view('Adm.indexUser')->with('lUser', $lUser)->with('lOrgChart',$orgChart)->with('lPlan',$planVacations)->with('schedules', $schedules);
     }
 
@@ -445,6 +447,7 @@ class UsersController extends Controller
                         ->select('us.id AS idUser', 'us.schedule_template_id as schedule_id', 'st.name as schedule_name', 'us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active','ocj.id_org_chart_job AS idOrg','vp.id_vacation_plan AS idPlan')
                         ->get();
 
+        $lUser = usersInSystemUtils::FilterUsersInSystem($lUser, 'idUser');
         return json_encode(['success' => true, 'message' => 'Registro actualizado con exitó', 'lUser' => $lUser]);
     }
 }
