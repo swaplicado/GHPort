@@ -188,7 +188,7 @@ var app = new Vue({
                  html = `
                 <div class="row hijoColab" id="hijo`+this.childIds+`">
                     <div class="col-md-2 label-container">
-                        <label for="">Hijo(a)</label>
+                        <label for="">Hijo(a):</label>
                     </div>
                     <div class="col-md-4">
                         <input type="text" name="nombre" value="`+name+`" class="my-form-control" placeholder="Nombre completo del hijo(a)" readonly>
@@ -196,13 +196,13 @@ var app = new Vue({
                     <div class="col-md-5">
                         <div class="row">
                             <div class="col-md-2 label-container">
-                                <label for="">Nacimiento</label>
+                                <label for="">Nacimiento:</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" name="edad" value="`+birthday+`" class="my-form-control" readonly>
                             </div>
                             <div class="col-md-2 label-container">
-                                <label for="">Sexo*</label>
+                                <label for="">Sexo:</label>
                             </div>
                             <div class="col-md-4">
                                 <select name="sexo" id="selSexChild" class="my-form-control select2-class" style="width: 100%;" disabled>`;

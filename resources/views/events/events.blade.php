@@ -167,6 +167,8 @@
 <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
 <script>
     var oDateRangePicker = null;
+    var dateRangePickerArrayApplications = [];
+    var dateRangePickerArrayIncidences = [];
     function initCalendar(
         sStart_date,
         bSingleMonth,

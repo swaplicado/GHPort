@@ -31,6 +31,8 @@
                 'title': 4,
                 'description': 5,
                 'offender': 6,
+                'startDateNoFormat': 7,
+                'endDateNoFormat': 8
             };
         }
         var oServerData = new GlobalData();
@@ -92,15 +94,21 @@
                     <th>Titulo</th>
                     <th>Descripción</th>
                     <th>Ofensor</th>
+                    
+                    <th></th>
+                    <th></th>
                     <tbody>
                         <tr v-for="san in lSanctions">
                             <td>@{{san.employee_id}}</td>
                             <td>@{{san.num}}</td>
-                            <td>@{{san.startDate}}</td>
-                            <td>@{{san.endDate}}</td>
+                            <td>@{{oDateUtils.formatDate(san.startDate,'DD-MMM-YYYY')}}</td>
+                            <td>@{{oDateUtils.formatDate(san.endDate,'DD-MMM-YYYY')}}</td>
                             <td>@{{san.title}}</td>
                             <td>@{{san.description}}</td>
                             <td>@{{san.offender}}</td>
+
+                            <td>@{{san.startDate}}</td>
+                            <td>@{{san.endDate}}</td>
                         </tr>
                     </tbody>
                 </thead>
@@ -117,7 +125,7 @@
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
-                let colStartDate = data[oServerData.indexesMinutesTable['startDate']];
+                let colStartDate = data[oServerData.indexesMinutesTable['startDateNoFormat']];
                 let oStartDate = moment(app.startDate);
                 let oEndDate = moment(app.endDate);
                 let oColStartDate = moment(colStartDate);
@@ -135,7 +143,8 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'minutes_table',
                                         'colTargets' => [0],
-                                        'colTargetsSercheable' => [],
+                                        'colTargetsSercheable' => [7,8],
+                                        'noSort' => true,
                                         // 'noDom' => true,
                                     ] )
 
@@ -178,7 +187,7 @@
     function showAll(){
         app.showAll = true;
         oDatePicker.val('');
-        table['sanctions_table'].draw();
+        table['minutes_table'].draw();
     }
 </script>
 @endsection

@@ -1129,7 +1129,7 @@ var app = new Vue({
         },
 
         approbePermission() {
-            SGui.showWaiting(15000);
+            SGui.showWaiting(60000);
             axios.post(this.oData.routeApprobe, {
                     'permission_id': this.oPermission.id_hours_leave,
                     'comments': this.comments,

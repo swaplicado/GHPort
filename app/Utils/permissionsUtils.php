@@ -158,7 +158,7 @@ class permissionsUtils {
         
         $client = new Client([
             'base_uri' => $config->urlSyncCAP,
-            'timeout' => 30.0,
+            'timeout' => 60.0,
             'headers' => $headers
         ]);
 

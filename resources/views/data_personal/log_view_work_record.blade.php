@@ -38,7 +38,7 @@
     
     <div class="card-header">
         <h3>
-            <b>Constancias laborales visualizadas y o descargadas</b>
+            <b>Constancias laborales visualizadas y/o descargadas</b>
             @include('layouts.manual_button')
         </h3>
     </div>
@@ -78,7 +78,8 @@
                                         'crear_modal' => true,
                                         'edit_modal' => true,
                                         'delete' => true,
-                                        'send' => true
+                                        'send' => true,
+                                        'order' => [[0, 'asc']],
                                     ] )
 <script>
     $(document).ready(function () {
@@ -92,6 +93,8 @@
                 return oColStartDate.isBetween(oStartDate, oEndDate);
             }
         );
+        filterMinutes();
+
     });
 
 </script>

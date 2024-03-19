@@ -29,9 +29,9 @@ class SyncController extends Controller
     public static function toSynchronize($withRedirect = true)
     {
         $config = \App\Utils\Configuration::getConfigurations();
-        // $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        // $photos = SyncController::SyncPhotos();
-        $synchronized = true;
+        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+        $photos = SyncController::SyncPhotos();
+        // $synchronized = true;
 
         if($synchronized){
              $newDate = Carbon::now();
@@ -46,7 +46,7 @@ class SyncController extends Controller
     public static function synchronizeWithERP($lastSyncDate = "")
     {
         $config = \App\Utils\Configuration::getConfigurations();
-        $lastSyncDate = Carbon::parse($lastSyncDate)->subDays($config->pastSyncDays)->startOfDay()->toDateTimeString();
+        // $lastSyncDate = Carbon::parse($lastSyncDate)->subDays($config->pastSyncDays)->startOfDay()->toDateTimeString();
 
         $client = new Client([
             'base_uri' => $config->urlSync,
@@ -195,6 +195,8 @@ class SyncController extends Controller
     
              \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
         }
+
+        // GlobalUsersUtils::syncExternalWithGlobalUsers();
 
         return redirect()->back();
     }

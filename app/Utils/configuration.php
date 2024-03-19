@@ -23,7 +23,7 @@ class Configuration {
         $data[$key] = $value;
 
         // Write File
-        $newJsonString = json_encode($data, JSON_PRETTY_PRINT);
+        $newJsonString = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents(base_path('gh_config.json'), stripslashes($newJsonString));
     }
 }

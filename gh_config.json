@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2024-02-27 15:08:26",
+    "lastSyncDateTime": "2024-03-19 08:48:24",
     "pastSyncDays": 1,
     "expiration_vacations": {
         "years": 100,
@@ -36,17 +36,17 @@
         },
         {
             "id": 2,
-            "text": "Du00edas pasados",
+            "text": "Días pasados",
             "type": "is_past"
         },
         {
             "id": 3,
-            "text": "Du00edas mayor a los actuales",
+            "text": "Días mayor a los actuales",
             "type": "is_advanced"
         },
         {
             "id": 4,
-            "text": "Du00edas proporcionales",
+            "text": "Días proporcionales",
             "type": "is_proportional"
         },
         {
@@ -316,7 +316,7 @@
             "id": 32,
             "class": 5,
             "type": 11,
-            "name": "Cu00d3NYUGE O PAREJA"
+            "name": "CÓNYUGE O PAREJA"
         },
         {
             "id": 33,
@@ -340,7 +340,7 @@
             "id": 36,
             "class": 5,
             "type": 31,
-            "name": "Tu00cdO(A)"
+            "name": "TÍO(A)"
         },
         {
             "id": 37,
@@ -417,7 +417,7 @@
     },
     "evalUser": {
         "user": "cesar.orozco",
-        "password": "12345678"
+        "password": "1234"
     },
     "fieldToFindUserInEval": {
         "username": false,
@@ -425,5 +425,6 @@
         "email": false,
         "external_id": false,
         "employee_num": true
-    }
+    },
+    "urlUniv": "192.168.1.251/univ/public/api/"
 }

@@ -62,7 +62,8 @@
                                         'crear_modal' => true,
                                         'edit_modal' => true,
                                         'delete' => true,
-                                        'send' => true
+                                        'send' => true,
+                                        'order' => [[1, 'asc']],
                                     ] )
 <script>
     $(document).ready(function (){

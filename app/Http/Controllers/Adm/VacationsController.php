@@ -52,8 +52,15 @@ class VacationsController extends Controller
                     EmployeeVacationUtils::syncVacConsumed($user->id);
                     
                     $oSyncLog = SyncLog::where('user_id', $user->id)->first();
-                    $oSyncLog->last_sync = Carbon::now()->toDateTimeString();
-                    $oSyncLog->update();
+                    if(!is_null($oSyncLog)){
+                        $oSyncLog->last_sync = Carbon::now()->toDateTimeString();
+                        $oSyncLog->update();
+                    }else{
+                        $oSyncLog = new SyncLog();
+                        $oSyncLog->user_id = $user->id;
+                        $oSyncLog->last_sync = Carbon::now()->toDateTimeString();
+                        $oSyncLog->save();
+                    }
                 }
             }
             \DB::commit();
