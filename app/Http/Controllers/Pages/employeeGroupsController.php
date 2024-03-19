@@ -8,6 +8,14 @@ use Illuminate\Http\Request;
 use App\Models\Adm\Group;
 use App\Utils\usersInSystemUtils;
 
+// Definir el tipo de contenido como texto/html
+header('Content-Type: text/html');
+
+// Definir cabeceras de caché para evitar que el navegador almacene en caché la página
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
+
 class employeeGroupsController extends Controller
 {
     public function index(){
@@ -88,22 +96,26 @@ class employeeGroupsController extends Controller
         try {
             $lEmpAssgined = \DB::table('groups_assigns as ga')
                                 ->join('users as u', 'u.id', '=', 'user_id_n')
+                                ->join('org_chart_jobs as org', 'org.id_org_chart_job', '=', 'u.org_chart_job_id')
                                 ->where('group_id_n', $idGroup)
                                 ->select(
                                     'u.id as id_employee',
-                                    'u.full_name as employee'
+                                    'u.full_name as employee',
+                                    'org.job_name as area',
                                 )
                                 ->orderBy('employee')
                                 ->get();
 
             $lEmpNoAssigned = \DB::table('users')
+                                    ->join('org_chart_jobs as org', 'org.id_org_chart_job', '=', 'users.org_chart_job_id')
                                     ->whereNotIn('id', $lEmpAssgined->pluck('id_employee')->toArray())
                                     ->where('is_active', 1)
                                     ->where('is_delete', 0)
                                     ->where('id', '!=', 1)
                                     ->select(
                                         'id as id_employee',
-                                        'full_name as employee'
+                                        'full_name as employee',
+                                        'org.job_name as area',
                                     )
                                     ->orderBy('employee')
                                     ->get();

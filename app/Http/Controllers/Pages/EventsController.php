@@ -14,6 +14,14 @@ use Carbon\Carbon;
 use App\Models\Adm\Event;
 use App\Utils\usersInSystemUtils;
 
+// Definir el tipo de contenido como texto/html
+header('Content-Type: text/html');
+
+// Definir cabeceras de caché para evitar que el navegador almacene en caché la página
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
+
 class EventsController extends Controller
 {
     public function index()
@@ -236,9 +244,10 @@ class EventsController extends Controller
         try {
             $lUsersAssigned = \DB::table('events_assigns')
                                 ->join('users', 'users.id', '=', 'events_assigns.user_id_n')
+                                ->join('org_chart_jobs as org', 'org.id_org_chart_job', '=', 'users.org_chart_job_id')
                                 ->where( 'event_id', $request->event_id)
                                 ->where('users.id', '!=', 1)
-                                ->select('users.id','event_id', 'full_name', 'full_name_ui')
+                                ->select('users.id','event_id', 'full_name', 'full_name_ui', 'org.job_name as area')
                                 ->orderBy('full_name_ui')
                                 ->get();
             
@@ -377,12 +386,14 @@ class EventsController extends Controller
     
             $lUserAssigned = \DB::table('events_assigns as ea')
                                 ->join('users as u', 'u.id', '=', 'ea.user_id_n')
+                                ->join('org_chart_jobs as org', 'org.id_org_chart_job', '=', 'u.org_chart_job_id')
                                 ->where('ea.event_id', $idEvent)
                                 ->where('ea.is_deleted', 0)
                                 ->where('ea.is_closed', 0)
                                 ->select(
                                     'u.id as id_employee',
-                                    'u.full_name as employee'
+                                    'u.full_name as employee',
+                                    'org.job_name as area',
                                 )
                                 ->orderBy('employee')
                                 ->get();
@@ -400,13 +411,15 @@ class EventsController extends Controller
                                 ->get();
     
             $lUsersNoAssigned = \DB::table('users')
+                        ->join('org_chart_jobs as org', 'org.id_org_chart_job', '=', 'users.org_chart_job_id')
                         ->where('is_delete', 0)
                         ->where('is_active', 1)
                         ->whereNotIn('id', $lUserAssigned->pluck('id_employee')->toArray())
                         ->where('id', '!=', 1)
                         ->select(
-                            'id as id_employee',
-                            'full_name as employee'
+                            'users.id as id_employee',
+                            'users.full_name as employee',
+                            'org.job_name as area',
                         )
                         ->orderBy('employee')
                         ->get();

@@ -1,6 +1,6 @@
 <div class="modal fade" id="modal_groups_assign" tabindex="-1" role="dialog" aria-labelledby="modal_groups_assign_label"
     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header modal-header-small">
                 <h5 class="modal-title" id="modal_groups_assign_label">Asignación de grupo</h5>
@@ -16,6 +16,7 @@
                                 <thead class="thead-light">
                                     <th>id</th>
                                     <th>Colaboradores sin asignar</th>
+                                    <th>Área</th>
                                 </thead>
                             </table>
                         </div>
@@ -50,6 +51,7 @@
                                 <thead class="thead-light">
                                     <th>id</th>
                                     <th>Colaboradores asignados</th>
+                                    <th>Área</th>
                                 </thead>
                             </table>
                         </div>
@@ -59,6 +61,20 @@
             <div class="modal-footer modal-footer-small">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" v-on:click="setAssign()">Guardar</a>
+            </div>
+            <div class="modal-footer modal-footer-small">
+                <div class="container">
+                    <div>
+                        <label class="form-label" for="listColabs"><h5>Colaboradores asignados:</h5></label>
+                        <ol class="ulColumns3 ol_bold" name="listColabs">
+                            <template v-for="(colab, index) in lEmployeesAssigned">
+                                <li class="li_bold">
+                                    @{{colab.employee}}
+                                </li>
+                            </template>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

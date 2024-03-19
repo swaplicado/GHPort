@@ -7,6 +7,19 @@
 <link href="myApp/Utils/SDatePicker/css/datepicker-bs4.min.css" rel="stylesheet" />
 <link href="myApp/Utils/SDatePicker/css/datepicker-bulma.min.css" rel="stylesheet" />
 <link href="myApp/Utils/SDatePicker/css/datepicker-foundation.min.css" rel="stylesheet" />
+<style>
+    ol.ol_bold {
+        list-style-type: none; /* Elimina la numeración por defecto */
+        counter-reset: item; /* Reinicia el contador */
+    }
+
+    li.li_bold::before {
+        content: counter(item) ". "; /* Agrega el número y un punto */
+        counter-increment: item; /* Incrementa el contador */
+        font-weight: bold; /* Aplica negrita al número */
+    }
+
+</style>
 @endsection
 
 @section('headJs')
@@ -37,11 +50,13 @@
             this.indexesEmpNoAssign = {
                 'id_employee': 0,
                 'employee': 1,
+                'area': 2,
             }
 
             this.indexesEmpAssign = {
                 'id_employee': 0,
                 'employee': 1,
+                'area': 2,
             }
 
             this.indexesGroupNoAssign = {
@@ -80,7 +95,7 @@
                 </div>
                 <br>
                 <br>
-                <table class="table table-bordered" id="events_table">
+                <table class="table table-bordered" id="events_table" style="width: 100%">
                     <thead class="thead-light">
                         <th>id_event</th>
                         <th>Evento</th>
@@ -114,7 +129,7 @@
 {{-- Tabla de empleados no asignados --}}
 @include('layouts.table_jsControll', [
                                         'table_id' => 'employeesNoAssignTable',
-                                        'colTargets' => [0],
+                                        'colTargets' => [0,2],
                                         'colTargetsSercheable' => [],
                                         'noDom' => true,
                                         'noPaging' => true,
@@ -127,7 +142,7 @@
 {{-- Tabla de empleados asignados --}}
 @include('layouts.table_jsControll', [
                                         'table_id' => 'employeesAssignTable',
-                                        'colTargets' => [0],
+                                        'colTargets' => [0,2],
                                         'colTargetsSercheable' => [],
                                         'noDom' => true,
                                         'noPaging' => true,

@@ -264,7 +264,8 @@ var app = new Vue({
                 dataEmployeesNoAssigned.push(
                     [
                         emp.id_employee,
-                        emp.employee,
+                        emp.employee + ' / ' + emp.area,
+                        emp.area,
                     ]
                 );
             }
@@ -279,7 +280,8 @@ var app = new Vue({
                 dataEmployeesAssigned.push(
                     [
                         emp.id_employee,
-                        emp.employee,
+                        emp.employee + ' / ' + emp.area,
+                        emp.area,
                     ]
                 );
             }
@@ -364,7 +366,8 @@ var app = new Vue({
                 this.lEmployeesAssigned.push(
                     {
                         'id_employee': item[this.indexesEmpAssign.id_employee],
-                        'employee': item[this.indexesEmpAssign.employee]
+                        'employee': this.getNameFromString(item[this.indexesEmpAssign.employee]),
+                        'area': item[this.indexesEmpAssign.area]
                     }
                 );
 
@@ -404,7 +407,8 @@ var app = new Vue({
                 this.lEmployeesNoAssigned.push(
                     {
                         'id_employee': item[this.indexesEmpNoAssign.id_employee],
-                        'employee': item[this.indexesEmpNoAssign.employee]
+                        'employee': this.getNameFromString(item[this.indexesEmpNoAssign.employee]),
+                        'area': item[this.indexesEmpNoAssign.area]
                     }
                 );
 
@@ -579,6 +583,20 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
+        },
+
+        getNameFromString(cadena){
+            // Encontrar la posición de la subcadena ".-"
+            var posicion = cadena.indexOf(" / ");
+
+            // Verificar si la subcadena fue encontrada
+            if (posicion !== -1) {
+                // Imprimir la parte de la cadena hasta la posición de la subcadena
+                return cadena.substring(0, posicion);
+            } else {
+                // Si la subcadena no fue encontrada, imprimir la cadena completa
+                return cadena;
+            }
         }
     }
 });
