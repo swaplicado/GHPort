@@ -97,12 +97,12 @@ class Menu {
         //Menu consulta datos personales
         $datosPersonales = [];
 
-        array_push($datosPersonales,['route' => route('word_record_personal'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Constancia laboral']);
+        array_push($datosPersonales,['route' => route('word_record_personal'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Mi constancia laboral']);
         
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($datosPersonales,['route' => route('word_record_personal_manager'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Constancia todos colabs.']);
-            array_push($datosPersonales,['route' => route('get_word_record_personal_manager_low'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Constancia colabs baja.']);
-            array_push($datosPersonales,['route' => route('word_record_log'), 'icon' => 'bx bx-book-reader bx-xs', 'name' => 'Logs constancia labor.']);
+            array_push($datosPersonales,['route' => route('word_record_personal_manager'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Todos colabs.']);
+            array_push($datosPersonales,['route' => route('get_word_record_personal_manager_low'), 'icon' => 'bx bxs-contact bx-xs', 'name' => 'Colabs. Baja.']);
+            array_push($datosPersonales,['route' => route('word_record_log'), 'icon' => 'bx bx-book-reader bx-xs', 'name' => 'Historial descargas.']);
         }
         array_push($lMenus,(object) ['type' => $list, 'list' =>$datosPersonales, 'icon' => 'bx bxs-food-menu bx-xs', 'name' => 'Constancias laborales', 'id' => 'DatosPersonales']); 
 
