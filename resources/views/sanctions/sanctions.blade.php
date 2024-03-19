@@ -30,6 +30,7 @@
                 'title': 3,
                 'description': 4,
                 'offender': 5,
+                'dateNoFormat': 6,
             };
         }
         var oServerData = new GlobalData();
@@ -89,15 +90,19 @@
                     <th>Fecha</th>
                     <th>Titulo</th>
                     <th>Descripción</th>
-                    <th>Ofensor</th>
+                    <th>Colaborador</th>
+
+                    <th></th>
                     <tbody>
                         <tr v-for="san in lSanctions">
                             <td>@{{san.employee_id}}</td>
                             <td>@{{san.num}}</td>
-                            <td>@{{san.startDate}}</td>
+                            <td>@{{oDateUtils.formatDate(san.startDate, 'DD-MMM-YYYY')}}</td>
                             <td>@{{san.title}}</td>
                             <td>@{{san.description}}</td>
                             <td>@{{san.offender}}</td>
+
+                            <td>@{{san.startDate}}</td>
                         </tr>
                     </tbody>
                 </thead>
@@ -115,7 +120,7 @@
     $(document).ready(function () {
         $.fn.dataTable.ext.search.push(
             function( settings, data, dataIndex ) {
-                let colStartDate = data[oServerData.indexesSanctionsTable['date']];
+                let colStartDate = data[oServerData.indexesSanctionsTable['dateNoFormat']];
                 let oStartDate = moment(app.startDate);
                 let oEndDate = moment(app.endDate);
                 let oColStartDate = moment(colStartDate);
@@ -133,8 +138,9 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'sanctions_table',
                                         'colTargets' => [0],
-                                        'colTargetsSercheable' => [],
+                                        'colTargetsSercheable' => [6],
                                         // 'noDom' => true,
+                                        'noSort' => true
                                     ] )
 
 @include('layouts.manual_jsControll')

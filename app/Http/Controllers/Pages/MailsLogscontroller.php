@@ -101,11 +101,15 @@ class MailsLogscontroller extends Controller
                             ->where('is_active', 1)
                             ->where('is_delete', 0)
                             ->first();
-    
-            $application = \DB::table('applications')
+            if($mailLog->application_id_n == null){
+                $application = \DB::table('applications')
+                            ->where('id_application', $mailLog->hours_leave_id_n)
+                            ->first();
+            }else{
+                $application = \DB::table('applications')
                             ->where('id_application', $mailLog->application_id_n)
                             ->first();
-
+            }
             $lDays = $this->getlDays($application);
             
             if($mailLog->type_mail_id == SysConst::MAIL_SOLICITUD_VACACIONES){
@@ -115,6 +119,7 @@ class MailsLogscontroller extends Controller
             }
             
         } catch (\Throwable $th) {
+            \Log::error($th);
             return json_encode(['success' => false, 'message' => 'Error al enviar el e-mail', 'icon' => 'error']);    
         }
 

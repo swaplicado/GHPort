@@ -37,8 +37,8 @@ class GlobalUsersUtils {
         $oUser->username = $username;
         $oUser->email = $email;
         $oUser->full_name = $full_name;
-        Mail::to('adrian.aviles@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_INSERT));
-        Mail::to('cesar.orozco@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_INSERT));
+        // Mail::to('adrian.aviles@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_INSERT));
+        // Mail::to('cesar.orozco@swaplicado.com.mx')->send(new updateGlobalUserMail($oUser, SysConst::USERGLOBAL_INSERT));
         
         $globalUser = new globalUser();
         $globalUser->username = $username;

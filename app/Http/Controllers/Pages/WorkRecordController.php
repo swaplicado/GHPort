@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
+use \App\Utils\delegationUtils;
+use App\Constants\SysConst;
 
 
 class WorkRecordController extends Controller
@@ -19,6 +21,7 @@ class WorkRecordController extends Controller
     }
 
     public function indexManager(){
+        delegationUtils::getAutorizeRolUser([SysConst::ADMINISTRADOR, SysConst::GH]);
         $dateEmployees = $this->getDataEmployees();
         return view('data_personal.work_record') -> with ('dataUser', $dateEmployees);
     }

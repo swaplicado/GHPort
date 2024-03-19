@@ -114,6 +114,10 @@ class sanctionsController extends Controller
 
             $arrEmployes = self::makeArraylEmployees($lEmployees);
             $lSanctions = self::getSanctions($arrEmployes, $request->type);
+            if(count($lSanctions) > 0){
+                $lSanctions = collect($lSanctions)->sortByDesc('startDate');
+                $lSanctions = $lSanctions->values()->all();
+            }
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
@@ -128,6 +132,10 @@ class sanctionsController extends Controller
             $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
             $arrEmployes = self::makeArraylEmployees($lEmployees);
             $lSanctions = self::getSanctions($arrEmployes, $request->type);
+            if(count($lSanctions) > 0){
+                $lSanctions = collect($lSanctions)->sortByDesc('startDate');
+                $lSanctions = $lSanctions->values()->all();
+            }
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);            
@@ -142,6 +150,10 @@ class sanctionsController extends Controller
             $lEmployees = [$oUser];
             $lData = self::makeArraylEmployees($lEmployees);
             $lSanctions = self::getSanctions($lData, $request->type);
+            if(count($lSanctions) > 0){
+                $lSanctions = collect($lSanctions)->sortByDesc('startDate');
+                $lSanctions = $lSanctions->values()->all();
+            }
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
@@ -175,6 +187,10 @@ class sanctionsController extends Controller
         }
         $lData = self::makeArraylEmployees($lEmployees);
         $lSanctions = self::getSanctions($lData, SysConst::ACTA);
+        if(count($lSanctions) > 0){
+            $lSanctions = collect($lSanctions)->sortByDesc('startDate');
+            $lSanctions = $lSanctions->values()->all();
+        }
 
         $lTypes = [
             'ACTA' => SysConst::ACTA,
@@ -211,6 +227,10 @@ class sanctionsController extends Controller
         }
         $lData = self::makeArraylEmployees($lEmployees);
         $lSanctions = self::getSanctions($lData, SysConst::SANCION);
+        if(count($lSanctions) > 0){
+            $lSanctions = collect($lSanctions)->sortByDesc('startDate');
+            $lSanctions = $lSanctions->values()->all();
+        }
 
         $lTypes = [
             'ACTA' => SysConst::ACTA,

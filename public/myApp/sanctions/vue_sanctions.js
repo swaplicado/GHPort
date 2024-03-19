@@ -11,6 +11,7 @@ var app = new Vue({
         startDate: oServerData.startDate,
         endDate: oServerData.endDate,
         showAll: true,
+        oDateUtils: new SDateUtils(),
     },
     mounted(){
         self = this;
@@ -44,11 +45,13 @@ var app = new Vue({
                     [
                         san.employee_id,
                         san.num,
-                        san.startDate,
-                        san.endDate,
+                        this.oDateUtils.formatDate(san.startDate, 'DD-MMM-YYYY'),
+                        this.oDateUtils.formatDate(san.endDate, 'DD-MMM-YYYY'),
                         san.title,
                         san.description,
                         san.offender,
+                        san.startDate,
+                        san.endDate,
                     ]
                 );
             }
@@ -64,10 +67,11 @@ var app = new Vue({
                     [
                         san.employee_id,
                         san.num,
-                        san.startDate,
+                        this.oDateUtils.formatDate(san.startDate, 'DD-MMM-YYYY'),
                         san.title,
                         san.description,
                         san.offender,
+                        san.startDate,
                     ]
                 );
             }

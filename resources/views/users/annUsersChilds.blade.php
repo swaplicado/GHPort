@@ -132,6 +132,9 @@
                                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                             });
 
+        startAniv = moment(oServerData.startDate).format('YYYY-MM-DD');
+        endAniv = moment(oServerData.endDate).format('YYYY-MM-DD');
+
         oDatePickerBirthay = $('input[name="daterangeBirthday"]').daterangepicker({
                                 opens: 'left',
                                 locale: {
@@ -154,6 +157,9 @@
                                 filterBirthday();
                                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
                             });
+
+        startBirthday = moment(oServerData.startDate).format('YYYY-MM-DD');
+        endBirthday = moment(oServerData.endDate).format('YYYY-MM-DD');
 
         oDatePickerAniv.val('');
         oDatePickerBirthay.val('');

@@ -346,8 +346,8 @@ class incidencesUtils {
         ]);
 
         $body = '{
-                "email": "cap@swaplicado.com.mx",
-                "password": "1234"
+                "name": "Admin",
+                "password": "Super2023!"
         }';
 
         $response = $client->request('POST', 'login' , [

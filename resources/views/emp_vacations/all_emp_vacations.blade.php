@@ -39,7 +39,7 @@
                                     <img v-else-if="emp.company_id == 4" src="img/swap_logo_22.png" width="50vmax" height="20vmax" alt="">
                                     <img v-else-if="emp.company_id == 5" src="img/ame.png" width="70vmax" height="30vmax" alt="">
                                 </td>
-                                <td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); border-right: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes: @{{emp.tot_vacation_remaining}} días</td>
+                                <td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); border-right: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciones pendientes: @{{emp.tot_vacation_remaining}} días</td>
                                 <td v-if="emp.is_head_user" style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">
                                     Encargado de área
                                     <span class="bx bxs-group"></span>

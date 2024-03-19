@@ -118,11 +118,11 @@
                     <th>Colaborador</th>
                     <th>Solicitud</th>
                     <th>Tipo</th>
-                    <th>Fecha inició</th>
+                    <th>Fecha inicio</th>
                     <th>Fecha fin</th>
                     <th>Tiempo</th>
                     <th>Estatus</th>
-                    <th>Fecha envió</th>
+                    <th>Fecha envío</th>
                 </thead>
                 <tbody>
                     <tr v-for="application in lApplications">

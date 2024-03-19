@@ -301,7 +301,7 @@ class UsersController extends Controller
             $userUniv = $resultUniv->data;
             try {
                 $resultFind = json_decode(globalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id));
-                if($resultFind->success){
+                if(!$resultFind->success){
                     //insertar en user_vs_system
                     GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id);
                 }
@@ -405,6 +405,7 @@ class UsersController extends Controller
 
                 $us->pass = $us->password;
                 $us->external_id = $us->external_id_n;
+                $us->email = $us->institutional_mail;
                 GlobalUsersUtils::globalUpdateFromSystem($us, SysConst::SYSTEM_PGH);
             } catch (\Throwable $th) {
                 \DB::rollback();
@@ -430,6 +431,9 @@ class UsersController extends Controller
                 $us->changed_password = 0;
                 $us->update();
 
+                $us->pass = $us->password;
+                $us->external_id = $us->external_id_n;
+                $us->email = $us->institutional_mail;
                 GlobalUsersUtils::globalUpdateFromSystem($us, SysConst::SYSTEM_PGH);
             } catch (\Throwable $th) {
                 \DB::rollback();

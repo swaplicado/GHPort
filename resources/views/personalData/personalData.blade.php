@@ -150,7 +150,7 @@
                                         <label for="selSex">Sexo:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="selSex" id="selSex" v-model="sex" style="width: 100%">
+                                        <select name="selSex" id="selSex" v-model="sex" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="sex in lSex" :value="sex.id">@{{sex.text}}</option>
                                         </select>
                                     </div>
@@ -160,7 +160,7 @@
                                         <label for="selBlood">Tipo sangre:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="selBlood" id="selBlood" v-model="bloodType" style="width: 100%">
+                                        <select name="selBlood" id="selBlood" v-model="bloodType" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="blood in lBlood" :value="blood.id">@{{blood.text}}</option>
                                         </select>
                                     </div>
@@ -170,7 +170,7 @@
                                         <label for="selSchooling">Escolaridad:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="selSchooling" id="selSchooling" v-model="schooling" style="width: 100%">
+                                        <select name="selSchooling" id="selSchooling" v-model="schooling" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="school in lSchooling" :value="school.id">@{{school.text}}</option>
                                         </select>
                                     </div>
@@ -183,7 +183,7 @@
                                         <label for="selCivl">Estado civil:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="selCivl" id="selCivl" v-model="maritalStatus" style="width: 100%">
+                                        <select name="selCivl" id="selCivl" v-model="maritalStatus" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="civil in lCivil" :value="civil.id">@{{civil.text}}</option>
                                         </select>
                                     </div>
@@ -197,7 +197,7 @@
                                             placeholder="del empleado" style="text-transform:uppercase;" :readonly="infoDates.type == 2 || infoDates.type == 3">
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row">                     
                                     <div class="col-md-4 label-container">
                                         <label for="companyPhone">Teléfono empresa:</label>
                                     </div>
@@ -265,7 +265,7 @@
                                         <label for="SelEmergencyContac">Parentesco contacto:*</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <select name="SelEmergencyContac" id="SelEmergencyContac" v-model="parentesco" style="width: 100%">
+                                        <select name="SelEmergencyContac" id="SelEmergencyContac" v-model="parentesco" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="par in lParentesco" :value="par.id">@{{par.text}}</option>
                                         </select>
                                     </div>
@@ -297,7 +297,7 @@
                                         <label for="selState">Estado:*</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select name="selState" id="selState" v-model="state" style="width: 100%">
+                                        <select name="selState" id="selState" v-model="state" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="st in lState" :value="st.id">@{{st.text}}</option>
                                         </select>
                                     </div>
@@ -407,7 +407,7 @@
                                         <label for="selSexSpouce">Sexo:*</label>
                                     </div>
                                     <div class="col-md-4">
-                                        <select name="selSexSpouce" id="selSexSpouce" v-model="sexSpouce" style="width: 100%">
+                                        <select name="selSexSpouce" id="selSexSpouce" v-model="sexSpouce" style="width: 100%" :disabled="infoDates.type == 2 || infoDates.type == 3">
                                             <option v-for="sexSp in lSex" :value="sexSp.id">@{{sexSp.text}}</option>
                                         </select>
                                     </div>

@@ -59,7 +59,7 @@
             </button>
             <br>
             <br>
-            <table class="table table-bordered" id="groups_table">
+            <table class="table table-bordered" id="groups_table" style="width: 100%">
                 <thead class="thead-light">
                     <th>id_group</th>
                     <th>Grupo</th>

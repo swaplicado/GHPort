@@ -18,8 +18,8 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $sync = new SyncController();
-        $sync->toSynchronize(false);
+        //$sync = new SyncController();
+        //$sync->toSynchronize(false);
     }
 
     public function index(){
