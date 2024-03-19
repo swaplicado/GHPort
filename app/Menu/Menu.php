@@ -111,7 +111,14 @@ class Menu {
 
         //quinto grupo de menus consultas
         $consultas = [];
-        array_push($consultas,['route'=> route('directory'), 'icon' => 'bx bx-book-open bx-xs', 'name' => 'Directorio']);
+
+        $orgChartJob = \DB::table('org_chart_jobs')->where('id_org_chart_job', $oUser->org_chart_job_id)->first();
+        if($orgChartJob != null){
+            if($orgChartJob->is_office){
+                array_push($consultas,['route'=> route('directory'), 'icon' => 'bx bx-book-open bx-xs', 'name' => 'Directorio']);
+            }
+        }
+
         array_push($consultas,['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-xs', 'name' => 'Organigrama']);
         // array_push($consultas,['route' => route('personalData'), 'icon' => 'bx bxs-user-circle bx-xs', 'name' => 'Mis datos personales']); 
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
@@ -197,6 +204,9 @@ class Menu {
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-xs', 'name' => 'Áreas func.']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('officeOrgChartJob'), 'icon' => 'bx bx-buildings bx-xs', 'name' => 'Mostrar áreas']);
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-xs', 'name' => 'Colabs. vs áreas func.']);    

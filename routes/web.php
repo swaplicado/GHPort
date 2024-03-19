@@ -311,6 +311,9 @@ Route::middleware(['auth', 'menu'])->group( function () {
     /**Rutas de mostrar usuarios en sistema */
     Route::get('showUsers', 'Adm\UsersShowInSystemController@index')->name('showUsers');
     Route::post('showUsers/update', 'Adm\UsersShowInSystemController@updateShowInSystem')->name('showUsers_updateShowInSystem');
+    /**Rutas de si es area administrativa */
+    Route::get('officeArea', 'Adm\UsersShowInSystemController@officeOrgChartJob')->name('officeOrgChartJob');
+    Route::post('officeArea/update', 'Adm\UsersShowInSystemController@updateOfficeOrgChartJob')->name('updateOfficeOrgChartJob');
 });
 /**
  * Rutas permisos 

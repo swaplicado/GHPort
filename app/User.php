@@ -44,6 +44,7 @@ class User extends Authenticatable
         'changed_password',
         'external_id_n',
         'is_delete',
+        'show_in_system',
         'created_by',
         'updated_by'
     ];

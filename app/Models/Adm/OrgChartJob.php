@@ -17,6 +17,7 @@ class OrgChartJob extends Model
         'top_org_chart_job_id_n',
         'positions',
         'is_area',
+        'is_office',
         'area_code',
         'area_name',
         'area_name_ui',
