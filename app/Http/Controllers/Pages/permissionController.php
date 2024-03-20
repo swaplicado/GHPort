@@ -141,6 +141,10 @@ class permissionController extends Controller
             $interOut = null;
             $interReturn = null;
 
+            if($comments == null || $comments == ""){
+                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'error']);
+            }
+
             if(!is_null($request->interOut) && !is_null($request->interReturn)){
                 $interOut = Carbon::createFromFormat('g:i A', $request->interOut)->format('H:i');
                 $interReturn = Carbon::createFromFormat('g:i A', $request->interReturn)->format('H:i');
@@ -196,6 +200,10 @@ class permissionController extends Controller
 
             $interOut = null;
             $interReturn = null;
+
+            if($comments == null || $comments == ""){
+                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'error']);
+            }
 
             if(!is_null($request->interOut) && !is_null($request->interReturn)){
                 $interOut = Carbon::createFromFormat('g:i A', $request->interOut)->format('H:i');

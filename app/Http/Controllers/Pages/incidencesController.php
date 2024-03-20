@@ -156,6 +156,10 @@ class incidencesController extends Controller
         $is_season_special  = $request->is_season_special;
         $is_event  = $request->is_event;
         try {
+            if($comments == null || $comments == ""){
+                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+            }
+
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
             foreach($arrApplicationsEA as $arr){
@@ -242,6 +246,11 @@ class incidencesController extends Controller
         $is_season_special  = $request->is_season_special;
 
         try {
+
+            if($comments == null || $comments == ""){
+                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+            }
+            
             $application = Application::findOrFail($id_application);
 
             \DB::beginTransaction();

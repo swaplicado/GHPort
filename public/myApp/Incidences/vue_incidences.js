@@ -689,6 +689,11 @@ var app = new Vue({
                 return;
             }
 
+            if(this.comments == null || this.comments == ""){
+                SGui.showMessage('', 'Debe ingresar un comentario para la solicitud');
+                return;
+            }
+
             if(this.takedDays < 1){
                 SGui.showMessage('', 'No se puede crear una solicitud con cero días efectivos de incidencia', 'warning');
                 return;

@@ -759,6 +759,11 @@ var appMyVacations = new Vue({
                 return;
             }
 
+            if(this.comments == null || this.comments == ''){
+                SGui.showMessage('', 'Debe ingresar un comentario para la solicitud', 'warning');
+                return;
+            }
+
             // let check = this.checkSpecial();
             // if(check[0]){
             //     if(!(await SGui.showConfirm(check[1], '¿Desea continua?', 'warning'))){

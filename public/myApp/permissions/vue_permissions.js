@@ -716,6 +716,11 @@ var app = new Vue({
                 return;
             }
 
+            if (this.comments == null || this.comments == "") {
+                SGui.showMessage('', 'Debe ingresar un comentario para la solicitud');
+                return;
+            }
+
             if(this.type_id != 3){
                 if ((this.hours < 1 && this.minutes < 1) || this.hours == null && this.minutes == null) {
                     SGui.showMessage('', 'Debe ingresar tiempo de permiso');

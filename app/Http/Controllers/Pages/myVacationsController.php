@@ -126,6 +126,10 @@ class myVacationsController extends Controller
                 return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
             }
 
+            if($comments == null || $comments == ''){
+                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+            }
+
             $vacations = collect($user->vacation)->sortBy('year');
 
             \DB::beginTransaction();
@@ -231,6 +235,10 @@ class myVacationsController extends Controller
         $lDays = $request->lDays;
 
         try {
+            if($comments == null || $comments == ''){
+                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+            }
+
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
 
             foreach($arrApplicationsEA as $arr){
