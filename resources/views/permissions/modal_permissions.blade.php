@@ -33,93 +33,7 @@
                                 </div>
                             </div>
                             <div class="myBreakLine"></div>
-                            <div v-if="(startDate != null && startDate != '') && type_id != null">
-                                <div class="row" v-if="type_id == 1">
-                                    <template v-if="!haveSchedule">
-                                        <div class="col-md-3">
-                                            <label for=""></label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="">Horas:</label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="">Minutos:</label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <div class="col-md-1">
-                                            <label for="">entrada:</label>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" id="entryTime" class="form-control" ref="entryTime"
-                                                name="example" autocomplete="off" :placeholder="entry" style="background-color: white !important"/>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="">salida:</label>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" class="form-control" autocomplete="off" v-model="departure" disabled/>
-                                        </div>
-                                    </template>
-                                </div>
-                                <div class="row" v-if="type_id == 2 && (startDate != null && startDate != '')">
-                                    <template v-if="!haveSchedule">
-                                        <div class="col-md-3">
-                                            <label for=""></label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="">Horas:</label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="">Minutos:</label>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
-                                        </div>
-                                    </template>
-                                    <template v-else>
-                                        <div class="col-md-1">
-                                            <label for="">entrada:</label>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" class="form-control" autocomplete="off" v-model="entry" disabled/>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label for="">salida:</label>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" id="outTime" class="form-control" ref="outTime"
-                                                name="example" autocomplete="off" :placeholder="departure" style="background-color: white !important"/>
-                                        </div>
-                                    </template>
-                                </div>
-                                <div class="row" v-if="type_id == 3 && (startDate != null && startDate != '')">
-                                    <div class="col-md-1">
-                                        <label for="">Salida:</label>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <input type="text" id="entryTime" class="form-control" ref="entryTime"
-                                                name="example" autocomplete="off" :placeholder="entry" style="background-color: white !important"/>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <label for="">Regreso:</label>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <input type="text" id="outTime" class="form-control" ref="outTime"
-                                                name="example" autocomplete="off" :placeholder="departure" style="background-color: white !important"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-else>
+                            <div>
                                 <span style="color: #4e73df">Seleccione un tipo y un dia del calendario para poder ingresar las horas</span>
                             </div>
                         </div>
@@ -177,6 +91,96 @@
                             </span>
                         </div>
                     </div>
+                </div>
+                <div class="card" v-if="!isRevision">
+                    <br>
+                    <div v-if="(startDate != null && startDate != '') && type_id != null">
+                        <div class="row" v-if="type_id == 1">
+                            <template v-if="!haveSchedule">
+                                <div class="col-md-4">
+                                    <label for=""></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Horas:</b></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Minutos:</b></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="col-md-1">
+                                    <label for=""><b>entrada:</b></label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" id="entryTime" class="form-control" ref="entryTime"
+                                        name="example" autocomplete="off" :placeholder="entry" style="background-color: white !important"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>salida:</b></label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" autocomplete="off" v-model="departure" disabled/>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="row" v-if="type_id == 2 && (startDate != null && startDate != '')">
+                            <template v-if="!haveSchedule">
+                                <div class="col-md-4">
+                                    <label for=""></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Horas:</b></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>Minutos:</b></label>
+                                </div>
+                                <div class="col-md-1">
+                                    <input type="number" class="form-input" id="minutos" min="0" max="59" step="1" v-model="minutes" v-on:focus="focusMinutes();" v-on:blur="formatValueMinutes();"/>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="col-md-1">
+                                    <label for=""><b>entrada:</b></label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" autocomplete="off" v-model="entry" disabled/>
+                                </div>
+                                <div class="col-md-1">
+                                    <label for=""><b>salida:</b></label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" id="outTime" class="form-control" ref="outTime"
+                                        name="example" autocomplete="off" :placeholder="departure" style="background-color: white !important"/>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="row" v-if="type_id == 3 && (startDate != null && startDate != '')">
+                            <div class="col-md-1">
+                                <label for=""><b>Salida:</b></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" id="entryTime" class="form-control" ref="entryTime"
+                                        name="example" autocomplete="off" :placeholder="entry" style="background-color: white !important"/>
+                            </div>
+                            <div class="col-md-1">
+                                <label for=""><b>Regreso:</b></label>
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" id="outTime" class="form-control" ref="outTime"
+                                        name="example" autocomplete="off" :placeholder="departure" style="background-color: white !important"/>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                 </div>
                 <div class="card">
                     <div class="card-body card-body-small">
