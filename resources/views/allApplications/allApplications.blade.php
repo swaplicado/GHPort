@@ -41,7 +41,8 @@
                 'end_date_format': 11,
                 'time': 12,
                 'status': 13,
-                'date_send_n': 14
+                'date_send_n': 14,
+                'revisor': 15
             };
         }
         var oServerData = new GlobalData();
@@ -106,7 +107,7 @@
                 </div>
             </div>
             <br>
-            <table class="table table-bordered" id="applications_table">
+            <table class="table table-bordered" id="applications_table" style="width: 100%">
                 <thead class="thead-light">
                     <th>request_id</th>
                     <th>request_class_id</th>
@@ -123,6 +124,7 @@
                     <th>Tiempo</th>
                     <th>Estatus</th>
                     <th>Fecha envío</th>
+                    <th>Revisor</th>
                 </thead>
                 <tbody>
                     <tr v-for="application in lApplications">
@@ -138,9 +140,10 @@
                         <td>@{{application.request_type}}</td>
                         <td style="white-space: nowrap;">@{{application.start_date_format}}</td>
                         <td style="white-space: nowrap;">@{{application.end_date_format}}</td>
-                        <td style="white-space: nowrap;">@{{application.time}}</td>
+                        <td>@{{application.time}}</td>
                         <td>@{{application.status}}</td>
                         <td style="white-space: nowrap;">@{{application.date_send_n}}</td>
+                        <td>@{{application.revisor}}</td>
                     </tr>
                 </tbody>
             </table>

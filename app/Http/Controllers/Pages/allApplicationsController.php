@@ -40,6 +40,10 @@ class allApplicationsController extends Controller
 
         $lVacations = [];
         foreach($dataVacations->lVacations as $vacation){
+            $revisor = '';
+            if($vacation->user_apr_rej_id != null){
+                $revisor = \DB::table('users')->where('id', $vacation->user_apr_rej_id)->value('full_name');
+            }
             $lVacations[] = [
                                 'request_id' => $vacation->id_application,
                                 'request_class_id' => SysConst::VACACIONES,
@@ -57,11 +61,17 @@ class allApplicationsController extends Controller
                                 'time' => '',
                                 'status' => $vacation->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($vacation->date_send_n, 'DDD D-M-Y'),
+                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor' => $revisor
                             ];
         }
 
         $lIncidences = [];
         foreach($dataIncidences->lIncidences as $incidence){
+            $revisor = '';
+            if($incidence->user_apr_rej_id != null){
+                $revisor = \DB::table('users')->where('id', $incidence->user_apr_rej_id)->value('full_name');
+            }
             $lIncidences[] = [
                                 'request_id' => $incidence->id_application,
                                 'request_class_id' => SysConst::INCIDENCIA,
@@ -79,11 +89,17 @@ class allApplicationsController extends Controller
                                 'time' => '',
                                 'status' => $incidence->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($incidence->date_send_n, 'DDD D-M-Y'),
+                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor' => $revisor,
                             ];
         }
 
         $lPermissionsPersonal = [];
         foreach($dataPermissionsPersonal->lPermissions as $permission){
+            $revisor = '';
+            if($permission->user_apr_rej_id != null){
+                $revisor = \DB::table('users')->where('id', $permission->user_apr_rej_id)->value('full_name');
+            }
             $lPermissionsPersonal[] = [
                                 'request_id' => $permission->id_hours_leave,
                                 'request_class_id' => SysConst::PERMISO_PERSONAL_HORAS,
@@ -101,11 +117,17 @@ class allApplicationsController extends Controller
                                 'time' => $permission->time,
                                 'status' => $permission->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($permission->date_send_n, 'DDD D-M-Y'),
+                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor' => $revisor,
                             ];
         }
 
         $lPermissionsLaboral = [];
         foreach($dataPermissionsLaboral->lPermissions as $permission){
+            $revisor = '';
+            if($permission->user_apr_rej_id != null){
+                $revisor = \DB::table('users')->where('id', $permission->user_apr_rej_id)->value('full_name');
+            }
             $lPermissionsLaboral[] = [
                                 'request_id' => $permission->id_hours_leave,
                                 'request_class_id' => SysConst::PERMISO_LABORAL_HORAS,
@@ -123,6 +145,8 @@ class allApplicationsController extends Controller
                                 'time' => $permission->time,
                                 'status' => $permission->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($permission->date_send_n, 'DDD D-M-Y'),
+                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor' => $revisor,
                             ];
         }
 
