@@ -176,10 +176,8 @@
                                 'crear' => true,
                                 'editar' => true,
                                 'delete' => true,
+                                'sendAprov' => true,
                             ])
-                            <button id="btn_sendAprov" type="button" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
-                                <span class="bx bxs-send"></span>
-                            </button>
                             <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                                 <label for="myRqStatus">Filtrar por estatus: </label>
                                 <select class="form-control inline" v-on:change="filterMyVacationTable();" name="myRqStatus" id="myRqStatus" style="width: 30%;">
@@ -324,6 +322,7 @@
 
         var oDateRangePickerForMyRequest;
         var dateRangePickerArrayApplications = [];
+        var dateRangePickerArrayIncidences = [];
         var dateRangePickerArraySpecialSeasons = [];
         let dateRangePickerValid = true;
         var aniversaryDay = '';

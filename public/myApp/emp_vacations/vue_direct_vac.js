@@ -434,6 +434,7 @@ var app = new Vue({
                 'is_advanced': this.is_advanced,
                 'is_proportional': this.is_proportional,
                 'is_season_special': this.is_season_special,
+                'is_event': false,
                 'lDays': copylDays,
             })
             .then(response => {

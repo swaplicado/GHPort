@@ -60,7 +60,7 @@
                 </h3>
             </div>
             <div class="card-body">
-                <button id="btn_delegation" v-on:click="showModalDelegations();" type="button" class="btn3d btn-info" style="display: inline-block; margin-right: 5px" title="Nueva delegación">
+                <button id="btn_delegation" v-on:click="showModalDelegations();" type="button" class="btn3d btn-info" style="display: inline-block; margin-right: 20px" title="Nueva delegación">
                     <span class="bx bx-user-plus"></span>
                 </button>
                 @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true])

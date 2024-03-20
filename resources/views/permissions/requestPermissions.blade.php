@@ -199,10 +199,7 @@
                                                                 ])
                         </div>
                         <br>
-                        @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true])
-                        <button id="btn_sendAprov" type="button" v-on:click="sendAuthorize()" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
-                            <span class="bx bxs-send"></span>
-                        </button>
+                        @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'sendAprov' => true, 'sendAprovVueMethod' => 'sendAuthorize()'])
                         <br>
                         <br>
                         @include('permissions.permissions_table', ['table_id' => 'table_permissions', 'table_ref' => 'table_permissions'])

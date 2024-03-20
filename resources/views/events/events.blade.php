@@ -87,11 +87,7 @@
             </div>
             <div class="card-body">
                 <div v-if="cardType == 'events'">
-                    @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true])
-                    <button id="btn_asign" type="button" class="btn3d bg-gradient-light" 
-                        style="display: inline-block; margin-right: 5px" title="Asignaciones" v-on:click="showModalEventAssign();">
-                        <span class="bx bx-transfer-alt"></span>
-                    </button>
+                    @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'asign' => true, 'asignVueMethod' => 'showModalEventAssign()'])
                 </div>
                 <br>
                 <br>

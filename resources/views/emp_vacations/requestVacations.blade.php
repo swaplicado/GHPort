@@ -161,11 +161,11 @@
                     </div>
                 </div>
                 <br>
-                <button id="btn_getApp" v-on:click="getApplication()" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 5px" title="Ver solicitud">
+                <button id="btn_getApp" v-on:click="getApplication()" type="button" class="btn3d bg-gray-400" style="display: inline-block; margin-right: 20px" title="Ver solicitud">
                     <span class="bx bx-show-alt"></span>
                 </button>
                 
-                <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Cancelar" v-show="rqStatus == 3">
+                <button id="btn_cancel" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 20px" title="Cancelar" v-show="rqStatus == 3">
                     <span class="bx bx-x"></span>
                 </button>
 
@@ -405,10 +405,9 @@
                                 'crear' => true,
                                 'editar' => true,
                                 'delete' => true,
+                                'sendAprov' => true,
+                                'sendAprovMethod' => 'mySendAprove();'
                             ])
-                            <button id="btn_sendAprov" onclick="mySendAprove();" type="button" class="btn3d" style="display: inline-block; margin-right: 5px; background-color: #4DB6AC" title="Enviar y autorizar">
-                                <span class="bx bxs-send"></span>
-                            </button>
                             <div class="col-md-7" style="float: right; text-align: right; padding-right: 0 !important;">
                                 <label for="myRqStatus">Filtrar por estatus: </label>
                                 <select class="form-control inline" v-on:change="filterMyVacationTable();" name="myRqStatus" id="myRqStatus" style="width: 30%;">

@@ -67,11 +67,7 @@
             </h3>
         </div>
         <div class="card-body">
-            @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true])
-            <button id="btn_asign" type="button" class="btn3d bg-gradient-light" 
-                style="display: inline-block; margin-right: 5px" title="Asignaciones" v-on:click="showModalGroupAssign();">
-                <span class="bx bx-transfer-alt"></span>
-            </button>
+            @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'asign' => true, 'asignVueMethod' => 'showModalGroupAssign()'])
             <br>
             <br>
             <table class="table table-bordered" id="groups_table" style="width: 100%">
