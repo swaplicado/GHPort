@@ -9,11 +9,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="selArea">Tipo de incidencia:</label>
+                <label for="selArea">Tipo de incidencia:*</label>
                 <input type="text" id="tpIncidenceE" name="tpIncidenceE" style="width: 90%;" v-model="nameTp">
-                <label for="selArea">Clase de incidencia:</label>
+                <label for="selArea">Clase de incidencia:*</label>
                 <select class="select2-class-create-clase" id="selClIncE" name="selClIncE" style="width: 90%;"></select>
-                <label for="selArea">Sistema con el que interactua:</label>
+                <label for="selArea">Sistema con el que interactua:*</label>
                 <select class="select2-class-create-sistema" id="selIntSysE" name="selIntSysE" style="width: 90%;"></select>
                 <br><br>
 
@@ -27,7 +27,7 @@
                 
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" v-on:click="save();">Guardar</a>
             </div>
         </div>

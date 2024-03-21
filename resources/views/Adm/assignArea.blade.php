@@ -2,6 +2,20 @@
 
 @section('headStyles')
 <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
+<style>
+    /* Estilo por defecto */
+    label {
+        margin-bottom: 5px; /* Establece el margen por defecto */
+    }
+
+    /* Media query para dispositivos móviles */
+    @media screen and (max-width: 768px) {
+        label {
+            margin-bottom: 0; /* Establece el margen a 0 para dispositivos móviles */
+        }
+    }
+
+</style>
 @endsection
 
 @section('headJs')
@@ -37,23 +51,47 @@
 
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Crear áreas funcionales</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Crear área funcional</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <label for="selArea">Nombre área:</label>
-                <input type="text" id="nomAreaC" name="nomAreaC" style="width: 90%;" v-model="area">
-                <label for="selArea">Puestos área:</label>
-                <input type="number" id="numAreaC" min="1" name="numAreaC" style="width: 90%;" v-model="job_num">
-                <label for="selArea">Área superior:</label>
-                <select class="select2-class-create" id="selAreaC" name="selAreaC" style="width: 90%;"></select>
-                <label for="selLevel">Nivel jerarquico:</label>
-                <select class="select2-class-create-nj" id="selOrgC" name="selOrgC" style="width: 90%"></select>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selArea">Nombre del área:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <input type="text" id="nomAreaC" name="nomAreaC" style="width: 90%; margin-bottom: 5px;" v-model="area">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Puestos área:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <input type="number" id="numAreaC" min="1" name="numAreaC" style="width: 90%;" v-model="job_num">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Área superior:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-create" id="selAreaC" name="selAreaC" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selLevel" style="margin-top: 10px; margin-bottom: 0px;">Nivel jerarquico:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-create-nj" id="selOrgC" name="selOrgC" style="width: 90%"></select>
+                    </div>
+                </div>
                 <br><br>
 
                 <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
@@ -62,7 +100,7 @@
                 <br>
                 
                 <input type="checkbox" id="config_leaderC" name="config_leaderC" value="config_leader" v-model="config_leader">
-                <label for="selArea">Realizará configuraciones</label>
+                <label for="selArea">Acceso a configuraciones del sistema</label>
                 
             </div>
             <div class="modal-footer">
@@ -75,23 +113,47 @@
 
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Área: @{{area}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Editar área funcional: @{{area}}</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <label for="selArea">Nombre área:</label>
-                <input type="text" id="nomArea" name="nomArea" style="width: 90%;" v-model="area">
-                <label for="selArea">Puestos área:</label>
-                <input type="number" id="numArea" min="1" name="numArea" style="width: 90%;" v-model="job_num">
-                <label for="selArea">Área superior:</label>
-                <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
-                <label for="selLevel">Nivel jerarquico:</label>
-                <select class="select2-class-edit-nj" id="selOrgE" name="selOrgE" style="width: 90%"></select>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selArea" style="margin-bottom: 0px;">Nombre del área:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <input type="text" id="nomArea" name="nomArea" style="width: 90%; margin-bottom: 5px;" v-model="area">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Puestos del área:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <input type="number" id="numArea" min="1" name="numArea" style="width: 90%;" v-model="job_num">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Área superior:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selLevel" style="margin-top: 10px; margin-bottom: 0px;">Nivel jerarquico:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-edit-nj" id="selOrgE" name="selOrgE" style="width: 90%"></select>
+                    </div>
+                </div>
                 <br><br>
 
                 <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
@@ -100,7 +162,7 @@
                 <br>
                 
                 <input type="checkbox" id="config_leaderC" name="config_leaderC" value="config_leader" v-model="config_leader">
-                <label for="selArea">Realizará configuraciones</label>
+                <label for="selArea">Acceso a configuraciones del sistema</label>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>

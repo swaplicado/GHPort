@@ -107,7 +107,7 @@
                 </div>
             </div>
             <div class="modal-footer modal-footer-small">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" v-on:click="setAssignEmployee()" v-if="assignBy == 'employee'">Guardar</a>
                 <button type="button" class="btn btn-primary" v-on:click="setAssignGroup()" v-if="assignBy == 'group'">Guardar</a>
             </div>

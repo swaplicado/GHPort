@@ -11,16 +11,16 @@
             <div class="modal-body modal-body-small">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-1">
-                            <label for="">Nombre:</label>
+                        <div class="col-md-2">
+                            <label for="">Nombre:*</label>
                         </div>
-                        <div class="col-md-11">
+                        <div class="col-md-10">
                             <input type="text" class="form-control" v-model="eventName">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-1">
-                            <label for="">Prioridad:</label>
+                        <div class="col-md-2">
+                            <label for="">Prioridad:*</label>
                         </div>
                         <div class="col-md-2">
                             <input type="number" class="form-control" v-model="priority">
@@ -51,19 +51,19 @@
                             <div class="myBreakLine"></div>
                         </span>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-top: 5px;">
                         <div class="col-md-2">
                             <label for="startDate">Fecha inicio:</label>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="startDate" name="startDate" class="form-control" v-model="startDate">
+                            <input type="text" id="startDate" name="startDate" class="form-control" v-model="startDate" disabled>
                         </div>
 
                         <div class="col-md-2">
                             <label for="endDate">Fecha fin:</label>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="endDate" name="endDate" class="form-control" v-model="endDate">
+                            <input type="text" id="endDate" name="endDate" class="form-control" v-model="endDate" disabled>
                         </div>
                     </div>
                     <div class="row">
@@ -71,13 +71,13 @@
                             <label for="takedDays">Días efectivos:</label>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="takedDays" name="takedDays" class="form-control" v-model="takedDays">
+                            <input type="text" id="takedDays" name="takedDays" class="form-control" v-model="takedDays" disabled>
                         </div>
                         <div class="col-md-2">
                             <label for="totalDays">Días totales:</label>
                         </div>
                         <div class="col-md-4">
-                            <input type="text" id="totalDays" name="totalDays" class="form-control" v-model="totCalendarDays">
+                            <input type="text" id="totalDays" name="totalDays" class="form-control" v-model="totCalendarDays" disabled>
                         </div>
                     </div>
                     <div class="myBreakLine"></div>
@@ -95,7 +95,7 @@
                 </div>
             </div>
             <div class="modal-footer modal-footer-small">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" v-on:click="saveEvent()">Guardar</a>
             </div>
         </div>

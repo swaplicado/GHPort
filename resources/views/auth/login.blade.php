@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header text-white" style="background-color: #4e73df;" >Acceso</div>
+                <div class="card-header text-white" style="background-color: #4e73df;" >Inicie su sesión</div>
 
                 <div class="card-body">
                     @if (session('success'))
@@ -17,7 +17,7 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="username" class="col-md-4 col-form-label text-md-right">Usuario:</label>
+                            <label for="username" class="col-md-4 col-form-label text-md-right">Nombre de usuario:*</label>
 
                             <div class="col-md-6">
                                 <input id="username" placeholder="nombre.apellido" type="username" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
@@ -31,7 +31,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">Contraseña:</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">Contraseña:*</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -53,7 +53,7 @@
 
                                 @if (Route::has('password.request'))
                                     <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        ¿Olvidaste tu contraseña?
+                                        ¿Olvidó su contraseña?
                                     </a>
                                 @endif
                             </div>

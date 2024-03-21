@@ -49,7 +49,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <label for="selArea">Área:</label>
+                    <label for="selArea">Área:*</label>
                     <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
                 </div>
             </div>

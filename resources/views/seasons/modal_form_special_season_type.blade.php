@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="name" class="form-label">Nombre:</label>
+                        <label for="name" class="form-label">Nombre:*</label>
                     </div>
                     <div class="col-md-8 col-xs-12">
                         <input name="name" id="name" v-model="name" class="form-control">
@@ -20,7 +20,7 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="priority" class="form-label">prioridad:</label>
+                        <label for="priority" class="form-label">prioridad:*</label>
                     </div>
                     <div class="col-md-8 class-xs-12">
                         <input type="number" readonly v-model="priority" v-bind:class="['form-control', priorityclass]">
@@ -29,7 +29,7 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="priority" class="form-label">Color:</label>
+                        <label for="priority" class="form-label">Color:*</label>
                     </div>
                     <div class="col-md-8 class-xs-12">
                         <input type="color" class="form-control" id="color-picker" v-model="hexColor">
@@ -38,7 +38,7 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="description">Descripción:</label>
+                        <label for="description">Descripción:*</label>
                     </div>
                     <div class="col-md-8 col-xs-12">
                         <textarea class="form-control" name="description" id="description" v-model="description"></textarea>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button class="btn btn-primary" type="button" v-on:click="saveSeasonType();">Guardar</button>
             </div>
         </div>

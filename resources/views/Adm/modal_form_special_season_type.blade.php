@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="name" class="form-label">Nombre:</label>
+                        <label for="name" class="form-label">Nombre:*</label>
                     </div>
                     <div class="col-md-8 col-xs-12">
                         <input name="name" id="name" v-model="name" class="form-control">
@@ -20,7 +20,7 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="key_code" class="form-label">Clave:</label>
+                        <label for="key_code" class="form-label">Clave:*</label>
                     </div>
                     <div class="col-md-8 col-xs-12">
                         <input name="key_code" id="key_code" v-model="key_code" class="form-control">
@@ -29,7 +29,7 @@
                 <br>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-xs-12">
-                        <label for="priority" class="form-label">prioridad:</label>
+                        <label for="priority" class="form-label">prioridad:*</label>
                     </div>
                     <div class="col-md-8 class-xs-12">
                         <select class="form-control" name="priority" id="priority" v-bind:style="{ 'color': text_color, 'background-color': color }" v-on:change="changeColor();" v-model="priority" style="width: 20%">
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button class="btn btn-primary" type="button" v-on:click="saveSeasonType();">Guardar</button>
             </div>
         </div>

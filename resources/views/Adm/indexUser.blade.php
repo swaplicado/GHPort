@@ -2,6 +2,20 @@
 
 @section('headStyles')
 <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
+<style>
+    /* Estilo por defecto */
+    label {
+        margin-bottom: 5px; /* Establece el margen por defecto */
+    }
+
+    /* Media query para dispositivos móviles */
+    @media screen and (max-width: 768px) {
+        label {
+            margin-bottom: 0; /* Establece el margen a 0 para dispositivos móviles */
+        }
+    }
+
+</style>
 @endsection
 
 @section('headJs')

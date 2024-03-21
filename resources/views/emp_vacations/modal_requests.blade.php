@@ -164,7 +164,7 @@
                     <button v-if="isApprove" type="button" class="btn btn-success" v-on:click="acceptRequest()"><span class="bx bxs-like"></span>&nbsp Aprobar</a>
                     <button v-else type="button" class="btn btn-danger" v-on:click="rejectRequest"><span class="bx bxs-dislike"></span>&nbsp Rechazar</a>
                 </template>
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>

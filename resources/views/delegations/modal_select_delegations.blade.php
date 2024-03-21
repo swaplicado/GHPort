@@ -20,7 +20,7 @@
                             @csrf
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="">Selecciona usuario:</label>
+                                    <label for="">Selecciona usuario:*</label>
                                     <select class="form-control" name="user_delegation" id="user_delegation">
                                         <option value=""></option>
                                         @foreach(Session::get('lDelegations') as $oDel)
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Seleccionar usuario</button>
                     </div>
                 </form>

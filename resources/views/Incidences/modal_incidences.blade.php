@@ -14,7 +14,7 @@
                         <div v-show="!isEdit && !isRevision">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label for="">Selecciona clase:</label>
+                                    <label for="">Selecciona clase:*</label>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="select2-class form-control" name="incident_class" id="incident_class" style="width: 90%;"></select>
@@ -22,7 +22,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label for="">Selecciona Tipo:</label>
+                                    <label for="">Selecciona Tipo:*</label>
                                 </div>
                                 <div class="col-md-9">
                                     <select class="select2-class form-control" name="incident_type" id="incident_type" style="width: 90%;"></select>
@@ -165,8 +165,12 @@
                             <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
                             <p v-else>(Sin comentarios)</p>
                         </div>
-                        <div>
+                        <div v-if="isRevision">
                             <label class="form-label" for="comments"><b>Comentarios:</b></label>
+                            <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
+                        </div>
+                        <div v-else>
+                            <label class="form-label" for="comments"><b>Comentarios:*</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
                         </div>
                     </div>
@@ -174,13 +178,13 @@
             </div>
             <div class="modal-footer modal-footer-small">
                 <template v-if="!isRevision">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" v-on:click="save()" v-if="valid">Guardar</a>
                 </template>
                 <template v-else-if="isRevision">
                     <button type="button" class="btn btn-success" v-on:click="approbeIncidence()" v-if="valid"><span class="bx bxs-like"></span>&nbsp Aprobar</a>
                         <button type="button" class="btn btn-danger" v-on:click="rejectIncidence()" v-if="valid"><span class="bx bxs-dislike"></span>&nbsp Rechazar</a>
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 </template>
             </div>
         </div>

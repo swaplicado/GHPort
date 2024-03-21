@@ -48,7 +48,7 @@
 
 <div class="modal fade" id="modal_assign" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Solicitud especial: @{{specialName}}</h5>
@@ -57,14 +57,38 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="sol_type">Tipo de solicitud:</label>
-                <select class="select2-class" id="sol_type" name="sol_type" style="width: 90%;"></select>
-                <label for="assign_by">Asignar a:</label>
-                <select class="select2-class" id="assign_by" name="assign_by" style="width: 90%;"></select>
-                <label for="sel_option">Selecciona @{{option}}:</label>
-                <select class="select2-class" id="sel_option" name="sel_option" style="width: 90%;"></select>
-                <label for="sel_revisor">Revisado por:</label>
-                <select class="select2-class" id="sel_revisor" name="sel_revisor" style="width: 90%;"></select>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="sol_type">Tipo de solicitud:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class" id="sol_type" name="sol_type" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="assign_by">Asignar a:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class" id="assign_by" name="assign_by" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="sel_option">Selecciona @{{option}}:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class" id="sel_option" name="sel_option" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="sel_revisor">Revisado por:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class" id="sel_revisor" name="sel_revisor" style="width: 90%;"></select>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>

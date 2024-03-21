@@ -120,7 +120,7 @@
                             </ol>
                         </div>
                         <div>
-                            <label class="form-label" for="comments"><b>Comentarios:</b></label>
+                            <label class="form-label" for="comments"><b>Comentarios:*</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
                         </div>
                     </div>

@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button class="btn btn-primary" type="button" v-on:click="saveAssignVacationPlan();">Guardar</button>
             </div>
         </div>

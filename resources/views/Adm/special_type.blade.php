@@ -45,7 +45,7 @@
 
     <div class="modal fade" id="modal_special_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Tipo de solicitud especial</h5>
@@ -55,22 +55,28 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12">
-                            <label for="" class="form-label">Nombre de la solicitud especial: </label>
+                        <div class="col-md-2">
+                            <label for="" class="form-label">Nombre de la solicitud especial:* </label>
+                        </div>
+                        <div class="col-md-10">
                             <input type="text" class="form-control" name="name_special" v-model="name" :disabled="is_edit">
                         </div>
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-12">
-                            <label for="" class="form-label">Situación de la solicitud especial: </label>
+                        <div class="col-md-2">
+                            <label for="" class="form-label">Situación de la solicitud especial:* </label>
+                        </div>
+                        <div class="col-md-10">
                             <select class="select2-class" name="" id="sel_situation" style="width: 100%;"></select>
                         </div>
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-12">
-                            <label for="" class="form-label">Clave de la solicitud especial: </label>
+                        <div class="col-md-2">
+                            <label for="" class="form-label">Clave de la solicitud especial:* </label>
+                        </div>
+                        <div class="col-md-10">
                             <input type="text" class="form-control" name="code_special" v-model="code">
                         </div>
                     </div>

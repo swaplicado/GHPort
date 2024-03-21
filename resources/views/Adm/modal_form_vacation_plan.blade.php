@@ -13,13 +13,13 @@
                     <div class="card-body">
                         <div class="row justify-content-center">
                             <div class="col-md-1">
-                                <label class="form-label">Nombre:</label>
+                                <label class="form-label">Nombre:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input id="name" class="form-control" :disabled="onlyShow" v-model="name">
                             </div>
                             <div class="col-md-2">
-                                <label class="form-label">Tipo pago:</label>
+                                <label class="form-label">Tipo pago:*</label>
                             </div>
                             <div class="col-md-2" style="padding-left: 0;">
                                 <select class="form-control" :disabled="onlyShow" v-model="payment_frec">
@@ -32,7 +32,7 @@
                         <br>
                         <div class="row justify-content-center">
                             <div class="col-md-1">
-                                <label class="form-label">Fecha inicio:</label>
+                                <label class="form-label">Fecha inicio:*</label>
                             </div>
                             <div class="col-md-4">
                                 <input type="date" class="form-control" :disabled="onlyShow" v-model="start_date">
@@ -55,9 +55,9 @@
                                             <a v-if="!onlyShow" href="#" v-on:click="showInfo();">
                                                 <span class="bx bx-info-circle"></span>
                                             </a>
-                                            Año
+                                            Año*
                                         </th>
-                                        <th>Días</th>
+                                        <th>Días*</th>
                                         <th>
                                             <button id="btn_add" type="button" v-if="!onlyShow" class="btn3d btn-info" title="Agregar renglon" v-on:click="addRow();">
                                                 <span class="bx bx-plus"></span>
@@ -82,11 +82,11 @@
                 </div>
             </div>
             <div class="modal-footer" v-if="!onlyShow">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" :disabled="disabledSave" v-on:click="saveVacationPlan();">Guardar</a>
             </div>
             <div class="modal-footer" v-else>
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cerrar</button>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>

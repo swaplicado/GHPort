@@ -39,7 +39,7 @@
 
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Puesto: @{{job}}</h5>
@@ -49,15 +49,18 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-2">
                         <label for="selArea">Área asignada:</label>
+                    </div>
+                    <div class="col-md-10">
                         <select class="select2-class" class="form-control" id="selArea" name="selArea" style="width: 90%;"></select>
                     </div>
                 </div>
-                <br>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-2">
                         <label for="selArea">Número de colab:</label>
+                    </div>
+                    <div class="col-md-4">
                         <input type="number" class="form-control" min="1" max="50" step="1" v-model="positions">
                     </div>
                 </div>

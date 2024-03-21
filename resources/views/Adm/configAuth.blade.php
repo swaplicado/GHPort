@@ -38,7 +38,7 @@
 
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Insertar autorización de incidencias</h5>
@@ -47,16 +47,43 @@
                 </button>
             </div>
             <div class="modal-body">
-                <label for="selIns">Tipo incidencia:</label>
-                <select class="select2-class-create" id="insTp" name="insTp" style="width: 90%;"></select>
-                <label for="selIns">Empresa:</label>
-                <select class="select2-class-create" id="comp" name="comp" style="width: 90%;"></select>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selIns">Tipo incidencia:*</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-create" id="insTp" name="insTp" style="width: 90%;"></select>
+                    </div>
+                </div>
                 <br>
-                <label for="selIns">Área funcional:</label>
-                <br>
-                <select class="select2-class-create" id="area" name="area" style="width: 90%;"></select>
-                <label for="selIns">Usuario:</label>
-                <select class="select2-class-create" id="usr" name="usr" style="width: 90%;"></select>
+                <div class="row">
+                    <p>Seleccione al menos una de las opciones(Empresa, Área funcional o Usuario)</p>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selIns">Empresa:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-create" id="comp" name="comp" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selIns">Área funcional:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-create" id="area" name="area" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selIns">Usuario:</label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class-create" id="usr" name="usr" style="width: 90%;"></select>
+                    </div>
+                </div>
+
                 <br><br>
 
                 <input type="checkbox" id="auth" name="auth" value="needauth" v-model="needauth">
