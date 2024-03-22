@@ -38,7 +38,8 @@
             this.getAssignedRoute = <?php echo json_encode(route('events_getAssigned')); ?>;
             this.saveAssignUserRoute = <?php echo json_encode(route('events_saveAssignUser')); ?>;
             this.saveAssignGroupRoute = <?php echo json_encode(route('events_saveAssignGroup')); ?>;
-
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:eventos" ); ?>;
             this.indexesEventsTable = {
                 'id_event': 0,
                 'event': 1,
@@ -173,7 +174,7 @@
                                         'noSort' => true,
                                         'selectMulti' => true,
                                     ] )
-
+@include('layouts.manual_jsControll')
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
 <script>

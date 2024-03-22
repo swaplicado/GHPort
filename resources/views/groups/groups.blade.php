@@ -33,7 +33,8 @@
             this.deleteRoute = <?php echo json_encode(route('groups_delete')) ?>;
             this.getUsersAssignRoute = <?php echo json_encode(route('groups_getUsersAssign')) ?>;
             this.setAssignRoute = <?php echo json_encode(route('groups_setAssign')) ?>;
-
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:grupos" ); ?>;
             this.indexesGroupsTable = {
                 'id_group': 0,
                 'groupName': 1,
@@ -109,7 +110,7 @@
                                         'noSort' => true,
                                         'selectMulti' => true,
                                     ] )
-
+@include('layouts.manual_jsControll')
 {{-- Tabla de empleados asignados --}}
 @include('layouts.table_jsControll', [
                                         'table_id' => 'employeesAssignTable',
