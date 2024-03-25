@@ -458,7 +458,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
 			\Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();

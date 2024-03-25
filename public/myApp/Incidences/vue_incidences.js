@@ -680,17 +680,17 @@ var app = new Vue({
 
         async save(){
             if(this.startDate == null || this.startDate == ""){
-                SGui.showMessage('', 'Debe ingresar una fecha de inicio');
+                SGui.showMessage('', 'Debe ingresar una fecha de inicio', 'warning');
                 return;
             }
 
             if(this.endDate == null || this.endDate == ""){
-                SGui.showMessage('', 'Debe ingresar una fecha de fin');
+                SGui.showMessage('', 'Debe ingresar una fecha de fin', 'warning');
                 return;
             }
 
             if(this.comments == null || this.comments == ""){
-                SGui.showMessage('', 'Para proseguir, se requiere incluir un comentario en la solicitud');
+                SGui.showMessage('', 'Para proseguir, se requiere incluir un comentario en la solicitud', 'warning');
                 return;
             }
 
@@ -900,7 +900,7 @@ var app = new Vue({
 
         sendRegistry(data){
             if(data[this.indexes_incidences.applications_st_name] != 'Nuevas'){
-                SGui.showMessage('','Solo se pueden enviar incidencias con el estatus CREADO', 'warning');
+                SGui.showMessage('','Solo se pueden enviar incidencias con el estatus "Nuevas"', 'warning');
                 return
             }
 
