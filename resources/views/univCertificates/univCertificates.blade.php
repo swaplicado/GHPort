@@ -51,8 +51,8 @@
 @section('content')
 <div id="certificatesApp">
     
-    <a class="btn btn-outline-secondary focus" id="empCert" href="#" v-on:click="setViewMode('empCert');" v-show="oUser.rol_id != roles.ESTANDAR">Certificados mis colabs.</a>
-    <a class="btn btn-outline-secondary" id="myCert" href="#" v-on:click="setViewMode('myCert');">Mis certificados</a>
+    <a class="btn btn-outline-secondary focus" id="myCert" href="#" v-on:click="setViewMode('myCert');">Mis certificados</a>
+    <a class="btn btn-outline-secondary" id="empCert" href="#" v-on:click="setViewMode('empCert');" v-show="oUser.rol_id != roles.ESTANDAR">Certificados mis colabs.</a>
 
     <div class="card shadow mb-4">
         <div class="card-header">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered" id="employees_table">
+                <table class="table table-bordered" id="employees_table" style="width: 100%">
                     <thead class="thead-light">
                         <th>id_employee</th>
                         <th>Colaborador</th>
