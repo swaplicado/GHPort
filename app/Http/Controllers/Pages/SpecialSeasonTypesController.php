@@ -25,7 +25,7 @@ class SpecialSeasonTypesController extends Controller
         try {
             $checkSeasonType = SpecialSeasonType::where('priority', $request->priority)->where('is_deleted', 0)->first();
             if(!is_null($checkSeasonType)){
-                return json_encode(['success' => false, 'message' => 'Error al guardar el registro, ya existe un tipo de temporada especial con la misma prioridad', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'Ya existe un tipo de temporada especial con la misma prioridad, por favor, introduzca una prioridad diferente', 'icon' => 'error']);
             }
             \DB::beginTransaction();
                 $oSeasonType = new SpecialSeasonType();
@@ -44,7 +44,7 @@ class SpecialSeasonTypesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lSpecialSeasonType = SpecialSeasonType::leftJoin('users as u', 'u.id', '=', 'special_season_types.updated_by')
@@ -74,7 +74,7 @@ class SpecialSeasonTypesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lSpecialSeasonType = SpecialSeasonType::leftJoin('users as u', 'u.id', '=', 'special_season_types.updated_by')
@@ -120,7 +120,7 @@ class SpecialSeasonTypesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lSpecialSeasonType = SpecialSeasonType::leftJoin('users as u', 'u.id', '=', 'special_season_types.updated_by')

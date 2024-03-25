@@ -28,7 +28,7 @@ class vacationManagementController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['succeess' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['succeess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user, 
@@ -48,7 +48,7 @@ class vacationManagementController extends Controller
             $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener la lista de colaboradores directos', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lEmployees' => $lEmployees ]);
     }
@@ -62,7 +62,7 @@ class vacationManagementController extends Controller
             $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener la lista de los colaboradores', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         return json_encode(['success'  => true, 'lEmployees' => $lEmployees]);
     }

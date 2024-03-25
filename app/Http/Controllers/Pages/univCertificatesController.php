@@ -60,7 +60,7 @@ class univCertificatesController extends Controller
                             ->toArray();
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -79,7 +79,7 @@ class univCertificatesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         
         }
 
@@ -99,7 +99,7 @@ class univCertificatesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);            
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);            
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -148,7 +148,7 @@ class univCertificatesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lEmployeesCuadrants' => $oResponse->data]);
     }
@@ -207,7 +207,7 @@ class univCertificatesController extends Controller
         } catch (\Throwable $th) {
             \Log::error($th);
             unlink($zipFile);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
     }
 }

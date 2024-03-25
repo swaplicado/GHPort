@@ -59,7 +59,7 @@ class ReportMyEmpVacations extends Controller
             $lEmployees = EmployeeVacationUtils::getVacations($lEmployees);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener los colaboradores', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees, 'lLevels' => $oLevels]);
@@ -87,7 +87,7 @@ class ReportMyEmpVacations extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener los colaboradores', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees, 'lLevels' => $oLevels]);
@@ -107,7 +107,7 @@ class ReportMyEmpVacations extends Controller
             $nowYear = Carbon::now()->year;
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Errror al obtener las vacaciones del periodo '. $request->startYear.' - '.$nowYear, 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento no es posible obtener las vacaciones del periodo '. $request->startYear.' - '.$nowYear.' Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees, 'nowYear' => $nowYear]);

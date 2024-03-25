@@ -201,7 +201,7 @@ var app = new Vue({
                     }
                 })
                 .catch(function (error) {
-                    SGui.showError('Error al obtener los registros');
+                    SGui.showError(error);
                 });
             }
         },

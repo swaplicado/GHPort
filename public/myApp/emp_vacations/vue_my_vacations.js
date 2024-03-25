@@ -157,7 +157,7 @@ var appMyVacations = new Vue({
             this.cleanData();
             let employee_id = $('#selectEmp').select2().val();
             if(employee_id == null || employee_id == undefined || employee_id == ''){
-                SGui.showMessage('', 'Debe seleccionar un colaborador', 'info');
+                SGui.showMessage('', 'Por favor, seleccione un colaborador', 'info');
                 return;
             }
 
@@ -559,7 +559,7 @@ var appMyVacations = new Vue({
                 // this.lDays = result[2];
             }else{
                 if(this.HasRequestCreated()){
-                    SGui.showMessage('', 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'warning');
+                    SGui.showMessage('', 'No es posible generar una nueva solicitud de vacaciones si existen solicitudes pendientes de envío. Por favor, envíe o elimine las solicitudes pendientes antes de continuar', 'warning');
                     return;
                 }
                 this.newData = true;
@@ -750,17 +750,17 @@ var appMyVacations = new Vue({
 
         async requestVac(){
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
-                SGui.showMessage('', 'Debe ingresar las fecha de inicio y fin de vacaciones', 'warning');
+                SGui.showMessage('', 'Debe ingresar las fecha de inicio y de fin de vacaciones', 'warning');
                 return;
             }
 
             if(this.takedDays < 1){
-                SGui.showMessage('', 'No se puede crear una solicitud con cero días efectivos de vacaciones', 'warning');
+                SGui.showMessage('', 'No es posible generar una solicitud sin días efectivos de vacaciones. Por favor, elija un rango de fechas que esté dentro de los días hábiles, o si es necesario, seleccione el día inhábil en la sección "Desglose de los días de calendario"', 'warning');
                 return;
             }
 
             if(this.comments == null || this.comments == ''){
-                SGui.showMessage('', 'Debe ingresar un comentario para la solicitud', 'warning');
+                SGui.showMessage('', 'Para proseguir, se requiere incluir un comentario en la solicitud', 'warning');
                 return;
             }
 
@@ -775,7 +775,7 @@ var appMyVacations = new Vue({
                 var route = this.oData.requestVacRoute;
             }else{
                 if(this.status != 'Nuevas'){
-                    SGui.showMessage('','Solo se pueden editar solicitudes con el estatus CREADO', 'warning');
+                    SGui.showMessage('','La solicitud que deseas editar no tiene el estatus de "nuevas". Solo se pueden editar solicitudes con dicho estatus', 'warning');
                     return;
                 }
                 var route = this.oData.updateRequestVacRoute;
@@ -957,7 +957,7 @@ var appMyVacations = new Vue({
 
         deleteRegistry(data){
             if(data[this.indexes.status] != 'Nuevas'){
-                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus CREADO', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden elimianr solicitudes con dicho estatus', 'warning');
                 return;
             }
 
@@ -978,7 +978,7 @@ var appMyVacations = new Vue({
 
         sendRegistry(data){
             if(data[this.indexes.status] != 'Nuevas'){
-                SGui.showMessage('','Solo se pueden enviar solicitudes con el estatus CREADO', 'warning');
+                SGui.showMessage('','La solicitud que deseas enviar no tiene el estatus de "nuevas". Solo se pueden enviar solicitudes con dicho estatus', 'warning');
                 return
             }
 
@@ -1177,7 +1177,8 @@ var appMyVacations = new Vue({
                 for(let appEA of this.applicationsEA){
                     if(moment(appEA, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
                         $('#clear').trigger('click');
-                        SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el dia: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
+                        // SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el dia: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
+                        SGui.showMessage('', 'En la fecha \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY') +' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'warning');
                         break;
                     }
                 }

@@ -138,7 +138,7 @@ class OrgChartController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
@@ -178,7 +178,7 @@ class OrgChartController extends Controller
                         ->select('users.*', 'up.photo_base64_n')
                         ->get();
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al obtener los colaboradores', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lUser' => $lUser]);
@@ -207,7 +207,7 @@ class OrgChartController extends Controller
         } catch (\Throwable $th) {
             //Log::emergency($th->getMessage());
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
@@ -250,7 +250,7 @@ class OrgChartController extends Controller
         } catch (\Throwable $th) {
             //Log::emergency($th->getMessage());
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')

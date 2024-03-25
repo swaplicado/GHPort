@@ -113,7 +113,7 @@ class EventsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al crear el evento', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')
@@ -172,7 +172,7 @@ class EventsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al crear el evento', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')
@@ -211,7 +211,7 @@ class EventsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')
@@ -268,7 +268,7 @@ class EventsController extends Controller
     
                              
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
@@ -299,7 +299,7 @@ class EventsController extends Controller
                         ->get();
                      
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lGroups' => $lGroups, 'lGroupsAssigned' => $lGroupsAssigned]);
@@ -336,7 +336,7 @@ class EventsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true]);
@@ -374,7 +374,7 @@ class EventsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true]);

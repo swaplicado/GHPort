@@ -75,7 +75,7 @@ class profileController extends Controller
 
     public function updatePass(Request $request){
         if($request->password != $request->confirm_password){
-            return json_encode(['success' => false, 'message' => 'Los campos contraseña deben coincidir', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'Los campos de contraseña y confirmación de contraseña deben ser iguales. Por favor, ingréselos de nuevo.', 'icon' => 'error']);
         }
 
         try {
@@ -91,7 +91,7 @@ class profileController extends Controller
             GlobalUsersUtils::globalUpdateFromSystem($user, SysConst::SYSTEM_PGH);
         } catch (\Throwable $th) {
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registro actualizado', 'icon' => 'success']);
@@ -120,7 +120,7 @@ class profileController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error', 'checked' => !$is_active]);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error', 'checked' => !$is_active]);
         }
 
         return json_encode(['success' => true, 'checked' => $is_active]);

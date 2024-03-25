@@ -95,11 +95,11 @@ class VacationPlansController extends Controller
                 \DB::commit();
             } catch (\Throwable $th) {
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
             }
             return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro Guardado con éxito', 'icon' => 'success']);
         }else{
-            return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible guardar el registro debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
     }
 
@@ -107,7 +107,7 @@ class VacationPlansController extends Controller
         try {
             $oVacationPlanDays = VacationPlanDay::where('vacations_plan_id', $request->vacation_plan_id)->get();
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'vacationPlanDays' => $oVacationPlanDays]);
@@ -126,7 +126,7 @@ class VacationPlansController extends Controller
 
                 \DB::commit();
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro eliminado con éxito', 'icon' => 'success']);
@@ -169,12 +169,12 @@ class VacationPlansController extends Controller
                 \DB::commit();
             } catch (\Throwable $th) {
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
             }
 
             return json_encode(['success' => true, 'lVacationPlans' => $lVacationPlans, 'message' => 'Registro actualizado con éxito', 'icon' => 'success']);
         }else{
-            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible actualizar el registro debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
     }
 
@@ -210,7 +210,7 @@ class VacationPlansController extends Controller
                                 ->orderBy('full_name_ui')
                                 ->get();
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
@@ -257,7 +257,7 @@ class VacationPlansController extends Controller
             }
 
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true]);

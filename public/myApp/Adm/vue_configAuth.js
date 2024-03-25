@@ -158,7 +158,7 @@ var app = new Vue({
                 i++;
             }
             if (i >= 3) {
-                SGui.showError("Debe de asignar valor a almenos uno: empresa, area, usuario");
+                SGui.showError("Debe de asignar valor a al menos uno: empresa, area, usuario");
                 return null;
             } 
             // comprueba si ya existe un registro igual

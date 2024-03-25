@@ -283,7 +283,7 @@ class requestPermissionController extends Controller
             
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
+            return json_encode(['sucess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 
@@ -301,7 +301,7 @@ class requestPermissionController extends Controller
             $permission = Permission::findOrFail($request->permission_id);
 
             if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas aprobar no tiene el estatus de "Por aprobar". Solo se pueden aprobar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
@@ -363,7 +363,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['sucess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -399,7 +399,7 @@ class requestPermissionController extends Controller
             $permission = Permission::findOrFail($request->permission_id);
 
             if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas rechazar no tiene el estatus de "Por aprobar". Solo se pueden rechazar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
@@ -450,7 +450,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+            return json_encode(['sucess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -491,7 +491,7 @@ class requestPermissionController extends Controller
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener la lista de colaboradores directos', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -512,7 +512,7 @@ class requestPermissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -529,7 +529,7 @@ class requestPermissionController extends Controller
                                 ->first();
                             
                 if(is_null($oManager)){
-                    return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
+                    return json_encode(['success' => false, 'message' => 'En este momento no es posible encontrar al supervisor '.$request->manager_name.' en el sistema. Por favor verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
                 }
 
                 $lPermissions = permissionsUtils::getMyManagerlPermissions($oManager->org_chart_job_id, $request->cl);
@@ -539,7 +539,7 @@ class requestPermissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener los permisos', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
@@ -589,7 +589,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $org_chart_job_id = null;

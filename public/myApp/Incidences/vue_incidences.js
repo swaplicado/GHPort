@@ -690,12 +690,12 @@ var app = new Vue({
             }
 
             if(this.comments == null || this.comments == ""){
-                SGui.showMessage('', 'Debe ingresar un comentario para la solicitud');
+                SGui.showMessage('', 'Para proseguir, se requiere incluir un comentario en la solicitud');
                 return;
             }
 
             if(this.takedDays < 1){
-                SGui.showMessage('', 'No se puede crear una solicitud con cero días efectivos de incidencia', 'warning');
+                SGui.showMessage('', 'No es posible generar una solicitud sin días efectivos de incidencia. Por favor, elija un rango de fechas que esté dentro de los días hábiles, o si es necesario, seleccione el día inhábil en la sección "Desglose de los días de calendario"', 'warning');
                 return;
             }
 
@@ -787,7 +787,7 @@ var app = new Vue({
 
         deleteRegistry(data){
             if(data[this.indexes_incidences.applications_st_name] != 'Nuevas'){
-                SGui.showMessage('','Solo se pueden eliminar incidencias con el estatus CREADO', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 
@@ -1419,7 +1419,7 @@ var app = new Vue({
         deleteSendRegistry(){
             let data = table['table_ReqIncidences'].row('.selected').data()
             if(data[this.oData.indexes_incidences.request_status_id] != 2){
-                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus POR APROBAR', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "Por aprobar". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 

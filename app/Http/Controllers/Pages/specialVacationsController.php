@@ -12,6 +12,7 @@ use App\Models\Vacations\ApplicationLog;
 use GuzzleHttp\Client;
 use \Carbon\Carbon;
 use \App\Utils\folioUtils;
+use App\Models\Vacations\requestVacationLog;
 
 class specialVacationsController extends Controller
 {
@@ -64,7 +65,7 @@ class specialVacationsController extends Controller
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
                 if($isBetWeen){
-                    return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'icon' => 'warning']);
                 }
             }
 
@@ -72,7 +73,7 @@ class specialVacationsController extends Controller
 
             foreach($user->applications as $ap){
                 if($ap->request_status_id == 1){
-                    return json_encode(['success' => false, 'message' => 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'No es posible generar una nueva solicitud de vacaciones si existen solicitudes pendientes de envío. Por favor, envíe o elimine las solicitudes pendientes antes de continuar', 'icon' => 'warning']);
                 }
             }
 
@@ -131,7 +132,7 @@ class specialVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al guardar la solicitud', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
@@ -157,14 +158,14 @@ class specialVacationsController extends Controller
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
                 if($isBetWeen){
-                    return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'icon' => 'warning']);
                 }
             }
 
             $application = Application::findOrFail($request->id_application);
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden eliminar solicitudes con el estatus CREADO', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden enviar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             \DB::beginTransaction();
@@ -175,7 +176,7 @@ class specialVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
     
             if($user->tot_vacation_remaining < $takedDays){
-                return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Actualmente no tienes los días de vacaciones solicitados. Por favor, ingresa un número menor de días de vacaciones para continuar, o si necesitas aclaraciones, consulta con el área de gestión humana', 'icon' => 'warning']);
             }
     
             $vacations = collect($user->vacation)->sortBy('year');
@@ -225,7 +226,7 @@ class specialVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al editar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
         $user->applications = EmployeeVacationUtils::getTakedDays($user);
@@ -249,7 +250,7 @@ class specialVacationsController extends Controller
             $application = Application::findOrFail($request->id_application);
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden eliminar solicitudes con el estatus CREADO', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden eliminar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             \DB::beginTransaction();
@@ -265,7 +266,7 @@ class specialVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registro eliminado con éxito', 'icon' => 'success', 'oUser' => $user]);
@@ -276,7 +277,7 @@ class specialVacationsController extends Controller
             $applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'applications' => $applications]);
@@ -325,7 +326,7 @@ class specialVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al aprobrar la solicitud', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registro enviado y aprobado con éxito', 'icon' => 'success', 'oUser' => $user]);
@@ -392,8 +393,9 @@ class specialVacationsController extends Controller
             'rows' => $rows,
         ];
 
+        $config = \App\Utils\Configuration::getConfigurations();
         $client = new Client([
-            'base_uri' => '192.168.1.251:9001',
+            'base_uri' => $config->urlSync,
             'timeout' => 10.0,
         ]);
 
@@ -451,7 +453,7 @@ class specialVacationsController extends Controller
 
             if($user->tot_vacation_remaining < $takedDays){
                 // return json_encode(['success' => false, 'message' => 'El colaborador no cuenta con dias disponibles', 'icon' => 'warning']);
-                throw new \Exception("El colaborador no cuenta con dias disponibles");
+                throw new \Exception("Actualmente el colaborador no cuenta con los días de vacaciones solicitados. Por favor, ingresa un número menor de días de vacaciones para continuar, o si necesitas aclaraciones, consulta con el área de gestión humana");
             }
 
             $vacations = collect($user->vacation)->sortBy('year');

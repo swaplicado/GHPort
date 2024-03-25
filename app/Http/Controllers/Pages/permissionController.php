@@ -142,7 +142,7 @@ class permissionController extends Controller
             $interReturn = null;
 
             if($comments == null || $comments == ""){
-                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'error']);
             }
 
             if(!is_null($request->interOut) && !is_null($request->interReturn)){
@@ -180,7 +180,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al crear el permiso', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
@@ -202,7 +202,7 @@ class permissionController extends Controller
             $interReturn = null;
 
             if($comments == null || $comments == ""){
-                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'error']);
             }
 
             if(!is_null($request->interOut) && !is_null($request->interReturn)){
@@ -233,7 +233,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al crear el permiso', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible actualizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
@@ -255,7 +255,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el permiso', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible eliminar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
@@ -315,7 +315,7 @@ class permissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'oPermission' => $oPermission, 'schedule' => $schedule, 'permission' => $permission]);
     }
@@ -329,7 +329,7 @@ class permissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         if($needAuth == null || $needAuth == 1){
@@ -346,7 +346,7 @@ class permissionController extends Controller
         $employee_id = $request->employee_id;
         try {
             if(delegationUtils::getOrgChartJobIdUser() == 1){
-                return json_encode(['success' => false, 'message' => 'No tienes area funcional, favor de comunicarte con el administrador del sistema', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 'icon' => 'warning']);
             }
             \DB::beginTransaction();
             $permission = Permission::findOrFail($permission_id);
@@ -393,7 +393,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar el permiso']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo']);
         }
 
         $mypool = Pool::create();
@@ -453,7 +453,7 @@ class permissionController extends Controller
                 $data = permissionsUtils::sendPermissionToCAP($permission);
                 if($data->status != 'Success'){
                     \DB::rollBack();
-                    return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+                    return json_encode(['sucess' => false, 'message' => $data->message, 'icon' => 'error']);
                 }
             }
 
@@ -479,7 +479,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar y autorizar la solicitud', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar y autorizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();

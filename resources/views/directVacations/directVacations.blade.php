@@ -37,6 +37,8 @@
             this.getlDaysRoute = <?php echo json_encode(route('myVacations_getlDays')); ?>;
             this.deleteRequestRoute = <?php echo json_encode(route('myVacations_delete_requestVac')); ?>;
             this.directVacationsApprobeRoute = <?php echo json_encode(route('directVacations_approbe')); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:vacdirectas" ); ?>;
             this.indexesMyRequestTable = {
                 'id':0,
                 'request_status_id':1,
@@ -168,7 +170,6 @@
                         <div class="card-header">
                             <h3>
                                 Solicitudes vacaciones: @{{ oUser.employee }}
-                                @include('layouts.manual_button')
                             </h3>
                         </div>
                         <div class="card-body">
@@ -289,7 +290,7 @@
         'order' => [[1, $config->orderVac]],
         'ordering' => true,
     ])
-    
+    @include('layouts.manual_jsControll')
     <script>
         $(document).ready(function() {
             $('#myRqStatus').change(function() {

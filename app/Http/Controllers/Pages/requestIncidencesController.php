@@ -179,7 +179,7 @@ class requestIncidencesController extends Controller
             $lIncidences = incidencesUtils::getUserIncidences($oUser->id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => 'Error al obtener al colaborador', 'icon' => 'error']);
+            return json_encode(['sucess' => false, 'message' => 'En este momento, no es posible obtener los datos del colaborador debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lIncidences' => $lIncidences, 'lEvents' => $lEvents]);
@@ -191,7 +191,7 @@ class requestIncidencesController extends Controller
             $application = Application::findOrFail($request->application_id);
 
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas aprobar no tiene el estatus de "Por aprobar". Solo se pueden aprobar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
@@ -232,7 +232,11 @@ class requestIncidencesController extends Controller
                 }
             }else{
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+                if($system->interact_system_id == 3){
+                    return json_encode(['success' => false, 'message' => 'No fue posible conectar con el sistema CAP. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+                }else{
+                    return json_encode(['success' => false, 'message' => 'No fue posible conectar con el sistema SIIE. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+                }
             }
             
             $employee = \DB::table('users')
@@ -273,7 +277,7 @@ class requestIncidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => 'Error al aprobar la incidencia', 'icon' => 'error']);
+            return json_encode(['sucess' => false, 'message' => 'En este momento, no es posible aprobar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -309,7 +313,7 @@ class requestIncidencesController extends Controller
             $application = Application::findOrFail($request->application_id);
 
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas rechazar no tiene el estatus de "Por aprobar". Solo se pueden rechazar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
@@ -366,7 +370,7 @@ class requestIncidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al rechazar la incidencia', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible rechazar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -437,7 +441,7 @@ class requestIncidencesController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener a los colaboradores', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener los datos de los colaboradores debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -454,7 +458,7 @@ class requestIncidencesController extends Controller
                                 ->first();
                             
                 if(is_null($oManager)){
-                    return json_encode(['success' => false, 'message' => 'No se encontro al supervisor '.$request->manager_name, 'icon' => 'error']);
+                    return json_encode(['success' => false, 'message' => 'En este momento no es posible encontrar al supervisor '.$request->manager_name.' en el sistema. Por favor verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
                 }
 
                 $lIncidences = incidencesUtils::getMyManagerlIncidences($oManager->org_chart_job_id);
@@ -464,7 +468,7 @@ class requestIncidencesController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener las incidencias', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener las solicitudes debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
@@ -577,7 +581,7 @@ class requestIncidencesController extends Controller
         try {
             \DB::beginTransaction();
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas rechazar no tiene el estatus de "Por aprobar". Solo se pueden rechazar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             $system = \DB::table('cat_incidence_tps')

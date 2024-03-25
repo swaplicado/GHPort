@@ -42,7 +42,7 @@ var app = new Vue({
                 return;
             }
             if(this.confirm_password != this.password){
-                SGui.showMessage('', 'Los campos "Contraseña" y "Confirmar contraseña" deben coincidir', 'warning');
+                SGui.showMessage('', 'Los campos "Contraseña" y "Confirmar contraseña" deben coincidir, por favor, introduzcalos de nuevo', 'warning');
                 return;
             }
 
@@ -62,7 +62,7 @@ var app = new Vue({
                 }
             }).catch(function (error){
                 console.log(error);
-                SGui.showMessage('', 'Error al actualizar el registro', 'error');
+                SGui.showMessage('', error, 'error');
             })
         },
 

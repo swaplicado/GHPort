@@ -40,7 +40,7 @@ class employeeGroupsController extends Controller
             \DB::rollBack();
             \Log::error($th);
 
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lGroups' => $lGroups]);
@@ -63,7 +63,7 @@ class employeeGroupsController extends Controller
             \DB::rollback();
             \Log::error($th);
 
-            return json_encode(['scuccess' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['scuccess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lGroups' => $lGroups]);
@@ -85,7 +85,7 @@ class employeeGroupsController extends Controller
             \DB::rollback();
             \Log::error($th);
 
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lGroups' => $lGroups]);
@@ -124,7 +124,7 @@ class employeeGroupsController extends Controller
         $lEmpNoAssigned = usersInSystemUtils::FilterUsersInSystem($lEmpNoAssigned, 'id_employee');
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lEmpAssigned' => $lEmpAssgined, 'lEmpNoAssigned' => $lEmpNoAssigned]);
@@ -161,7 +161,7 @@ class employeeGroupsController extends Controller
             \DB::rollBack();
             \Log::error($th);
 
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true]);

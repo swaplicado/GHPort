@@ -37,7 +37,7 @@ class UsersShowInSystemController extends Controller
             $oUser->update();
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'toastType' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'toastType' => 'error']);
         }
 
         return json_encode(['success' => true, 'showInSystem' => $oUser->show_in_system, 'toastType' => 'success']);
@@ -59,7 +59,7 @@ class UsersShowInSystemController extends Controller
             $oOrgChartJob->update();
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage(), 'toastType' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'toastType' => 'error']);
         }
 
         return json_encode(['success' => true, 'is_office' => $oOrgChartJob->is_office, 'toastType' => 'success']);

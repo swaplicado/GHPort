@@ -19,7 +19,8 @@ class WorkRecordController extends Controller
         $dateEmployees = $this->getDataEmployees(Auth::user()->id);
 
         $dateEmployees = usersInSystemUtils::FilterUsersInSystem($dateEmployees, 'id');
-        return view('data_personal.work_record') -> with ('dataUser', $dateEmployees);
+        $manualRoute = "http://192.168.1.251/dokuwiki/doku.php?id=wiki:constancia";
+        return view('data_personal.work_record') ->with('dataUser', $dateEmployees)->with('manualRoute', $manualRoute);
     }
 
     public function indexManager(){
@@ -27,7 +28,8 @@ class WorkRecordController extends Controller
         $dateEmployees = $this->getDataEmployees();
 
         $dateEmployees = usersInSystemUtils::FilterUsersInSystem($dateEmployees, 'id');
-        return view('data_personal.work_record') -> with ('dataUser', $dateEmployees);
+        $manualRoute = "http://192.168.1.251/dokuwiki/doku.php?id=wiki:conscolabs";
+        return view('data_personal.work_record') ->with('dataUser', $dateEmployees)->with('manualRoute', $manualRoute);
     }
 
     public function indexManagerLow(){

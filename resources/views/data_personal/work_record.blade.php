@@ -24,6 +24,8 @@
            //rutas
             this.users = <?php echo json_encode($dataUser); ?>;
             this.rute_get_work_personal = <?php echo json_encode(route("get_word_record_personal")); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( $manualRoute ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -46,7 +48,7 @@
 @endsection
 
 @section('scripts')
-
+@include('layouts.manual_jsControll')
 <script>
     moment.locale('es');
     $(document).ready(function () {

@@ -65,7 +65,7 @@ class jobVsOrgChartJobController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lJobVsOrgChartJob' => $lJobVsOrgChartJob]);

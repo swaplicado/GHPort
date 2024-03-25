@@ -28,6 +28,8 @@
             this.startDate = <?php echo json_encode($startDate); ?>;
             this.endDate = <?php echo json_encode($endDate); ?>;
             this.rute_get_work_personal = <?php echo json_encode(route("word_record_log")); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:conscolabslow" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -62,7 +64,7 @@
 @endsection
 
 @section('scripts')
-
+@include('layouts.manual_jsControll')
 <script>
     moment.locale('es');
     $(document).ready(function () {

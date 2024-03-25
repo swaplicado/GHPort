@@ -132,7 +132,7 @@ class incidencesController extends Controller
             $lIncidencesEA = incidencesUtils::getEmpIncidencesEA($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
+            return json_encode(['success' => false, 'message' => 'En este momento no fue posible obtener los registros de incidencias solicitadas anteriormente. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'warning']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidencesEA, 'lVacations' => $lVacationsEA]);
@@ -157,7 +157,7 @@ class incidencesController extends Controller
         $is_event  = $request->is_event;
         try {
             if($comments == null || $comments == ""){
-                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'warning']);
             }
 
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
@@ -165,7 +165,7 @@ class incidencesController extends Controller
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($start_date, $end_date);
                 if($isBetWeen){
-                    return json_encode(['success' => false, 'message' => 'Ya existe una incidencia para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'icon' => 'warning']);
                 }
             }
 
@@ -221,7 +221,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al crear la incidencia', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
@@ -248,7 +248,7 @@ class incidencesController extends Controller
         try {
 
             if($comments == null || $comments == ""){
-                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'warning']);
             }
             
             $application = Application::findOrFail($id_application);
@@ -278,7 +278,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible actualizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
@@ -308,7 +308,7 @@ class incidencesController extends Controller
         $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento no es posible obtene el registro. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oApplication' => $oApplication, 'lEvents' => $lEvents]);
@@ -330,7 +330,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento no es posible eliminar el registro. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
@@ -370,7 +370,7 @@ class incidencesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento no es posible enviar el registro. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         if( is_null($needAuth) || $needAuth == 1){
@@ -386,7 +386,7 @@ class incidencesController extends Controller
         $application_id = $request->application_id;
         try {
             if(delegationUtils::getOrgChartJobIdUser() == 1){
-                return json_encode(['success' => false, 'message' => 'No tienes area funcional, favor de comunicarte con el administrador del sistema', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 'icon' => 'warning']);
             }
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
@@ -400,7 +400,7 @@ class incidencesController extends Controller
 
             if(count($lSuperviser) == 0){
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'No se encontró ningún supervisor, notifique al administrador', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'No cuenta con un supervisor asignado en el sistema. Por favor, contacte con el área de gestion humana', 'icon' => 'error']);
             }
 
             $data = incidencesUtils::checkExternalIncident($application);
@@ -412,7 +412,7 @@ class incidencesController extends Controller
                 }
             }else{
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'No fue posible conectar con el sistema SIIE. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
             }
 
             $date = Carbon::now();
@@ -458,7 +458,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
 			\Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar la incidencia']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo']);
         }
 
         $mypool = Pool::create();
@@ -530,7 +530,11 @@ class incidencesController extends Controller
                 }
             }else{
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+                if($system->interact_system_id == 3){
+                    return json_encode(['success' => false, 'message' => 'No fue posible conectar con el sistema SIIE. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+                }else{
+                    return json_encode(['success' => false, 'message' => 'No fue posible conectar con el sistema SIIE. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+                }
             }
 
             $lIncidences = $this->getIncidences($application->user_id);
@@ -554,7 +558,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar y autorizar la solicitud', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar y autorizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -633,7 +637,7 @@ class incidencesController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener el año de aplicación']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener el año de aplicación debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo']);
         }
 
         return json_encode(['success' => true, 'lBirthDay' => $lBirthDay, 'birthDayYear' => $year, 'minYear' => $minYear]);

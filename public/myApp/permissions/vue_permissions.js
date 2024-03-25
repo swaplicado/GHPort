@@ -444,7 +444,7 @@ var app = new Vue({
                     inputOut.blur();
                     inputReturn.blur();
 
-                    SGui.showMessage('', 'La hora de salida no puede ser menor a la hora de regreso');
+                    SGui.showMessage('', 'La hora de regreso no puede ser anterior a la hora de salida.');
 
                     this.interOut = null;
                     this.interReturn = null;
@@ -810,7 +810,7 @@ var app = new Vue({
 
         deleteRegistry(data) {
             if (data[this.indexes_permission.Estatus] != 'Nuevas') {
-                SGui.showMessage('', 'Solo se pueden eliminar permisos con el estatus CREADO', 'warning');
+                SGui.showMessage('', 'La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden elimianr solicitudes con dicho estatus', 'warning');
                 return;
             }
 
@@ -981,7 +981,7 @@ var app = new Vue({
 
         sendRegistry(data) {
             if (data[this.indexes_permission.Estatus] != 'Nuevas') {
-                SGui.showMessage('', 'Solo se pueden enviar permisos con el estatus CREADO', 'warning');
+                SGui.showMessage('', 'La solicitud que deseas enviar no tiene el estatus de "nuevas". Solo se pueden enviar solicitudes con dicho estatus', 'warning');
                 return
             }
 
@@ -1448,7 +1448,7 @@ var app = new Vue({
                     this.permissionOut = null;
                     this.permissionEntry = null;
                     this.totalTime = '';
-                    SGui.showMessage('', 'La hora de salida no puede ser mayor a la hora de regreso');
+                    SGui.showMessage('', 'La hora de salida no puede ser posterior a la hora de regreso');
                     return;
                 }
                 if(result > this.permission_time){
@@ -1478,7 +1478,7 @@ var app = new Vue({
         deleteSendRegistry(){
             let data = table['table_ReqPermissions'].row('.selected').data()
             if(data[this.indexes_permission.request_status_id] != 2){
-                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus POR APROBAR', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "Por aprobar". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 

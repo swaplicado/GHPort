@@ -177,7 +177,7 @@ var appRequestVacation = new Vue({
             this.oApplication = null;
             $('#two-inputs').data('dateRangePicker').clear();
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
-                SGui.showMessage('', 'Solo se pueden aprobar solicitudes nuevas', 'warning');
+                SGui.showMessage('', 'La solicitud que deseas aprobar no tiene el estatus de "Por aprobar". Solo se pueden aprobar solicitudes con dicho estatus', 'warning');
                 return;
             }
             this.oUser = await this.oUsersUtils.getUserData(this.oData.getUserDataRoute, data[this.indexes.user_id]);
@@ -214,7 +214,7 @@ var appRequestVacation = new Vue({
             this.oApplication = null;
             $('#two-inputs').data('dateRangePicker').clear();
             if(parseInt(data[this.indexes.request_status_id]) != this.oData.const.APPLICATION_ENVIADO){
-                SGui.showMessage('', 'Solo se pueden rechazar solicitudes nuevas', 'warning');
+                SGui.showMessage('', 'La solicitud que deseas rechazar no tiene el estatus de "Por aprobar". Solo se pueden rechazar solicitudes con dicho estatus', 'warning');
                 return;
             }
             this.oUser = await this.oUsersUtils.getUserData(this.oData.getUserDataRoute, data[this.indexes.user_id]);
@@ -796,7 +796,7 @@ var appRequestVacation = new Vue({
         deleteRegistry(){
             let data = table['table_requestVac'].row('.selected').data()
             if(data[this.indexes.request_status_id] != 2){
-                SGui.showMessage('','Solo se pueden eliminar solicitudes con el estatus POR APROBAR', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "Por aprobar". Solo se pueden enviar solicitudes con dicho estatus', 'warning');
                 return;
             }
 

@@ -28,6 +28,8 @@
             this.updateRoute = <?php echo json_encode( route('update_authConf') ); ?>;
             this.createRoute = <?php echo json_encode( route('create_authConf') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_authConf') ); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:confauth" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -133,6 +135,7 @@
     <div class="card-header">
         <h3>
             <b> Configuración de autorización de incidencias</b>
+            @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
@@ -186,5 +189,6 @@
                                         'noDom' => true,
                                         'select' => true,
                                     ] )
+        @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_configAuth.js') }}"></script>
 @endsection

@@ -103,7 +103,7 @@ class recoveredVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollback();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al recuperar los días de vacaciones', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
@@ -195,7 +195,7 @@ class recoveredVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollback();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al recuperar los días de vacaciones', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');

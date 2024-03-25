@@ -157,7 +157,7 @@ class SpecialSeasonsController extends Controller
             return json_encode(['success' => true, 'lSpecialSeason' => $lSpecialSeason, 'lSpecialSeasonType' => $lSpecialSeasonType]);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
     }
 
@@ -262,7 +262,7 @@ class SpecialSeasonsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'message' => 'Registros guardados con éxito', 'icon' => 'success']);
     }
@@ -395,7 +395,7 @@ class SpecialSeasonsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al guardar los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registros guardados con éxito', 'icon' => 'success']);

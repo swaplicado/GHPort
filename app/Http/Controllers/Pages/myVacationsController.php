@@ -85,7 +85,7 @@ class myVacationsController extends Controller
             $oApp = Application::find($request->id_application);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener la lista de días efectivos', 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento no se ha podido obtener la lista de días laborables. Por favor, cierre la solicitud e intente nuevamente', 'error']);
         }
         return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
     }
@@ -109,7 +109,8 @@ class myVacationsController extends Controller
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
                 if($isBetWeen){
-                    return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                    // return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' , ingrese una fecha diferente para poder continuar', 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'icon' => 'warning']);
                 }
             }
 
@@ -118,16 +119,16 @@ class myVacationsController extends Controller
 
             foreach($user->applications as $ap){
                 if($ap->request_status_id == 1){
-                    return json_encode(['success' => false, 'message' => 'No puede crear otra solicitud de vacaciones si tiene solicitudes creadas pendientes de enviar', 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'No es posible generar una nueva solicitud de vacaciones si existen solicitudes pendientes de envío. Por favor, envíe o elimine las solicitudes pendientes antes de continuar', 'icon' => 'warning']);
                 }
             }
 
             if($user->tot_vacation_remaining < $takedDays){
-                return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Actualmente no tienes los días de vacaciones solicitados. Por favor, ingresa un número menor de días de vacaciones para continuar, o si necesitas aclaraciones, consulta con el área de gestión humana', 'icon' => 'warning']);
             }
 
             if($comments == null || $comments == ''){
-                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'warning']);
             }
 
             $vacations = collect($user->vacation)->sortBy('year');
@@ -211,7 +212,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al guardar la solicitud', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         // $user = $this->getUserVacationsData();
@@ -236,7 +237,7 @@ class myVacationsController extends Controller
 
         try {
             if($comments == null || $comments == ''){
-                return json_encode(['success' => false, 'message' => 'Debe ingresar un comentario para la solicitud', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'warning']);
             }
 
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
@@ -244,7 +245,7 @@ class myVacationsController extends Controller
             foreach($arrApplicationsEA as $arr){
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
                 if($isBetWeen){
-                    return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY'), 'icon' => 'warning']);
+                    return json_encode(['success' => false, 'message' => 'En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'icon' => 'warning']);
                 }
             }
 
@@ -263,7 +264,7 @@ class myVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, true, 1);
 
             if(($user->tot_vacation_remaining + $user->prox_vac_days) < $takedDays){
-                return json_encode(['success' => false, 'message' => 'No cuentas con días disponibles', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Actualmente no tienes los días de vacaciones solicitados. Por favor, ingresa un número menor de días de vacaciones para continuar, o si necesitas aclaraciones, consulta con el área de gestión humana', 'icon' => 'warning']);
             }
     
             $vacations = collect($user->vacation)->sortBy('year');
@@ -335,7 +336,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al editar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar los cambios en la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
         }
         // $user = $this->getUserVacationsData();
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
@@ -348,7 +349,7 @@ class myVacationsController extends Controller
             $applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al cargar los registros', 'icon' => 'error']);    
+            return json_encode(['success' => false, 'message' => 'En este momento no es posible obtener los registros. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);    
         }
 
         return json_encode(['success' => true, 'applications' => $applications]);
@@ -376,7 +377,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al eliminar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible eliminar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registro eliminado con éxito', 'icon' => 'success', 'oUser' => $user]);
@@ -385,7 +386,7 @@ class myVacationsController extends Controller
     public function sendRequestVac(Request $request){
         try {
             if(delegationUtils::getOrgChartJobIdUser() == 1){
-                return json_encode(['success' => false, 'message' => 'No tienes area funcional, favor de comunicarte con el administrador del sistema', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 'icon' => 'warning']);
             }
 
             $application = Application::findOrFail($request->id_application);
@@ -400,11 +401,11 @@ class myVacationsController extends Controller
                 }
             }else{
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'Error al revisar la incidencia con siie', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'No fue posible conectar con el sistema SIIE. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
             }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden enviar solicitudes con el estatus CREADO', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'La solicitud que deseas enviar no tiene el estatus de CREADO. Solo se pueden enviar solicitudes con dicho estatus', 'icon' => 'warning']);
             }
 
             $employee = User::find($request->employee_id);
@@ -412,7 +413,7 @@ class myVacationsController extends Controller
 
             if(count($lSuperviser) == 0){
                 \DB::rollBack();
-                return json_encode(['success' => false, 'message' => 'No se encontró ningún supervisor, notifique al administrador', 'icon' => 'error']);
+                return json_encode(['success' => false, 'message' => 'No cuenta con un supervisor asignado en el sistema. Por favor, contacte con el área de gestion humana', 'icon' => 'error']);
             }
 
             $oType = \DB::table('applications_vs_types')
@@ -475,7 +476,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al enviar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
             $mypool = Pool::create();
@@ -543,7 +544,7 @@ class myVacationsController extends Controller
             $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'No se pudieron obtener registos de vacaciones solicitadas anteriormente', 'icon' => 'warning']);
+            return json_encode(['success' => false, 'message' => 'En este momento no fue posible obtener los registros de vacaciones solicitadas anteriormente. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'warning']);
         }
 
         return json_encode(['success' => true, 'arrAplications' => $lApplicationsEA, 'arrSpecialSeasons' => $lSpecialSeason]);
@@ -555,7 +556,7 @@ class myVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id, true);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => true, 'message' => 'En este momento no fue posible obtener los registros de vacaciones pasadas. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);
@@ -567,7 +568,7 @@ class myVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => true, 'message' => 'En este momento no fue posible obtener los registros de vacaciones. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);
@@ -673,7 +674,7 @@ class myVacationsController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'Error al obtener la fecha de regreso', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento no se ha podido obtener la fecha de regreso. Por favor, cierre la solicitud e intente nuevamente', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'returnDate' => $oReturnDate->toDateString()]);

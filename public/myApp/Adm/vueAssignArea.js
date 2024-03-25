@@ -240,7 +240,7 @@ var app = new Vue({
 
         deleteRegistry(data) {
             if (data[10] != 0) {
-                SGui.showError('No se puede eliminar un registro con nodos hijos');
+                SGui.showError('No se puede eliminar un registro con nodos hijos, primero elimine todos los nodos hijos para poder proseguir');
             } else {
                 axios.post(this.oData.deleteRoute, {
                         'org_chart_job': data[0],

@@ -231,9 +231,9 @@ class Menu {
             array_push($solicitudes,['route' => route('SpecialTypeVsOrgChart'), 'icon' => 'bx bx-file bx-xs', 'name' => 'Asignación solicitud']);       
         }
  
-        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($configuracion,['type' => $list, 'list' => $solicitudes, 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Solicitudes Especiales', 'id' => 'solic_esp']);       
-        }
+        // if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+        //     array_push($configuracion,['type' => $list, 'list' => $solicitudes, 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Solicitudes Especiales', 'id' => 'solic_esp']);       
+        // }
          //cierra submenu
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('configAuth'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Aut. incidencias']);    

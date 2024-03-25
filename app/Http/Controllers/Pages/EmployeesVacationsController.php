@@ -133,7 +133,7 @@ class EmployeesVacationsController extends Controller
     
             $lEmployees = EmployeeVacationUtils::getVacations($lEmployees, $request->startYear);
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lEmployees' => $lEmployees]);
@@ -144,7 +144,7 @@ class EmployeesVacationsController extends Controller
             $config = \App\Utils\Configuration::getConfigurations();
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id, true);
         } catch (\Throwable $th) {
-            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => true, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);
@@ -155,7 +155,7 @@ class EmployeesVacationsController extends Controller
             $config = \App\Utils\Configuration::getConfigurations();
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
         } catch (\Throwable $th) {
-            return json_encode(['success' => true, 'message' => 'Error al obtener los registros', 'icon' => 'error']);
+            return json_encode(['success' => true, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);

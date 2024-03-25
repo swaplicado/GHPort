@@ -411,7 +411,7 @@ class UsersController extends Controller
                 GlobalUsersUtils::globalUpdateFromSystem($us, SysConst::SYSTEM_PGH);
             } catch (\Throwable $th) {
                 \DB::rollback();
-                return json_encode(['success' => false, 'message' => 'Error al crear el registro']);
+                return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
             }    
         }else{
             try {

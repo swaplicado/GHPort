@@ -54,7 +54,7 @@ class SpecialTypeController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => 'Error al guardar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lSpecialType' => $lSpecialType]);
     }
@@ -86,7 +86,7 @@ class SpecialTypeController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => 'Error al actualizar el registro', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lSpecialType' => $lSpecialType]);
     }

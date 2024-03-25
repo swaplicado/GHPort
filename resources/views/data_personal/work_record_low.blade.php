@@ -23,7 +23,9 @@
         function GlobalData(){
            //rutas
             this.users = <?php echo json_encode($dataUser); ?>;
-            this.rute_get_work_personal_low = <?php echo json_encode(route("get_word_record_personal_low")); ?>; 
+            this.rute_get_work_personal_low = <?php echo json_encode(route("get_word_record_personal_low")); ?>;
+            this.manualRoute = [];
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:conscolabslow" ); ?>;
         }
         var oServerData = new GlobalData();
     </script>
@@ -46,7 +48,7 @@
 @endsection
 
 @section('scripts')
-
+@include('layouts.manual_jsControll')
 <script>
     moment.locale('es');
     $(document).ready(function () {

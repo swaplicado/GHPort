@@ -89,11 +89,11 @@ var app = new Vue({
 
         save() {
             if (this.username == '') {
-                SGui.showError("El usuario no puede estar vacio");
+                SGui.showError("Debe llenar el campo Usuario");
                 return false;
             }
             if (this.mail == '') {
-                SGui.showError("El mail no puede estar vacio");
+                SGui.showError("Debe llenar el campo Correo");
                 return false;
             }
             SGui.showWaiting(5000);
