@@ -268,7 +268,7 @@ var app = new Vue({
             let route;
             let is_checked = document.getElementById('checkBoxAllEmployees').checked;
             if(is_checked){
-                if(this.oUser.rol_id == this.roles.GH || this.oUser.rol_id == this.roles.ADMIN){
+                if(this.oUser.rol_id == this.roles.GH  || this.oUser.rol_id == this.roles.ADMIN){
                     route = this.oData.getAllEmployeesRoute;
                 }else if(this.oUser.rol_id == this.roles.JEFE){
                     route = this.oData.getAllMyEmployeesRoute;
