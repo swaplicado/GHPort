@@ -189,7 +189,7 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'applications_table',
                                         'colTargets' => [0,4,5],
-                                        'colTargetsSercheable' => [1,2,3],
+                                        'colTargetsSercheable' => [1,2,3,7],
                                         'colTargetsNoOrder' => [],
                                         'noDom' => true,
                                         'select' => true,
@@ -197,7 +197,10 @@
                                         'cancel' => true,
                                         'noSort' => true,
                                         'ordering' => true,
-                                        'order' => [[4, 'asc']],
+                                        'order' => [[7, 'asc']],
+                                        'rowGroup' => [7],
+                                        'rowGroupNotSelectable' => true,
+                                        // 'exportOptions' => true,
                                     ] )
 
 @include('layouts.manual_jsControll')

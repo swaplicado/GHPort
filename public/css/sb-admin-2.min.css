@@ -13209,3 +13209,13 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   .toast.error {
     background-color: #FF4747;
   }
+
+  tr.group,
+tr.group:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+ 
+:root.dark tr.group,
+:root.dark tr.group:hover {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+}

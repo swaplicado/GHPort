@@ -42,6 +42,9 @@
     <script src="{{ asset('datatables/dataTables.js')}}"></script>
     <script src="{{ asset('sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('myApp/Utils/SDateUtils.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
     <script>
         function GlobalDataNotification(){
             this.lNotifications = <?php echo json_encode(session()->get('lNotifications')) ?>;

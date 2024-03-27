@@ -12,6 +12,14 @@ use App\Utils\EmployeeVacationUtils;
 use App\Utils\orgChartUtils;
 use App\Utils\usersInSystemUtils;
 
+// Definir el tipo de contenido como texto/html
+header('Content-Type: text/html');
+
+// Definir cabeceras de caché para evitar que el navegador almacene en caché la página
+header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
+header('Pragma: no-cache'); // HTTP 1.0.
+header('Expires: 0'); // Proxies.
+
 class univCertificatesController extends Controller
 {
     public function index(){
