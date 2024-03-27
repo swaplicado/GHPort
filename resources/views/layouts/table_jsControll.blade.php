@@ -108,18 +108,107 @@
                                 text: 'Copiar'
                             }, 
                             'csv', 
-                            'excel', 
+                            @if(isset($exportOptions))
+                                {
+                                    extend: 'excel',
+                                    text: 'Excel',
+                                    action: function(e, dt, button, config) {
+                                        var data = dt.buttons.exportData({
+                                            columns: ':not(.exclude)' // Excluir columnas con la clase 'exclude'
+                                        });
+
+                                        // Obtener los nombres de las columnas y aplicar formato en negrita
+                                        var columns = dt.columns(':not(.exclude)').header().toArray().map(function(node) {
+                                            return {v: node.innerText, s: {font: {bold: true}}};
+                                        });
+
+                                        // Insertar los encabezados de las columnas al inicio de los datos
+                                        data.body.unshift(columns);
+
+                                        // Crear el libro de Excel
+                                        var workbook = XLSX.utils.book_new();
+                                        var sheet = XLSX.utils.aoa_to_sheet(data.body);
+
+                                        // Ajustar automáticamente el ancho de las columnas al contenido
+                                        var wscols = data.body.map(function(row) {
+                                            return row.map(function(cell) {
+                                                return {wch: cell.toString().length};
+                                            });
+                                        })[0];
+                                        sheet['!cols'] = wscols;
+
+                                        // Agregar la hoja al libro
+                                        XLSX.utils.book_append_sheet(workbook, sheet, 'Hoja 1');
+
+                                        // Escribir el libro en formato de array
+                                        var wbout = XLSX.write(workbook, {bookType:'xlsx', type:'array'});
+
+                                        // Descargar el archivo
+                                        saveAs(new Blob([wbout], {type: 'application/octet-stream'}), 'PortalGh.xlsx');
+                                    }
+                                },
+                            @else
+                                'excel',
+                            @endif
                             {
                                 extend: 'print',
                                 text: 'Imprimir'
-                            }
+                            },
                         ],
                     "initComplete": function(){ 
                         // $("#{{$table_id}}").show();
                         $("#{{$table_id}}").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
-                    }
+                    },
+
+                    @if(isset($rowGroup))
+                        "rowGroup": {
+                            dataSrc: {{$rowGroup[0]}}, // Índice de la columna por la cual deseas agrupar
+                            @if(isset($rowGroupNotSelectable))
+                                select: false,
+                            @endif
+                        },
+                    @endif
+
+                    @if(isset($rowsGroup))
+                        "rowGroup": {
+                            dataSrc: <?php echo json_encode($rowsGroup) ?>, // Índice de la columna por la cual deseas agrupar
+                            @if(isset($rowGroupNotSelectable))
+                                select: false
+                            @endif
+                        },
+                    @endif
+
+                    @if(isset($rowGroupNotSelectable))
+                        "rowCallback": function(row, data) {
+                            if ($(row).hasClass('group')) {
+                                $(row).find('input[type="checkbox"]').prop('disabled', true); // Deshabilita la selección en el renglón de agrupación
+                            }
+                        }
+                    @endif
                 });
-            
+
+        @if(isset($selectRowGroup))
+            $('#{{$table_id}} tbody').on('click', 'tr.dtrg-group', function () {
+                if(!$(this).hasClass('noSelectableRow')){
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+                        // table['{{$table_id}}'].$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+                }
+            });
+        @endif
+
+        @if(isset($noSelectableRow))
+            $('#{{$table_id}} tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('noSelectableRow')) {
+                    return false; // Evitar la selección si la fila tiene la clase 'noSelectableRow'
+                }
+            });
+        @endif
+
         @if(isset($select))
             $('#{{$table_id}} tbody').on('click', 'tr', function () {
                 if(!$(this).hasClass('noSelectableRow')){
@@ -130,6 +219,18 @@
                         table['{{$table_id}}'].$('tr.selected').removeClass('selected');
                         $(this).addClass('selected');
                     }
+                }
+            });
+        @endif
+
+        @if(isset($rowGroupNotSelectable))
+            // Escucha el evento de selección
+            $('#{{$table_id}} tbody').on('click', 'tr', function() {
+                var row = table['{{$table_id}}'].row(this);
+                if (!$(this).hasClass('dtrg-group')) {
+                    row.select(); // Solo selecciona el renglón si no tiene la clase 'group'
+                }else{
+                    $(this).removeClass('selected');
                 }
             });
         @endif
