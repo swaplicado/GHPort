@@ -14,6 +14,8 @@ var app = new Vue({
         roles: oServerData.roles,
     },
     mounted(){
+        self = this;
+
         $('.select2-class').select2({});
 
         var dataFilterWithCertificate = [
@@ -87,6 +89,9 @@ var app = new Vue({
             var datalEmployeesToCuadrants = [];
             for(let emp of lEmployeesToCuadrants){
                 for(let cuadrant of emp.cuadrants){
+                    if(cuadrant.asignado != 1){
+                        continue;
+                    }
                     datalEmployeesToCuadrants.push(
                         [
                             emp.id,
@@ -99,7 +104,7 @@ var app = new Vue({
                             emp.full_name,
                             cuadrant.cuadrant_name,
                             '',
-                            '',
+                            'Cuadrante: ' + cuadrant.cuadrant_name,
                             cuadrant.asignado == 1 ? cuadrant.cuadrantStatus : 'No asignado',
                         ]
                     );
@@ -117,12 +122,15 @@ var app = new Vue({
                                     emp.full_name,
                                     cuadrant.cuadrant_name,
                                     module.module,
-                                    '',
+                                    'Módulo: ' + module.module,
                                     module.moduleStatus,
                                 ]
                             );
                             if(typeof module.courses !== 'undefined'){
                                 for(let course of module.courses){
+                                    // if(course.courseStatus != "Aprobado"){
+                                    //     continue;
+                                    // }
                                     datalEmployeesToCuadrants.push(
                                         [
                                             emp.id,
@@ -146,7 +154,7 @@ var app = new Vue({
                 }
             }
 
-            this.filterCuadrantTable();
+            // this.filterCuadrantTable();
 
             table['cuadrants_table'].clear().draw();
             table['cuadrants_table'].rows.add(datalEmployeesToCuadrants).draw();
@@ -154,13 +162,23 @@ var app = new Vue({
             for(let i = 0; i < datalEmployeesToCuadrants.length; i++){
                 switch (datalEmployeesToCuadrants[i][this.indexesCuadrantsTable.id_type]) {
                     case 1:
-                        table['cuadrants_table'].row(i).nodes().to$().addClass('cuadrantColor');
+                        // table['cuadrants_table'].row(i).nodes().to$().addClass('cuadrantColor');
+                        let dataCuadrant = table['cuadrants_table'].row(i).data();
+                        if(dataCuadrant[this.indexesCuadrantsTable.status] != 'Cursado'){
+                            table['cuadrants_table'].row(i).nodes().to$().addClass('noSelectableRow');
+                        }
+                        table['cuadrants_table'].row(i).nodes().to$().addClass('dtrg-level-1');
                         break;
                     case 2:
-                        table['cuadrants_table'].row(i).nodes().to$().addClass('moduleColor');
+                        // table['cuadrants_table'].row(i).nodes().to$().addClass('moduleColor');
+                        let dataModule = table['cuadrants_table'].row(i).data();
+                        if(dataModule[this.indexesCuadrantsTable.status] != 'Cursado'){
+                            table['cuadrants_table'].row(i).nodes().to$().addClass('noSelectableRow');
+                        }
+                        table['cuadrants_table'].row(i).nodes().to$().addClass('dtrg-level-2');
                         break;
                     case 3:
-                        table['cuadrants_table'].row(i).nodes().to$().addClass('courseColor');
+                        // table['cuadrants_table'].row(i).nodes().to$().addClass('courseColor');
                         break;
                     default:
                         break;
@@ -209,16 +227,37 @@ var app = new Vue({
             });
         },
 
+        findInTable(valorABuscar, indexABuscar){
+            var filaCoincidente = null;
+            var datosFilas = table['cuadrants_table'].rows().data();
+            // Iterar sobre los datos de las filas para buscar la coincidencia
+            for (var i = 0; i < datosFilas.length; i++) {
+                var fila = datosFilas[i];
+                if (fila[indexABuscar] == valorABuscar) {
+                    filaCoincidente = fila;
+                    break;
+                }
+            }
+
+            if (filaCoincidente !== null) {
+                console.log("Fila coincidente:", filaCoincidente);
+                return filaCoincidente;
+            } else {
+                console.log("No se encontró ninguna coincidencia.");
+                return null;
+            }
+
+        },
+
         getCertificates(){
             let arrData = table['cuadrants_table'].rows({ selected: true }).data().toArray();
-            if(arrData.length == 0){
+            if(arrData.length == 0 && lRowsCuadrants.length == 0 && lRowsModules.length == 0){
                 SGui.showMessage('', 'Debe seleccionar un renglon', 'warning');
                 return;
             }
             SGui.showWaiting();
             let route = this.oData.getCertificatesRoute;
             this.setlAssignmentsToCertificates();
-
 
             axios({
                 method: 'post',

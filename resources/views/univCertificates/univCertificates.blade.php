@@ -2,6 +2,45 @@
 
 @section('headStyles')
 <link href={{asset('select2js/css/select2.min.css')}} rel="stylesheet" />
+<style>
+    table.dataTable tr.dtrg-group.dtrg-level-0 th::before {
+        content: 'Colaborador: ';
+    }
+
+    table.dataTable tr.dtrg-group.dtrg-level-0 th {
+        background-color: #049dc99e !important;
+        color: black !important;
+        font-weight: bold !important;
+    }
+
+    /* .dtrg-level-1 td::before {
+        content: 'Cuadrante: ';
+    } */
+
+    .dtrg-level-1 td {
+        background-color: #04867a9e !important;
+        color: black !important;
+        font-weight: bold !important;
+        font-size: 1.1em !important;
+        padding-left: 2em !important;
+    }
+
+    /* .dtrg-level-2 td::before {
+        content: 'Módulo: ';
+    } */
+
+    .dtrg-level-2 td {
+        background-color: #fbdf439e !important;
+        color: black !important;
+        font-weight: bold !important;
+        font-size: 1.1em !important;
+        padding-left: 4em !important;
+    }
+
+    td {
+        color: black !important;
+    }
+</style>
 @endsection
 
 @section('headJs')
@@ -134,43 +173,16 @@
             <div>
                 <br>
                 <h4 style="text-align:center; background-color: #e9ecef">Certificados</h4>
-                <div class="row">
+                <div class="row" hidden>
                     <div class="col-md-3">
                         <div class="form-check">
                             <select class="select2-class form-control" name="filter_withCertificate" id="filter_withCertificate" style="width: 90%;"></select>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkCuadrants" v-on:change="filterCuadrantTable()" checked>
-                            <label class="form-check-label" for="checkCuadrants">
-                                Cuadrantes
-                                <span style="background-color: #A2F1A0">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkModules" v-on:change="filterCuadrantTable()">
-                            <label class="form-check-label" for="checkModules">
-                                Módulos
-                                <span style="background-color: #A0EEF1">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkCourses" v-on:change="filterCuadrantTable()">
-                            <label class="form-check-label" for="checkCourses">
-                                Cursos
-                                <span style="background-color: #F1BFA0">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            </label>
-                        </div>
-                    </div>
                 </div>
                 <br>
                 <div>
-                    <table class="table table-bordered" id="cuadrants_table">
+                    <table class="table table-bordered" id="cuadrants_table" style="width: 100%">
                         <thead class="thead-light">
                             <th>id_employee_univ</th>
                             <th>id_assigment</th>
@@ -182,7 +194,7 @@
                             <th>Colaborador</th>
                             <th>Cuadrante</th>
                             <th>Módulo</th>
-                            <th>Curso</th>
+                            <th></th>
                             <th>Estatus</th>
                         </thead>
                         <tbody></tbody>
@@ -211,11 +223,13 @@
                 }
 
                 if(settings.nTable.id == 'cuadrants_table'){
-                    if(withCeretificate == 0){
-                        return data[oServerData.indexesCuadrantsTable.withCertificate] == 1 && lTypes.includes(col_type);
-                    }else{
-                        return lTypes.includes(col_type);
-                    }
+                    // if(withCeretificate == 0){
+                    //     // return data[oServerData.indexesCuadrantsTable.withCertificate] == 1 && lTypes.includes(col_type);
+                    //     return data[oServerData.indexesCuadrantsTable.withCertificate] == 1;
+                    // }else{
+                    //     return true;
+                    // }
+                    return true;
                 }
             }
         );
@@ -241,11 +255,15 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'cuadrants_table',
                                         'colTargets' => [0,1,3,4,5],
-                                        'colTargetsSercheable' => [2,6],
+                                        'colTargetsSercheable' => [2,6,7,8,9],
                                         // 'noPaging' => true,
                                         'noDom' => true,
                                         'selectMulti' => true,
                                         'order' => [[7, 'asc'], [8, 'asc'], [9, 'asc'], [10, 'asc']],
+                                        'rowsGroup' => [7],
+                                        'noSort' => true,
+                                        // 'selectRowGroup' => true,
+                                        'noSelectableRow' => true,
                                     ] )
 
 <script type="text/javascript" src="{{ asset('myApp/univCertificates/vue_univCertificates.js') }}"></script>
