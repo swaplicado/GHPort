@@ -11,6 +11,7 @@ use App\Utils\EmployeeVacationUtils;
 use App\Utils\orgChartUtils;
 use Carbon\Carbon;
 use App\Utils\usersInSystemUtils;
+use DB;
 
 class sanctionsController extends Controller
 {
@@ -51,6 +52,9 @@ class sanctionsController extends Controller
                     $arrData[] = [ 
                                     'employee_id' => $emp->id_emp,
                                     'num' => $admRec->num,
+                                    'prec' => $admRec->prec,
+                                    'sec' => $admRec->sec,
+                                    'sub' => $admRec->sub,
                                     'startDate' => Carbon::parse($admRec->recDtSta)->toDateString(),
                                     'endDate' => Carbon::parse($admRec->recDtEnd)->toDateString(),
                                     'title' => $admRec->breachAbstract,
@@ -72,6 +76,9 @@ class sanctionsController extends Controller
                     $arrData[] = [ 
                                     'employee_id' => $emp->id_emp,
                                     'num' => $breach->num,
+                                    'prec' => $breach->prec,
+                                    'sec' => $breach->sec,
+                                    'sub' => $breach->sub,
                                     'startDate' => Carbon::parse($breach->breachTs)->toDateString(),
                                     'endDate' => Carbon::parse($breach->breachTs)->toDateString(),
                                     'title' => $breach->breachAbstract,
@@ -260,5 +267,55 @@ class sanctionsController extends Controller
                                             ->with('lRoles', $lRoles)
                                             ->with('startDate', $startDate)
                                             ->with('endDate', $endDate);
+    }
+
+    public function indexReportSanctionsMatrix() {
+        $employees = DB::table('users')
+                        ->where('is_delete',0)
+                        ->where('show_in_system',1)
+                        ->get();
+                        
+        $lData = self::queryToArray($employees);
+        $lSanctions = self::getSanctions($lData, SysConst::SANCION);
+        $lAdmin = self::getSanctions($lData, SysConst::ACTA);
+
+        $lTypes = [
+            'ACTA' => SysConst::ACTA,
+            'SANCION' => SysConst::SANCION,
+        ];
+
+        $lRoles = [
+            'ESTANDAR' => SysConst::ESTANDAR,
+            'GH' => SysConst::GH,
+            'JEFE' => SysConst::JEFE,
+        ];
+
+        // $lSanctions = [];
+
+        $startDate = Carbon::now()->startOfMonth()->toDateString();
+        $endDate = Carbon::now()->endOfMonth()->toDateString();
+        
+        return view('sanctions.sanctions')->with('lSanctions', $lSanctions)
+                                            ->with('lAdmin', $lAdmin)
+                                            ->with('lTypes', $lTypes)
+                                            ->with('lRoles', $lRoles)
+                                            ->with('startDate', $startDate)
+                                            ->with('endDate', $endDate);
+
+    }
+
+    public function queryToArray($employees) {
+        $olEmployees = collect($employees);
+        foreach ($olEmployees as $emp) {
+            $emp->ext_company_id = \DB::table('ext_company')->where('id_company', $emp->company_id)->value('external_id');
+        }
+        $lCompany = $olEmployees->pluck('ext_company_id')->unique();
+
+        $lEmployeesArray = [];
+        foreach($lCompany as $company){
+            $lEmployeesArray[] = ['company' => $company, 'lEmployees' => $olEmployees->where('ext_company_id', $company)->pluck('external_id_n')->toArray()]; 
+        }
+
+        return $lEmployeesArray;    
     }
 }
