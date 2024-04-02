@@ -105,54 +105,39 @@
                             'pageLength',
                             {
                                 extend: 'copy',
-                                text: 'Copiar'
-                            }, 
-                            'csv', 
-                            @if(isset($exportOptions))
-                                {
-                                    extend: 'excel',
-                                    text: 'Excel',
-                                    action: function(e, dt, button, config) {
-                                        var data = dt.buttons.exportData({
-                                            columns: ':not(.exclude)' // Excluir columnas con la clase 'exclude'
-                                        });
-
-                                        // Obtener los nombres de las columnas y aplicar formato en negrita
-                                        var columns = dt.columns(':not(.exclude)').header().toArray().map(function(node) {
-                                            return {v: node.innerText, s: {font: {bold: true}}};
-                                        });
-
-                                        // Insertar los encabezados de las columnas al inicio de los datos
-                                        data.body.unshift(columns);
-
-                                        // Crear el libro de Excel
-                                        var workbook = XLSX.utils.book_new();
-                                        var sheet = XLSX.utils.aoa_to_sheet(data.body);
-
-                                        // Ajustar automáticamente el ancho de las columnas al contenido
-                                        var wscols = data.body.map(function(row) {
-                                            return row.map(function(cell) {
-                                                return {wch: cell.toString().length};
-                                            });
-                                        })[0];
-                                        sheet['!cols'] = wscols;
-
-                                        // Agregar la hoja al libro
-                                        XLSX.utils.book_append_sheet(workbook, sheet, 'Hoja 1');
-
-                                        // Escribir el libro en formato de array
-                                        var wbout = XLSX.write(workbook, {bookType:'xlsx', type:'array'});
-
-                                        // Descargar el archivo
-                                        saveAs(new Blob([wbout], {type: 'application/octet-stream'}), 'PortalGh.xlsx');
+                                text: 'Copiar',
+                                @if(isset($colToExport))
+                                    exportOptions: {
+                                        columns: <?php echo json_encode($colToExport) ?>,
                                     }
-                                },
-                            @else
-                                'excel',
-                            @endif
+                                @endif
+                            },
+                            {
+                                extend: 'csv',
+                                text: 'csv',
+                                @if(isset($colToExport))
+                                    exportOptions: {
+                                        columns: <?php echo json_encode($colToExport) ?>,
+                                    }
+                                @endif
+                            },
+                            {
+                                extend: 'excel',
+                                text: 'Excel',
+                                @if(isset($colToExport))
+                                    exportOptions: {
+                                        columns: <?php echo json_encode($colToExport) ?>,
+                                    }
+                                @endif
+                            },
                             {
                                 extend: 'print',
-                                text: 'Imprimir'
+                                text: 'Imprimir',
+                                @if(isset($colToExport))
+                                    exportOptions: {
+                                        columns: <?php echo json_encode($colToExport) ?>,
+                                    }
+                                @endif
                             },
                         ],
                     "initComplete": function(){ 

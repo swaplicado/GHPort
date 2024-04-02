@@ -68,6 +68,7 @@
                                         'colTargets' => [0,1,2],
                                         'colTargetsSercheable' => [],
                                         'rowGroup' => [2],
+                                        'colToExport' => [2,3,4]
                                     ] )
 
 <script type="text/javascript" src="{{ asset('myApp/usersInEvents/vue_usersInEvents.js') }}"></script>
