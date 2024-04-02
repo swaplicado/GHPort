@@ -314,6 +314,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     /**Rutas de si es area administrativa */
     Route::get('officeArea', 'Adm\UsersShowInSystemController@officeOrgChartJob')->name('officeOrgChartJob');
     Route::post('officeArea/update', 'Adm\UsersShowInSystemController@updateOfficeOrgChartJob')->name('updateOfficeOrgChartJob');
+
+    Route::get('usersInEvents', 'Pages\usersInEventsController@index')->name('usersInEvents');
 });
 /**
  * Rutas permisos 

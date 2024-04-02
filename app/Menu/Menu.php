@@ -121,6 +121,9 @@ class Menu {
 
         array_push($consultas,['route' => route('orgChart'), 'icon' => 'bx bx-sitemap bx-xs', 'name' => 'Organigrama']);
         // array_push($consultas,['route' => route('personalData'), 'icon' => 'bx bxs-user-circle bx-xs', 'name' => 'Mis datos personales']); 
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4 || $oUser->rol_id == 2){
+            array_push($consultas,['route' => route('usersInEvents'), 'icon' => 'bx bxs-calendar-star bx-xs', 'name' => 'Eventos de mis colabs.']); 
+        }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($consultas,['route' => route('univCertificates'), 'icon' => 'bx bxs-certification bx-xs', 'name' => 'Certificados']); 
         }
