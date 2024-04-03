@@ -3,6 +3,7 @@ var app = new Vue({
     data: {
         oData: oServerData,
         lEvents: oServerData.lEvents,
+        startDate: oServerData.startDate,
     },
     mounted(){
 
