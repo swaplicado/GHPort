@@ -15,11 +15,11 @@
             <tbody>
                 <tr>
                     <td style="background-color: #49e"></td>
-                    <td style="text-align: left;">&nbsp (Día de vacaciones de esta solicitud)</td>
+                    <td style="text-align: left;">&nbsp (Inicio/Fin de la solicitud)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #f590eb"></td>
-                    <td style="text-align: left;">&nbsp (Día de vacaciones de otras solicitudes)</td>
+                    <td style="text-align: left;">&nbsp (Día de vacaciones)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #ffad72"></td>

@@ -81,6 +81,18 @@ class SDateRangePicker {
                 var _class = '';
                 var _tooltip = '';
 
+                if(app.oApplication != undefined){
+                    if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                        if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                            _tooltip = _tooltip + 'Inicio. ';
+                        }
+        
+                        if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                            _tooltip = _tooltip + 'Fin. ';
+                        }
+                    }
+                }
+
                 let index = lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                 if(index > -1){
                     _class = 'priority_' + lTemp[index].priority;

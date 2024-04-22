@@ -72,6 +72,18 @@ class SDateRangePicker {
                 var _tooltip = '';
                 if(table[table_id].row('.selected').data() != undefined){
                     if(table[table_id].row('.selected').data()[payment_frec_index] == const_QUINCENA){
+                        if(app.oApplication != undefined){
+                            if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                                    _tooltip = _tooltip + 'Inicio. ';
+                                }
+                
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                                    _tooltip = _tooltip + 'Fin. ';
+                                }
+                            }
+                        }
+
                         let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                         if(index > -1){
                             _class = 'priority_' + app.lTemp[index].priority;
@@ -123,14 +135,27 @@ class SDateRangePicker {
                             }
                         }
 
-                        let indexlDays = app.lDays.findIndex(({ date }) => moment(date, 'ddd DD-MMM-YYYY').isSame(moment(t.getTime())));
-                        if(indexlDays > -1){
-                            if(app.lDays[indexlDays].taked){
-                                _class = 'requestedVac';
-                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                        // let indexlDays = app.lDays.findIndex(({ date }) => moment(date, 'ddd DD-MMM-YYYY').isSame(moment(t.getTime())));
+                        // if(indexlDays > -1){
+                        //     if(app.lDays[indexlDays].taked){
+                        //         _class = 'requestedVac';
+                        //         _tooltip = _tooltip + 'Solicitud de vacaciones. ';
+                        //     }
+                        // }
+
+                    } else {
+                        if(app.oApplication != undefined){
+                            if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                                    _tooltip = _tooltip + 'Inicio. ';
+                                }
+                
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                                    _tooltip = _tooltip + 'Fin. ';
+                                }
                             }
                         }
-                    } else {
+
                         let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                         if(index > -1){
                             _class = 'priority_' + app.lTemp[index].priority;
@@ -184,6 +209,18 @@ class SDateRangePicker {
                     }
                 }else if(app.oApplication != null){
                     if(app.oApplication.payment_frec_id == const_QUINCENA){
+                        if(app.oApplication != undefined){
+                            if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                                    _tooltip = _tooltip + 'Inicio. ';
+                                }
+                
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                                    _tooltip = _tooltip + 'Fin. ';
+                                }
+                            }
+                        }
+
                         let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                         if(index > -1){
                             _class = 'priority_' + app.lTemp[index].priority;
@@ -243,6 +280,18 @@ class SDateRangePicker {
                             }
                         }
                     } else {
+                        if(app.oApplication != undefined){
+                            if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                                    _tooltip = _tooltip + 'Inicio. ';
+                                }
+                
+                                if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                                    _tooltip = _tooltip + 'Fin. ';
+                                }
+                            }
+                        }
+
                         let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                         if(index > -1){
                             _class = 'priority_' + app.lTemp[index].priority;
@@ -382,6 +431,18 @@ class SDateRangePicker {
                 var _class = '';
                 var _tooltip = '';
                 if(user_payment_frec_id == const_QUINCENA){
+                    if(app.oApplication != undefined){
+                        if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                            if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                                _tooltip = _tooltip + 'Inicio. ';
+                            }
+            
+                            if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                                _tooltip = _tooltip + 'Fin. ';
+                            }
+                        }
+                    }
+
                     let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                     if(index > -1){
                         _class = 'priority_' + app.lTemp[index].priority;
@@ -433,6 +494,18 @@ class SDateRangePicker {
                         }
                     }
                 } else {
+                    if(app.oApplication != undefined){
+                        if(app.oApplication.start_date != undefined && app.oApplication.end_date != undefined){
+                            if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.start_date){
+                                _tooltip = _tooltip + 'Inicio. ';
+                            }
+            
+                            if(moment(t.getTime()).format('YYYY-MM-DD') == app.oApplication.end_date){
+                                _tooltip = _tooltip + 'Fin. ';
+                            }
+                        }
+                    }
+
                     let index = app.lTemp.findIndex(({ lDates }) => lDates.includes(moment(t.getTime()).format('YYYY-MM-DD')));
                     if(index > -1){
                         _class = 'priority_' + app.lTemp[index].priority;
