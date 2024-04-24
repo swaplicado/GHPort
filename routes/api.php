@@ -39,6 +39,6 @@ Route::group(['middleware' => 'auth:api'], function() {
     ]);
 });
 
-Route::post('getUsersFromGU', [
+Route::get('getUsersFromGU', [
     'uses' => 'Sys\\SyncController@getUsersFromGU'
 ]);
