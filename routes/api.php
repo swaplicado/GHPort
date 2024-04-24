@@ -38,3 +38,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         'uses' => 'api\\GlobalComunicationController@getPendingUser'
     ]);
 });
+
+Route::post('getUsersFromGU', [
+    'uses' => 'Sys\\SyncController@getUsersFromGU'
+]);
