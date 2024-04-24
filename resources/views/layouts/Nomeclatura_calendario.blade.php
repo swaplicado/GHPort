@@ -15,7 +15,7 @@
             <tbody>
                 <tr>
                     <td style="background-color: #49e"></td>
-                    <td style="text-align: left;">&nbsp (Inicio/Fin de la solicitud)</td>
+                    <td style="text-align: left;">&nbsp (Inicio/fin de la solicitud)</td>
                 </tr>
                 <tr>
                     <td style="background-color: #f590eb"></td>
