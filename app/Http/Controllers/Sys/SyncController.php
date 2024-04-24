@@ -464,4 +464,51 @@ class SyncController extends Controller
 
         return true;
     }
+
+    /**
+     * Metodo para obtener la lista de usuarios de la tabla global users a partir de la fecha recibida.
+     * 1.- Sincroniza los usuarios
+     * 2.- Obtiene la lista de usuarios a partir de la fecha recibida
+     * 3.- Regresa un array con los string json de los usuarios obtenidos* 
+     * @param mixed $fromDateTime formato "YYYY-MM-DD HH:mm:ss" -> "2024-01-01 00:00:00"
+     */
+    public function getUsersFromGU(Request $request){
+        try {
+            $fromDateTime = $request->fromDateTime;
+            $config = \App\Utils\Configuration::getConfigurations();
+            $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+            $photos = SyncController::SyncPhotos();
+            // $synchronized = true;
+
+            if($synchronized){
+                $newDate = Carbon::now();
+                $newDate->subMinutes(10);
+        
+                \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+            }
+
+            $lUsers = \DB::connection('mysqlGlobalUsers')
+                        ->table('global_users')
+                        ->where('updated_at', '>=', $fromDateTime)
+                        ->where('is_deleted', 0)
+                        ->where('is_active', 1)
+                        ->get()
+                        ->toArray();
+
+            return response()->json([
+                'status_code ' => 200,
+                'status' => 'success',
+                'message' => "Se sincronizaron los usuarios correctamente",
+                'lUsers' => $lUsers
+                ], 200, [], JSON_UNESCAPED_UNICODE);
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            return response()->json([
+                'status_code ' => 500,
+                'status' => 'error',
+                'message' => $th->getMessage(),
+                'data' => null
+            ], 500, [], JSON_UNESCAPED_UNICODE);
+        }
+    }
 }
