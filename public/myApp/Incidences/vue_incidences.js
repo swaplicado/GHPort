@@ -55,6 +55,7 @@ var app = new Vue({
         lEvents: oServerData.lEvents,
         is_event: false,
         lIncidencesEA: [],
+        isNewApplication: false,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -96,7 +97,11 @@ var app = new Vue({
         type_id:function(val){
             if(!this.isEdit && !this.isRevision){
                 let oIncidence = this.lTypesToFilter.find(({ id_incidence_tp }) => id_incidence_tp == val);
-                this.limit_days = oIncidence.limit_days_n != undefined ? oIncidence.limit_days_n : null;
+                if(oIncidence == null || oIncidence == undefined){
+                    this.limit_days = null;
+                }else{
+                    this.limit_days = oIncidence.limit_days_n != undefined ? oIncidence.limit_days_n : null;
+                }
                 this.createCalendar(val);
                 $('#two-inputs-calendar').on('datepicker-first-date-selected', function(event, data) {
                     if(self.limit_days != null && self.limit_days > 0){
@@ -489,6 +494,26 @@ var app = new Vue({
             }
         },
 
+        checkSelectDates(){
+            if(this.isNewApplication){
+                for(let appEA of dateRangePickerArrayApplications){
+                    if(moment(appEA, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                        $('#clear').trigger('click');
+                        // SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el dia: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
+                        SGui.showMessage('', 'En la fecha \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY') +' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'warning');
+                        break;
+                    }
+                }
+                for(let appEA of dateRangePickerArrayIncidences){
+                    if(moment(appEA.date, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
+                        $('#clear').trigger('click');
+                        SGui.showMessage('', 'En la fecha \n' + this.oDateUtils.formatDate(appEA.date, 'ddd DD-MMM-YYYY') +' ya hay una incidencia registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'warning');
+                        break;
+                    }
+                }
+            }
+        },
+
         getDataDays(){
             var result = this.vacationUtils.getTakedDays(
                             this.oData.lHolidays,
@@ -517,7 +542,7 @@ var app = new Vue({
                 if(data.success){
                     dateRangePickerArrayApplications = data.lVacations;
                     dateRangePickerArrayIncidences = data.lIncidences;
-                    this.applicationsEA = data.arrAplications;
+                    // this.applicationsEA = data.arrAplications;
                     // swal.close();
                     resolve(dateRangePickerArrayIncidences);
                 }else{
@@ -570,6 +595,7 @@ var app = new Vue({
 
         async showModal(data = null){
             SGui.showWaiting();
+            this.isNewApplication = false;
             $('#clear').trigger('click');
             // $('#incident_class').val('').trigger('change');
             $('#incident_type').empty().trigger("change");
@@ -610,6 +636,7 @@ var app = new Vue({
                 }
             }
             Swal.close();
+            this.isNewApplication = true;
             $('#modal_incidences').modal('show');
         },
 
@@ -733,6 +760,8 @@ var app = new Vue({
             this.valid = true;
             this.idApplication = null;
             this.isEdit = false;
+            $('#date-range-001').val('');
+            $('#date-range-002').val('');
             // this.isRevision = false;
         },
 
@@ -1042,6 +1071,7 @@ var app = new Vue({
          */
         async showDataModal(data){
             SGui.showWaiting();
+            this.isNewApplication = false;
             this.cleanData();
             $('#clear').trigger('click');
             this.isRevision = true;
