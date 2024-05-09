@@ -628,7 +628,7 @@ class EmployeeVacationUtils {
                                     ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO, sysConst::APPLICATION_CONSUMIDO])
                                     ->where('is_deleted', 0)
                                     ->where('type_incident_id', SysConst::TYPE_VACACIONES)
-                                    ->select('start_date', 'end_date', 'ldays')
+                                    ->select('start_date', 'end_date', 'ldays', 'emp_comments_n')
                                     ->get();
         
         $arrDatesApplications = [];
@@ -637,7 +637,8 @@ class EmployeeVacationUtils {
             foreach($lDays as $day){
                 if($day->taked){
                     $date = Carbon::parse($day->date);
-                    $arrDatesApplications[] = $date->toDateString();
+                    // $arrDatesApplications[] = $date->toDateString();
+                    $arrDatesApplications[] = ['name' => 'Solicitud de vacaciones', 'date' => $date->toDateString(), 'comments' => $app->emp_comments_n];
                 }
             }
         }
