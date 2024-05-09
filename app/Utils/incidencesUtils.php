@@ -425,7 +425,7 @@ class incidencesUtils {
                                     ->whereIn('request_status_id', [SysConst::APPLICATION_ENVIADO, SysConst::APPLICATION_APROBADO, sysConst::APPLICATION_CONSUMIDO])
                                     ->where('applications.is_deleted', 0)
                                     ->where('type_incident_id', '!=', SysConst::TYPE_VACACIONES)
-                                    ->select('start_date', 'end_date', 'ldays', 'c.incidence_tp_name', 'emp_comments_n')
+                                    ->select('start_date', 'end_date', 'ldays', 'c.incidence_tp_name')
                                     ->get();
         
         $arrDatesApplications = [];
@@ -434,7 +434,7 @@ class incidencesUtils {
             foreach($lDays as $day){
                 if($day->taked){
                     $date = Carbon::parse($day->date);
-                    $arrDatesApplications[] = ['name' => $app->incidence_tp_name, 'date' => $date->toDateString(), 'comments' => $app->emp_comments_n];
+                    $arrDatesApplications[] = ['name' => $app->incidence_tp_name, 'date' => $date->toDateString()];
                 }
             }
         }

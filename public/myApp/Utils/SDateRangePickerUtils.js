@@ -116,17 +116,9 @@ class SDateRangePicker {
 
                         if(dateRangePickerArrayApplications != undefined){
                             if(dateRangePickerArrayApplications.length > 0){
-                                // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                                //     _class = 'requestedVac';
-                                //     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                                // }
-                                let indexVac = dateRangePickerArrayApplications.findIndex(function(evento) {
-                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                                });
-                                if(indexVac > -1){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                                     _class = 'requestedVac';
-                                    _tooltip = _tooltip + dateRangePickerArrayApplications[indexVac].name +  
-                                                '. ' + dateRangePickerArrayApplications[indexVac].comments;
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                                 }
                             }
                         }
@@ -138,8 +130,7 @@ class SDateRangePicker {
                                 });
                                 if(indexIncidence > -1){
                                     _class = 'incidence';
-                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  
-                                                '. ' + dateRangePickerArrayIncidences[indexIncidence].comments;
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
                                 }
                             }
                         }
@@ -188,17 +179,9 @@ class SDateRangePicker {
 
                         if(dateRangePickerArrayApplications != undefined){
                             if(dateRangePickerArrayApplications.length > 0){
-                                // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                                //     _class = 'requestedVac';
-                                //     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                                // }
-                                let indexVac = dateRangePickerArrayApplications.findIndex(function(evento) {
-                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                                });
-                                if(indexVac > -1){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                                     _class = 'requestedVac';
-                                    _tooltip = _tooltip + dateRangePickerArrayApplications[indexVac].name +  
-                                                '. ' + dateRangePickerArrayApplications[indexVac].comments;
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                                 }
                             }
                         }
@@ -210,8 +193,7 @@ class SDateRangePicker {
                                 });
                                 if(indexIncidence > -1){
                                     _class = 'incidence';
-                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  
-                                                '. ' + dateRangePickerArrayIncidences[indexIncidence].comments;
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
                                 }
                             }
                         }
@@ -342,17 +324,9 @@ class SDateRangePicker {
 
                         if(dateRangePickerArrayApplications != undefined){
                             if(dateRangePickerArrayApplications.length > 0){
-                                // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                                //     _class = 'requestedVac';
-                                //     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                                // }
-                                let indexVac = dateRangePickerArrayApplications.findIndex(function(evento) {
-                                    return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                                });
-                                if(indexVac > -1){
+                                if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                                     _class = 'requestedVac';
-                                    _tooltip = _tooltip + dateRangePickerArrayApplications[indexVac].name +  
-                                                '. ' + dateRangePickerArrayApplications[indexVac].comments;
+                                    _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                                 }
                             }
                         }
@@ -364,8 +338,7 @@ class SDateRangePicker {
                                 });
                                 if(indexIncidence > -1){
                                     _class = 'incidence';
-                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  
-                                                '. ' + dateRangePickerArrayIncidences[indexIncidence].comments;
+                                    _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
                                 }
                             }
                         }
@@ -502,17 +475,9 @@ class SDateRangePicker {
 
                     if(dateRangePickerArrayApplications != undefined){
                         if(dateRangePickerArrayApplications.length > 0){
-                            // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            //     _class = 'requestedVac';
-                            //     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                            // }
-                            let indexVac = dateRangePickerArrayApplications.findIndex(function(evento) {
-                                return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                            });
-                            if(indexVac > -1){
+                            if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                                 _class = 'requestedVac';
-                                _tooltip = _tooltip + dateRangePickerArrayApplications[indexVac].name +  
-                                            '. ' + dateRangePickerArrayApplications[indexVac].comments;
+                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                             }
                         }
                     }
@@ -524,8 +489,7 @@ class SDateRangePicker {
                             });
                             if(indexIncidence > -1){
                                 _class = 'incidence';
-                                _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  
-                                            '. ' + dateRangePickerArrayIncidences[indexIncidence].comments;
+                                _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
                             }
                         }
                     }
@@ -572,17 +536,9 @@ class SDateRangePicker {
                     }
                     if(dateRangePickerArrayApplications != undefined){
                         if(dateRangePickerArrayApplications.length > 0){
-                            // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                            //     _class = 'requestedVac';
-                            //     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                            // }
-                            let indexVac = dateRangePickerArrayApplications.findIndex(function(evento) {
-                                return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                            });
-                            if(indexVac > -1){
+                            if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
                                 _class = 'requestedVac';
-                                _tooltip = _tooltip + dateRangePickerArrayApplications[indexVac].name +  
-                                            '. ' + dateRangePickerArrayApplications[indexVac].comments;
+                                _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                             }
                         }
                     }
@@ -594,8 +550,7 @@ class SDateRangePicker {
                             });
                             if(indexIncidence > -1){
                                 _class = 'incidence';
-                                _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  
-                                            '. ' + dateRangePickerArrayIncidences[indexIncidence].comments;
+                                _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
                             }
                         }
                     }

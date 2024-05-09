@@ -126,33 +126,20 @@ class SDateRangePicker {
                     _tooltip = _tooltip + 'Inhabil. ';
                 }
 
-                if(dateRangePickerArrayApplications != undefined){
-                    if(dateRangePickerArrayApplications.length > 0){
-                        // if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
-                        //     _class = 'requestedVac';
-                        //     _tooltip = _tooltip + 'Solicitud de vacaciones. ';
-                        // }
-                        let indexVac = dateRangePickerArrayApplications.findIndex(function(evento) {
-                            return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                        });
-                        if(indexVac > -1){
-                            _class = 'requestedVac';
-                            _tooltip = _tooltip + dateRangePickerArrayApplications[indexVac].name +  
-                                        '. ' + dateRangePickerArrayApplications[indexVac].comments;
-                        }
+                if(dateRangePickerArrayApplications.length > 0){
+                    if(dateRangePickerArrayApplications.includes(moment(t.getTime()).format('YYYY-MM-DD'))){
+                        _class = 'requestedVac';
+                        _tooltip = _tooltip + 'Solicitud de vacaciones. ';
                     }
                 }
 
-                if(dateRangePickerArrayIncidences != undefined){
-                    if(dateRangePickerArrayIncidences.length > 0){
-                        let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
-                            return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
-                        });
-                        if(indexIncidence > -1){
-                            _class = 'incidence';
-                            _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  
-                                        '. ' + dateRangePickerArrayIncidences[indexIncidence].comments;
-                        }
+                if(dateRangePickerArrayIncidences.length > 0){
+                    let indexIncidence = dateRangePickerArrayIncidences.findIndex(function(evento) {
+                        return moment(evento.date).format('YYYY-MM-DD') == moment(t.getTime()).format('YYYY-MM-DD');
+                    });
+                    if(indexIncidence > -1){
+                        _class = 'incidence';
+                        _tooltip = _tooltip + dateRangePickerArrayIncidences[indexIncidence].name +  '. ';
                     }
                 }
 
