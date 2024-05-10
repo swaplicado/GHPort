@@ -128,7 +128,8 @@ class incidencesController extends Controller
 
     public function getEmpIncidencesEA(Request $request){
         try {
-            $lVacationsEA = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+            // $lVacationsEA = EmployeeVacationUtils::getEmpApplicationsEA($request->user_id);
+            $lVacationsEA = EmployeeVacationUtils::getEmpApplicationsVacEAWithComments($request->user_id);
             $lIncidencesEA = incidencesUtils::getEmpIncidencesEA($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
