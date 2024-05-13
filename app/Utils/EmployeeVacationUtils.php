@@ -659,7 +659,7 @@ class EmployeeVacationUtils {
             foreach($lDays as $day){
                 if($day->taked){
                     $date = Carbon::parse($day->date);
-                    $arrDatesApplications[] = ['name' => 'solicitud de vacaciones', 'date' => $date->toDateString(), 'comments' => $app->emp_comments_n];
+                    $arrDatesApplications[] = ['name' => 'Solicitud de vacaciones', 'date' => $date->toDateString(), 'comments' => $app->emp_comments_n];
                 }
             }
         }
