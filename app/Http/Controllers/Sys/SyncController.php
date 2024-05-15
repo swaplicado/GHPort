@@ -487,11 +487,25 @@ class SyncController extends Controller
                 \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
             }
 
-            $lUsers = \DB::connection('mysqlGlobalUsers')
-                        ->table('global_users')
-                        ->where('updated_at', '>=', $fromDateTime)
-                        ->where('is_deleted', 0)
-                        ->where('is_active', 1)
+            $lUsers = \DB::table('users as u')
+                        ->join('ext_jobs as j', 'u.job_id', '=', 'j.id_job')
+                        ->join('ext_departments as d', 'd.id_department', '=', 'j.department_id')
+                        ->join('globalusers.users_vs_systems', 'u.id', '=', 'globalusers.users_vs_systems.user_system_id')
+                        ->where('u.is_active', 1)
+                        ->where('u.is_delete', 0)
+                        ->where('globalusers.users_vs_systems.system_id', 5)
+                        ->select(
+                            'u.username',
+                            'u.institutional_mail as email',
+                            'u.full_name',
+                            'u.employee_num',
+                            'u.is_active',
+                            'globalusers.users_vs_systems.global_user_id as id_global_user',
+                            'j.id_job',
+                            'j.job_name',
+                            'd.id_department',
+                            'd.department_name'
+                        )
                         ->get()
                         ->toArray();
 
