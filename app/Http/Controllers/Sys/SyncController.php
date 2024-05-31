@@ -28,18 +28,26 @@ class SyncController extends Controller
 {
     public static function toSynchronize($withRedirect = true)
     {
-        $config = \App\Utils\Configuration::getConfigurations();
-        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        $photos = SyncController::SyncPhotos();
-        // $synchronized = true;
-
-        if($synchronized){
-             $newDate = Carbon::now();
-             $newDate->subMinutes(10);
-    
-             \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            if(!$config->syncExecution){
+                \App\Utils\Configuration::setConfiguration('syncExecution', true);
+                $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+                $photos = SyncController::SyncPhotos();
+                // $synchronized = true;
+        
+                if($synchronized){
+                     $newDate = Carbon::now();
+                     $newDate->subMinutes(10);
+            
+                     \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+                }
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
         }
 
+        \App\Utils\Configuration::setConfiguration('syncExecution', false);
         return $synchronized;
     }
 
@@ -184,16 +192,23 @@ class SyncController extends Controller
     }
 
     public function reSync(){
-        $config = \App\Utils\Configuration::getConfigurations();
-        $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-        $photos = SyncController::SyncPhotos();
-        $synchronized = true;
-
-        if($synchronized){
-             $newDate = Carbon::now();
-             $newDate->subMinutes(10);
-    
-             \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+        try {
+            $config = \App\Utils\Configuration::getConfigurations();
+            if(!$config->syncExecution){
+                \App\Utils\Configuration::setConfiguration('syncExecution', true);
+                $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+                $photos = SyncController::SyncPhotos();
+                // $synchronized = true;
+        
+                if($synchronized){
+                     $newDate = Carbon::now();
+                     $newDate->subMinutes(10);
+            
+                     \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+                }
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
         }
 
         // GlobalUsersUtils::syncExternalWithGlobalUsers();
@@ -476,15 +491,18 @@ class SyncController extends Controller
         try {
             $fromDateTime = $request->fromDateTime;
             $config = \App\Utils\Configuration::getConfigurations();
-            $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
-            $photos = SyncController::SyncPhotos();
-            // $synchronized = true;
-
-            if($synchronized){
-                $newDate = Carbon::now();
-                $newDate->subMinutes(10);
-        
-                \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+            if(!$config->syncExecution){
+                \App\Utils\Configuration::setConfiguration('syncExecution', true);
+                $synchronized = SyncController::synchronizeWithERP($config->lastSyncDateTime);
+                $photos = SyncController::SyncPhotos();
+                // $synchronized = true;
+    
+                if($synchronized){
+                    $newDate = Carbon::now();
+                    $newDate->subMinutes(10);
+            
+                    \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
+                }
             }
 
             $lUsers = \DB::table('users as u')
@@ -509,6 +527,8 @@ class SyncController extends Controller
                         ->get()
                         ->toArray();
 
+            \App\Utils\Configuration::setConfiguration('syncExecution', false);
+
             return response()->json([
                 'status_code ' => 200,
                 'status' => 'success',
@@ -517,6 +537,7 @@ class SyncController extends Controller
                 ], 200, [], JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $th) {
             \Log::error($th);
+            \App\Utils\Configuration::setConfiguration('syncExecution', false);
             return response()->json([
                 'status_code ' => 500,
                 'status' => 'error',
