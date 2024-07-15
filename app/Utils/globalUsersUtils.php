@@ -248,6 +248,56 @@ class GlobalUsersUtils {
         return $data;
     }
 
+    public static function syncJobsAndDepartmentsUniv(){
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ];
+
+        $url =  \DB::connection('mysqlGlobalUsers')
+                    ->table('systems')
+                    ->where('id_system', SysConst::SYSTEM_UNIVAETH)
+                    ->value('url');
+        
+        $client = new Client([
+            'base_uri' => $url,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $request = new \GuzzleHttp\Psr7\Request('GET', 'syncJobsAndDepartments', $headers);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
+
+    public static function setupDeptsAndHeadersUniv(){
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json'
+        ];
+
+        $url =  \DB::connection('mysqlGlobalUsers')
+                    ->table('systems')
+                    ->where('id_system', SysConst::SYSTEM_UNIVAETH)
+                    ->value('url');
+        
+        $client = new Client([
+            'base_uri' => $url,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $request = new \GuzzleHttp\Psr7\Request('GET', 'setupDeptsAndHeaders', $headers);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
+
     /**
      * The function `getUserFromUnivAeth` retrieves user data from a remote server using a token for
      * authentication.
@@ -799,7 +849,7 @@ class GlobalUsersUtils {
                     }
                 }
             }else{
-                \Log::error('No se encontro el usuario global user_id: ' . $oUser->id . ' system_id: ' . $fromSystem);
+                \Log::error('Al actualizar en globalUsers no se encontro el usuario global con user_id: ' . $oUser->id . ' full_name: ' . $oUser->full_name . ' system_id: ' . $fromSystem);
             }
         }
     }

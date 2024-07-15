@@ -37,31 +37,41 @@ class UsersController extends Controller
 
         $this->lJobs = Job::pluck('id_job', 'external_id_n');
         $this->lOrgChartJobs = \DB::table('ext_jobs_vs_org_chart_job')->get();
-
+        $flag = '';
         try {
             $this->loginUnivData = globalUsersUtils::loginToUniv();
+            globalUsersUtils::syncJobsAndDepartmentsUniv();
             $this->loginCAPData = globalUsersUtils::loginToCAP();
             $this->loginEvalData = globalUsersUtils::loginToEval();
+            $output = new \Symfony\Component\Console\Output\ConsoleOutput();
             foreach ($lUsers as $jUser) {
                 try {
                     \DB::beginTransaction();
                     \DB::connection('mysqlGlobalUsers')->beginTransaction();
                     if (isset($lGhPortUsers[$jUser->id_employee])) {
                         $id = $lGhPortUsers[$jUser->id_employee];
+                        $flag = 'upd';
                         $this->updUser($jUser, $id);
                     }
                     else {
+                        $flag = 'insert';
+                        $output->writeln("Inserción de " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
                         $this->insertUser($jUser);
                     }
                     \DB::connection('mysqlGlobalUsers')->commit();
                     \DB::commit();
                 } catch (\Throwable $th) { 
+                    $output->writeln("catch del for principal " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname . " " . $th->getMessage());
                     \Log::error($th);
                     \DB::connection('mysqlGlobalUsers')->rollBack();
                     \DB::rollBack();
                 }
             }
+
+            globalUsersUtils::setupDeptsAndHeadersUniv();
         }catch (\Throwable $th) {
+            $output->writeln("catch principal " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname . " " . $th->getMessage());
+            \Log::error('login: ');
             \Log::error($th);
             return false;
         }
@@ -148,7 +158,9 @@ class UsersController extends Controller
 
     private function insertUser($jUser)
     {
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
         if ((!$jUser->is_active) || $jUser->is_deleted) {
+            $output->writeln("Usuario inactivo o eliminado " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
             return;
         }
         $config = \App\Utils\Configuration::getConfigurations();
@@ -258,14 +270,16 @@ class UsersController extends Controller
         $oUsersPhotos->created_by = 1;
         $oUsersPhotos->updated_by = 1;
         $oUsersPhotos->save();
-
+        $output->writeln("Insertado en Gh " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
         $result = json_decode(GlobalUsersUtils::findGlobalUser(null, $oUser->full_name, $oUser->external_id, $oUser->employee_num));
         $globalUser = $result->globalUser;
         if(is_null($globalUser)){
             //global user
             try {
+                $output->writeln("Insertar en global " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
                 $globalUser = GlobalUsersUtils::insertNewGlobalUser(SysConst::SYSTEM_PGH, $oUser->id, $oUser->username, $oUser->password, $oUser->email, $oUser->full_name, $oUser->external_id_n, $oUser->employee_num, $oUser->is_active, $oUser->is_delete);
             } catch (\Throwable $th) {
+                $output->writeln("catch de la insercion en users global " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname . " " . $th->getMessage());
                 \DB::beginTransaction();
                     try {
                         $oUser->id_user_system = $oUser->id;
@@ -282,11 +296,29 @@ class UsersController extends Controller
             $oUser->id_user_system = $userUnivId;
             //univ
             try {
+                $output->writeln("Sincronizar con la universidad " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
+                $oUser->siie_job_id = $jUser->siie_job_id;
                 $resultUniv = globalUsersUtils::syncUserToUniv($this->loginUnivData->token_type, $this->loginUnivData->access_token, $oUser, SysConst::USERGLOBAL_INSERT);
                 if($resultUniv->status != 'success'){
                     throw new Exception($resultUniv->message);
                 }
+                $userUniv = $resultUniv->data;
+                $output->writeln("Sincronizado con la universidad " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
+                try {
+                    $output->writeln("Buscar usuario global, segunda pasada " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
+                    $resultFind = json_decode(globalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id));
+                    if(!$resultFind->success){
+                        //insertar en user_vs_system
+                        GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id);
+                    }
+                } catch (\Throwable $th) {
+                    $output->writeln("catch de usuario global, segunda pasada " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname);
+                    $oUser->id_user_system = $userUniv->id;
+                    $oUser->id_global_user = $globalUser->id_global_user;
+                    programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_INSERT_SYSTEM_VS_USER, $oUser, null);
+                }
             } catch (\Throwable $th) {
+                $output->writeln("catch de la sincro con la uni " . $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname . " " . $th->getMessage());
                 \DB::beginTransaction();
                     try {
                         $oUser->id_user_system = $globalUser->id_global_user;
@@ -297,19 +329,6 @@ class UsersController extends Controller
                         \DB::rollBack();
                     }
                 \DB::commit();
-            }
-
-            $userUniv = $resultUniv->data;
-            try {
-                $resultFind = json_decode(globalUsersUtils::findSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id));
-                if(!$resultFind->success){
-                    //insertar en user_vs_system
-                    GlobalUsersUtils::insertSystemUser($globalUser->id_global_user, SysConst::SYSTEM_UNIVAETH, $userUniv->id);
-                }
-            } catch (\Throwable $th) {
-                $oUser->id_user_system = $userUniv->id;
-                $oUser->id_global_user = $globalUser->id_global_user;
-                programmedTaskUtils::createTaskToUsersGlobal(SysConst::TASK_INSERT_SYSTEM_VS_USER, $oUser, null);
             }
         }
     }
