@@ -50,6 +50,7 @@ class Vacations_report {
                             'date' => $day->addDays($i)->format('Y-m-d'),
                             'day_name' => $day->isoFormat('dddd'),
                             'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
+                            'num_week' => $day->dayOfWeek,
                             'incidences' => [],
                             'comments' => [],
                             'id' => 0,
@@ -117,8 +118,13 @@ class Vacations_report {
                                     if($incDay->taked){
                                         if($inc->application_type == 'permission'){
                                             if($inc->permission_type != SysConst::PERMISO_INTERMEDIO){
-                                                $res = permissionsUtils::convertMinutesToHours($inc->minutes);
-                                                array_push($emp->myWeek[$i]['incidences'], 'permiso: '. $inc->name.' '.$res[0].' hrs. '.$res[1].' min.');
+                                                $permissionSchedule = Vacations_report::getScheduleUser($emp->id, $emp->myWeek[$i]['num_week'], $inc->permission_type, $inc->minutes);
+                                                if ($permissionSchedule) {
+                                                    array_push($emp->myWeek[$i]['incidences'], 'Permiso '. strtolower($inc->name) . ': ' . $permissionSchedule);
+                                                } else {
+                                                    $res = permissionsUtils::convertMinutesToHours($inc->minutes);
+                                                    array_push($emp->myWeek[$i]['incidences'], 'Permiso '. strtolower($inc->name).': '.$res[0].' hrs. '.$res[1].' min.');
+                                                }
                                             }else{
                                                 $salida = Carbon::parse($inc->intermediate_out)->format('H:i');
                                                 $regreso = Carbon::parse($inc->intermediate_return)->format('H:i');
@@ -206,5 +212,43 @@ class Vacations_report {
             $output->writeln($th->getMessage());
             return $th->getMessage();
         }
+    }
+
+    public static function getScheduleUser($user_id, $numDay, $permission_type, $minutes) {
+        $schedule = \DB::table('users as u')
+                        ->join('schedule_template as st', 'st.id', '=', 'u.schedule_template_id')
+                        ->join('schedule_day as sd', 'sd.schedule_template_id', '=', 'st.id')
+                        ->where('u.id', $user_id)
+                        ->where('sd.is_working', 1)
+                        ->where('sd.is_deleted', 0)
+                        ->where('sd.day_num', $numDay)
+                        ->select(
+                            'st.name',
+                            'sd.day_name',
+                            'sd.day_num',
+                            \DB::raw("DATE_FORMAT(sd.entry, '%H:%i') as entry"),
+                            \DB::raw("DATE_FORMAT(sd.departure, '%H:%i') as departure")
+                        )
+                        ->first();
+
+        $hasSchedule = false;
+        $permissionSchedule = '';
+        $entry = '';
+        $departure = '';
+        if(!is_null($schedule)){
+            $hasSchedule = true;
+            $entry = $schedule->entry;
+            $departure = $schedule->departure;
+            if($permission_type == SysConst::PERMISO_ENTRADA){
+                $permissionSchedule = Carbon::parse($entry)->addMinutes($minutes)->format('h:i A');
+            }else if ($permission_type == SysConst::PERMISO_SALIDA){
+                $permissionSchedule = Carbon::parse($departure)->subMinutes($minutes)->format('h:i A');
+            }
+
+            $schedule->entry = Carbon::parse($schedule->entry)->format('h:i A');
+            $schedule->departure = Carbon::parse($schedule->departure)->format('h:i A');
+        }
+
+        return $permissionSchedule;
     }
 }

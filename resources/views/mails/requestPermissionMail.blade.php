@@ -76,7 +76,7 @@
                             @if($hasSchedule)
                                 @if($permission->type_permission_id != 3)
                                 <tr>
-                                    <td style="text-align: left;">{{$permission->permission_tp_name}}</td>
+                                    <td style="text-align: left;">Permiso {{ strtolower($permission->permission_tp_name) }}:</td>
                                     <td style="text-align: left;">{{$permissionSchedule}}</td>
                                 </tr>
                                 @endif
