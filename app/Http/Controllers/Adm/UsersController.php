@@ -379,6 +379,7 @@ class UsersController extends Controller
                             'ocj.id_org_chart_job AS idOrg',
                             'vp.vacation_plan_name AS nameVp',
                             'vp.id_vacation_plan AS idPlan',
+                            'us.rol_id AS idRol',
                             'us.is_active AS active',
                             'st.id as schedule_id',
                             'st.name as schedule_name'
@@ -398,9 +399,13 @@ class UsersController extends Controller
                         ->where('t.is_deleted', 0)
                         // ->where('a.is_deleted', 0)
                         ->get();
+
+        $roles = \DB::table('adm_rol as ar')
+                    ->where('ar.is_delete', 0)
+                    ->get();
         
         $lUser = usersInSystemUtils::FilterUsersInSystem($lUser, 'idUser');
-        return view('Adm.indexUser')->with('lUser', $lUser)->with('lOrgChart',$orgChart)->with('lPlan',$planVacations)->with('schedules', $schedules);
+        return view('Adm.indexUser')->with('lUser', $lUser)->with('lOrgChart',$orgChart)->with('lPlan',$planVacations)->with('schedules', $schedules)->with('lRol',$roles);
     }
 
     public function update(Request $request){
@@ -420,6 +425,7 @@ class UsersController extends Controller
                 $us->is_active = $request->active; 
                 $us->vacation_plan_id = $request->selVac;
                 $us->org_chart_job_id = $request->selArea;
+                $us->rol_id = $request->selRol;
                 $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
                 $us->update();
@@ -447,6 +453,7 @@ class UsersController extends Controller
                 $us->is_active = $request->active; 
                 $us->vacation_plan_id = $request->selVac;
                 $us->org_chart_job_id = $request->selArea;
+                $us->rol_id = $request->selRol;
                 $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
                 $us->changed_password = 0;
@@ -467,7 +474,7 @@ class UsersController extends Controller
                         ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
                         ->leftJoin('schedule_template as st', 'st.id', '=', 'us.schedule_template_id')
                         ->where('us.is_delete',0)
-                        ->select('us.id AS idUser', 'us.schedule_template_id as schedule_id', 'st.name as schedule_name', 'us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active','ocj.id_org_chart_job AS idOrg','vp.id_vacation_plan AS idPlan')
+                        ->select('us.id AS idUser', 'us.schedule_template_id as schedule_id', 'st.name as schedule_name', 'us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active','ocj.id_org_chart_job AS idOrg','vp.id_vacation_plan AS idPlan','us.rol_id AS idRol')
                         ->get();
 
         $lUser = usersInSystemUtils::FilterUsersInSystem($lUser, 'idUser');

@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------------------------------------------------
+feat: Se agrega el campo de rol a la pantalla de gestión de usuarios
+author: Cesar Orozco
+date: 2024-08-12
+description: No había campo para modificar el rol de los usuarios del sistema, en la vista de gestión de usuarios, 
+se incorpora el campo.
+-------------------------------------------------------------------------------------------------------------------------

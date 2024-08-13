@@ -33,6 +33,7 @@
             this.lUser = <?php echo json_encode($lUser); ?>;
             this.lOrgChart = <?php echo json_encode($lOrgChart); ?>;
             this.lPlan = <?php echo json_encode($lPlan); ?>;
+            this.lRol = <?php echo json_encode($lRol); ?>;
             this.lSchedules = <?php echo json_encode($schedules); ?>;
             this.updateRoute = <?php echo json_encode( route('update_user') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_user') ); ?>;
@@ -52,6 +53,8 @@
                 'nameVp':9,
                 'idPlan':10,
                 'active':11,
+                'isActive':12,
+                'idRol':13
             };
         }
         var oServerData = new GlobalData();
@@ -88,6 +91,7 @@
                         <th>id_plan</th>
                         <th>is_active</th>
                         <th>Esta activo</th>
+                        <th>id_rol</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +110,7 @@
                         <td>@{{user.active}}</td>
                         <td v-if="user.active == 0">No</td>
                         <td v-else="user.active == 1">Sí</td>
+                        <td>@{{user.idRol}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -117,7 +122,7 @@
 @section('scripts')
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_user',
-                                            'colTargets' => [0,4,8,10,11],
+                                            'colTargets' => [0,4,8,10,11,13],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'edit_modal' => true,

@@ -57,6 +57,14 @@
                         <select class="select2-class" id="selSchedule" name="selSchedule" v-model="selSchedule" style="width: 90%;"></select>             
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="selSchedule" style="margin-top: 10px; margin-bottom: 0px;">Rol: <span title="Rol" class="bx bx-info-circle"></span></label>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="select2-class" id="selRol" name="selRol" v-model="selRol" style="width: 90%;"></select>             
+                    </div>
+                </div>
                 <br><br>
 
                 <input type="checkbox" id="active" name="active" value="active" v-model="active">

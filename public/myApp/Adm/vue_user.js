@@ -5,6 +5,7 @@ var app = new Vue({
         lUser: oServerData.lUser,
         lPlan: oServerData.lPlan,
         lOrgChart: oServerData.lOrgChart,
+        lRol: oServerData.lRol,
         indexesUserTable: oServerData.indexesUserTable,
         idUser: 0,
         username: '',
@@ -17,7 +18,8 @@ var app = new Vue({
         active: 0,
         passRess: 0,
         selArea: 0,
-        selVac: 0,
+        selVac: 0, 
+        selRol: 0,
         lSchedules: oServerData.lSchedules,
         selSchedule: null,
     },
@@ -26,6 +28,7 @@ var app = new Vue({
         var datalAreas = [];
         var datalPlan = [];
         var datalSchedules = [];
+        var datalRoles = [];
         for (var i = 0; i < self.lOrgChart.length; i++) {
             datalAreas.push({ id: self.lOrgChart[i].id_org_chart_job, text: self.lOrgChart[i].job_name_ui });
         }
@@ -34,6 +37,9 @@ var app = new Vue({
         }
         for (var i = 0; i < self.lSchedules.length; i++) {
             datalSchedules.push({ id: self.lSchedules[i].id, text: self.lSchedules[i].name });
+        }
+        for (var i = 0; i < self.lRol.length; i++) {
+            datalRoles.push({ id: self.lRol[i].id_rol, text: self.lRol[i].rol });
         }
         $('#selArea')
             .select2({
@@ -60,6 +66,15 @@ var app = new Vue({
             }).on('select2:select', function(e) {
                 self.selSchedule = e.params.data.id;
             });
+        
+        $('#selRol')
+            .select2({
+                placeholder: 'selecciona rol',
+                data: datalRoles,
+            }).on('select2:select', function(e) {
+                self.selRol = e.params.data.id;
+            });
+        $('#selRol').val('').trigger('change');
 
         $('#selSchedule').val('').trigger('change');
     },
@@ -76,11 +91,14 @@ var app = new Vue({
             this.nameVp = data[this.indexesUserTable.nameVp];
             this.idPlan = parseInt(data[this.indexesUserTable.idPlan]);
             this.active = parseInt(data[this.indexesUserTable.active]);
+            this.idRol = parseInt(data[this.indexesUserTable.idRol]);
             this.passRess = 0;
             this.selArea = this.idOrg;
             this.selVac = this.idPlan;
+            this.selRol = this.idRol;
             $('#selArea').val(this.idOrg).trigger('change');
             $('#selVac').val(this.idPlan).trigger('change');
+            $('#selRol').val(this.idRol).trigger('change');
             $('#selSchedule').val(this.scheduleId).trigger('change');
 
             $('#editModal').modal('show');
@@ -108,6 +126,7 @@ var app = new Vue({
                     'selArea': this.selArea,
                     'selVac': this.selVac,
                     'selSchedule': this.selSchedule,
+                    'selRol': this.selRol,
                 })
                 .then(response => {
                     let res = response.data;
@@ -132,6 +151,7 @@ var app = new Vue({
                                     us.idPlan,
                                     us.active,
                                     ((us.active == 0) ? 'No' : 'Sí'),
+                                    us.idRol,
                                 ]
                             );
                         }
