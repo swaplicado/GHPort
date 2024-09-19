@@ -31,9 +31,9 @@
             this.deleteRoute = <?php echo json_encode( route('delete_closingDates') ); ?>;
             this.initialCalendarDate = <?php echo json_encode( $initial); ?>;
             this.constants = <?php echo json_encode( $constants); ?>;
-
+            this.lTypes = <?php echo json_encode( $lTypes ); ?>;
             this.manualRoute = [];
-            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:areasfuncionales" ); ?>;
+            this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:datespersonaldata" ); ?>;
             this.indexes_closeDates = {
                 'id_closing_dates': 0,
                 'date_ini': 1,
@@ -58,9 +58,20 @@
                 </button>
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="">Selecciona tipo:*</label>
+                    </div>
+                    <div class="col-md-9">
+                        <select class="select2-class-modal form-control" name="closing_date_type" 
+                            id="closing_date_type" style="width: 90%;"></select>
+                    </div>
+                </div>
+                <br>
                 <div style="text-align: center">
                     <div class="card">
                         <div class="card-body card-body-small">
+
                             <span id="two-inputs-calendar">
                                 <span hidden>
                                     <input id="date-range-001" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly> a <input id="date-range-002" type="date" value="" class="form-control" style="width: 30%; display: inline" readonly>
@@ -98,7 +109,7 @@
 
     <div class="card-header">
         <h3>
-            <b>Fechas para cambio de datos personales</b>
+            <b>Fechas para cambio de datos personales y curriculum vitae</b>
             @include('layouts.manual_button')
         </h3>
     </div>
@@ -113,13 +124,15 @@
                         <th>closing_dates_id</th>
                         <th>Fecha inicio</th>
                         <th>Fecha fin</th>
+                        <th>Tipo</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="date in lDates">
-                        <td>@{{date.id_closing_dates}}</td>
-                        <td>@{{date.start_date}}</td>
-                        <td>@{{date.end_date}}</td>
+                        <td>@{{ date.id_closing_dates }}</td>
+                        <td>@{{ oDateUtils.formatDate(date.start_date) }}</td>
+                        <td>@{{ oDateUtils.formatDate(date.end_date) }}</td>
+                        <td>@{{ date.name }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -129,6 +142,9 @@
 @endsection
 
 @section('scripts')
+<script>
+    moment.locale('es');
+</script>
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_dates',
                                             'colTargets' => [0],
@@ -143,7 +159,6 @@
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_closing_dates.js') }}"></script>
     <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>
     <script>
-        moment.locale('es');
         var dateRangePickerArrayApplications = [];
         var dateRangePickerArrayIncidences = [];
         var lTemp = [];

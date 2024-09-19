@@ -132,6 +132,10 @@ class Menu {
             array_push($consultas,['route' => route('admMinutes'), 'icon' => 'bx bxs-cabinet bx-xs', 'name' => 'Actas administrativas']);    
             array_push($consultas,['route' => route('sanctions'), 'icon' => 'bx bxs-box bx-xs', 'name' => 'Sanciones']);  
         }  
+
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($consultas,['route' => route('curriculumLogs_index'), 'icon' => 'bx bxs-id-card bx-xs', 'name' => 'Actualización datos']); 
+        }
         
         //submenu de festejos
         $festejos = [];
@@ -222,6 +226,9 @@ class Menu {
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-xs', 'name' => 'Temporadas especiales']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('closing_dates_index'), 'icon' => 'bx bx-calendar bx-xs', 'name' => 'Fechas DP/CV']);    
         }
         //submenu solicitudes especiales
         $solicitudes = [];

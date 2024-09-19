@@ -29,20 +29,27 @@ class ClosingDatesController extends Controller
             'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
         ];
         $dates = \DB::table('closing_dates as clo')
+                    ->join('closing_dates_type as t', 't.id', '=', 'clo.type_id')
                     ->where('is_delete',0)
                     ->orderBy('start_date')
                     ->get();
         $initial = '2024-01-30';
-        return view('closing_dates.index')->with('lDates', $dates)->with('initial',$initial)->with('constants',$constants);
+
+        $lTypes = \DB::table('closing_dates_type')->get();
+
+        return view('closing_dates.index')->with('lDates', $dates)
+                                        ->with('initial',$initial)
+                                        ->with('constants',$constants)
+                                        ->with('lTypes', $lTypes);
     }
 
     public function createClosing(Request $request){
-
         if($request->id_closedate != null){
             $closing = ClosingDates::find($request->id_closedate);
             $closing->start_date = $request->startDate;
             $closing->end_date = $request->endDate;
             $closing->is_delete = 0;
+            $closing->type_id = $request->type_id;
 
             $closing->save();
 
@@ -65,6 +72,7 @@ class ClosingDatesController extends Controller
                 'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
             ];
             $dates = \DB::table('closing_dates as clo')
+                        ->join('closing_dates_type as t', 't.id', '=', 'clo.type_id')
                         ->where('is_delete',0)
                         ->orderBy('start_date')
                         ->get();
@@ -76,6 +84,7 @@ class ClosingDatesController extends Controller
             $closing->start_date = $request->startDate;
             $closing->end_date = $request->endDate;
             $closing->is_delete = 0;
+            $closing->type_id = $request->type_id;
 
             $closing->save();
 
@@ -98,6 +107,7 @@ class ClosingDatesController extends Controller
                 'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
             ];
             $dates = \DB::table('closing_dates as clo')
+                        ->join('closing_dates_type as t', 't.id', '=', 'clo.type_id')
                         ->where('is_delete',0)
                         ->orderBy('start_date')
                         ->get();
@@ -139,6 +149,7 @@ class ClosingDatesController extends Controller
             'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
         ];
         $dates = \DB::table('closing_dates as clo')
+                    ->join('closing_dates_type as t', 't.id', '=', 'clo.type_id')
                     ->where('is_delete',0)
                     ->orderBy('start_date')
                     ->get();

@@ -22,6 +22,8 @@ var app = new Vue({
         selRol: 0,
         lSchedules: oServerData.lSchedules,
         selSchedule: null,
+        can_change_dp: 0,
+        can_change_cv: 0,
     },
     mounted() {
         let self = this;
@@ -93,6 +95,8 @@ var app = new Vue({
             this.active = parseInt(data[this.indexesUserTable.active]);
             this.idRol = parseInt(data[this.indexesUserTable.idRol]);
             this.passRess = 0;
+            this.can_change_dp = parseInt(data[this.indexesUserTable.can_change_dp]);
+            this.can_change_cv = parseInt(data[this.indexesUserTable.can_change_cv]);
             this.selArea = this.idOrg;
             this.selVac = this.idPlan;
             this.selRol = this.idRol;
@@ -127,6 +131,8 @@ var app = new Vue({
                     'selVac': this.selVac,
                     'selSchedule': this.selSchedule,
                     'selRol': this.selRol,
+                    'can_change_dp': this.can_change_dp,
+                    'can_change_cv': this.can_change_cv,
                 })
                 .then(response => {
                     let res = response.data;
@@ -152,6 +158,8 @@ var app = new Vue({
                                     us.active,
                                     ((us.active == 0) ? 'No' : 'Sí'),
                                     us.idRol,
+                                    us.can_change_dp,
+                                    us.can_change_cv,
                                 ]
                             );
                         }

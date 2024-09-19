@@ -11,6 +11,8 @@ use App\Models\Adm\UsersPhotos;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\HasApiTokens;
+use App\Models\Curriculum\curriculum;
+use App\Models\UserDataLogs\userDataLog;
 
 class User extends Authenticatable
 {
@@ -121,5 +123,13 @@ class User extends Authenticatable
 
     public function getEmailForPasswordReset(){
         return $this->institutional_mail;
+    }
+
+    public function curriculum(){
+        return $this->hasOne(curriculum::class);
+    }
+
+    public function userDataLog() {
+        return $this->hasMany(UserDataLog::class, 'user_id', 'id');
     }
 }

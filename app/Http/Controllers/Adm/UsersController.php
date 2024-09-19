@@ -258,6 +258,8 @@ class UsersController extends Controller
         $oUser->is_delete = $jUser->is_deleted;
         $oUser->created_by = 1;
         $oUser->updated_by = 1;
+        $oUser->can_change_dp = 1;
+        $oUser->can_change_cv = 1;
 
         $oUser->save();
 
@@ -382,7 +384,9 @@ class UsersController extends Controller
                             'us.rol_id AS idRol',
                             'us.is_active AS active',
                             'st.id as schedule_id',
-                            'st.name as schedule_name'
+                            'st.name as schedule_name',
+                            'us.can_change_dp',
+                            'us.can_change_cv'
                         )
                         ->get();
 
@@ -428,6 +432,8 @@ class UsersController extends Controller
                 $us->rol_id = $request->selRol;
                 $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
+                $us->can_change_dp = $request->can_change_dp;
+                $us->can_change_cv = $request->can_change_cv;
                 $us->update();
 
                 $us->pass = $us->password;
@@ -457,6 +463,8 @@ class UsersController extends Controller
                 $us->schedule_template_id = $request->selSchedule;
                 $us->updated_by = \Auth::user()->id;
                 $us->changed_password = 0;
+                $us->can_change_dp = $request->can_change_dp;
+                $us->can_change_cv = $request->can_change_cv;
                 $us->update();
 
                 $us->pass = $us->password;
@@ -474,7 +482,24 @@ class UsersController extends Controller
                         ->join('org_chart_jobs as ocj', 'ocj.id_org_chart_job', '=', 'us.org_chart_job_id')
                         ->leftJoin('schedule_template as st', 'st.id', '=', 'us.schedule_template_id')
                         ->where('us.is_delete',0)
-                        ->select('us.id AS idUser', 'us.schedule_template_id as schedule_id', 'st.name as schedule_name', 'us.username AS username', 'us.full_name AS fullname', 'us.email AS mail', 'us.employee_num AS numUser', 'us.benefits_date AS benDate', 'ocj.job_code AS nameOrg','vp.vacation_plan_name AS nameVp','us.is_active AS active','ocj.id_org_chart_job AS idOrg','vp.id_vacation_plan AS idPlan','us.rol_id AS idRol')
+                        ->select(
+                            'us.id AS idUser', 
+                            'us.schedule_template_id as schedule_id', 
+                            'st.name as schedule_name', 
+                            'us.username AS username', 
+                            'us.full_name AS fullname', 
+                            'us.email AS mail', 
+                            'us.employee_num AS numUser', 
+                            'us.benefits_date AS benDate', 
+                            'ocj.job_code AS nameOrg',
+                            'vp.vacation_plan_name AS nameVp',
+                            'us.is_active AS active',
+                            'ocj.id_org_chart_job AS idOrg',
+                            'vp.id_vacation_plan AS idPlan',
+                            'us.rol_id AS idRol',
+                            'us.can_change_dp',
+                            'us.can_change_cv'
+                            )
                         ->get();
 
         $lUser = usersInSystemUtils::FilterUsersInSystem($lUser, 'idUser');

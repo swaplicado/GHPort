@@ -17,10 +17,23 @@ var app = new Vue({
         takedDays: null,
         showDatePickerSimple: false,
         idCloseDate: 0,
-        isEdit: 0
+        isEdit: 0,
+        lTypes: oServerData.lTypes,
+        type_id: oServerData.lTypes[0].id,
     },
     mounted(){
         self = this;
+        let dataType = [];
+        for (let i = 0; i < this.lTypes.length; i++) {
+            dataType.push({ id: this.lTypes[i].id, text: this.lTypes[i].name });
+        }
+        
+        $('#closing_date_type').select2({
+            placeholder: 'Selecciona tipo',
+            data: dataType,
+        }).on('select2:select', function(e) {
+            self.type_id = e.params.data.id;
+        });
     },
     methods: {
         
@@ -71,6 +84,7 @@ var app = new Vue({
                 'id_closedate': this.idCloseDate,
                 'startDate': moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'endDate': moment(this.endDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'type_id': this.type_id,
             })
             .then( result => {
                 let data = result.data;
@@ -126,7 +140,8 @@ var app = new Vue({
                     [
                         date.id_closing_dates,
                         this.oDateUtils.formatDate(date.start_date, 'ddd DD-MMM-YYYY'),
-                        this.oDateUtils.formatDate(date.end_date, 'ddd DD-MMM-YYYY')
+                        this.oDateUtils.formatDate(date.end_date, 'ddd DD-MMM-YYYY'),
+                        date.name
                     ]
                 );
             }

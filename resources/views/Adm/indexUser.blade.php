@@ -54,7 +54,9 @@
                 'idPlan':10,
                 'active':11,
                 'isActive':12,
-                'idRol':13
+                'idRol':13,
+                'can_change_dp':14,
+                'can_change_cv':15
             };
         }
         var oServerData = new GlobalData();
@@ -92,6 +94,8 @@
                         <th>is_active</th>
                         <th>Esta activo</th>
                         <th>id_rol</th>
+                        <th>can_change_dp</th>
+                        <th>can_change_cv</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -111,6 +115,8 @@
                         <td v-if="user.active == 0">No</td>
                         <td v-else="user.active == 1">Sí</td>
                         <td>@{{user.idRol}}</td>
+                        <td>@{{user.can_change_dp}}</td>
+                        <td>@{{user.can_change_cv}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -122,7 +128,7 @@
 @section('scripts')
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_user',
-                                            'colTargets' => [0,4,8,10,11,13],
+                                            'colTargets' => [0,4,8,10,11,13,14,15],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'edit_modal' => true,

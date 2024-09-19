@@ -75,6 +75,16 @@
                 <input type="checkbox" id="passRes" name="passRes" value="passRes" v-model="passRess">
                 <label for="selArea">Restablecer contraseña por defecto</label>
                 
+                <br>
+
+                <input type="checkbox" id="can_change_dp" name="can_change_dp" v-model="can_change_dp">
+                <label for="">Edición de datos personales habilitado</label>
+                
+                <br>
+
+                <input type="checkbox" id="can_change_cv" name="can_change_cv" v-model="can_change_cv">
+                <label for="">Edición de curriculum vitae habilitado</label>
+                
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
