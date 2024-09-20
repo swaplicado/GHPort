@@ -67,23 +67,28 @@
                 </div>
                 <br><br>
 
-                <input type="checkbox" id="active" name="active" value="active" v-model="active">
-                <label for="selArea">Esta activo</label>
-                
-                <br>
-                
-                <input type="checkbox" id="passRes" name="passRes" value="passRes" v-model="passRess">
-                <label for="selArea">Restablecer contraseña por defecto</label>
-                
-                <br>
-
-                <input type="checkbox" id="can_change_dp" name="can_change_dp" v-model="can_change_dp">
-                <label for="">Edición de datos personales habilitado</label>
-                
-                <br>
-
-                <input type="checkbox" id="can_change_cv" name="can_change_cv" v-model="can_change_cv">
-                <label for="">Edición de curriculum vitae habilitado</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="checkbox" id="can_change_dp" name="can_change_dp" v-model="can_change_dp">
+                        <label for="">Habilitar captura de datos personales</label>
+                        
+                        <br>
+        
+                        <input type="checkbox" id="can_change_cv" name="can_change_cv" v-model="can_change_cv">
+                        <label for="">Habilitar captura de curriculum vitae</label>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="float: right">
+                            <input type="checkbox" id="active" name="active" value="active" v-model="active">
+                            <label for="selArea">Esta activo</label>
+                            
+                            <br>
+                            
+                            <input type="checkbox" id="passRes" name="passRes" value="passRes" v-model="passRess">
+                            <label for="selArea">Restablecer contraseña por defecto</label>
+                        </div>
+                    </div>
+                </div>
                 
             </div>
             <div class="modal-footer">

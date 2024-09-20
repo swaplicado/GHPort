@@ -116,7 +116,7 @@
                     <form action="#" class="my-form">
 
                         <div class="row">
-                            <div class="col-md-12" style="text-align: center">
+                            <div class="col-md-12">
                                 <h4><b>Datos personales</b></h4>
                             </div>
                         </div>
@@ -149,8 +149,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-4 label-container d-flex align-items-end">
-                                        <label for="fullNmae">Objetivo profesional:</label>
+                                    <div class="col-md-4" style="padding: 0">
+                                        <div style="width: 100%; font-weight: bold; border-bottom: 1px solid #7b7b7b7b; padding-left: 15px">
+                                            <label for="fullNmae">
+                                                Objetivo profesional:
+                                                <span title="Explica lo que buscas lograr en la organización y cómo tus habilidades contribuyen a ello" class="bx bx-info-circle"></span>
+                                            </label>
+                                        </div>
                                     </div>
                                     <div class="col-md-8">
                                         <textarea name="" id="" style="width: 100%" rows="5" class="my-form-control"
@@ -164,16 +169,17 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12" style="text-align: left">
-                                <h4>
-                                    <b>Experiencia laboral</b>
-                                </h4>
+                                <h4 class="inline"><b>Experiencia laboral </b></h4>
+                                <span title="Describe tus trabajos más recientes" class="bx bx-info-circle"></span>
+                                <span>(Ingresar tus últimos 3 trabajos, si los hay)</span>
+                                <br>
                                 <button id="btn_crear" type="button" class="btn3d btn-success" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Añadir experiencia laboral"
+                                    style="display: inline-block; margin-right: 20px" title="Añadir nuevo"
                                     @click="addWorkExperience" :disabled="!enabledEdition">
                                         <span class="bx bx-plus"></span>
                                 </button>
                                 <button id="btn_reject" type="button" class="btn3d btn-danger" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Eliminar renglon"
+                                    style="display: inline-block; margin-right: 20px" title="Eliminar último"
                                     @click="lessWorkExperience" :disabled="!enabledEdition">
                                         <span class="bx bx-minus"></span>
                                 </button>
@@ -200,7 +206,7 @@
                                                 :disabled="!enabledEdition">
                                         </div>
                                         <div class="col-md-1 label-container">
-                                            <label for="fullNmae">Periodo:</label>
+                                            <label for="fullNmae">Período:</label>
                                         </div>
                                         <div class="col-md-3">
                                             <input type="text" name=""  class="my-form-control"
@@ -224,8 +230,10 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row">
-                                        <div class="col-md-1 label-container d-flex align-items-end">
-                                            <label for="fullNmae">Actividades:</label>
+                                        <div class="col-md-1" style="padding: 0">
+                                            <div  style="width: 100%; font-weight: bold; border-bottom: 1px solid #7b7b7b7b; padding-left: 15px">
+                                                <label for="fullNmae">Actividades:</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-5">
                                             <textarea name="" id="" rows="5" style="width: 100%" class="my-form-control"
@@ -233,8 +241,10 @@
                                                 :disabled="!enabledEdition">
                                             </textarea>
                                         </div>
-                                        <div class="col-md-1 label-container d-flex align-items-end">
-                                            <label for="fullNmae">Logros:</label>
+                                        <div class="col-md-1" style="padding: 0">
+                                            <div  style="width: 100%; font-weight: bold; border-bottom: 1px solid #7b7b7b7b; padding-left: 15px">
+                                                <label for="fullNmae">Logros:</label>
+                                            </div>
                                         </div>
                                         <div class="col-md-5">
                                             <textarea name="" id="" rows="5" style="width: 100%" class="my-form-control"
@@ -250,16 +260,16 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12" style="text-align: left">
-                                <h4>
-                                    <b>Educación</b>
-                                </h4>
+                                <h4 class="inline"><b>Educación</b></h4>
+                                <span title="Describe tus últimos estudios" class="bx bx-info-circle"></span>
+                                <br>
                                 <button id="btn_crear" type="button" class="btn3d btn-success" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Añadir experiencia laboral"
+                                    style="display: inline-block; margin-right: 20px" title="Añadir nuevo"
                                     @click="addEducation" :disabled="!enabledEdition">
                                         <span class="bx bx-plus"></span>
                                 </button>
                                 <button id="btn_reject" type="button" class="btn3d btn-danger" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Eliminar renglon"
+                                    style="display: inline-block; margin-right: 20px" title="Eliminar último"
                                     @click="lessEducation" :disabled="!enabledEdition">
                                         <span class="bx bx-minus"></span>
                                 </button>
@@ -306,7 +316,7 @@
                                     </div>
 
                                     <div class="col-md-2 label-container">
-                                        <label for="fullNmae">Programa/curso:</label>
+                                        <label for="fullNmae">Programa o curso:</label>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" name=""  class="my-form-control" placeholder="" 
@@ -332,16 +342,16 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12" style="text-align: left">
-                                <h4>
-                                    <b>Habilidades y aptitudes</b>
-                                </h4>
+                                <h4 class="inline"><b>Habilidades y aptitudes</b></h4>
+                                <span title="Describe tus fortalezas más importantes" class="bx bx-info-circle"></span>
+                                <br>
                                 <button id="btn_crear" type="button" class="btn3d btn-success" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Añadir experiencia laboral"
+                                    style="display: inline-block; margin-right: 20px" title="Añadir nuevo"
                                     @click="addSkill" :disabled="!enabledEdition">
                                         <span class="bx bx-plus"></span>
                                 </button>
                                 <button id="btn_reject" type="button" class="btn3d btn-danger" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Eliminar renglon"
+                                    style="display: inline-block; margin-right: 20px" title="Eliminar último"
                                     @click="lessSkill" :disabled="!enabledEdition">
                                         <span class="bx bx-minus"></span>
                                 </button>
@@ -354,29 +364,32 @@
                             Sin datos capturados
                         </div>
                         <div class="row" v-for="(oSkill, index) in arraySkills">
-                            <div class="col-md-2 label-container">
-                                <label for="fullNmae">Habilidad/Aptitud:</label>
+                            <div class="col-md-2" style="padding: 0">
+                                <div  style="width: 100%; font-weight: bold; border-bottom: 1px solid #7b7b7b7b; padding-left: 15px">
+                                    <label for="fullNmae">Habilidad o aptitud:</label>
+                                </div>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" name=""  class="my-form-control" placeholder="" 
-                                    style="text-transform:uppercase;" v-model="arraySkills[index].skill"
+                                <textarea name="" id="" rows="5" style="width: 100%" class="my-form-control"
+                                    v-model="arraySkills[index].skill"
                                     :disabled="!enabledEdition">
+                                </textarea>
                             </div>
                         </div>
 
                         <br>
                         <div class="row">
                             <div class="col-md-12" style="text-align: left">
-                                <h4>
-                                    <b>Idiomas</b>
-                                </h4>
+                                <h4 class="inline"><b>Idiomas</b></h4>
+                                <span title="Agrega los idiomas que conoces" class="bx bx-info-circle"></span>
+                                <br>
                                 <button id="btn_crear" type="button" class="btn3d btn-success" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Añadir experiencia laboral"
+                                    style="display: inline-block; margin-right: 20px" title="Añadir nuevo"
                                     @click="addLanguage" :disabled="!enabledEdition">
                                         <span class="bx bx-plus"></span>
                                 </button>
                                 <button id="btn_reject" type="button" class="btn3d btn-danger" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Eliminar renglon"
+                                    style="display: inline-block; margin-right: 20px" title="Eliminar último"
                                     @click="lessLanguage" :disabled="!enabledEdition">
                                         <span class="bx bx-minus"></span>
                                 </button>
@@ -414,16 +427,16 @@
                         <br>
                         <div class="row">
                             <div class="col-md-12" style="text-align: left">
-                                <h4>
-                                    <b>Aspectos adicionales</b>
-                                </h4>
+                                <h4 class="inline"><b>Competencias adicionales</b></h4>
+                                <span title="Agrega otra información que consideres importante" class="bx bx-info-circle"></span>
+                                <br>
                                 <button id="btn_crear" type="button" class="btn3d btn-success" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Añadir experiencia laboral"
+                                    style="display: inline-block; margin-right: 20px" title="Añadir nuevo"
                                     @click="addAspect" :disabled="!enabledEdition">
                                         <span class="bx bx-plus"></span>
                                 </button>
                                 <button id="btn_reject" type="button" class="btn3d btn-danger" v-show="enabledEdition"
-                                    style="display: inline-block; margin-right: 20px" title="Eliminar renglon"
+                                    style="display: inline-block; margin-right: 20px" title="Eliminar último"
                                     @click="lessAspect" :disabled="!enabledEdition">
                                         <span class="bx bx-minus"></span>
                                 </button>
@@ -436,18 +449,22 @@
                             Sin datos capturados
                         </div>
                         <div class="row" v-for="(oAspect, index) in arrayAspect">
-                            <div class="col-md-2 label-container d-flex align-items-end">
-                                <label for="">Tipo:</label>
+                            <div class="col-md-2" style="padding: 0">
+                                <div  style="width: 100%; font-weight: bold; border-bottom: 1px solid #7b7b7b7b; padding-left: 15px">
+                                    <label for="">Tipo competencia:</label>
+                                </div>
                             </div>
-                            <div class="col-md-4 d-flex align-items-end">
+                            <div class="col-md-4">
                                 <select class="select2-class my-form-control" id="aspectType" name="aspectType" 
                                     v-model="arrayAspect[index].type" style="width: 100%;"
                                     :disabled="!enabledEdition">
                                     <option v-for="aspectType in curriculumOptions.aspectType" :value="aspectType">@{{aspectType}}</option>
                                 </select>
                             </div>
-                            <div class="col-md-2 label-container d-flex align-items-end">
-                                <label for="">Descripción:</label>
+                            <div class="col-md-2" style="padding: 0">
+                                <div  style="width: 100%; font-weight: bold; border-bottom: 1px solid #7b7b7b7b; padding-left: 15px">
+                                    <label for="">Descripción competencia:</label>
+                                </div>
                             </div>
                             <div class="col-md-4">
                                 <textarea name="" id="" rows="5" style="width: 100%;" class="my-form-control" 
@@ -460,7 +477,7 @@
                         <br>
                         <br>
                         <button type="button" class="btn btn-primary" v-on:click="saveCurriculum" 
-                            style="float: right;" v-show="enabledEdition">Actualizar cv</button>
+                            style="float: right;" v-show="enabledEdition">Actualizar CV</button>
                     </form>
                 </div>
             </div>
