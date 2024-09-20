@@ -319,7 +319,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     /**Rutas de curriculum */
     Route::get('curriculum', 'Pages\curriculumController@index')->name('curriculum_index');
-    Route::post('curriculum\save', 'Pages\curriculumController@saveCurriculum')->name('curriculum_save');
+    Route::post('curriculum/save', 'Pages\curriculumController@saveCurriculum')->name('curriculum_save');
 
     /**Rutas de curriculumLogs */
     Route::get('curriculumLogs', 'Pages\curriculumLogsController@index')->name('curriculumLogs_index');

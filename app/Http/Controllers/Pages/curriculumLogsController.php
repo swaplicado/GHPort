@@ -71,6 +71,16 @@ class curriculumLogsController extends Controller
                             ? '#fad7a0' : '' 
                     ) : '#f5b7b1';
             } else {
+                $updated_at = null;
+
+                foreach ($user->userDataLog as $dataLog) {
+                    if ($dataLog->data_type_id == $typeDP) {
+                        $updated_at = $dataLog->updated_at;
+                        break;
+                    }
+                }
+
+                $user->DP_updated_at = $updated_at;
                 $user->colorDP = '';
             }
 
@@ -96,6 +106,16 @@ class curriculumLogsController extends Controller
                     $user->colorCV = '#f5b7b1';
                 }
             } else {
+                $updated_at = null;
+
+                    foreach ($user->userDataLog as $dataLog) {
+                        if ($dataLog->data_type_id == $typeCV) {
+                            $updated_at = $dataLog->updated_at;
+                            break;
+                        }
+                    }
+
+                    $user->CV_updated_at = $updated_at;
                 $user->colorCV = '';
             }
         }
