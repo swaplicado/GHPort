@@ -42,3 +42,26 @@ Route::group(['middleware' => 'auth:api'], function() {
 Route::get('getUsersFromGU', [
     'uses' => 'Sys\\SyncController@getUsersFromGU'
 ]);
+
+
+/**
+ * Grupo de rutas para App PGH
+ * Prefijo: api/
+ * middleware: auth:api
+ */
+Route::group([
+    // 'middleware' => 'auth:api'
+], function() {
+    Route::get('events', [
+        'uses' => 'api\\AppPghController@events'
+    ]);
+    Route::get('incidents', [
+        'uses' => 'api\\AppPghController@incidents'
+    ]);
+    Route::get('permissions', [
+        'uses' => 'api\\AppPghController@permissions'
+    ]);
+    Route::put('authorization', [
+        'uses' => 'api\\AppPghController@authorization'
+    ]);
+});
