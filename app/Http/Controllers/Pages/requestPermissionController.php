@@ -390,7 +390,7 @@ class requestPermissionController extends Controller
         });
 
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
-        return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
+        return json_encode(['success' => true, 'message' => 'Permiso autorizado con éxito', 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
     public function rejectPermission(Request $request){
@@ -477,7 +477,7 @@ class requestPermissionController extends Controller
         });
 
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
-        return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
+        return json_encode(['success' => true, 'message' => 'Permiso rechazado', 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
     public function getDirectEmployees(Request $request){

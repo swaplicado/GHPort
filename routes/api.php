@@ -49,9 +49,7 @@ Route::get('getUsersFromGU', [
  * Prefijo: api/
  * middleware: auth:api
  */
-Route::group([
-    // 'middleware' => 'auth:api'
-], function() {
+ Route::group(['middleware' => 'authApi:api'], function() {
     Route::get('events', [
         'uses' => 'api\\AppPghController@events'
     ]);
@@ -63,5 +61,23 @@ Route::group([
     ]);
     Route::put('authorization', [
         'uses' => 'api\\AppPghController@authorization'
+    ]);
+    Route::get('incidentStatus', [
+        'uses' => 'api\\AppPghController@checkIncidentsStatus'
+    ]);
+    Route::get('isAuthorized', [
+        'uses' => 'api\\AppPghController@incidentIsAuthorized'
+    ]);
+    Route::get('isRejected', [
+        'uses' => 'api\\AppPghController@incidentIsRejected'
+    ]);
+    Route::post('authorizeIncidents', [
+        'uses' => 'api\\AppPghController@authorizeIncidents'
+    ]);
+    Route::post('rejectIncidents', [
+        'uses' => 'api\\AppPghController@rejectIncidents'
+    ]);
+    Route::get('logout', [
+        'uses' => 'api\\AuthController@logout'
     ]);
 });
