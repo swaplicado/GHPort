@@ -42,3 +42,42 @@ Route::group(['middleware' => 'auth:api'], function() {
 Route::get('getUsersFromGU', [
     'uses' => 'Sys\\SyncController@getUsersFromGU'
 ]);
+
+
+/**
+ * Grupo de rutas para App PGH
+ * Prefijo: api/
+ * middleware: auth:api
+ */
+ Route::group(['middleware' => 'authApi:api'], function() {
+    Route::get('events', [
+        'uses' => 'api\\AppPghController@events'
+    ]);
+    Route::get('incidents', [
+        'uses' => 'api\\AppPghController@incidents'
+    ]);
+    Route::get('permissions', [
+        'uses' => 'api\\AppPghController@permissions'
+    ]);
+    Route::put('authorization', [
+        'uses' => 'api\\AppPghController@authorization'
+    ]);
+    Route::post('incidents/status', [
+        'uses' => 'api\\AppPghController@checkIncidentsStatus'
+    ]);
+    Route::post('incidents/is-authorized', [
+        'uses' => 'api\\AppPghController@incidentIsAuthorized'
+    ]);
+    Route::post('incidents/is-rejected', [
+        'uses' => 'api\\AppPghController@incidentIsRejected'
+    ]);
+    Route::post('incidents/authorize', [
+        'uses' => 'api\\AppPghController@authorizeIncidents'
+    ]);
+    Route::post('incidents/reject', [
+        'uses' => 'api\\AppPghController@rejectIncidents'
+    ]);
+    Route::get('logout', [
+        'uses' => 'api\\AuthController@logout'
+    ]);
+});

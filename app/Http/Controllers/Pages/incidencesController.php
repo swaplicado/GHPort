@@ -497,10 +497,14 @@ class incidencesController extends Controller
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
-    public function sendAndAuthorize(Request $request){
-        try {
-            $application_id = $request->application_id;
+    public function sendAndAuthorize(Request $request) {
+        $application_id = $request->application_id;
 
+        return $this->sendAndAuthorizeById($application_id);
+    }
+
+    public function sendAndAuthorizeById($application_id) {
+        try {
             \DB::beginTransaction();
 
             $application = Application::findOrFail($application_id);

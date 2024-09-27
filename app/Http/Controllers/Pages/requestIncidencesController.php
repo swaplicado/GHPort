@@ -277,7 +277,7 @@ class requestIncidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => 'En este momento, no es posible aprobar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible aprobar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -304,7 +304,7 @@ class requestIncidencesController extends Controller
         });
 
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
-        return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
+        return json_encode(['success' => true, 'message' => 'Incidencia autorizada con éxito', 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
     public function rejectIncidence(Request $request){
@@ -397,7 +397,7 @@ class requestIncidencesController extends Controller
         });
 
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
-        return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
+        return json_encode(['success' => true, 'message' => 'Incidencia rechazada', 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 
     public function checkMail(Request $request){
