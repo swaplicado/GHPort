@@ -75,10 +75,16 @@ class AppPghController extends Controller
 
             $events = ExportUtils::getEvents($startDate, $endDate, $userIds);
 
-            return response()->json($events);
+            return response()->json([
+                'status' => 'success',
+                'data' => $events
+            ]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ],400);
         }
     }
 
@@ -142,10 +148,16 @@ class AppPghController extends Controller
 
             $incidents = ExportUtils::getIncidents($startDate, $endDate, $userIds);
 
-            return response()->json($incidents);
+            return response()->json([
+                'status' => 'success',
+                'data' => $incidents
+            ]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
         }
     }
 
@@ -214,10 +226,16 @@ class AppPghController extends Controller
 
             $entryPermissions = ExportUtils::getPermissions($startDate, $endDate, $userIds);
 
-            return response()->json($entryPermissions);
+            return response()->json([
+                'status' => 'success',
+                'data' => $entryPermissions
+            ]);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
         }
     }
 
@@ -269,12 +287,15 @@ class AppPghController extends Controller
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return response()->json(['error' => $th->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 400);
         }
 
         return response()->json([
-            'incidents' => $lIncidents,
-            'message' => 'Success'
+            'status' => 'success',
+            'data' => $lIncidents,
         ], 200);
     }
 
@@ -325,12 +346,15 @@ class AppPghController extends Controller
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return response()->json(['error' => $th->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 400);
         }
 
         return response()->json([
-            'incidents' => $lIncidents,
-            'message' => 'Success'
+            'status' => 'success',
+            'data' => $lIncidents
         ], 200);
     }
 
@@ -380,12 +404,15 @@ class AppPghController extends Controller
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return response()->json(['error' => $th->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 400);
         }
 
         return response()->json([
-            'incidents' => $lIncidents,
-            'message' => 'Success'
+            'status' => 'success',
+            'data' => $lIncidents
         ], 200);
     }
 
@@ -404,12 +431,15 @@ class AppPghController extends Controller
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return response()->json(['error' => $th->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 400);
         }
 
         return response()->json([
-            'incidents' => $lIncidents,
-            'message' => 'Success'
+            'status' => 'success',
+            'data' => $lIncidents
         ], 200);
     }
 
@@ -428,12 +458,15 @@ class AppPghController extends Controller
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
-            return response()->json(['error' => $th->getMessage()], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 400);
         }
 
         return response()->json([
-            'incidents' => $lIncidents,
-            'message' => 'Success'
+            'status' => 'success',
+            'data' => $lIncidents
         ], 200);
     }
 }

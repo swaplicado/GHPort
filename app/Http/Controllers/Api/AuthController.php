@@ -53,6 +53,6 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['status' => 'success', 'message' => 'Successfully logged out']);
     }
 }

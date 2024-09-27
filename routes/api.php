@@ -62,19 +62,19 @@ Route::get('getUsersFromGU', [
     Route::put('authorization', [
         'uses' => 'api\\AppPghController@authorization'
     ]);
-    Route::get('incidentStatus', [
+    Route::post('incidents/status', [
         'uses' => 'api\\AppPghController@checkIncidentsStatus'
     ]);
-    Route::get('isAuthorized', [
+    Route::post('incidents/is-authorized', [
         'uses' => 'api\\AppPghController@incidentIsAuthorized'
     ]);
-    Route::get('isRejected', [
+    Route::post('incidents/is-rejected', [
         'uses' => 'api\\AppPghController@incidentIsRejected'
     ]);
-    Route::post('authorizeIncidents', [
+    Route::post('incidents/authorize', [
         'uses' => 'api\\AppPghController@authorizeIncidents'
     ]);
-    Route::post('rejectIncidents', [
+    Route::post('incidents/reject', [
         'uses' => 'api\\AppPghController@rejectIncidents'
     ]);
     Route::get('logout', [

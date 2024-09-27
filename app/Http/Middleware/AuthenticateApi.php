@@ -14,6 +14,7 @@ class AuthenticateApi extends Middleware
             $this->authenticate($request, $guards);
         } catch (AuthenticationException $th) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Unauthenticated.'
             ], 401);
         }
