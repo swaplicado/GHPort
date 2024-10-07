@@ -191,6 +191,36 @@ class ExportUtils {
     }
 
     /**
+     * Función que obtiene los empleados desde PGH
+     * 
+     * @return array
+     */
+    public static function getEmployees() {
+        $query = 'SELECT
+                    u.id,
+                    u.first_name,
+                    u.last_name,
+                    u.full_name,
+                    u.employee_num,
+                    u.email,
+                    u.is_active,
+                    u.is_delete,
+                    u.created_at,
+                    u.updated_at
+                FROM
+                    users AS u
+                WHERE
+                    u.is_delete = 0
+                    AND u.is_active = 1
+                ORDER BY
+                    u.full_name ASC;';
+        
+        $results = \DB::select($query);
+
+        return $results;
+    }
+
+    /**
      * Obtiene el estatus de una solicitud de vacaciones, incidencia o permiso
      *
      * @param  object $oApplication

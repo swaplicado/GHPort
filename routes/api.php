@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('login', 'api\\AuthController@login');
+Route::get('validate-token', 'api\\AuthController@isTokenValid');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -79,5 +80,8 @@ Route::get('getUsersFromGU', [
     ]);
     Route::get('logout', [
         'uses' => 'api\\AuthController@logout'
+    ]);
+    Route::get('employees', [
+        'uses' => 'api\\AppPghController@employees'
     ]);
 });

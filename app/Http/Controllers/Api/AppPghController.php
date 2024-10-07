@@ -469,4 +469,21 @@ class AppPghController extends Controller
             'data' => $lIncidents
         ], 200);
     }
+
+    public function employees(Request $request) {
+        try {
+            $employees = ExportUtils::getEmployees();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $employees
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
 }
