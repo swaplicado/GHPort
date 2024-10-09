@@ -84,4 +84,10 @@ Route::get('getUsersFromGU', [
     Route::get('employees', [
         'uses' => 'api\\AppPghController@employees'
     ]);
+    Route::get('event-types', [
+        'uses' => 'api\\AppPghController@eventsType'
+    ]);
+    Route::get('holidays', [
+        'uses' => 'api\\AppPghController@holidays'
+    ]);
 });

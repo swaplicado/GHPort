@@ -6,6 +6,9 @@ use \App\Http\Controllers\Pages\requestVacationsController;
 use \App\Http\Controllers\Pages\requestIncidencesController;
 use \App\Http\Controllers\Pages\requestPermissionController;
 use Illuminate\Http\Request;
+use \App\User;
+use \App\Models\Adm\Holiday;
+use Carbon\Carbon;
 
 class ExportUtils {
 
@@ -110,8 +113,8 @@ class ExportUtils {
                 'u.employee_num',
                 'st.applications_st_name',
                 'tp.incidence_tp_name',
-                'a.*',
-                'cl.incidence_cl_name AS event_type'
+                'tp.id_incidence_tp',
+                'a.*'
             )
             ->join('sys_applications_sts AS st', 'a.request_status_id', '=', 'st.id_applications_st')
             ->join('users AS u', 'a.user_id', '=', 'u.id')
@@ -154,7 +157,7 @@ class ExportUtils {
                     u.employee_num,
                     st.applications_st_name,
                     tp.permission_tp_name,
-                    "permission" AS event_type,
+                    tp.id_permission_tp,
                     hl.*
                 FROM
                     hours_leave AS hl
@@ -191,33 +194,37 @@ class ExportUtils {
     }
 
     /**
-     * Función que obtiene los empleados desde PGH
+     * Función que obtiene los empleados de un usuario desde PGH
      * 
      * @return array
      */
-    public static function getEmployees() {
-        $query = 'SELECT
-                    u.id,
-                    u.first_name,
-                    u.last_name,
-                    u.full_name,
-                    u.employee_num,
-                    u.email,
-                    u.is_active,
-                    u.is_delete,
-                    u.created_at,
-                    u.updated_at
-                FROM
-                    users AS u
-                WHERE
-                    u.is_delete = 0
-                    AND u.is_active = 1
-                ORDER BY
-                    u.full_name ASC;';
-        
-        $results = \DB::select($query);
+    public static function getEmployees($id_user_boss, $last_sync_date) {
+        $org_chart_job_id = User::where('id', $id_user_boss)->value('org_chart_job_id');
+        $lChildAreas = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
 
-        return $results;
+        $query = \DB::table('users as u')
+                        ->where('u.is_active', 1)
+                        ->where('u.is_delete', 0)
+                        ->where('u.id', '!=', 1)
+                        ->whereIn('u.org_chart_job_id', $lChildAreas);
+
+        if ($last_sync_date) {
+            $query = $query->where('u.updated_at', '>=', $last_sync_date);
+        }
+
+        $query = $query->select(
+                        'u.id',
+                        'u.first_name',
+                        'u.last_name',
+                        'u.full_name',
+                        'u.updated_at',
+                        'u.created_at'
+                    )
+                    ->get();
+                        
+        $lEmployees = $query->toArray();
+
+        return $lEmployees;
     }
 
     /**
@@ -227,11 +234,11 @@ class ExportUtils {
      * @param  string $type
      * @return object
      */
-    public static function getApplicationStatus($oApplication, $type){
-        switch ($type) {
-            case 'VACACIONES':
-            case 'INASISTENCIA':
-                $oStatus = Application::where('id_application', $oApplication->id_application)
+    public static function getApplicationStatus($oApplication, $class){
+        switch ($class) {
+            case 'VACATION':
+            case 'INCIDENT':
+                $oStatus = Application::where('id_application', $oApplication->id)
                     ->join('sys_applications_sts', 'applications.request_status_id', '=', 'sys_applications_sts.id_applications_st')
                     ->select(
                             "sys_applications_sts.id_applications_st",
@@ -241,8 +248,8 @@ class ExportUtils {
                     ->first();
                 break;
 
-            case 'permission':
-                $oStatus = Permission::where('id_hours_leave', $oApplication->id_hours_leave)
+            case 'PERMISSION':
+                $oStatus = Permission::where('id_hours_leave', $oApplication->id)
                     ->join('sys_applications_sts', 'hours_leave.request_status_id', '=', 'sys_applications_sts.id_applications_st')
                     ->select(
                         "sys_applications_sts.id_applications_st",
@@ -391,5 +398,29 @@ class ExportUtils {
     public static function isRejected($oApplication, $type) {
         $oStatus = ExportUtils::getApplicationStatus($oApplication, $type);
         return $oStatus->applications_st_code == 'REC';
+    }
+
+    public static function getEventsType() {
+        $config = \App\Utils\Configuration::getConfigurations();
+        $lEventsType = $config->eventsType;
+        return $lEventsType;
+    }
+
+    public static function getHolidays($start_date) {
+        $holidays = Holiday::where('is_deleted', 0);
+
+        if ($start_date) {
+            $holidays = $holidays->where('fecha', '>=', $start_date);
+        }
+        $holidays = $holidays->select(
+                                'id',
+                                'name',
+                                'fecha',
+                                'year',
+                                'is_deleted'
+                            )
+                            ->orderBy('fecha', 'asc')
+                            ->get();
+        return $holidays;
     }
 }

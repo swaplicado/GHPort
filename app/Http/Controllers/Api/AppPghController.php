@@ -75,6 +75,11 @@ class AppPghController extends Controller
 
             $events = ExportUtils::getEvents($startDate, $endDate, $userIds);
 
+            foreach ($events as $key => $event) {
+                $event->type_key = 'EVE';
+                $event->type_class = 'EVENT';
+            }
+
             return response()->json([
                 'status' => 'success',
                 'data' => $events
@@ -147,6 +152,13 @@ class AppPghController extends Controller
             $userIds = $validatedData['user_ids'] ?? null; // Array de IDs de usuarios
 
             $incidents = ExportUtils::getIncidents($startDate, $endDate, $userIds);
+            $lEventsType = collect(ExportUtils::getEventsType());
+
+            foreach ($incidents as $incident) {
+                $event = $lEventsType->firstWhere('id_incidence', $incident->id_incidence_tp);
+                $incident->type_key = $event ? $event->type_key : null;
+                $incident->type_class = $event ? $event->type_class : null;
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -225,6 +237,13 @@ class AppPghController extends Controller
             $userIds = $validatedData['user_ids'] ?? null; // Array de IDs de usuarios
 
             $entryPermissions = ExportUtils::getPermissions($startDate, $endDate, $userIds);
+            $lEventsType = collect(ExportUtils::getEventsType());
+
+            foreach ($entryPermissions as $permission) {
+                $event = $lEventsType->firstWhere('id_permission', $permission->id_permission_tp);
+                $permission->type_key = $event ? $event->type_key : null;
+                $permission->type_class = $event ? $event->type_class : null;
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -280,9 +299,10 @@ class AppPghController extends Controller
     public function checkIncidentsStatus(Request $request) {
         try {
             $lIncidents = json_decode($request->getContent())->incidents;
+            $lEventsType = collect(ExportUtils::getEventsType());
             foreach ($lIncidents as $key => $incident) {
-                $type = $incident->event_type;
-                $oStatus = ExportUtils::getApplicationStatus($incident, $type);
+                $event = $lEventsType->firstWhere('type_key', $incident->type_key);
+                $oStatus = ExportUtils::getApplicationStatus($incident, $event->type_class);
                 $incident->system_result = $oStatus;
             }
         } catch (\Throwable $th) {
@@ -325,17 +345,22 @@ class AppPghController extends Controller
     public function authorizeIncidents(Request $request) {
         try {
             $lIncidents = json_decode($request->getContent())->incidents;
-            
+            $lEventsType = collect(ExportUtils::getEventsType());
+
             foreach ($lIncidents as $key => $incident) {
-                $type = $incident->event_type;
-                switch ($type) {
-                    case 'VACACIONES':
+                $event = $lEventsType->firstWhere('type_key', $incident->type_key);
+
+                switch ($event->type_class) {
+                    case 'VACATION':
+                        $incident->id_application = $incident->id;
                         $incident->system_result = ExportUtils::authorizeVacations($incident);
                         break;
-                    case 'INASISTENCIA':
+                    case 'INCIDENT':
+                        $incident->application_id = $incident->id;
                         $incident->system_result = ExportUtils::authorizeIncidence($incident);
                         break;
-                    case 'permission':
+                    case 'PERMISSION':
+                        $incident->permission_id = $incident->id;
                         $incident->system_result = ExportUtils::authorizePermission($incident);
                         break;
                     
@@ -384,17 +409,20 @@ class AppPghController extends Controller
     public function rejectIncidents(Request $request) {
         try {
             $lIncidents = json_decode($request->getContent())->incidents;
-            
+            $lEventsType = collect(ExportUtils::getEventsType());
             foreach ($lIncidents as $key => $incident) {
-                $type = $incident->event_type;
-                switch ($type) {
-                    case 'VACACIONES':
+                $event = $lEventsType->firstWhere('type_key', $incident->type_key);
+                switch ($event->type_class) {
+                    case 'VACATION':
+                        $incident->id_application = $incident->id;
                         $incident->system_result = ExportUtils::rejectVacations($incident);
                         break;
-                    case 'INASISTENCIA':
+                    case 'INCIDENT':
+                        $incident->application_id = $incident->id;
                         $incident->system_result = ExportUtils::rejectIncidence($incident);
                         break;
-                    case 'permission':
+                    case 'PERMISSION':
+                        $incident->permission_id = $incident->id;
                         $incident->system_result = ExportUtils::rejectPermission($incident);
                         break;
                     
@@ -424,10 +452,10 @@ class AppPghController extends Controller
     public function incidentIsAuthorized(Request $request) {
         try {
             $lIncidents = json_decode($request->getContent())->incidents;
-            
+            $lEventsType = collect(ExportUtils::getEventsType());
             foreach ($lIncidents as $key => $incident) {
-                $type = $incident->event_type;
-                $incident->system_result = ExportUtils::isAuthorized($incident, $type);
+                $event = $lEventsType->firstWhere('type_key', $incident->type_key);
+                $incident->system_result = ExportUtils::isAuthorized($incident, $event->type_class);
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
@@ -451,10 +479,10 @@ class AppPghController extends Controller
     public function incidentIsRejected(Request $request) {
         try {
             $lIncidents = json_decode($request->getContent())->incidents;
-            
+            $lEventsType = collect(ExportUtils::getEventsType());
             foreach ($lIncidents as $key => $incident) {
-                $type = $incident->event_type;
-                $incident->system_result = ExportUtils::isRejected($incident, $type);
+                $event = $lEventsType->firstWhere('type_key', $incident->type_key);
+                $incident->system_result = ExportUtils::isRejected($incident, $event->type_class);
             }
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
@@ -472,11 +500,48 @@ class AppPghController extends Controller
 
     public function employees(Request $request) {
         try {
-            $employees = ExportUtils::getEmployees();
+            $id_user_boss = $request->id_user_boss;
+            $last_sync_date = $request->last_sync_date;
+            $employees = ExportUtils::getEmployees($id_user_boss, $last_sync_date);
 
             return response()->json([
                 'status' => 'success',
                 'data' => $employees
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function eventsType() {
+        try {
+            $eventsType = ExportUtils::getEventsType();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $eventsType
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function holidays(Request $request) {
+        try {
+            $start_date = $request->start_date;
+            $holidays = ExportUtils::getHolidays($start_date);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $holidays
             ]);
 
         } catch (\Exception $e) {
