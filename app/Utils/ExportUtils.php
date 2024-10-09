@@ -21,7 +21,7 @@ class ExportUtils {
      * @param  string $endDate
      * @param  array $userIds
      */
-    public static function getEvents($startDate, $endDate, $userIds)
+    public static function getEvents($startDate, $endDate, $userIds, $last_sync_date)
     {
         // Construimos la consulta base
         $query = 'SELECT 
@@ -68,6 +68,7 @@ class ExportUtils {
             WHERE 1 = 1' // Condición dummy para simplificar agregar filtros condicionales
             // Filtros condicionales
             . ($userIds ? ' AND t.user_id IN (' . implode(',', $userIds) . ')' : '')
+            . ($last_sync_date ? ' AND t.updated_at >= ?' : '')
             . ($startDate ? ' AND t.start_date >= ?' : '')
             . ($endDate ? ' AND t.end_date <= ?' : '') .
             ' ORDER BY 
@@ -79,6 +80,9 @@ class ExportUtils {
         // Crear un array con los valores de parámetros a pasar a la consulta
         $bindings = [];
 
+        if ($last_sync_date) {
+            $bindings[] = $last_sync_date; // Agregar fecha de inicio
+        }
         if ($startDate) {
             $bindings[] = $startDate; // Agregar fecha de inicio
         }
@@ -104,7 +108,7 @@ class ExportUtils {
      * @param  array $userIds
      * @return array
      */
-    public static function getIncidents($startDate, $endDate, $userIds)
+    public static function getIncidents($startDate, $endDate, $userIds, $last_sync_date)
     {
         // Construimos la consulta base        
         $query = \DB::table('applications AS a')
@@ -134,6 +138,10 @@ class ExportUtils {
             $query->where('a.end_date', '<=', $endDate);
         }
 
+        if (!empty($last_sync_date)) {
+            $query->where('a.updated_at', '>=', $last_sync_date);
+        }
+
         $query->orderBy('a.updated_at', 'DESC');
         $results = $query->get()->toArray();
 
@@ -151,7 +159,7 @@ class ExportUtils {
      * @param  array $userIds
      * @return array
      */
-    public static function getPermissions($startDate, $endDate, $userIds) {
+    public static function getPermissions($startDate, $endDate, $userIds, $last_sync_date) {
         $query = 'SELECT 
                     u.full_name,
                     u.employee_num,
@@ -172,6 +180,7 @@ class ExportUtils {
                 WHERE
                     NOT hl.is_deleted'
                     . ($userIds ? ' AND hl.user_id IN (' . implode(',', $userIds) . ')' : '')
+                    . ($last_sync_date ? ' AND hl.start_date >= ?' : '')
                     . ($startDate ? ' AND hl.start_date >= ?' : '')
                     . ($endDate ? ' AND hl.end_date <= ?' : '') .
                 ' ORDER BY hl.updated_at DESC;';
@@ -179,6 +188,9 @@ class ExportUtils {
         // Crear un array con los valores de parámetros a pasar a la consulta
         $bindings = [];
 
+        if ($last_sync_date) {
+            $bindings[] = $last_sync_date; // Agregar fecha de inicio
+        }   
         if ($startDate) {
             $bindings[] = $startDate; // Agregar fecha de inicio
         }
@@ -406,18 +418,25 @@ class ExportUtils {
         return $lEventsType;
     }
 
-    public static function getHolidays($start_date) {
+    public static function getHolidays($start_date, $last_sync_date) {
         $holidays = Holiday::where('is_deleted', 0);
 
         if ($start_date) {
             $holidays = $holidays->where('fecha', '>=', $start_date);
         }
+
+        if ($last_sync_date) {
+            $holidays = $holidays->where('updated_at', '>=', $last_sync_date);
+        }
+
         $holidays = $holidays->select(
                                 'id',
                                 'name',
                                 'fecha',
                                 'year',
-                                'is_deleted'
+                                'is_deleted',
+                                'created_at',
+                                'updated_at'
                             )
                             ->orderBy('fecha', 'asc')
                             ->get();

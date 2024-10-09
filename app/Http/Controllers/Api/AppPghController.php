@@ -64,16 +64,25 @@ class AppPghController extends Controller
             $validatedData = $request->validate([
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after_or_equal:start_date', // Validamos que end_date sea posterior o igual a start_date
-                'user_ids' => 'nullable|array', // Validamos que sea un array
-                'user_ids.*' => 'integer', // Cada elemento del array debe ser un entero
+                'id_user_boss' => 'nullable|integer',
+                'last_sync_date'=> 'nullable|date'
             ]);
 
             // Recibe los posibles parámetros del request validados
             $startDate = $validatedData['start_date'] ?? null; // Ej: '2024-01-01'
             $endDate = $validatedData['end_date'] ?? null; // Ej: '2024-12-31'
-            $userIds = $validatedData['user_ids'] ?? null; // Array de IDs de usuarios
+            $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
+            $userIds = null;
 
-            $events = ExportUtils::getEvents($startDate, $endDate, $userIds);
+            if ($id_user_boss) {
+                $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
+                if ($employees) {
+                    $userIds = $employees->pluck('id')->toArray();
+                }
+            }
+
+            $events = ExportUtils::getEvents($startDate, $endDate, $userIds, $last_sync_date);
 
             foreach ($events as $key => $event) {
                 $event->type_key = 'EVE';
@@ -142,16 +151,25 @@ class AppPghController extends Controller
             $validatedData = $request->validate([
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after_or_equal:start_date', // Validamos que end_date sea posterior o igual a start_date
-                'user_ids' => 'nullable|array', // Validamos que sea un array
-                'user_ids.*' => 'integer', // Cada elemento del array debe ser un entero
+                'id_user_boss' => 'nullable|integer',
+                'last_sync_date'=> 'nullable|date'
             ]);
 
             // Recibe los posibles parámetros del request validados
             $startDate = $validatedData['start_date'] ?? null; // Ej: '2024-01-01'
             $endDate = $validatedData['end_date'] ?? null; // Ej: '2024-12-31'
-            $userIds = $validatedData['user_ids'] ?? null; // Array de IDs de usuarios
+            $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
+            $userIds = null;
 
-            $incidents = ExportUtils::getIncidents($startDate, $endDate, $userIds);
+            if ($id_user_boss) {
+                $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
+                if ($employees) {
+                    $userIds = $employees->pluck('id')->toArray();
+                }
+            }
+
+            $incidents = ExportUtils::getIncidents($startDate, $endDate, $userIds, $last_sync_date);
             $lEventsType = collect(ExportUtils::getEventsType());
 
             foreach ($incidents as $incident) {
@@ -227,16 +245,25 @@ class AppPghController extends Controller
             $validatedData = $request->validate([
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after_or_equal:start_date', // Validamos que end_date sea posterior o igual a start_date
-                'user_ids' => 'nullable|array', // Validamos que sea un array
-                'user_ids.*' => 'integer', // Cada elemento del array debe ser un entero
+                'id_user_boss' => 'nullable|integer',
+                'last_sync_date'=> 'nullable|date'
             ]);
 
             // Recibe los posibles parámetros del request validados
             $startDate = $validatedData['start_date'] ?? null; // Ej: '2024-01-01'
             $endDate = $validatedData['end_date'] ?? null; // Ej: '2024-12-31'
-            $userIds = $validatedData['user_ids'] ?? null; // Array de IDs de usuarios
+            $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
+            $userIds = null;
 
-            $entryPermissions = ExportUtils::getPermissions($startDate, $endDate, $userIds);
+            if ($id_user_boss) {
+                $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
+                if ($employees) {
+                    $userIds = $employees->pluck('id')->toArray();
+                }
+            }
+
+            $entryPermissions = ExportUtils::getPermissions($startDate, $endDate, $userIds, $last_sync_date);
             $lEventsType = collect(ExportUtils::getEventsType());
 
             foreach ($entryPermissions as $permission) {
@@ -537,7 +564,8 @@ class AppPghController extends Controller
     public function holidays(Request $request) {
         try {
             $start_date = $request->start_date;
-            $holidays = ExportUtils::getHolidays($start_date);
+            $last_sync_date = $request->last_sync_date;
+            $holidays = ExportUtils::getHolidays($start_date, $last_sync_date);
 
             return response()->json([
                 'status' => 'success',
