@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Token;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class AuthController extends Controller
 {
@@ -114,5 +116,75 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    public function loginBridge(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = request(['username', 'password']);
+
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                                    'status' => 'Unauthorized',
+                                    'error' => 'Credenciales incorrectas'
+                                ], 401);
+        }
+
+        $user = $request->user();
+        $client = new Client([
+            'base_uri' => 'http://192.168.1.251:8000',
+            'timeout' => 30.0,
+        ]);
+        $credentials = [
+            "username" => $request->username,
+            "password" => $request->username
+        ];
+
+        try {
+            $response = $client->request('POST', 'login/', [
+                'json' => $credentials,
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ]
+            ]);
+            $jsonString = $response->getBody()->getContents();
+            $data = json_decode($jsonString);
+
+            return response()->json([
+                'status' => 'success',
+                'token' => $data->token,
+                'token_type' => 'Token',
+                'user' => $data->user,
+                'area_holder' => $data->area_holder
+            ], 200);
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $errorResponse = $e->getResponse();
+                $errorString = $errorResponse->getBody()->getContents();
+                $errorData = json_decode($errorString);
+                
+                return response()->json([
+                    'status' => 'error',
+                    'error' => $errorData->error
+                ], 500);
+
+            } else {
+                // Maneja el caso donde no hay respuesta del servidor
+                return response()->json([
+                    'status' => 'error',
+                    'error' => 'Ocurrio un error inesperado en el servidor',
+                    'data' => $e
+                ], 500);
+            }
+        }
+    }
+
+    public function logoutBridge()
+    {
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
 }
