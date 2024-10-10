@@ -66,7 +66,7 @@ class AuthController extends Controller
         $authorizationHeader = $request->header('Authorization');
 
         if (!$authorizationHeader) {
-            return response()->json(['error' => 'No se proporcionó un token.'], 401);
+            return response()->json(['message' => 'No se proporcionó un token.'], 401);
         }
 
         // Extraer el token Bearer
@@ -76,24 +76,24 @@ class AuthController extends Controller
         $tokenId = $this->getTokenIdFromJWT($token);
 
         if (!$tokenId) {
-            return response()->json(['error' => 'Token no válido.'], 401);
+            return response()->json(['message' => 'Token no válido.'], 401);
         }
 
         // Buscar el token en la base de datos
         $passportToken = Token::find($tokenId);
 
         if (!$passportToken) {
-            return response()->json(['error' => 'Token no encontrado.'], 401);
+            return response()->json(['message' => 'Token no encontrado.'], 401);
         }
 
         // Verificar si el token ha expirado
         if ($passportToken->expires_at < Carbon::now()) {
-            return response()->json(['error' => 'Token expirado.'], 401);
+            return response()->json(['message' => 'Token expirado.'], 401);
         }
 
         // Verificar si el token ha sido revocado
         if ($passportToken->revoked) {
-            return response()->json(['error' => 'Token revocado.'], 401);
+            return response()->json(['message' => 'Token revocado.'], 401);
         }
 
         // Si todo está bien, el token es válido
