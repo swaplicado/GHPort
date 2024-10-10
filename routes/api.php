@@ -81,3 +81,6 @@ Route::get('getUsersFromGU', [
         'uses' => 'api\\AuthController@logout'
     ]);
 });
+Route::post('loginBridge', 'api\\AuthController@loginBridge');
+Route::post('logoutBridge', 'api\\AuthController@logoutBridge');
+Route::get('getDirectManager/{id}', 'api\\apiGlobalUsersController@getDirectManager');
