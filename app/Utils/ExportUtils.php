@@ -6,6 +6,9 @@ use \App\Http\Controllers\Pages\requestVacationsController;
 use \App\Http\Controllers\Pages\requestIncidencesController;
 use \App\Http\Controllers\Pages\requestPermissionController;
 use Illuminate\Http\Request;
+use \App\User;
+use \App\Models\Adm\Holiday;
+use Carbon\Carbon;
 
 class ExportUtils {
 
@@ -18,7 +21,7 @@ class ExportUtils {
      * @param  string $endDate
      * @param  array $userIds
      */
-    public static function getEvents($startDate, $endDate, $userIds)
+    public static function getEvents($startDate, $endDate, $userIds, $last_sync_date)
     {
         // Construimos la consulta base
         $query = 'SELECT 
@@ -65,6 +68,7 @@ class ExportUtils {
             WHERE 1 = 1' // Condición dummy para simplificar agregar filtros condicionales
             // Filtros condicionales
             . ($userIds ? ' AND t.user_id IN (' . implode(',', $userIds) . ')' : '')
+            . ($last_sync_date ? ' AND t.updated_at >= ?' : '')
             . ($startDate ? ' AND t.start_date >= ?' : '')
             . ($endDate ? ' AND t.end_date <= ?' : '') .
             ' ORDER BY 
@@ -76,6 +80,9 @@ class ExportUtils {
         // Crear un array con los valores de parámetros a pasar a la consulta
         $bindings = [];
 
+        if ($last_sync_date) {
+            $bindings[] = $last_sync_date; // Agregar fecha de inicio
+        }
         if ($startDate) {
             $bindings[] = $startDate; // Agregar fecha de inicio
         }
@@ -101,7 +108,7 @@ class ExportUtils {
      * @param  array $userIds
      * @return array
      */
-    public static function getIncidents($startDate, $endDate, $userIds)
+    public static function getIncidents($startDate, $endDate, $userIds, $last_sync_date)
     {
         // Construimos la consulta base        
         $query = \DB::table('applications AS a')
@@ -110,8 +117,8 @@ class ExportUtils {
                 'u.employee_num',
                 'st.applications_st_name',
                 'tp.incidence_tp_name',
-                'a.*',
-                'cl.incidence_cl_name AS event_type'
+                'tp.id_incidence_tp',
+                'a.*'
             )
             ->join('sys_applications_sts AS st', 'a.request_status_id', '=', 'st.id_applications_st')
             ->join('users AS u', 'a.user_id', '=', 'u.id')
@@ -131,6 +138,10 @@ class ExportUtils {
             $query->where('a.end_date', '<=', $endDate);
         }
 
+        if (!empty($last_sync_date)) {
+            $query->where('a.updated_at', '>=', $last_sync_date);
+        }
+
         $query->orderBy('a.updated_at', 'DESC');
         $results = $query->get()->toArray();
 
@@ -148,13 +159,13 @@ class ExportUtils {
      * @param  array $userIds
      * @return array
      */
-    public static function getPermissions($startDate, $endDate, $userIds) {
+    public static function getPermissions($startDate, $endDate, $userIds, $last_sync_date) {
         $query = 'SELECT 
                     u.full_name,
                     u.employee_num,
                     st.applications_st_name,
                     tp.permission_tp_name,
-                    "permission" AS event_type,
+                    tp.id_permission_tp,
                     hl.*
                 FROM
                     hours_leave AS hl
@@ -169,6 +180,7 @@ class ExportUtils {
                 WHERE
                     NOT hl.is_deleted'
                     . ($userIds ? ' AND hl.user_id IN (' . implode(',', $userIds) . ')' : '')
+                    . ($last_sync_date ? ' AND hl.start_date >= ?' : '')
                     . ($startDate ? ' AND hl.start_date >= ?' : '')
                     . ($endDate ? ' AND hl.end_date <= ?' : '') .
                 ' ORDER BY hl.updated_at DESC;';
@@ -176,6 +188,9 @@ class ExportUtils {
         // Crear un array con los valores de parámetros a pasar a la consulta
         $bindings = [];
 
+        if ($last_sync_date) {
+            $bindings[] = $last_sync_date; // Agregar fecha de inicio
+        }   
         if ($startDate) {
             $bindings[] = $startDate; // Agregar fecha de inicio
         }
@@ -191,17 +206,51 @@ class ExportUtils {
     }
 
     /**
+     * Función que obtiene los empleados de un usuario desde PGH
+     * 
+     * @return array
+     */
+    public static function getEmployees($id_user_boss, $last_sync_date) {
+        $org_chart_job_id = User::where('id', $id_user_boss)->value('org_chart_job_id');
+        $lChildAreas = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
+
+        $query = \DB::table('users as u')
+                        ->where('u.is_active', 1)
+                        ->where('u.is_delete', 0)
+                        ->where('u.id', '!=', 1)
+                        ->whereIn('u.org_chart_job_id', $lChildAreas);
+
+        if ($last_sync_date) {
+            $query = $query->where('u.updated_at', '>=', $last_sync_date);
+        }
+
+        $query = $query->select(
+                        'u.id',
+                        'u.first_name',
+                        'u.last_name',
+                        'u.full_name',
+                        'u.updated_at',
+                        'u.created_at'
+                    )
+                    ->get();
+                        
+        $lEmployees = $query->toArray();
+
+        return $lEmployees;
+    }
+
+    /**
      * Obtiene el estatus de una solicitud de vacaciones, incidencia o permiso
      *
      * @param  object $oApplication
      * @param  string $type
      * @return object
      */
-    public static function getApplicationStatus($oApplication, $type){
-        switch ($type) {
-            case 'VACACIONES':
-            case 'INASISTENCIA':
-                $oStatus = Application::where('id_application', $oApplication->id_application)
+    public static function getApplicationStatus($oApplication, $class){
+        switch ($class) {
+            case 'VACATION':
+            case 'INCIDENT':
+                $oStatus = Application::where('id_application', $oApplication->id)
                     ->join('sys_applications_sts', 'applications.request_status_id', '=', 'sys_applications_sts.id_applications_st')
                     ->select(
                             "sys_applications_sts.id_applications_st",
@@ -211,8 +260,8 @@ class ExportUtils {
                     ->first();
                 break;
 
-            case 'permission':
-                $oStatus = Permission::where('id_hours_leave', $oApplication->id_hours_leave)
+            case 'PERMISSION':
+                $oStatus = Permission::where('id_hours_leave', $oApplication->id)
                     ->join('sys_applications_sts', 'hours_leave.request_status_id', '=', 'sys_applications_sts.id_applications_st')
                     ->select(
                         "sys_applications_sts.id_applications_st",
@@ -361,5 +410,36 @@ class ExportUtils {
     public static function isRejected($oApplication, $type) {
         $oStatus = ExportUtils::getApplicationStatus($oApplication, $type);
         return $oStatus->applications_st_code == 'REC';
+    }
+
+    public static function getEventsType() {
+        $config = \App\Utils\Configuration::getConfigurations();
+        $lEventsType = $config->eventsType;
+        return $lEventsType;
+    }
+
+    public static function getHolidays($start_date, $last_sync_date) {
+        $holidays = Holiday::where('is_deleted', 0);
+
+        if ($start_date) {
+            $holidays = $holidays->where('fecha', '>=', $start_date);
+        }
+
+        if ($last_sync_date) {
+            $holidays = $holidays->where('updated_at', '>=', $last_sync_date);
+        }
+
+        $holidays = $holidays->select(
+                                'id',
+                                'name',
+                                'fecha',
+                                'year',
+                                'is_deleted',
+                                'created_at',
+                                'updated_at'
+                            )
+                            ->orderBy('fecha', 'asc')
+                            ->get();
+        return $holidays;
     }
 }

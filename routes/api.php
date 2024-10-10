@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::post('login', 'api\\AuthController@login');
+Route::get('validate-token', 'api\\AuthController@isTokenValid');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -84,3 +85,13 @@ Route::get('getUsersFromGU', [
 Route::post('loginBridge', 'api\\AuthController@loginBridge');
 Route::post('logoutBridge', 'api\\AuthController@logoutBridge');
 Route::get('getDirectManager/{id}', 'api\\apiGlobalUsersController@getDirectManager');
+    Route::get('employees', [
+        'uses' => 'api\\AppPghController@employees'
+    ]);
+    Route::get('event-types', [
+        'uses' => 'api\\AppPghController@eventsType'
+    ]);
+    Route::get('holidays', [
+        'uses' => 'api\\AppPghController@holidays'
+    ]);
+});
