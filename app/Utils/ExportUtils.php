@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use \App\User;
 use \App\Models\Adm\Holiday;
 use Carbon\Carbon;
+use App\Constants\SysConst;
 
 class ExportUtils {
 
@@ -124,7 +125,14 @@ class ExportUtils {
             ->join('users AS u', 'a.user_id', '=', 'u.id')
             ->join('cat_incidence_tps AS tp', 'a.type_incident_id', '=', 'tp.id_incidence_tp')
             ->join('cat_incidence_cls as cl', 'tp.incidence_cl_id', '=', 'cl.id_incidence_cl')
-            ->where('a.is_deleted', 0);
+            ->where('a.is_deleted', 0)
+            ->whereIn('a.request_status_id', [
+                                                SysConst::APPLICATION_ENVIADO,
+                                                SysConst::APPLICATION_APROBADO,
+                                                SysConst::APPLICATION_RECHAZADO,
+                                                SysConst::APPLICATION_CANCELADO,
+                                                SysConst::APPLICATION_CONSUMIDO
+                                            ]);
 
         if (!empty($userIds)) {
             $query->whereIn('a.user_id', $userIds);
@@ -160,46 +168,40 @@ class ExportUtils {
      * @return array
      */
     public static function getPermissions($startDate, $endDate, $userIds, $last_sync_date) {
-        $query = 'SELECT 
-                    u.full_name,
-                    u.employee_num,
-                    st.applications_st_name,
-                    tp.permission_tp_name,
-                    tp.id_permission_tp,
-                    hl.*
-                FROM
-                    hours_leave AS hl
-                        INNER JOIN
-                    sys_applications_sts AS st ON hl.request_status_id = st.id_applications_st
-                        INNER JOIN
-                    cat_permission_tp AS tp ON hl.type_permission_id = tp.id_permission_tp
-                        INNER JOIN
-                    permission_cl AS cl ON hl.cl_permission_id = cl.id_permission_cl
-                        INNER JOIN
-                    users AS u ON hl.user_id = u.id
-                WHERE
-                    NOT hl.is_deleted'
-                    . ($userIds ? ' AND hl.user_id IN (' . implode(',', $userIds) . ')' : '')
-                    . ($last_sync_date ? ' AND hl.start_date >= ?' : '')
-                    . ($startDate ? ' AND hl.start_date >= ?' : '')
-                    . ($endDate ? ' AND hl.end_date <= ?' : '') .
-                ' ORDER BY hl.updated_at DESC;';
+        $query = \DB::table('hours_leave AS hl')
+                    ->select('u.full_name', 'u.employee_num', 'st.applications_st_name', 'tp.permission_tp_name', 'tp.id_permission_tp', 'hl.*')
+                    ->join('sys_applications_sts AS st', 'hl.request_status_id', '=', 'st.id_applications_st')
+                    ->join('cat_permission_tp AS tp', 'hl.type_permission_id', '=', 'tp.id_permission_tp')
+                    ->join('permission_cl AS cl', 'hl.cl_permission_id', '=', 'cl.id_permission_cl')
+                    ->join('users AS u', 'hl.user_id', '=', 'u.id')
+                    ->where('hl.is_deleted', false)
+                    ->whereIn('hl.request_status_id', [
+                                                        SysConst::APPLICATION_ENVIADO,
+                                                        SysConst::APPLICATION_APROBADO,
+                                                        SysConst::APPLICATION_RECHAZADO,
+                                                        SysConst::APPLICATION_CANCELADO,
+                                                        SysConst::APPLICATION_CONSUMIDO
+                                                    ]);
 
-        // Crear un array con los valores de parámetros a pasar a la consulta
-        $bindings = [];
+                if ($userIds) {
+                    $query->whereIn('hl.user_id', $userIds);
+                }
 
-        if ($last_sync_date) {
-            $bindings[] = $last_sync_date; // Agregar fecha de inicio
-        }   
-        if ($startDate) {
-            $bindings[] = $startDate; // Agregar fecha de inicio
-        }
-        if ($endDate) {
-            $bindings[] = $endDate; // Agregar fecha de fin
-        }
+                if ($last_sync_date) {
+                    $query->where('hl.start_date', '>=', $last_sync_date);
+                }
 
-        // Ejecutar la consulta con los parámetros
-        $results = \DB::select($query, $bindings);
+                if ($startDate) {
+                    $query->where('hl.start_date', '>=', $startDate);
+                }
+
+                if ($endDate) {
+                    $query->where('hl.end_date', '<=', $endDate);
+                }
+
+                $query->orderBy('hl.updated_at', 'DESC');
+
+                $results = $query->get()->toArray();
 
         // Retornar los resultados como JSON
         return $results;
