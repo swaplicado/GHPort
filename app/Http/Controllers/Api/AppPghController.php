@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\SysConst;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Utils\ExportUtils;
@@ -152,7 +153,13 @@ class AppPghController extends Controller
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after_or_equal:start_date', // Validamos que end_date sea posterior o igual a start_date
                 'id_user_boss' => 'nullable|integer',
-                'last_sync_date'=> 'nullable|date'
+                'last_sync_date'=> 'nullable|date',
+                'status_creado' => 'nullable|boolean',
+                'status_enviado' => 'nullable|boolean',
+                'status_aprobado' => 'nullable|boolean',
+                'status_rechazado' => 'nullable|boolean',
+                'status_consumido' => 'nullable|boolean',
+                'status_cancelado' => 'nullable|boolean',
             ]);
 
             // Recibe los posibles parámetros del request validados
@@ -161,6 +168,12 @@ class AppPghController extends Controller
             $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
             $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
             $userIds = null;
+            $status_creado = $validatedData['status_creado'] ?? null;
+            $status_enviado = $validatedData['status_enviado'] ?? null;
+            $status_aprobado = $validatedData['status_aprobado'] ?? null;
+            $status_rechazado = $validatedData['status_rechazado'] ?? null;
+            $status_consumido = $validatedData['status_consumido'] ?? null;
+            $status_cancelado = $validatedData['status_cancelado'] ?? null;
 
             if ($id_user_boss) {
                 $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
@@ -169,7 +182,27 @@ class AppPghController extends Controller
                 }
             }
 
-            $incidents = ExportUtils::getIncidents($startDate, $endDate, $userIds, $last_sync_date);
+            $lStatus = [];
+            if ($status_creado !== null) {
+                $lStatus[] = SysConst::APPLICATION_CREADO;
+            }
+            if ($status_enviado !== null) {
+                $lStatus[] = SysConst::APPLICATION_ENVIADO;
+            }
+            if ($status_aprobado !== null) {
+                $lStatus[] = SysConst::APPLICATION_APROBADO;
+            }
+            if ($status_rechazado !== null) {
+                $lStatus[] = SysConst::APPLICATION_RECHAZADO;
+            }
+            if ($status_consumido !== null) {
+                $lStatus[] = SysConst::APPLICATION_CONSUMIDO;
+            }
+            if ($status_cancelado !== null) {
+                $lStatus[] = SysConst::APPLICATION_CANCELADO;
+            }
+
+            $incidents = ExportUtils::getIncidents($startDate, $endDate, $userIds, $last_sync_date, $lStatus);
             $lEventsType = collect(ExportUtils::getEventsType());
 
             foreach ($incidents as $incident) {
@@ -246,7 +279,13 @@ class AppPghController extends Controller
                 'start_date' => 'nullable|date',
                 'end_date' => 'nullable|date|after_or_equal:start_date', // Validamos que end_date sea posterior o igual a start_date
                 'id_user_boss' => 'nullable|integer',
-                'last_sync_date'=> 'nullable|date'
+                'last_sync_date'=> 'nullable|date',
+                'status_creado' => 'nullable|boolean',
+                'status_enviado' => 'nullable|boolean',
+                'status_aprobado' => 'nullable|boolean',
+                'status_rechazado' => 'nullable|boolean',
+                'status_consumido' => 'nullable|boolean',
+                'status_cancelado' => 'nullable|boolean',
             ]);
 
             // Recibe los posibles parámetros del request validados
@@ -255,6 +294,12 @@ class AppPghController extends Controller
             $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
             $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
             $userIds = null;
+            $status_creado = $validatedData['status_creado'] ?? null;
+            $status_enviado = $validatedData['status_enviado'] ?? null;
+            $status_aprobado = $validatedData['status_aprobado'] ?? null;
+            $status_rechazado = $validatedData['status_rechazado'] ?? null;
+            $status_consumido = $validatedData['status_consumido'] ?? null;
+            $status_cancelado = $validatedData['status_cancelado'] ?? null;
 
             if ($id_user_boss) {
                 $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
@@ -263,7 +308,27 @@ class AppPghController extends Controller
                 }
             }
 
-            $entryPermissions = ExportUtils::getPermissions($startDate, $endDate, $userIds, $last_sync_date);
+            $lStatus = [];
+            if ($status_creado !== null) {
+                $lStatus[] = SysConst::APPLICATION_CREADO;
+            }
+            if ($status_enviado !== null) {
+                $lStatus[] = SysConst::APPLICATION_ENVIADO;
+            }
+            if ($status_aprobado !== null) {
+                $lStatus[] = SysConst::APPLICATION_APROBADO;
+            }
+            if ($status_rechazado !== null) {
+                $lStatus[] = SysConst::APPLICATION_RECHAZADO;
+            }
+            if ($status_consumido !== null) {
+                $lStatus[] = SysConst::APPLICATION_CONSUMIDO;
+            }
+            if ($status_cancelado !== null) {
+                $lStatus[] = SysConst::APPLICATION_CANCELADO;
+            }
+
+            $entryPermissions = ExportUtils::getPermissions($startDate, $endDate, $userIds, $last_sync_date, $lStatus);
             $lEventsType = collect(ExportUtils::getEventsType());
 
             foreach ($entryPermissions as $permission) {
