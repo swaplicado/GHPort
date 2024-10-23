@@ -109,7 +109,7 @@ class ExportUtils {
      * @param  array $userIds
      * @return array
      */
-    public static function getIncidents($startDate, $endDate, $userIds, $last_sync_date)
+    public static function getIncidents($startDate, $endDate, $userIds, $last_sync_date, $lStatus)
     {
         // Construimos la consulta base        
         $query = \DB::table('applications AS a')
@@ -125,14 +125,7 @@ class ExportUtils {
             ->join('users AS u', 'a.user_id', '=', 'u.id')
             ->join('cat_incidence_tps AS tp', 'a.type_incident_id', '=', 'tp.id_incidence_tp')
             ->join('cat_incidence_cls as cl', 'tp.incidence_cl_id', '=', 'cl.id_incidence_cl')
-            ->where('a.is_deleted', 0)
-            ->whereIn('a.request_status_id', [
-                                                SysConst::APPLICATION_ENVIADO,
-                                                SysConst::APPLICATION_APROBADO,
-                                                SysConst::APPLICATION_RECHAZADO,
-                                                SysConst::APPLICATION_CANCELADO,
-                                                SysConst::APPLICATION_CONSUMIDO
-                                            ]);
+            ->where('a.is_deleted', 0);
 
         if (!empty($userIds)) {
             $query->whereIn('a.user_id', $userIds);
@@ -148,6 +141,18 @@ class ExportUtils {
 
         if (!empty($last_sync_date)) {
             $query->where('a.updated_at', '>=', $last_sync_date);
+        }
+
+        if (!empty($lStatus)) {
+            $query->whereIn('a.request_status_id', $lStatus);
+        } else {
+            $query->whereIn('a.request_status_id', [
+                SysConst::APPLICATION_ENVIADO,
+                SysConst::APPLICATION_APROBADO,
+                SysConst::APPLICATION_RECHAZADO,
+                SysConst::APPLICATION_CANCELADO,
+                SysConst::APPLICATION_CONSUMIDO
+            ]);
         }
 
         $query->orderBy('a.updated_at', 'DESC');
@@ -167,21 +172,14 @@ class ExportUtils {
      * @param  array $userIds
      * @return array
      */
-    public static function getPermissions($startDate, $endDate, $userIds, $last_sync_date) {
+    public static function getPermissions($startDate, $endDate, $userIds, $last_sync_date, $lStatus) {
         $query = \DB::table('hours_leave AS hl')
                     ->select('u.full_name', 'u.employee_num', 'st.applications_st_name', 'tp.permission_tp_name', 'tp.id_permission_tp', 'hl.*')
                     ->join('sys_applications_sts AS st', 'hl.request_status_id', '=', 'st.id_applications_st')
                     ->join('cat_permission_tp AS tp', 'hl.type_permission_id', '=', 'tp.id_permission_tp')
                     ->join('permission_cl AS cl', 'hl.cl_permission_id', '=', 'cl.id_permission_cl')
                     ->join('users AS u', 'hl.user_id', '=', 'u.id')
-                    ->where('hl.is_deleted', false)
-                    ->whereIn('hl.request_status_id', [
-                                                        SysConst::APPLICATION_ENVIADO,
-                                                        SysConst::APPLICATION_APROBADO,
-                                                        SysConst::APPLICATION_RECHAZADO,
-                                                        SysConst::APPLICATION_CANCELADO,
-                                                        SysConst::APPLICATION_CONSUMIDO
-                                                    ]);
+                    ->where('hl.is_deleted', false);
 
                 if ($userIds) {
                     $query->whereIn('hl.user_id', $userIds);
@@ -197,6 +195,18 @@ class ExportUtils {
 
                 if ($endDate) {
                     $query->where('hl.end_date', '<=', $endDate);
+                }
+
+                if (!empty($lStatus)) {
+                    $query->whereIn('hl.request_status_id', $lStatus);
+                } else {
+                    $query->whereIn('hl.request_status_id', [
+                        SysConst::APPLICATION_ENVIADO,
+                        SysConst::APPLICATION_APROBADO,
+                        SysConst::APPLICATION_RECHAZADO,
+                        SysConst::APPLICATION_CANCELADO,
+                        SysConst::APPLICATION_CONSUMIDO
+                    ]);
                 }
 
                 $query->orderBy('hl.updated_at', 'DESC');
