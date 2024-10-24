@@ -10,6 +10,7 @@ use \App\User;
 use \App\Models\Adm\Holiday;
 use Carbon\Carbon;
 use App\Constants\SysConst;
+use App\Utils\usersInSystemUtils;
 
 class ExportUtils {
 
@@ -247,6 +248,7 @@ class ExportUtils {
                     ->get();
                         
         $lEmployees = $query->toArray();
+        $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
 
         return $lEmployees;
     }
