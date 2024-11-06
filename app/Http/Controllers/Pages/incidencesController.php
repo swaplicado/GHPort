@@ -21,6 +21,7 @@ use App\Mail\requestIncidenceMail;
 use Carbon\Carbon;
 use App\Mail\authorizeIncidenceMail;
 use App\Utils\notificationsUtils;
+use GuzzleHttp\Client;
 
 class incidencesController extends Controller
 {
@@ -463,7 +464,53 @@ class incidencesController extends Controller
         }
 
         $mypool = Pool::create();
-        $mypool[] = async(function () use ($application, $lSuperviser, $mailLog){
+        $mypool[] = async(function () use ($application, $lSuperviser, $mailLog, $type_incident){
+
+            try {
+                $config = \App\Utils\Configuration::getConfigurations();
+                $arrUsers = $lSuperviser->map(function ($item) {
+                    return $item->id;
+                })->toArray();
+
+                $arrUsers = array_unique($arrUsers);
+
+                $headers = [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                    'X-API-Key' => $config->apiKeyPghMobile
+                ];
+
+                $oUser = delegationUtils::getUser();
+                $full_name = $oUser->short_name . ' ' . $oUser->first_name . ' ' . $oUser->last_name;
+
+                $body = '{
+                    "title": "' . $full_name . '",
+                    "body": "Envió solicitud de ' . mb_strtolower($type_incident, 'UTF-8') . '",
+                    "data": {
+                        "isNewToBadge": 1,
+                        "countBadge": 1
+                    },
+                    "sound": "default",
+                    "user_ids": [],
+                    "external_ids":  ' . json_encode($arrUsers) . '
+                }';
+
+                $client = new Client([
+                    'base_uri' => $config->urlNotificationAppMobile,
+                    'timeout' => 30.0,
+                    'headers' => $headers,
+                    'verify' => false
+                ]);
+
+                $request = new \GuzzleHttp\Psr7\Request('POST', '', $headers, $body);
+                $response = $client->sendAsync($request)->wait();
+                $jsonString = $response->getBody()->getContents();
+                $data = json_decode($jsonString);
+
+            } catch (\Throwable $th) {
+                \Log::error($th);
+            }
+
             try {
                 // $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
                 // $arrUsers = $lUsers->map(function ($item) {

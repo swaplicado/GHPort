@@ -187,7 +187,7 @@ class ExportUtils {
                 }
 
                 if ($last_sync_date) {
-                    $query->where('hl.start_date', '>=', $last_sync_date);
+                    $query->where('hl.updated_at', '>=', $last_sync_date);
                 }
 
                 if ($startDate) {
