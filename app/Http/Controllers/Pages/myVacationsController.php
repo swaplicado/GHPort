@@ -482,6 +482,51 @@ class myVacationsController extends Controller
             $mypool = Pool::create();
             $mypool[] = async(function () use ($application, $request, $lSuperviser, $mailLog){
                 try {
+                    $config = \App\Utils\Configuration::getConfigurations();
+                    $arrUsers = $lSuperviser->map(function ($item) {
+                        return $item->id;
+                    })->toArray();
+
+                    $arrUsers = array_unique($arrUsers);
+
+                    $headers = [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                        'X-API-Key' => $config->apiKeyPghMobile
+                    ];
+
+                    $oUser = delegationUtils::getUser();
+                    $full_name = $oUser->short_name . ' ' . $oUser->first_name . ' ' . $oUser->last_name;
+
+                    $body = '{
+                        "title": "' . $full_name .  '",
+                        "body": "Envió solicitud de vacaciones",
+                        "data": {
+                            "isNewToBadge": 1,
+                            "countBadge": 1
+                        },
+                        "sound": "default",
+                        "user_ids": [],
+                        "external_ids":  ' . json_encode($arrUsers) . '
+                    }';
+
+                    $client = new Client([
+                        'base_uri' => $config->urlNotificationAppMobile,
+                        'timeout' => 30.0,
+                        'headers' => $headers,
+                        'verify' => false
+                    ]);
+
+                    $request = new \GuzzleHttp\Psr7\Request('POST', '', $headers, $body);
+                    $response = $client->sendAsync($request)->wait();
+                    $jsonString = $response->getBody()->getContents();
+                    $data = json_decode($jsonString);
+
+                } catch (\Throwable $th) {
+                    \Log::error($th);
+                }
+
+                try {
                     // $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
                     $arrUsers = $lSuperviser->map(function ($item) {
                         return $item->institutional_mail;
@@ -508,6 +553,7 @@ class myVacationsController extends Controller
 
                 $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
                 $mailLog->update();
+
             })->then(function ($mailLog) {
                 
             })->catch(function ($mailLog) {

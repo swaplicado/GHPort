@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\requestPermissionMail;
 use App\Mail\authorizePermissionMail;
 use App\Utils\notificationsUtils;
+use GuzzleHttp\Client;
 
 class permissionController extends Controller
 {
@@ -398,6 +399,61 @@ class permissionController extends Controller
 
         $mypool = Pool::create();
         $mypool[] = async(function () use ($permission, $superviser, $mailLog){
+
+            try {
+                $config = \App\Utils\Configuration::getConfigurations();
+                $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
+                $arrUsers = $lUsers->map(function ($item) {
+                    return $item->id;
+                })->toArray();
+
+                $arrUsers = array_unique($arrUsers);
+
+                $headers = [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                    'X-API-Key' => $config->apiKeyPghMobile
+                ];
+
+                $class_permission = \DB::table('permission_cl')
+                                    ->where('id_permission_cl', $permission->cl_permission_id)
+                                    ->value('permission_cl_name');
+                
+                $type_permission = \DB::table('cat_permission_tp')
+                                    ->where('id_permission_tp', $permission->type_permission_id)
+                                    ->value('permission_tp_name');
+
+                $oUser = delegationUtils::getUser();
+                $full_name = $oUser->short_name . ' ' . $oUser->first_name . ' ' . $oUser->last_name;
+                
+                $body = '{
+                    "title": "' . $full_name . '",
+                    "body": "Envió solicitud de ' . mb_strtolower($class_permission, 'UTF-8') . '",
+                    "data": {
+                        "isNewToBadge": 1,
+                        "countBadge": 1
+                    },
+                    "sound": "default",
+                    "user_ids": [],
+                    "external_ids":  ' . json_encode($arrUsers) . '
+                }';
+
+                $client = new Client([
+                    'base_uri' => $config->urlNotificationAppMobile,
+                    'timeout' => 30.0,
+                    'headers' => $headers,
+                    'verify' => false
+                ]);
+
+                $request = new \GuzzleHttp\Psr7\Request('POST', '', $headers, $body);
+                $response = $client->sendAsync($request)->wait();
+                $jsonString = $response->getBody()->getContents();
+                $data = json_decode($jsonString);
+
+            } catch (\Throwable $th) {
+                \Log::error($th);
+            }
+
             try {
                 $lUsers = orgChartUtils::getAllUsersByOrgChartJob($superviser->org_chart_job_id);
                 $arrUsers = $lUsers->map(function ($item) {
