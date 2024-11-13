@@ -445,8 +445,8 @@ class permissionController extends Controller
                     'verify' => false
                 ]);
 
-                $request = new \GuzzleHttp\Psr7\Request('POST', '', $headers, $body);
-                $response = $client->sendAsync($request)->wait();
+                $requestNotification = new \GuzzleHttp\Psr7\Request('POST', '', $headers, $body);
+                $response = $client->sendAsync($requestNotification)->wait();
                 $jsonString = $response->getBody()->getContents();
                 $data = json_decode($jsonString);
 
