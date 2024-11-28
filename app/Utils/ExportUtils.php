@@ -231,7 +231,10 @@ class ExportUtils {
                         ->where('u.is_active', 1)
                         ->where('u.is_delete', 0)
                         ->where('u.id', '!=', 1)
-                        ->whereIn('u.org_chart_job_id', $lChildAreas);
+                        ->whereIn('u.org_chart_job_id', $lChildAreas)
+                        ->leftJoin('org_chart_jobs as org', 'org.id_org_chart_job', '=', 'u.org_chart_job_id')
+                        ->leftJoin('ext_jobs as j', 'j.id_job', '=', 'u.job_id')
+                        ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id');
 
         if ($last_sync_date) {
             $query = $query->where('u.updated_at', '>=', $last_sync_date);
@@ -242,6 +245,9 @@ class ExportUtils {
                         'u.first_name',
                         'u.last_name',
                         'u.full_name',
+                        'org.job_name as org_chart_job_name',
+                        'j.job_name',
+                        'd.department_name',
                         'u.updated_at',
                         'u.created_at'
                     )
