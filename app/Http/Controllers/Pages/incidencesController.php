@@ -491,6 +491,7 @@ class incidencesController extends Controller
                         "countBadge": 1
                     },
                     "sound": "default",
+                    "badge": 1,
                     "user_ids": [],
                     "external_ids":  ' . json_encode($arrUsers) . '
                 }';
