@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Utils\ExportUtils;
 use App\Http\Controllers\Pages\incidencesController;
 use Log;
+use App\Utils\EmployeeVacationUtils;
 
 class AppPghController extends Controller
 {
@@ -595,6 +596,11 @@ class AppPghController extends Controller
             $id_user_boss = $request->id_user_boss;
             $last_sync_date = $request->last_sync_date;
             $employees = ExportUtils::getEmployees($id_user_boss, $last_sync_date);
+
+            foreach ($employees as $key => $employee) {
+                $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($employee->id);
+                $employee->tot_vacation_remaining = $oUser->tot_vacation_remaining;
+            }
 
             return response()->json([
                 'status' => 'success',
