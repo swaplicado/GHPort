@@ -56,7 +56,7 @@ var app = new Vue({
                                                 }
                                             head_accord = head_accord
                                             +'</td>'
-                                            +'<td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciónes pendientes:'+emp.tot_vacation_remaining+' días</td>';
+                                            +'<td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">Vacaciones pendientes:'+emp.tot_vacation_remaining+' días</td>';
                                             if(emp.is_head_user){
                                                 head_accord = head_accord
                                                 +'<td style="width: 20%; border-left: solid 1px rgb(172, 172, 172); text-align: center;">'
