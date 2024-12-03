@@ -50,6 +50,7 @@
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.cancelIncidenceRoute = <?php echo json_encode(route('requestIncidences_cancel')); ?>;
             this.deleteSendIncidenceRoute = <?php echo json_encode(route('requestIncidences_delete')); ?>;
+            this.authorized_client = <?php echo json_encode($authorized_client); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;

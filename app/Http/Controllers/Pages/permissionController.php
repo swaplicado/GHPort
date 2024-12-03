@@ -110,6 +110,9 @@ class permissionController extends Controller
                         )
                         ->get();
 
+        $config = \App\Utils\Configuration::getConfigurations();
+        $requested_client = $config->requested_client_web;
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -124,7 +127,8 @@ class permissionController extends Controller
                                             ->with('clase_permiso', $clase_permiso)
                                             ->with('lSchedule', $lSchedule)
                                             ->with('lStatus', $lStatus)
-                                            ->with('lEvents', $lEvents);
+                                            ->with('lEvents', $lEvents)
+                                            ->with('requested_client', $requested_client);
     }
 
     public function createPermission(Request $request){
@@ -355,6 +359,7 @@ class permissionController extends Controller
             $date = Carbon::now();
             $permission->request_status_id = SysConst::APPLICATION_ENVIADO;
             $permission->date_send_n = $date->toDateString();
+            $permission->requested_client = $request->requested_client;
             $permission->update();
 
             $user = \DB::table('users')
@@ -500,6 +505,7 @@ class permissionController extends Controller
             $permission->date_send_n = $date->toDateString();
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->approved_date_n = Carbon::now()->toDateString();
+            $permission->authorized_client = $request->authorized_client;
             $permission->update();
 
             $config = \App\Utils\Configuration::getConfigurations();

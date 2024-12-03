@@ -57,6 +57,7 @@
             this.deleteSendRequestRoute = <?php echo json_encode(route('requestVacations_deleteRequest')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
             this.oApplication = <?php echo json_encode($oApplication); ?>;
+            this.authorized_client = <?php echo json_encode($authorized_client); ?>;
             this.getApplicationRoute = <?php echo json_encode(route('requestVacations_getApplication')); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesRequest = {

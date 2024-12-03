@@ -114,6 +114,9 @@ class incidencesController extends Controller
                         )
                         ->get();
 
+        $config = \App\Utils\Configuration::getConfigurations();
+        $requested_client = $config->requested_client_web;
+
         return view('Incidences.incidences')->with('lIncidences', $lIncidences)
                                             ->with('constants', $constants)
                                             ->with('lClass', $lClass)
@@ -124,7 +127,8 @@ class incidencesController extends Controller
                                             ->with('lSuperviser', $lSuperviser)
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('lStatus', $lStatus)
-                                            ->with('lEvents', $lEvents);
+                                            ->with('lEvents', $lEvents)
+                                            ->with('requested_client', $requested_client);
     }
 
     public function getEmpIncidencesEA(Request $request){
@@ -421,6 +425,7 @@ class incidencesController extends Controller
             $application->request_status_id = SysConst::APPLICATION_ENVIADO;
             $application->date_send_n = $date->toDateString();
             $application->send_default = isset($lSuperviser[0]->is_default);
+            $application->requested_client = $request->requested_client;
             $application->update();
 
             foreach($lSuperviser as $superviser){
@@ -547,11 +552,11 @@ class incidencesController extends Controller
 
     public function sendAndAuthorize(Request $request) {
         $application_id = $request->application_id;
-
-        return $this->sendAndAuthorizeById($application_id);
+        $authorized_client = $request->authorized_client;
+        return $this->sendAndAuthorizeById($application_id, $authorized_client);
     }
 
-    public function sendAndAuthorizeById($application_id) {
+    public function sendAndAuthorizeById($application_id, $authorized_client = null) {
         try {
             \DB::beginTransaction();
 
@@ -563,6 +568,7 @@ class incidencesController extends Controller
 
             $application->user_apr_rej_id = delegationUtils::getIdUser();
             $application->approved_date_n = Carbon::now()->toDateString();
+            $application->authorized_client = $authorized_client;
             $application->update();
 
             $system =  \DB::table('cat_incidence_tps')

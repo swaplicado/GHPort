@@ -52,6 +52,8 @@ var app = new Vue({
         requestSchedule: null,
         permission: null,
         lEvents: oServerData.lEvents,
+        requested_client: oServerData.requested_client,
+        authorized_client: oServerData.authorized_client
     },
     watch: {
         type_id:function(val){
@@ -961,6 +963,7 @@ var app = new Vue({
 
             axios.post(this.oData.routeSendAuthorize, {
                     'permission_id': data[this.indexes_permission.id],
+                    'authorized_client': this.authorized_client
                 })
                 .then(result => {
                     let data = result.data;
@@ -1014,6 +1017,7 @@ var app = new Vue({
             axios.post(this.oData.routeGestionSendIncidence, {
                     'permission_id': permission_id,
                     'employee_id': this.oUser.id,
+                    'requested_client': this.requested_client
                 })
                 .then(response => {
                     var data = response.data;
@@ -1139,6 +1143,7 @@ var app = new Vue({
                     'permission_id': this.oPermission.id_hours_leave,
                     'comments': this.comments,
                     'manager_id': this.selectedmanager,
+                    'authorized_client': this.authorized_client
                 })
                 .then(result => {
                     let data = result.data;
@@ -1164,6 +1169,7 @@ var app = new Vue({
                     'permission_id': this.oPermission.id_hours_leave,
                     'comments': this.comments,
                     'manager_id': this.selectedmanager,
+                    'authorized_client': this.authorized_client
                 })
                 .then(result => {
                     let data = result.data;

@@ -41,6 +41,7 @@ var appRequestVacation = new Vue({
         lTypes: [],
         tot_vacation_remaining: null,
         lEvents: oServerData.lEvents,
+        authorized_client: oServerData.authorized_client
     },
     computed: {
         propertyAAndPropertyB() {
@@ -403,6 +404,7 @@ var appRequestVacation = new Vue({
                 'year': this.year,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
+                'authorized_client': this.authorized_client
             })
             .then(response => {
                 var data = response.data;
@@ -432,6 +434,7 @@ var appRequestVacation = new Vue({
                 'year': this.year,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                 'manager_id': this.selectedmanager,
+                'authorized_client': this.authorized_client
             })
             .then(response => {
                 var data = response.data;

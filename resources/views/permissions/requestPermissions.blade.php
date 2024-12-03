@@ -43,6 +43,7 @@
             this.routePermission_cancel = <?php echo json_encode(route('requestPermission_cancel')) ?>;
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.routeDeletePermission = <?php echo json_encode(route('requestPermission_delete')); ?>;
+            this.authorized_client = <?php echo json_encode($authorized_client); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos#gestion" ); ?>;

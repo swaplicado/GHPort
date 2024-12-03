@@ -31,6 +31,7 @@
             this.lTemp = <?php echo json_encode($lTemp); ?>;
             this.lHolidays = <?php echo json_encode($lHolidays); ?>;
             this.oUser = <?php echo json_encode($oUser); ?>;
+            this.requested_client = <?php echo json_encode($requested_client); ?>;
             this.table_name = <?php echo json_encode('table_MyIncidences'); ?>;
             this.routeCreate = <?php echo json_encode(route('incidences_create')); ?>;
             this.routeUpdate = <?php echo json_encode(route('incidences_update')); ?>;

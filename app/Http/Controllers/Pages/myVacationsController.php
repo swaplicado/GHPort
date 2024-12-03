@@ -67,6 +67,9 @@ class myVacationsController extends Controller
 
         $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
 
+        $requested_client = $config->requested_client_web;
+        $authorized_client = $config->authorized_client_web;
+
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
                                                 ->with('lHolidays', $holidays)
@@ -77,7 +80,9 @@ class myVacationsController extends Controller
                                                 ->with('lTemp', $lTemp_special)
                                                 ->with('lSuperviser', $lSuperviser)
                                                 ->with('lStatus', $lStatus)
-                                                ->with('lEvents', $lEvents);
+                                                ->with('lEvents', $lEvents)
+                                                ->with('requested_client', $requested_client)
+                                                ->with('authorized_client', $authorized_client);
     }
 
     public function getlDays(Request $request){
@@ -429,6 +434,7 @@ class myVacationsController extends Controller
             $application->date_send_n = $date->toDateString();
             $application->send_default = isset($lSuperviser[0]->is_default);
             // $application->folio_n = $this->makeFolio($date, $application->user_id);
+            $application->requested_client = $request->requested_client;
             $application->update();
 
             $application_log = new ApplicationLog();

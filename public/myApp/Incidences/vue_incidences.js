@@ -56,6 +56,8 @@ var app = new Vue({
         is_event: false,
         lIncidencesEA: [],
         isNewApplication: false,
+        requested_client: oServerData.requested_client,
+        authorized_client: oServerData.authorized_client
     },
     computed: {
         propertyAAndPropertyB() {
@@ -961,6 +963,7 @@ var app = new Vue({
             SGui.showWaiting(15000);
             axios.post(this.oData.routeGestionSendIncidence, {
                 'application_id': application_id,
+                'requested_client': this.requested_client
             })
             .then(response => {
                 var data = response.data;
@@ -1020,6 +1023,7 @@ var app = new Vue({
                 'comments': this.comments,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'manager_id': this.selectedmanager,
+                'authorized_client': this.authorized_client
             })
             .then( result => {
                 let data = result.data;
@@ -1046,6 +1050,7 @@ var app = new Vue({
                 'comments': this.comments,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'manager_id': this.selectedmanager,
+                'authorized_client': this.authorized_client
             })
             .then( result => {
                 let data = result.data;
@@ -1217,6 +1222,7 @@ var app = new Vue({
 
             axios.post(this.oData.routeSendAuthorize, {
                 'application_id': data[this.indexes_incidences.id_application],
+                'authorized_client': this.authorized_client
             })
             .then( result => {
                 let data = result.data;

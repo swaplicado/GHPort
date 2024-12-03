@@ -48,6 +48,7 @@
             this.lEvents = <?php echo json_encode($lEvents); ?>;
             this.year = <?php echo json_encode($year); ?>;
             this.today = <?php echo json_encode($today); ?>;
+            this.requested_client = <?php echo json_encode($requested_client); ?>;
             this.requestVacRoute = <?php echo json_encode(route('myVacations_setRequestVac')); ?>;
             this.updateRequestVacRoute = <?php echo json_encode(route('myVacations_updateRequestVac')); ?>;
             this.myVacations_filterYearRoute = <?php echo json_encode(route('myVacations_filterYear')); ?>;

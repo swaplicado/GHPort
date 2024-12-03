@@ -53,6 +53,8 @@ var appMyVacations = new Vue({
         lTypes: [],
         loadReturnDate: false,
         lEvents: oServerData.lEvents,
+        requested_client: oServerData.requested_client,
+        authorized_client: oServerData.authorized_client
     },
     computed: {
         propertyAAndPropertyB() {
@@ -1026,6 +1028,7 @@ var appMyVacations = new Vue({
                 'year': this.year,
                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
                 'employee_id': this.oUser.id,
+                'requested_client': this.requested_client
             })
             .then(response => {
                 var data = response.data;
@@ -1259,6 +1262,7 @@ var appMyVacations = new Vue({
                                 'year': this.year,
                                 'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'),
                                 'manager_id': this.selectedmanager,
+                                'authorized_client': this.authorized_client
                             })
                             .then(response => {
                                 let data = response.data;

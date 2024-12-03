@@ -140,6 +140,10 @@ class requestIncidencesController extends Controller
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
+
+        $config = \App\Utils\Configuration::getConfigurations();
+        $authorized_client = $config->authorized_client_web;
+
         return view('Incidences.requestIncidences')->with('constants', $constants)
                                                     ->with('myManagers', $myManagers)
                                                     ->with('lIncidences', $lIncidences)
@@ -153,7 +157,8 @@ class requestIncidencesController extends Controller
                                                     ->with('initialCalendarDate', $initialCalendarDate)
                                                     ->with('lRequestStatus', $lRequestStatus)
                                                     ->with('lGestionStatus', $lGestionStatus)
-                                                    ->with('lEvents', $lEvents);
+                                                    ->with('lEvents', $lEvents)
+                                                    ->with('authorized_client', $authorized_client);
     }
 
     public function getEmployee(Request $request){
@@ -207,6 +212,7 @@ class requestIncidencesController extends Controller
             // quitar caracteres especiales de los comentarios de empleado
 
             $application->emp_comments_n = str_replace(['"', "\\"], "", $application->emp_comments_n);
+            $application->authorized_client = $request->authorized_client;
             $application->update();
 
             $application_log = new ApplicationLog();
@@ -327,6 +333,7 @@ class requestIncidencesController extends Controller
             if($request->returnDate){
                 $application->return_date = $request->returnDate;
             }
+            $application->authorized_client = $request->authorized_client;
             $application->update();
 
             $application_log = new ApplicationLog();

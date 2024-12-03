@@ -295,6 +295,8 @@ class requestVacationsController extends Controller
         $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
 
+        $authorized_client = $config->authorized_client_web;
+
         return view('emp_vacations.requestVacations')->with('lEmployees', $data[1])
                                                     ->with('year', $data[0])
                                                     ->with('lHolidays', $data[2])
@@ -305,7 +307,8 @@ class requestVacationsController extends Controller
                                                     ->with('oApplication', $oApplication)
                                                     ->with('lRequestStatus', $lRequestStatus)
                                                     ->with('lGestionStatus', $lGestionStatus)
-                                                    ->with('lEvents', $lEvents);
+                                                    ->with('lEvents', $lEvents)
+                                                    ->with('authorized_client', $authorized_client);
     }
 
     public function getDataManager(Request $request){
@@ -377,6 +380,7 @@ class requestVacationsController extends Controller
             if($request->returnDate){
                 $application->return_date = $request->returnDate;
             }
+            $application->authorized_client = $request->authorized_client;
             $application->update();
 
             notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);
@@ -616,6 +620,7 @@ class requestVacationsController extends Controller
             if($request->returnDate){
                 $application->return_date = $request->returnDate;
             }
+            $application->authorized_client = $request->authorized_client;
             $application->update();
 
             notificationsUtils::revisedNotificationFromAction($application->type_incident_id, $application->id_application);

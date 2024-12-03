@@ -112,6 +112,9 @@ class requestPermissionController extends Controller
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
+
+        $authorized_client = $config->authorized_client_web;
+
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -127,7 +130,8 @@ class requestPermissionController extends Controller
                                             ->with('clase_permiso', $clase_permiso)
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('lRequestStatus', $lRequestStatus)
-                                            ->with('lGestionStatus', $lGestionStatus);
+                                            ->with('lGestionStatus', $lGestionStatus)
+                                            ->with('authorized_client', $authorized_client);
     }
 
     public function PersonalTheme($permission_id = null){
@@ -217,6 +221,9 @@ class requestPermissionController extends Controller
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
+
+        $authorized_client = $config->authorized_client_web;
+
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -232,7 +239,8 @@ class requestPermissionController extends Controller
                                             ->with('clase_permiso', $clase_permiso)
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('lRequestStatus', $lRequestStatus)
-                                            ->with('lGestionStatus', $lGestionStatus);
+                                            ->with('lGestionStatus', $lGestionStatus)
+                                            ->with('authorized_client', $authorized_client);
     }
 
 
@@ -310,6 +318,7 @@ class requestPermissionController extends Controller
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->approved_date_n = Carbon::now()->toDateString();
             $permission->sup_comments_n = $comments;
+            $permission->authorized_client = $request->authorized_client;
             $permission->update();
 
             $config = \App\Utils\Configuration::getConfigurations();
@@ -408,6 +417,7 @@ class requestPermissionController extends Controller
             $permission->user_apr_rej_id = delegationUtils::getIdUser();
             $permission->rejected_date_n = Carbon::now()->toDateString();
             $permission->sup_comments_n = $comments;
+            $permission->authorized_client = $request->authorized_client;
             $permission->update();
 
             // $data = incidencesUtils::sendToCAP($application);
