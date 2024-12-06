@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Constants\SysConst;
 use App\Http\Controllers\Controller;
+use App\Utils\delegationUtils;
+use Auth;
 use Illuminate\Http\Request;
 use App\Utils\ExportUtils;
 use App\Http\Controllers\Pages\incidencesController;
@@ -84,11 +86,21 @@ class AppPghController extends Controller
                 }
             }
 
+            $config = \App\Utils\Configuration::getConfigurations();
+            if ($config->appMobileWithMySelf) {
+                $user_id = delegationUtils::getIdUser();
+                if ($user_id) {
+                    $userIds[] = $user_id;
+                }
+            }
+
             $events = ExportUtils::getEvents($startDate, $endDate, $userIds, $last_sync_date);
 
             foreach ($events as $key => $event) {
                 $event->type_key = 'EVE';
                 $event->type_class = 'EVENT';
+                $event->requested_client = 1;
+                $event->authorized_client = 1;
             }
 
             return response()->json([
@@ -180,6 +192,14 @@ class AppPghController extends Controller
                 $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
                 if ($employees) {
                     $userIds = $employees->pluck('id')->toArray();
+                }
+            }
+
+            $config = \App\Utils\Configuration::getConfigurations();
+            if ($config->appMobileWithMySelf) {
+                $user_id = delegationUtils::getIdUser();
+                if ($user_id) {
+                    $userIds[] = $user_id;
                 }
             }
 
@@ -306,6 +326,14 @@ class AppPghController extends Controller
                 $employees = collect(ExportUtils::getEmployees($id_user_boss, null));
                 if ($employees) {
                     $userIds = $employees->pluck('id')->toArray();
+                }
+            }
+
+            $config = \App\Utils\Configuration::getConfigurations();
+            if ($config->appMobileWithMySelf) {
+                $user_id = delegationUtils::getIdUser();
+                if ($user_id) {
+                    $userIds[] = $user_id;
                 }
             }
 
@@ -593,6 +621,7 @@ class AppPghController extends Controller
 
     public function employees(Request $request) {
         try {
+            $config = \App\Utils\Configuration::getConfigurations();
             $id_user_boss = $request->id_user_boss;
             $last_sync_date = $request->last_sync_date;
             $employees = ExportUtils::getEmployees($id_user_boss, $last_sync_date);
@@ -600,6 +629,27 @@ class AppPghController extends Controller
             foreach ($employees as $key => $employee) {
                 $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($employee->id);
                 $employee->tot_vacation_remaining = $oUser->tot_vacation_remaining;
+                $employee->mySelf = 0;
+            }
+
+            if ($config->appMobileWithMySelf) {
+                $oUser = delegationUtils::getUser();
+                $vacation_data = EmployeeVacationUtils::getEmployeeDataForMyVacation($oUser->id);
+                $oUser->tot_vacation_remaining = $vacation_data->tot_vacation_remaining;
+                array_push($employees, [ 
+                        "id" => $oUser->id,
+                        "first_name" => $oUser->first_name,
+                        "last_name" => $oUser->last_name,
+                        "full_name" => $oUser->full_name,
+                        "org_chart_job_name" => $oUser->org_chart_job_name,
+                        "job_name" => $oUser->job_name,
+                        "department_name" => $oUser->department_name,
+                        "updated_at" => $oUser->updated_at,
+                        "created_at" => $oUser->created_at,
+                        "tot_vacation_remaining" => $oUser->tot_vacation_remaining,
+                        "mySelf" => 1
+                    ]
+                );
             }
 
             return response()->json([
@@ -650,4 +700,32 @@ class AppPghController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Trabajo en proceso
+     */
+    // public function createAndSendIncident(Request $request) {
+    //     try {
+    //         $oIncident = (object)$request->incident;
+    //         $lEventsType = collect(ExportUtils::getEventsType());
+    //         $event = $lEventsType->firstWhere('type_key', $oIncident->type_key);
+
+    //         switch ($event->type_class) {
+    //             case 'VACATION':
+    //                 ExportUtils::createAndSendVacation($oIncident);
+    //                 break;
+    //             case 'INCIDENT':
+                    
+    //                 break;
+    //             case 'PERMISSION':
+                    
+    //                 break;
+                
+    //             default:
+    //                 break;
+    //         }
+    //     } catch (\Throwable $th) {
+    //         Log::error($th);
+    //     }
+    // }
 }
