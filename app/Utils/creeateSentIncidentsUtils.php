@@ -420,6 +420,7 @@ class creeateSentIncidentsUtils
         $take_holidays = false;
         $take_rest_days = false;
         $type_incident_id = $requestIncidence->incident_type_id;
+        $requested_client = $requestIncidence->requested_client;
 
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
         if($comments == null || $comments == ""){
@@ -466,6 +467,7 @@ class creeateSentIncidentsUtils
         $application->type_incident_id = $type_incident_id;
         $application->emp_comments_n = $comments;
         $application->is_deleted = false;
+        $application->requested_client = $requested_client;
         $application->save();
 
         if($type_incident_id == SysConst::TYPE_CUMPLEAÑOS){
@@ -583,6 +585,7 @@ class creeateSentIncidentsUtils
         $minutes = $requestPermission->minutes;
         $interOut = null;
         $interReturn = null;
+        $requested_client = $requestPermission->requested_client;
 
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
         if($comments == null || $comments == ""){
@@ -612,6 +615,7 @@ class creeateSentIncidentsUtils
         $permission->updated_by = \Auth::user()->id;
         $permission->intermediate_out = $interOut;
         $permission->intermediate_return = $interReturn;
+        $permission->requested_client = $requested_client;
         $permission->save();
 
         return json_encode(['success' => true, 'permission' => $permission]);
