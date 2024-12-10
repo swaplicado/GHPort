@@ -1,5 +1,8 @@
 <?php namespace App\Utils;
 
+use App\Http\Controllers\Pages\incidencesController;
+use App\Http\Controllers\Pages\myVacationsController;
+use App\Http\Controllers\Pages\permissionController;
 use \App\Models\Vacations\Application;
 use \App\Models\Permissions\Permission;
 use \App\Http\Controllers\Pages\requestVacationsController;
@@ -461,5 +464,121 @@ class ExportUtils {
                             ->orderBy('fecha', 'asc')
                             ->get();
         return $holidays;
+    }
+
+    public static function createAndSendVacation($oVacation) {
+        try {
+            $employee_id = \Auth::user()->id;
+            $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id, true, 1);
+            $vacations = collect($user->vacation)->sortBy('year');
+
+            \DB::beginTransaction();
+
+            $result = json_decode(creeateSentIncidentsUtils::createVacation($oVacation, $user, $vacations));
+            if ($result->success) {
+                $sendResult = json_decode(creeateSentIncidentsUtils::sendVacation($user, $result->application->id_application));
+                if ($sendResult->success) {
+                    \DB::commit();   
+                    $application = $sendResult->application;
+                    $toUsers = collect($sendResult->toUsers);
+                    $oMailLog = $sendResult->oMailLog;
+                    try {
+                        creeateSentIncidentsUtils::sendMail($application, $toUsers, 'VAC', $oMailLog->id_mail_log);
+                        creeateSentIncidentsUtils::sendAppNotification($user, $toUsers, 'Envió solicitud de vacaciones');
+                    } catch (\Throwable $th) {
+                        \Log::error($th->getMessage());
+                    }
+                }
+            }
+
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            \DB::rollBack();
+            return json_encode([
+                    'success' => false,
+                    'message' => $th->getMessage()
+                ]);
+        }
+
+        return json_encode([
+            'success' => true,
+            'message' => 'Solicitud de vacaciones generada con éxito'
+        ]);
+    }
+
+    public static function createAndSendIncidence($oIncidence) {
+        try {
+            \DB::beginTransaction();
+            $oUser = \Auth::user();
+            $result = json_decode(creeateSentIncidentsUtils::createIncidence($oIncidence, $oUser));
+            if ($result->success) {
+                $sendResult = json_decode(creeateSentIncidentsUtils::sendIncidence($oUser, $result->application->id_application));
+                if ($sendResult->success) {
+                    \DB::commit();   
+                    $application = $sendResult->application;
+                    $toUsers = collect($sendResult->toUsers);
+                    $oMailLog = $sendResult->oMailLog;
+                    $type_incident = $sendResult->type_incident;
+                    try {
+                        creeateSentIncidentsUtils::sendMail($application, $toUsers, 'INC', $oMailLog->id_mail_log);
+                        creeateSentIncidentsUtils::sendAppNotification($oUser, $toUsers, 'Envió solicitud de ' . mb_strtolower($type_incident, 'UTF-8'));
+                    } catch (\Throwable $th) {
+                        \Log::error($th->getMessage());
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            \DB::rollBack();
+            return json_encode([
+                    'success' => false,
+                    'message' => $th->getMessage()
+                ]);
+        }
+
+        return json_encode([
+            'success' => true,
+            'message' => 'Incidencia generada con éxito'
+        ]);
+    }
+
+    public static function createAndSendPermission($oPermission) {
+        try {
+            \DB::beginTransaction();
+            $oUser = \Auth::user();
+            $result = json_decode(creeateSentIncidentsUtils::createPermission($oPermission, $oUser));
+            if ($result->success) {
+                $sendResult = json_decode(creeateSentIncidentsUtils::sendPermission($oUser, $result->permission->id_hours_leave));
+                if ($sendResult->success) {
+                    \DB::commit();   
+                    $permission = $sendResult->permission;
+                    $toUsers = collect($sendResult->toUsers);
+                    $oMailLog = $sendResult->oMailLog;
+                    
+                    $class_permission = \DB::table('permission_cl')
+                                    ->where('id_permission_cl', $permission->cl_permission_id)
+                                    ->value('permission_cl_name');
+
+                    try {
+                        creeateSentIncidentsUtils::sendMail($permission, $toUsers, 'PER', $oMailLog->id_mail_log);
+                        creeateSentIncidentsUtils::sendAppNotification($oUser, $toUsers, 'Envió solicitud de ' . mb_strtolower($class_permission, 'UTF-8'));
+                    } catch (\Throwable $th) {
+                        \Log::error($th->getMessage());
+                    }
+                }
+            }
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            \DB::rollBack();
+            return json_encode([
+                    'success' => false,
+                    'message' => $th->getMessage()
+                ]);
+        }
+
+        return json_encode([
+            'success' => true,
+            'message' => 'Permiso generado con éxito'
+        ]);
     }
 }

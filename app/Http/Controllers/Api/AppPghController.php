@@ -704,28 +704,44 @@ class AppPghController extends Controller
     /**
      * Trabajo en proceso
      */
-    // public function createAndSendIncident(Request $request) {
-    //     try {
-    //         $oIncident = (object)$request->incident;
-    //         $lEventsType = collect(ExportUtils::getEventsType());
-    //         $event = $lEventsType->firstWhere('type_key', $oIncident->type_key);
+    public function createAndSendIncident(Request $request) {
+        try {
+            $oIncident = (object)$request->incident;
+            $lEventsType = collect(ExportUtils::getEventsType());
+            $event = $lEventsType->firstWhere('type_key', $oIncident->type_key);
 
-    //         switch ($event->type_class) {
-    //             case 'VACATION':
-    //                 ExportUtils::createAndSendVacation($oIncident);
-    //                 break;
-    //             case 'INCIDENT':
-                    
-    //                 break;
-    //             case 'PERMISSION':
-                    
-    //                 break;
+            switch ($event->type_class) {
+                case 'VACATION':
+                    $result = json_decode(ExportUtils::createAndSendVacation($oIncident));
+                    break;
+                case 'INCIDENT':
+                    $result = json_decode(ExportUtils::createAndSendIncidence($oIncident));
+                    break;
+                case 'PERMISSION':
+                    $result = json_decode(ExportUtils::createAndSendPermission($oIncident));
+                    break;
                 
-    //             default:
-    //                 break;
-    //         }
-    //     } catch (\Throwable $th) {
-    //         Log::error($th);
-    //     }
-    // }
+                default:
+                    break;
+            }
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 500);
+        }
+
+        if ($result->success) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $result->message
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => $result->message
+            ], 500);
+        }
+    }
 }
