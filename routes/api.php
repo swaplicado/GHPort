@@ -81,17 +81,20 @@ Route::get('getUsersFromGU', [
     Route::get('logout', [
         'uses' => 'api\\AuthController@logout'
     ]);
+    Route::post('createAndSendIncident', [
+        'uses' => 'api\\AppPghController@createAndSendIncident'
+    ]);
+    Route::get('employees', [
+        'uses' => 'api\\AppPghController@employees'
+    ]);
 });
 Route::post('loginBridge', 'api\\AuthController@loginBridge');
 Route::post('logoutBridge', 'api\\AuthController@logoutBridge');
 Route::get('getDirectManager/{id}', 'api\\apiGlobalUsersController@getDirectManager');
-    Route::get('employees', [
-        'uses' => 'api\\AppPghController@employees'
-    ]);
     Route::get('event-types', [
         'uses' => 'api\\AppPghController@eventsType'
     ]);
     Route::get('holidays', [
         'uses' => 'api\\AppPghController@holidays'
     ]);
-});
+
