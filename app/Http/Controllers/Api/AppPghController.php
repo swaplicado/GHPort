@@ -708,40 +708,48 @@ class AppPghController extends Controller
         try {
             $oIncident = (object)$request->incident;
             $lEventsType = collect(ExportUtils::getEventsType());
-            $event = $lEventsType->firstWhere('type_key', $oIncident->type_key);
-
+            $event = $lEventsType->firstWhere('app_id', $oIncident->incident_type_id);
+            
             switch ($event->type_class) {
                 case 'VACATION':
+                    $oIncident->incident_type_id = $event->id_incidence;
                     $result = json_decode(ExportUtils::createAndSendVacation($oIncident));
                     break;
                 case 'INCIDENT':
+                    $oIncident->incident_type_id = $event->id_incidence;
                     $result = json_decode(ExportUtils::createAndSendIncidence($oIncident));
                     break;
                 case 'PERMISSION':
+                    $oIncident->id_permission_cl = $event->id_permission_cl;
+                    $oIncident->id_permission_tp = $event->id_permission_tp;
                     $result = json_decode(ExportUtils::createAndSendPermission($oIncident));
                     break;
-                
                 default:
-                    break;
+                    throw new \Exception("Tipo de evento no soportado.");
             }
         } catch (\Throwable $th) {
             Log::error($th);
             return response()->json([
                 'status' => 'error',
+                'error' => $th->getMessage(),
                 'message' => $th->getMessage()
             ], 500);
         }
 
+        // Manejo de la respuesta según el valor de `$result->success`
         if ($result->success) {
             return response()->json([
                 'status' => 'success',
+                'data' => $result,
                 'message' => $result->message
             ], 200);
         } else {
+            // Devuelve un código HTTP 500 si `$result->success` es false
             return response()->json([
                 'status' => 'error',
+                'error' => $result,
                 'message' => $result->message
-            ], 500);
+            ], 500); // Aquí cambias el código HTTP
         }
     }
 }

@@ -17,6 +17,9 @@ use GuzzleHttp\Client;
 use App\Mail\requestIncidenceMail;
 use \App\Models\Permissions\Permission;
 use App\Mail\requestPermissionMail;
+use App\User;
+use App\Models\Adm\Holiday;
+use Carbon\CarbonPeriod;
 
 class creeateSentIncidentsUtils
 {
@@ -59,6 +62,12 @@ class creeateSentIncidentsUtils
         }
 
         $vacations = collect($user->vacation)->sortBy('year');
+
+        $oDays = json_decode(creeateSentIncidentsUtils::calclDays($user->id, $lDays, $startDate, $endDate));
+        $lDays = $oDays->lDays;
+        $takedDays = $oDays->takedDays;
+        $tot_calendar_days = $oDays->tot_calendar_days;
+        $returnDate = $oDays->return_day;
 
         $application = new Application();
         $application->folio_n = folioUtils::makeFolio(Carbon::now(), $employee_id);
@@ -452,6 +461,12 @@ class creeateSentIncidentsUtils
         $is_season_special = $typeVacation->is_season_special;
         $is_event = $typeVacation->is_event;
 
+        $oDays = json_decode(creeateSentIncidentsUtils::calclDays($oUser->id, $lDays, $start_date, $end_date));
+        $lDays = $oDays->lDays;
+        $takedDays = $oDays->takedDays;
+        $tot_calendar_days = $oDays->tot_calendar_days;
+        $return_date = $oDays->return_day;
+
         $application = new Application();
         $application->folio_n = folioUtils::makeFolio(Carbon::now(), $oUser->id, $type_incident_id);
         $application->start_date = $start_date;
@@ -578,8 +593,8 @@ class creeateSentIncidentsUtils
     public static function createPermission($requestPermission, $oUser) {
         $start_date = $requestPermission->start_date;
         $comments = $requestPermission->comments;
-        $class_id = $requestPermission->class_id;
-        $type_id = $requestPermission->type_id;
+        $class_id = $requestPermission->id_permission_cl;
+        $type_id = $requestPermission->id_permission_tp;
         $employee_id = $oUser->id;
         $hours = $requestPermission->hours;
         $minutes = $requestPermission->minutes;
@@ -670,5 +685,70 @@ class creeateSentIncidentsUtils
             ]
         );
     }
-}
 
+    public static function calclDays($user_id, $arrDays, $start_date, $end_date){
+        $oUser = User::findOrFail($user_id);
+
+        // Validar formato de las fechas
+        if (!Carbon::hasFormat($start_date, 'Y-m-d') || !Carbon::hasFormat($end_date, 'Y-m-d')) {
+            throw new \Exception("Las fechas start_date y end_date deben estar en el formato Y-m-d.");
+        }
+
+        // Asegurarse de que las fechas sean válidas
+        if (Carbon::parse($start_date)->gt(Carbon::parse($end_date))) {
+            throw new \Exception("La fecha start_date no puede ser posterior a end_date.");
+        }
+
+        // Crear el rango de fechas
+        $period = CarbonPeriod::create($start_date, $end_date);
+
+        // Verificar que el rango no esté vacío
+        if (iterator_count($period) === 0) {
+            throw new \Exception("El rango de fechas está vacío.");
+        }
+
+        // Continuar con la lógica previa
+        $lHolidays = Holiday::where('is_deleted', false)
+                            ->where('fecha', '>=', $arrDays[0])
+                            ->get();
+
+        $holidayDates = $lHolidays->pluck('fecha')->toArray();
+        $is_week = $oUser->payment_frec_id == 1;
+
+        $days = [];
+        foreach ($period as $date) {
+            $isHoliday = in_array($date->format('Y-m-d'), $holidayDates);
+            $bussinesDay = $is_week
+                ? ($date->dayOfWeek != 0 && !$isHoliday)
+                : ($date->dayOfWeek != 0 && $date->dayOfWeek != 6 && !$isHoliday);
+
+            $days[] = [
+                'date' => $date->format('Y-m-d'),
+                'bussinesDay' => $bussinesDay,
+                'taked' => in_array($date->format('Y-m-d'), $arrDays),
+                'is_optional' => !$bussinesDay,
+            ];
+        }
+
+        $takedDays = count($arrDays);
+        $total_calendar_days = iterator_count($period);
+
+        $return_day = Carbon::parse($end_date);
+        for ($i = 0; $i < 30; $i++) {
+            $return_day->addDay();
+            if ($is_week && $return_day->dayOfWeek == 0) {
+                continue;
+            }
+            if (!in_array($return_day->format('Y-m-d'), $holidayDates)) {
+                break;
+            }
+        }
+
+        return json_encode([
+            'lDays' => $days,
+            'takedDays' => $takedDays,
+            'tot_calendar_days' => $total_calendar_days,
+            'return_day' => $return_day->format('Y-m-d'),
+        ]);
+    }
+}
