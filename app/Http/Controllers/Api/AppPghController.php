@@ -361,7 +361,9 @@ class AppPghController extends Controller
             $lEventsType = collect(ExportUtils::getEventsType());
 
             foreach ($entryPermissions as $permission) {
-                $event = $lEventsType->firstWhere('id_permission', $permission->id_permission_tp);
+                $event = $lEventsType->where('id_permission_cl', $permission->cl_permission_id)
+                                    ->where('id_permission_tp', $permission->type_permission_id)
+                                    ->first();
                 $permission->type_key = $event ? $event->type_key : null;
                 $permission->type_class = $event ? $event->type_class : null;
             }
