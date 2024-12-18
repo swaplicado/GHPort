@@ -25,13 +25,17 @@ class creeateSentIncidentsUtils
 {
     public static function createVacation($requestVacation, $user, $vacations) {
         $employee_id = $user->id;
-        $startDate = $requestVacation->start_date;
-        $endDate = $requestVacation->end_date;
+        $startDate = Carbon::parse($requestVacation->startDate)->format('Y-m-d');
+        $endDate = Carbon::parse($requestVacation->endDate)->format('Y-m-d');
         $comments = $requestVacation->comments;
         $takedDays = $requestVacation->takedDays;
         $returnDate = $requestVacation->returnDate;
         $tot_calendar_days = $requestVacation->tot_calendar_days;
-        $lDays = $requestVacation->lDays;
+        
+        foreach ($requestVacation->selectedDays as $oDay) {
+            $lDays[] = Carbon::parse($oDay)->format('Y-m-d');
+        }
+
         $take_holidays = $requestVacation->take_holidays;
         $take_rest_days = $requestVacation->take_rest_days;
         $requested_client = $requestVacation->requested_client;
@@ -419,13 +423,17 @@ class creeateSentIncidentsUtils
     }
 
     public static function createIncidence($requestIncidence, $oUser) {
-        $start_date = $requestIncidence->start_date;
-        $end_date = $requestIncidence->end_date;
+        $start_date = Carbon::parse($requestIncidence->startDate)->format('Y-m-d');
+        $end_date = Carbon::parse($requestIncidence->endDate)->format('Y-m-d');
         $comments = $requestIncidence->comments;
         $takedDays = $requestIncidence->takedDays;
         $return_date = $requestIncidence->returnDate;
         $tot_calendar_days = $requestIncidence->tot_calendar_days;
-        $lDays = $requestIncidence->lDays;
+        
+        foreach ($requestIncidence->selectedDays as $oDay) {
+            $lDays[] = Carbon::parse($oDay)->format('Y-m-d');
+        }
+
         $take_holidays = false;
         $take_rest_days = false;
         $type_incident_id = $requestIncidence->incident_type_id;
@@ -591,13 +599,13 @@ class creeateSentIncidentsUtils
     }
 
     public static function createPermission($requestPermission, $oUser) {
-        $start_date = $requestPermission->start_date;
+        $start_date = Carbon::parse($requestPermission->startDate)->format('Y-m-d');
         $comments = $requestPermission->comments;
         $class_id = $requestPermission->id_permission_cl;
         $type_id = $requestPermission->id_permission_tp;
         $employee_id = $oUser->id;
-        $hours = $requestPermission->hours;
-        $minutes = $requestPermission->minutes;
+        $timeStart = $requestPermission->timeStart;
+        $timeEnd = $requestPermission->timeEnd;
         $interOut = null;
         $interReturn = null;
         $requested_client = $requestPermission->requested_client;
@@ -619,7 +627,7 @@ class creeateSentIncidentsUtils
         $permission->total_days = 1;
         $permission->tot_calendar_days = 1;
         $permission->ldays = json_encode([$start_date]);
-        $permission->minutes = permissionsUtils::getTime($hours, $minutes);
+        $permission->minutes = creeateSentIncidentsUtils::calcMinutesTime($timeStart, $timeEnd);
         $permission->user_id = $employee_id;
         $permission->request_status_id = SysConst::APPLICATION_CREADO;
         $permission->type_permission_id = $type_id;
@@ -750,5 +758,19 @@ class creeateSentIncidentsUtils
             'tot_calendar_days' => $total_calendar_days,
             'return_day' => $return_day->format('Y-m-d'),
         ]);
+    }
+
+    public static function calcMinutesTime ($timeStart, $timeEnd) {
+        if (!$timeEnd) {
+            $carbonFecha = Carbon::parse($timeStart);
+            $inicioDelDia = $carbonFecha->copy()->startOfDay();
+            $minutos = $inicioDelDia->diffInMinutes($carbonFecha);
+        } else {
+            $carbon1 = Carbon::parse($timeStart);
+            $carbon2 = Carbon::parse($timeEnd);
+            $minutos = $carbon1->diffInMinutes($carbon2);
+        }
+        
+        return $minutos;
     }
 }

@@ -710,15 +710,15 @@ class AppPghController extends Controller
         try {
             $oIncident = (object)$request->incident;
             $lEventsType = collect(ExportUtils::getEventsType());
-            $event = $lEventsType->firstWhere('app_id', $oIncident->incident_type_id);
+            $event = $lEventsType->firstWhere('app_id', $oIncident->incidentType);
             
             switch ($event->type_class) {
                 case 'VACATION':
-                    $oIncident->incident_type_id = $event->id_incidence;
+                    $oIncident->incidentType = $event->id_incidence;
                     $result = json_decode(ExportUtils::createAndSendVacation($oIncident));
                     break;
                 case 'INCIDENT':
-                    $oIncident->incident_type_id = $event->id_incidence;
+                    $oIncident->incidentType = $event->id_incidence;
                     $result = json_decode(ExportUtils::createAndSendIncidence($oIncident));
                     break;
                 case 'PERMISSION':
@@ -733,7 +733,6 @@ class AppPghController extends Controller
             Log::error($th);
             return response()->json([
                 'status' => 'error',
-                'error' => $th->getMessage(),
                 'message' => $th->getMessage()
             ], 500);
         }
@@ -742,14 +741,12 @@ class AppPghController extends Controller
         if ($result->success) {
             return response()->json([
                 'status' => 'success',
-                'data' => $result,
                 'message' => $result->message
             ], 200);
         } else {
             // Devuelve un código HTTP 500 si `$result->success` es false
             return response()->json([
                 'status' => 'error',
-                'error' => $result,
                 'message' => $result->message
             ], 500); // Aquí cambias el código HTTP
         }
