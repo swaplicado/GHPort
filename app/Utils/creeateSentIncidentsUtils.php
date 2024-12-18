@@ -615,9 +615,9 @@ class creeateSentIncidentsUtils
             throw new \Exception('Para proseguir, se requiere incluir un comentario en la solicitud', 1);
         }
 
-        if(!is_null($requestPermission->interOut) && !is_null($requestPermission->interReturn)){
-            $interOut = Carbon::createFromFormat('g:i A', $requestPermission->interOut)->format('H:i');
-            $interReturn = Carbon::createFromFormat('g:i A', $requestPermission->interReturn)->format('H:i');
+        if(!is_null($timeStart) && !is_null($timeEnd)){
+            $interOut = Carbon::parse($timeStart)->format('H:i');
+            $interReturn = Carbon::parse($timeEnd)->format('H:i');
         }
 
         $permission = new Permission();
@@ -766,9 +766,7 @@ class creeateSentIncidentsUtils
             $inicioDelDia = $carbonFecha->copy()->startOfDay();
             $minutos = $inicioDelDia->diffInMinutes($carbonFecha);
         } else {
-            $carbon1 = Carbon::parse($timeStart);
-            $carbon2 = Carbon::parse($timeEnd);
-            $minutos = $carbon1->diffInMinutes($carbon2);
+            $minutos = 0;
         }
         
         return $minutos;
