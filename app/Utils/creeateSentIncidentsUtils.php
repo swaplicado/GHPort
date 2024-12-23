@@ -25,8 +25,8 @@ class creeateSentIncidentsUtils
 {
     public static function createVacation($requestVacation, $user, $vacations) {
         $employee_id = $user->id;
-        $startDate = Carbon::parse($requestVacation->startDate)->format('Y-m-d');
-        $endDate = Carbon::parse($requestVacation->endDate)->format('Y-m-d');
+        $startDate = Carbon::createFromFormat('d/m/Y', $requestVacation->startDate)->format('Y-m-d');
+        $endDate = Carbon::createFromFormat('d/m/Y', $requestVacation->endDate)->format('Y-m-d');
         $comments = $requestVacation->comments;
         $takedDays = $requestVacation->takedDays;
         $returnDate = $requestVacation->returnDate;
@@ -423,8 +423,8 @@ class creeateSentIncidentsUtils
     }
 
     public static function createIncidence($requestIncidence, $oUser) {
-        $start_date = Carbon::parse($requestIncidence->startDate)->format('Y-m-d');
-        $end_date = Carbon::parse($requestIncidence->endDate)->format('Y-m-d');
+        $start_date = Carbon::createFromFormat('d/m/Y', $requestIncidence->startDate)->format('Y-m-d');
+        $end_date = Carbon::createFromFormat('d/m/Y', $requestIncidence->endDate)->format('Y-m-d');
         $comments = $requestIncidence->comments;
         $takedDays = $requestIncidence->takedDays;
         $return_date = $requestIncidence->returnDate;
