@@ -599,7 +599,7 @@ class creeateSentIncidentsUtils
     }
 
     public static function createPermission($requestPermission, $oUser) {
-        $start_date = Carbon::parse($requestPermission->startDate)->format('Y-m-d');
+        $start_date = Carbon::createFromFormat('d/m/Y', $requestPermission->startDate)->format('Y-m-d');
         $comments = $requestPermission->comments;
         $class_id = $requestPermission->id_permission_cl;
         $type_id = $requestPermission->id_permission_tp;
@@ -762,9 +762,10 @@ class creeateSentIncidentsUtils
 
     public static function calcMinutesTime ($timeStart, $timeEnd) {
         if (!$timeEnd) {
-            $carbonFecha = Carbon::parse($timeStart);
-            $inicioDelDia = $carbonFecha->copy()->startOfDay();
-            $minutos = $inicioDelDia->diffInMinutes($carbonFecha);
+            $hora1 = Carbon::createFromFormat('H:i', '00:00');
+            $hora2 = Carbon::createFromFormat('H:i', $timeStart);
+
+            $minutos = $hora1->diffInMinutes($hora2);
         } else {
             $minutos = 0;
         }
