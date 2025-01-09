@@ -463,6 +463,12 @@ class ExportUtils {
                             )
                             ->orderBy('fecha', 'asc')
                             ->get();
+
+        foreach ($holidays as $holiday) {
+            $holiday->start_date = $holiday->fecha;
+            $holiday->end_date = $holiday->fecha;
+            $holiday->type_key = 'HOL';
+        }
         return $holidays;
     }
 
