@@ -632,6 +632,7 @@ class AppPghController extends Controller
                 $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($employee->id);
                 $employee->tot_vacation_remaining = $oUser->tot_vacation_remaining;
                 $employee->mySelf = 0;
+                $employee->rol_id = 0;
             }
 
             if ($config->appMobileWithMySelf) {
@@ -649,7 +650,8 @@ class AppPghController extends Controller
                         "updated_at" => $oUser->updated_at,
                         "created_at" => $oUser->created_at,
                         "tot_vacation_remaining" => $oUser->tot_vacation_remaining,
-                        "mySelf" => 1
+                        "mySelf" => 1,
+                        "rol_id" => $oUser->rol_id
                     ]
                 );
             }
