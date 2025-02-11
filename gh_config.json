@@ -1,6 +1,6 @@
 {
-    "lastSyncDateTime": "2024-03-19 08:48:24",
-    "syncExecution": true,
+    "lastSyncDateTime": "2025-02-11 10:08:02",
+    "syncExecution": false,
     "pastSyncDays": 1,
     "expiration_vacations": {
         "years": 100,
@@ -390,13 +390,14 @@
         "paragraph11": "con un ingreso mensual bruto de $",
         "paragraph12": "Se extiende la presente a solicitud de la interesada, para los fines y usos legales que juzgue convenientes.",
         "paragraph13": "Atentamente:",
-        "paragraph14": "L.A.E."
+        "paragraph14": "L.A.E.",
+        "paragraph15": "laboro en la empresa"
     },
     "fillGlobalUsersFromSystemId": 5,
     "getUsersToFillGlobalUsersFromConnection": "mysql",
     "univUser": {
         "user": "admin",
-        "password": "Super2023!"
+        "password": "115717"
     },
     "fieldToFindUserInUniv": {
         "username": false,
@@ -427,5 +428,252 @@
         "external_id": false,
         "employee_num": true
     },
-    "urlUniv": "192.168.1.251/univ/public/api/"
+    "urlUniv": "192.168.1.251/univ/public/api/",
+    "closing_dates_type": {
+        "DP": 1,
+        "CV": 2
+    },
+    "curriculumOptions": {
+        "educationLevel": [
+            "Primaria",
+            "Secundaria",
+            "Preparatoria o carrera técnica",
+            "Licenciatura",
+            "Maestría",
+            "Doctorado",
+            "Postdoctorado"
+        ],
+        "documentObtained": [
+            "Certificado",
+            "Carta de pasante",
+            "Título"
+        ],
+        "language": [
+            "Inglés",
+            "Francés",
+            "Portugués",
+            "Italiano",
+            "Alemán",
+            "Japonés",
+            "Chino mandarín",
+            "Chino",
+            "Coreano",
+            "Ruso",
+            "Hindi",
+            "Bengalí"
+        ],
+        "languageLevel": [
+            "Principiante",
+            "Intermedio",
+            "Avanzado",
+            "Experto"
+        ],
+        "aspectType": [
+            "Certificación",
+            "Curso",
+            "Diplomado",
+            "Especialidad",
+            "Interés",
+            "Logro",
+            "Premio",
+            "Publicación",
+            "Reconocimiento",
+            "Otro"
+        ]
+    },
+    "maxWorkExperience": 5,
+    "maxEducation": 5,
+    "maxSkills": 5,
+    "maxLanguage": 5,
+    "maxAspect": 5,
+    "minWorkExperience": 0,
+    "minEducation": 1,
+    "minSkills": 0,
+    "minLanguage": 0,
+    "minAspect": 0,
+    "eventsType": [
+        {
+            "id_incidence": 1,
+            "app_id": 1,
+            "type_key": "VAC",
+            "type_name": "VACACIONES",
+            "type_class": "VACATION",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 4,
+            "app_id": 2,
+            "type_key": "SGO",
+            "type_name": "PERMISO SIN GOCE",
+            "type_class": "INCIDENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 5,
+            "app_id": 3,
+            "type_key": "GOC",
+            "type_name": "PERMISO CON GOCE (sindicato)",
+            "type_class": "INCIDENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 6,
+            "app_id": 4,
+            "type_key": "PPA",
+            "type_name": "PERMISO PATERNIDAD",
+            "type_class": "INCIDENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 8,
+            "app_id": 5,
+            "type_key": "TFP",
+            "type_name": "TRABAJO FUERA DE OFICINA/PLANTA",
+            "type_class": "INCIDENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 9,
+            "app_id": 6,
+            "type_key": "CUM",
+            "type_name": "CUMPLEAÑOS",
+            "type_class": "INCIDENT",
+            "single_date": true,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 10,
+            "app_id": 7,
+            "type_key": "OFF",
+            "type_name": "HOME OFFICE",
+            "type_class": "INCIDENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 12,
+            "app_id": 8,
+            "type_key": "FAL",
+            "type_name": "PERMISO FALLECIMIENTO",
+            "type_class": "INCIDENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_incidence": 13,
+            "app_id": 9,
+            "type_key": "ELE",
+            "type_name": "ELECCION 2024",
+            "type_class": "INCIDENT",
+            "single_date": true,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_permission_tp": 1,
+            "id_permission_cl": 1,
+            "app_id": 10,
+            "type_key": "PE",
+            "type_name": "PERMISO ENTRADA PERSONAL",
+            "type_class": "PERMISSION",
+            "single_date": true,
+            "has_time": true,
+            "single_time": true
+        },
+        {
+            "id_permission_tp": 2,
+            "id_permission_cl": 1,
+            "app_id": 11,
+            "type_key": "PS",
+            "type_name": "PERMISO SALIDA PERSONAL",
+            "type_class": "PERMISSION",
+            "single_date": true,
+            "has_time": true,
+            "single_time": true
+        },
+        {
+            "id_permission_tp": 3,
+            "id_permission_cl": 1,
+            "app_id": 12,
+            "type_key": "PI",
+            "type_name": "PERMISO INTERMEDIO PERSONAL",
+            "type_class": "PERMISSION",
+            "single_date": true,
+            "has_time": true,
+            "single_time": false
+        },
+        {
+            "id": 0,
+            "app_id": 13,
+            "type_key": "HOL",
+            "type_name": "HOLIDAYS",
+            "type_class": "HOLIDAY",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id": 0,
+            "app_id": 14,
+            "type_key": "EVE",
+            "type_name": "EVENTS",
+            "type_class": "EVENT",
+            "single_date": false,
+            "has_time": false,
+            "single_time": false
+        },
+        {
+            "id_permission_tp": 1,
+            "id_permission_cl": 2,
+            "app_id": 15,
+            "type_key": "PEL",
+            "type_name": "PERMISO ENTRADA LABORAL",
+            "type_class": "PERMISSION",
+            "single_date": true,
+            "has_time": true,
+            "single_time": true
+        },
+        {
+            "id_permission_tp": 2,
+            "id_permission_cl": 2,
+            "app_id": 16,
+            "type_key": "PSL",
+            "type_name": "PERMISO SALIDA LABORAL",
+            "type_class": "PERMISSION",
+            "single_date": true,
+            "has_time": true,
+            "single_time": true
+        },
+        {
+            "id_permission_tp": 3,
+            "id_permission_cl": 2,
+            "app_id": 17,
+            "type_key": "PIL",
+            "type_name": "PERMISO INTERMEDIO LABORAL",
+            "type_class": "PERMISSION",
+            "single_date": true,
+            "has_time": true,
+            "single_time": false
+        }
+    ],
+    "apiKeyPghMobile": "AIzaSyB4ey3GXz5aErUAZEFSzmKJxwoUbveqSDw",
+    "urlNotificationAppMobile": "https://api-pgh-uscentral1-c6h8v2v3.uc.gateway.dev/v1/notification",
+    "authorized_client_web": 1,
+    "authorized_client_app": 2,
+    "requested_client_web": 1,
+    "requested_client_app": 2,
+    "appMobileWithMySelf": 1
 }

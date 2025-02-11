@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
 class permissionsUtils {
     public static function getMyEmployeeslPermissions($cl = 0){
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
-        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
         $lPermissions = [];
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         foreach($lEmployees as $emp){
@@ -23,7 +23,7 @@ class permissionsUtils {
     }
 
     public static function getMyManagerlPermissions($org_chart_job_id, $cl){
-        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
         $lPermissions = [];
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         foreach($lEmployees as $emp){

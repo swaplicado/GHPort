@@ -225,6 +225,9 @@ class Menu {
             array_push($configuracion,['route' => route('vacationPlans'), 'icon' => 'bx bxs-notepad bx-xs', 'name' => 'Plan vacaciones']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($configuracion,['route' => route('closing_dates_index'), 'icon' => 'bx bx-calendar-minus bx-xs', 'name' => 'Abrir datos personales']);    
+        }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('specialSeasons'), 'icon' => 'bx bx-calendar-exclamation bx-xs', 'name' => 'Temporadas especiales']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){

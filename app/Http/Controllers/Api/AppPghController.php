@@ -623,6 +623,8 @@ class AppPghController extends Controller
 
     public function employees(Request $request) {
         try {
+            // Log::error('el request: ');
+            // Log::error($request);
             $config = \App\Utils\Configuration::getConfigurations();
             $id_user_boss = $request->id_user_boss;
             $last_sync_date = $request->last_sync_date;
@@ -656,12 +658,15 @@ class AppPghController extends Controller
                 );
             }
 
+            // Log::error($employees);
+
             return response()->json([
                 'status' => 'success',
                 'data' => $employees
             ]);
 
         } catch (\Exception $e) {
+            Log::error($e);
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage()

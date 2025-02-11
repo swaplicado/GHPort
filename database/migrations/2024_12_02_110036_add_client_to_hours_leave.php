@@ -14,8 +14,8 @@ class AddClientToHoursLeave extends Migration
     public function up()
     {
         Schema::table('hours_leave', function (Blueprint $table) {
-            $table->integer('requested_client')->nullable()->after('cl_permission_id');
-            $table->integer('authorized_client')->nullable()->after('requested_client');
+            $table->integer('requested_client')->default(0)->nullable()->after('cl_permission_id');
+            $table->integer('authorized_client')->default(0)->nullable()->after('requested_client');
         });
     }
 

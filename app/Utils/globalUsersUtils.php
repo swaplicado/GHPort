@@ -209,6 +209,7 @@ class GlobalUsersUtils {
         $pendingUser = \DB::connection('mysqlGlobalUsers')
                 ->table('global_users')
                 ->whereNotIn('id_global_user',$arrUsersCompany)
+                ->orderBy('full_name')
                 ->get();
         
         return $pendingUser;

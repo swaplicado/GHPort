@@ -114,6 +114,11 @@ class requestPermissionController extends Controller
         $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
 
         $authorized_client = $config->authorized_client_web;
+        if($clase_permiso == SysConst::PERMISO_LABORAL){
+            $permission_time = $config->permission_time_work;
+        }else{
+            $permission_time = $config->permission_time;
+        }
 
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
@@ -125,7 +130,7 @@ class requestPermissionController extends Controller
                                             ->with('oPermission', $oPermission)
                                             ->with('oUser', $oUser)
                                             ->with('lEmployees', $lEmployees)
-                                            ->with('permission_time', $config->permission_time)
+                                            ->with('permission_time', $permission_time)
                                             ->with('myManagers', $myManagers)
                                             ->with('clase_permiso', $clase_permiso)
                                             ->with('initialCalendarDate', $initialCalendarDate)
@@ -223,6 +228,11 @@ class requestPermissionController extends Controller
         $myManagers = usersInSystemUtils::FilterUsersInSystem($myManagers, 'id');
 
         $authorized_client = $config->authorized_client_web;
+        if($clase_permiso == SysConst::PERMISO_LABORAL){
+            $permission_time = $config->permission_time_work;
+        }else{
+            $permission_time = $config->permission_time;
+        }
 
         return view('permissions.requestPermissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
@@ -234,7 +244,7 @@ class requestPermissionController extends Controller
                                             ->with('oPermission', $oPermission)
                                             ->with('oUser', $oUser)
                                             ->with('lEmployees', $lEmployees)
-                                            ->with('permission_time', $config->permission_time)
+                                            ->with('permission_time', $permission_time)
                                             ->with('myManagers', $myManagers)
                                             ->with('clase_permiso', $clase_permiso)
                                             ->with('initialCalendarDate', $initialCalendarDate)
@@ -385,6 +395,7 @@ class requestPermissionController extends Controller
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();
+                \Log::error($th);
                 return null; 
             }
 
@@ -473,6 +484,7 @@ class requestPermissionController extends Controller
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();
+                \Log::error($th);
                 return null; 
             }
 
@@ -631,6 +643,7 @@ class requestPermissionController extends Controller
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();   
+                \Log::error($th);
                 return null; 
             }
 

@@ -250,7 +250,8 @@ class UsersController extends Controller
         $oUser->is_unionized = 0;
         $oUser->company_id = $comp;
         $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
-        $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
+        // $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
+        $oUser->org_chart_job_id = 1;
         $oUser->vacation_plan_id = 7;
         $oUser->payment_frec_id = $jUser->way_pay;
         $oUser->is_active = $jUser->is_active;

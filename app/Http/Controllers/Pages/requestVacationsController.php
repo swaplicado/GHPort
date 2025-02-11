@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\cancelIncidenceMail;
 use App\User;
 use App\Utils\CapLinkUtils;
+use Error;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -450,6 +451,7 @@ class requestVacationsController extends Controller
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();   
+                \Log::error($th);
                 return null; 
             }
 
@@ -562,6 +564,7 @@ class requestVacationsController extends Controller
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();   
+                \Log::error($th);
                 return null; 
             }
 
@@ -682,7 +685,8 @@ class requestVacationsController extends Controller
                                                 );
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
-                $mailLog->update();   
+                $mailLog->update();
+                \Log::error($th);
                 return null; 
             }
 
@@ -1091,6 +1095,7 @@ class requestVacationsController extends Controller
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();   
+                \Log::error($th);
                 return null; 
             }
 

@@ -42,6 +42,7 @@ class SysConst {
         'HOMEOFFICE' => 10,
         'PERMISO_HORAS' => 11,
         'PERMISO_FALLECIMIENTO' => 12,
+        'ELECCION_2024' => 13
     ];
 
     public const lTypesCodes = [
@@ -57,6 +58,7 @@ class SysConst {
         'HOMEOFFICE' => 'OFF',
         'PERMISO_HORAS' => 'HOR',
         'PERMISO_FALLECIMIENTO' => 'FAL',
+        'ELECCION_2024' => 'ELE'
     ];
 
     /**

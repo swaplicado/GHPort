@@ -30,7 +30,7 @@ class updateGlobalUserMail extends Mailable
     public function build()
     {
         $email = "Portalgh@aeth.mx";
-        $subject = "Portalgh - Actualizacion de usuario";
+        $subject = "[Portal GH] Actualizacion de usuario";
         return $this->from($email)
                     ->subject($subject)
                     ->view('mails.updateGlobalUserMail')

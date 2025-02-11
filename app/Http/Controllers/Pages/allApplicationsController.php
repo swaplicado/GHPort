@@ -97,7 +97,7 @@ class allApplicationsController extends Controller
                                 'time' => '',
                                 'status' => $incidence->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($incidence->date_send_n, 'DDD D-M-Y'),
-                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor_id' => $incidence->user_apr_rej_id,
                                 'revisor' => $revisor,
                             ];
         }
@@ -125,7 +125,7 @@ class allApplicationsController extends Controller
                                 'time' => $permission->time,
                                 'status' => $permission->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($permission->date_send_n, 'DDD D-M-Y'),
-                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor_id' => $permission->user_apr_rej_id,
                                 'revisor' => $revisor,
                             ];
         }
@@ -153,7 +153,7 @@ class allApplicationsController extends Controller
                                 'time' => $permission->time,
                                 'status' => $permission->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($permission->date_send_n, 'DDD D-M-Y'),
-                                'revisor_id' => $vacation->user_apr_rej_id,
+                                'revisor_id' => $permission->user_apr_rej_id,
                                 'revisor' => $revisor,
                             ];
         }

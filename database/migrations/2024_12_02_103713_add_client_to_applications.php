@@ -14,8 +14,8 @@ class AddClientToApplications extends Migration
     public function up()
     {
         Schema::table('applications', function (Blueprint $table) {
-            $table->integer('requested_client')->nullable()->after('type_incident_id');
-            $table->integer('authorized_client')->nullable()->after('requested_client');
+            $table->integer('requested_client')->default(0)->nullable()->after('type_incident_id');
+            $table->integer('authorized_client')->default(0)->nullable()->after('requested_client');
         });
     }
 

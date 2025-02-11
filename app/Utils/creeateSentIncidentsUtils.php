@@ -28,16 +28,16 @@ class creeateSentIncidentsUtils
         $startDate = Carbon::createFromFormat('d/m/Y', $requestVacation->startDate)->format('Y-m-d');
         $endDate = Carbon::createFromFormat('d/m/Y', $requestVacation->endDate)->format('Y-m-d');
         $comments = $requestVacation->comments;
-        $takedDays = $requestVacation->takedDays;
-        $returnDate = $requestVacation->returnDate;
-        $tot_calendar_days = $requestVacation->tot_calendar_days;
+        // $takedDays = $requestVacation->takedDays;
+        // $returnDate = $requestVacation->returnDate;
+        // $tot_calendar_days = $requestVacation->tot_calendar_days;
         
         foreach ($requestVacation->selectedDays as $oDay) {
             $lDays[] = Carbon::parse($oDay)->format('Y-m-d');
         }
 
-        $take_holidays = $requestVacation->take_holidays;
-        $take_rest_days = $requestVacation->take_rest_days;
+        $take_holidays = 0;
+        $take_rest_days = 0;
         $requested_client = $requestVacation->requested_client;
 
         $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
@@ -55,9 +55,9 @@ class creeateSentIncidentsUtils
                 throw new \Exception('No es posible generar una nueva solicitud de vacaciones si existen solicitudes pendientes de envío. Por favor, envíe o elimine las solicitudes pendientes antes de continuar', 1);
             }
         }
-        if ($user->tot_vacation_remaining < $takedDays) {
-            throw new \Exception('Actualmente no tienes los días de vacaciones solicitados. Por favor, ingresa un número menor de días de vacaciones para continuar, o si necesitas aclaraciones, consulta con el área de gestión humana', 1);   
-        }
+        // if ($user->tot_vacation_remaining < $takedDays) {
+        //     throw new \Exception('Actualmente no tienes los días de vacaciones solicitados. Por favor, ingresa un número menor de días de vacaciones para continuar, o si necesitas aclaraciones, consulta con el área de gestión humana', 1);   
+        // }
 
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
         
@@ -426,9 +426,9 @@ class creeateSentIncidentsUtils
         $start_date = Carbon::createFromFormat('d/m/Y', $requestIncidence->startDate)->format('Y-m-d');
         $end_date = Carbon::createFromFormat('d/m/Y', $requestIncidence->endDate)->format('Y-m-d');
         $comments = $requestIncidence->comments;
-        $takedDays = $requestIncidence->takedDays;
-        $return_date = $requestIncidence->returnDate;
-        $tot_calendar_days = $requestIncidence->tot_calendar_days;
+        $takedDays = 0;
+        $return_date = '';
+        $tot_calendar_days = 0;
         
         foreach ($requestIncidence->selectedDays as $oDay) {
             $lDays[] = Carbon::parse($oDay)->format('Y-m-d');
@@ -436,7 +436,7 @@ class creeateSentIncidentsUtils
 
         $take_holidays = false;
         $take_rest_days = false;
-        $type_incident_id = $requestIncidence->incident_type_id;
+        $type_incident_id = $requestIncidence->incidentType;
         $requested_client = $requestIncidence->requested_client;
 
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);

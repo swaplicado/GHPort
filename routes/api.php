@@ -88,13 +88,12 @@ Route::get('getUsersFromGU', [
         'uses' => 'api\\AppPghController@employees'
     ]);
 });
+Route::get('event-types', [
+    'uses' => 'api\\AppPghController@eventsType'
+]);
+Route::get('holidays', [
+    'uses' => 'api\\AppPghController@holidays'
+]);
 Route::post('loginBridge', 'api\\AuthController@loginBridge');
 Route::post('logoutBridge', 'api\\AuthController@logoutBridge');
 Route::get('getDirectManager/{id}', 'api\\apiGlobalUsersController@getDirectManager');
-    Route::get('event-types', [
-        'uses' => 'api\\AppPghController@eventsType'
-    ]);
-    Route::get('holidays', [
-        'uses' => 'api\\AppPghController@holidays'
-    ]);
-

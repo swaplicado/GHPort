@@ -29,6 +29,7 @@ class SyncController extends Controller
     public static function toSynchronize($withRedirect = true)
     {
         try {
+            $synchronized = false;
             $config = \App\Utils\Configuration::getConfigurations();
             if(!$config->syncExecution){
                 \App\Utils\Configuration::setConfiguration('syncExecution', true);
@@ -38,8 +39,7 @@ class SyncController extends Controller
         
                 if($synchronized){
                      $newDate = Carbon::now();
-                     $newDate->subMinutes(10);
-            
+                     $newDate->subHours(2);
                      \App\Utils\Configuration::setConfiguration('lastSyncDateTime', $newDate->toDateTimeString());
                 }
             }
@@ -79,6 +79,13 @@ class SyncController extends Controller
                 return false;
             }
             $jobCont->insertJobVsOrgJob();
+
+            $holidaysCont = new holidaysController();
+            $resHol = $holidaysCont->saveHolidaysFromJSON($data->holidays);
+
+            if(!$resHol){
+                return false;
+            }
             
             $usrCont = new UsersController();
             $resUs = $usrCont->saveUsersFromJSON($data->employees);
@@ -87,13 +94,6 @@ class SyncController extends Controller
             }
 
             // $usrCont->dumySetUserAdmissionLog();
-
-            $holidaysCont = new holidaysController();
-            $resHol = $holidaysCont->saveHolidaysFromJSON($data->holidays);
-
-            if(!$resHol){
-                return false;
-            }
 
             $lCompany = \DB::table('ext_company')
                             ->select(
@@ -509,9 +509,10 @@ class SyncController extends Controller
                         ->join('ext_jobs as j', 'u.job_id', '=', 'j.id_job')
                         ->join('ext_departments as d', 'd.id_department', '=', 'j.department_id')
                         ->join('globalusers.users_vs_systems', 'u.id', '=', 'globalusers.users_vs_systems.user_system_id')
-                        ->where('u.is_active', 1)
+                        // ->where('u.is_active', 1)
                         ->where('u.is_delete', 0)
                         ->where('globalusers.users_vs_systems.system_id', 5)
+                        ->where('u.updated_at', '>=', $fromDateTime)
                         ->select(
                             'u.username',
                             'u.institutional_mail as email',

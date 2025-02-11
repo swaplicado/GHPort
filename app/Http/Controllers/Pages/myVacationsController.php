@@ -555,6 +555,7 @@ class myVacationsController extends Controller
                 } catch (\Throwable $th) {
                     $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                     $mailLog->update();   
+                    \Log::error($th);
                     return null; 
                 }
 

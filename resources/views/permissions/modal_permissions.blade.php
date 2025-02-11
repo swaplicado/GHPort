@@ -104,7 +104,7 @@
                                     <label for=""><b>Horas:</b></label>
                                 </div>
                                 <div class="col-md-1">
-                                    <input type="number" class="form-input" id="horas" min="0" :max="max_hours" step="1" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                    <input type="number" class="form-input" id="horas" min="0" max="24" step="1" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
                                 </div>
                                 <div class="col-md-1">
                                     <label for=""><b>Minutos:</b></label>
@@ -138,7 +138,7 @@
                                     <label for=""><b>Horas:</b></label>
                                 </div>
                                 <div class="col-md-1">
-                                    <input type="number" class="form-input" id="horas" min="0" :max="max_hours" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
+                                    <input type="number" class="form-input" id="horas" min="0" max="24" v-model="hours" v-on:focus="focusHours();" v-on:blur="formatValueHours();"/>
                                 </div>
                                 <div class="col-md-1">
                                     <label for=""><b>Minutos:</b></label>
