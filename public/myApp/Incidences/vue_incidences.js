@@ -152,7 +152,7 @@ var app = new Vue({
     updated() {
         this.$nextTick(function () {
             if(typeof self.$refs.table_Incidences != 'undefined' && self.needRenderTableIncidences){
-                this.createTable('table_Incidences', [0,2,3,4,7,16,17,19], [1,5,6]);
+                this.createTable('table_Incidences', [0,2,3,4,7,16,17,19], [1,5,6,20]);
                 let dataClassFilter = [{id: '0', text: 'Todos'}];
                 for (let i = 0; i < this.lClass.length; i++) {
                     dataClassFilter.push({id: this.lClass[i].id_incidence_cl, text: this.lClass[i].incidence_cl_name });

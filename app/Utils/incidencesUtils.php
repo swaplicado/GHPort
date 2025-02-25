@@ -169,9 +169,14 @@ class incidencesUtils {
         foreach($lEmployees as $emp){
             array_push($lIncidences, incidencesUtils::getUserIncidences($emp->id));
         }
-
+        
         $lIncidences = Arr::collapse($lIncidences);
-
+        foreach ($lIncidences as &$info) {
+            // Verificar si el org_chart_job_id está en el array de directEmployeeIds
+            
+                $info->is_direct = 0; // Si no está, no es empleado directo
+        }
+        \Log::info($lIncidences);
         return $lIncidences;
     }
 

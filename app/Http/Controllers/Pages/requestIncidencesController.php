@@ -183,6 +183,11 @@ class requestIncidencesController extends Controller
             $lTemp_special = EmployeeVacationUtils::getEmployeeTempSpecial($oUser->org_chart_job_id, $oUser->id, $oUser->job_id);
             $lEvents = EmployeeVacationUtils::getEmployeeEvents($request->user_id);
             $lIncidences = incidencesUtils::getUserIncidences($oUser->id);
+            foreach ($lIncidences as &$info) {
+                // Verificar si el org_chart_job_id está en el array de directEmployeeIds
+                
+                    $info->is_direct = 0; // Si no está, no es empleado directo
+            }
         } catch (\Throwable $th) {
             \Log::error($th);
             return json_encode(['sucess' => false, 'message' => 'En este momento, no es posible obtener los datos del colaborador debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
