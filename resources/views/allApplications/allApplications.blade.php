@@ -42,7 +42,8 @@
                 'time': 12,
                 'status': 13,
                 'date_send_n': 14,
-                'revisor': 15
+                'revisor': 15,
+                'is_direct': 16
             };
         }
         var oServerData = new GlobalData();
@@ -125,6 +126,7 @@
                     <th>Estatus</th>
                     <th>Fecha envío</th>
                     <th>Revisor</th>
+                    <th>is_direct</th>
                 </thead>
                 <tbody>
                     <tr v-for="application in lApplications">
@@ -144,6 +146,7 @@
                         <td>@{{application.status}}</td>
                         <td style="white-space: nowrap;">@{{application.date_send_n}}</td>
                         <td>@{{application.revisor}}</td>
+                        <td>@{{application.is_direct}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -163,11 +166,22 @@
                 let employee = parseInt( $('#filtro_employee').val(), 10 );
 
                 if(settings.nTable.id == 'applications_table'){
-                    return (
-                        (clase != 0 ? clase == data[oServerData.indexesApplications.request_class_id] : true) &&
-                        (employee != 0 ? employee == data[oServerData.indexesApplications.employee_id] : true) &&
-                        (status == data[oServerData.indexesApplications.request_status_id])
-                    )
+                    let requestClassId = parseInt(data[oServerData.indexesApplications.request_class_id], 10) || 0;
+                    let employeeId = parseInt(data[oServerData.indexesApplications.employee_id], 10) || 0;
+                    let isDirect = parseInt(data[oServerData.indexesApplications.is_direct], 10) || 0;
+                    let requestStatusId = parseInt(data[oServerData.indexesApplications.request_status_id], 10) || 0;
+
+                    let claseMatch = (clase !== 0 ? clase === requestClassId : true);
+                    let employeeMatch = (employee === 0 
+                        ? isDirect == 1 
+                        : (employee !== -1 
+                            ? employee === employeeId 
+                            : true));
+                    let statusMatch = (status === requestStatusId);
+
+                    let resultado = claseMatch && employeeMatch && statusMatch;
+
+                    return resultado;
                 }
             }
         );
@@ -189,7 +203,7 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'applications_table',
                                         'colTargets' => [0,4,5],
-                                        'colTargetsSercheable' => [1,2,3,7],
+                                        'colTargetsSercheable' => [1,2,3,7,16],
                                         'colTargetsNoOrder' => [],
                                         'noDom' => true,
                                         'select' => true,

@@ -25,19 +25,30 @@ class allApplicationsController extends Controller
 {
     public function index(requestVacationsController $requestVacationsController){
         $year = Carbon::now()->year;
-        $dataEmployees = json_decode(applicationsUtils::getEmployeesToRevise());
-        $dataVacations = json_decode(applicationsUtils::getVacations($year));
-        $dataIncidences = json_decode(applicationsUtils::getIncidences($year));
-        $dataPermissionsPersonal = json_decode(applicationsUtils::getPermissionsPersonal($year));
-        $dataPermissionsLaboral = json_decode(applicationsUtils::getPermissionsLaboral($year));
+        $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
+        $arrOrgJobsAux = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
+        $dataEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        $dataDirect = EmployeeVacationUtils::getlEmployees($arrOrgJobsAux);
+        $dataDirect = json_decode($dataDirect);
+        $ids = array_map(fn($e) => $e->id, $dataDirect);
+        \Log::info($ids);
+        //$dataEmployees = json_decode(applicationsUtils::getEmployeesToRevise());
+        $dataVacations = json_decode(applicationsUtils::getVacations($year,false,$dataEmployees));
+        $dataIncidences = json_decode(applicationsUtils::getIncidences($year,false,$dataEmployees));
+        $dataPermissionsPersonal = json_decode(applicationsUtils::getPermissionsPersonal($year,false,$dataEmployees));
+        $dataPermissionsLaboral = json_decode(applicationsUtils::getPermissionsLaboral($year,false,$dataEmployees));
 
-        $dataEmployees = collect($dataEmployees->lEmployees);
         $dataEmployees = $dataEmployees->sortBy('full_name');
 
         $lEmployees = [];
         $lEmployees[] = [
             'id' => 0,
-            'text' => 'Todos'
+            'text' => 'Mis colaboradores directos'
+        ];
+        $lEmployees[] = [
+            'id' => -1,
+            'text' => 'Todos mis colaboradores'
         ];
         foreach($dataEmployees as $employee){
             $lEmployees[] = [
@@ -70,7 +81,8 @@ class allApplicationsController extends Controller
                                 'status' => $vacation->applications_st_name,
                                 'date_send_n' => dateUtils::formatDate($vacation->date_send_n, 'DDD D-M-Y'),
                                 'revisor_id' => $vacation->user_apr_rej_id,
-                                'revisor' => $revisor
+                                'revisor' => $revisor,
+                                'is_direct' => in_array($vacation->user_id,$ids) ? 1 : 0 
                             ];
         }
 
@@ -99,6 +111,7 @@ class allApplicationsController extends Controller
                                 'date_send_n' => dateUtils::formatDate($incidence->date_send_n, 'DDD D-M-Y'),
                                 'revisor_id' => $incidence->user_apr_rej_id,
                                 'revisor' => $revisor,
+                                'is_direct' => in_array($incidence->user_id,$ids) ? 1 : 0 
                             ];
         }
 
@@ -127,6 +140,7 @@ class allApplicationsController extends Controller
                                 'date_send_n' => dateUtils::formatDate($permission->date_send_n, 'DDD D-M-Y'),
                                 'revisor_id' => $permission->user_apr_rej_id,
                                 'revisor' => $revisor,
+                                'is_direct' => in_array($permission->user_id,$ids) ? 1 : 0
                             ];
         }
 
@@ -155,6 +169,7 @@ class allApplicationsController extends Controller
                                 'date_send_n' => dateUtils::formatDate($permission->date_send_n, 'DDD D-M-Y'),
                                 'revisor_id' => $permission->user_apr_rej_id,
                                 'revisor' => $revisor,
+                                'is_direct' => in_array($permission->user_id,$ids) ? 1 : 0
                             ];
         }
 
