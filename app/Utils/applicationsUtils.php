@@ -75,19 +75,23 @@ class applicationsUtils {
     /**
      * Metodo para obtener un array con las vacaciones de los empleados a revisar
      */
-    public static function getVacations($year, $allEmployees = false){
+    public static function getVacations($year, $allEmployees = false, $dataEmployees = false){
         try {
-            if(!$allEmployees){
-                $data = json_decode(self::getEmployeesToRevise());
+            if($dataEmployees == false){
+                if(!$allEmployees){
+                    $data = json_decode(self::getEmployeesToRevise());
+                }else{
+                    $data = json_decode(self::getAllEmployees());
+                }
+        
+                if(!$data->success){
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+        
+                $lEmployees = $data->lEmployees;
             }else{
-                $data = json_decode(self::getAllEmployees());
+                $lEmployees = $dataEmployees;
             }
-    
-            if(!$data->success){
-                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            }
-    
-            $lEmployees = $data->lEmployees;
             $lVacations = [];
             foreach($lEmployees as $emp){
                 $applications_enviado = EmployeeVacationUtils::getApplications(
@@ -153,19 +157,23 @@ class applicationsUtils {
     /**
      * Metodo para obtener las incidencias de los empleados a revisar
      */
-    public static function getIncidences($year, $allEmployees = false){
+    public static function getIncidences($year, $allEmployees = false, $dataEmployees = false){
         try {
-            if(!$allEmployees){
-                $data = json_decode(self::getEmployeesToRevise());
+            if($dataEmployees == false){
+                if(!$allEmployees){
+                    $data = json_decode(self::getEmployeesToRevise());
+                }else{
+                    $data = json_decode(self::getAllEmployees());
+                }
+        
+                if(!$data->success){
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+        
+                $lEmployees = $data->lEmployees;
             }else{
-                $data = json_decode(self::getAllEmployees());
+                $lEmployees = $dataEmployees;
             }
-
-            if(!$data->success){
-                return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
-            }
-
-            $lEmployees = $data->lEmployees;
             $lIncidences = [];
             foreach($lEmployees as $emp){
                 $arrIncidencies = incidencesUtils::getUserIncidences($emp->id);
@@ -182,15 +190,23 @@ class applicationsUtils {
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
 
-    public static function getPermissionsPersonal($year, $allEmployees = false){
+    public static function getPermissionsPersonal($year, $allEmployees = false, $dataEmployees = false){
         try {
-            if(!$allEmployees){
-                $data = json_decode(self::getEmployeesToRevise());
+            if($dataEmployees == false){
+                if(!$allEmployees){
+                    $data = json_decode(self::getEmployeesToRevise());
+                }else{
+                    $data = json_decode(self::getAllEmployees());
+                }
+        
+                if(!$data->success){
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+        
+                $lEmployees = $data->lEmployees;
             }else{
-                $data = json_decode(self::getAllEmployees());
+                $lEmployees = $dataEmployees;
             }
-
-            $lEmployees = $data->lEmployees;
             $lPermissions = [];
             foreach($lEmployees as $emp){
                 $arrPermissions = permissionsUtils::getUserPermissions($emp->id, SysConst::PERMISO_PERSONAL);
@@ -206,15 +222,23 @@ class applicationsUtils {
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
 
-    public static function getPermissionsLaboral($year, $allEmployees = false){
+    public static function getPermissionsLaboral($year, $allEmployees = false, $dataEmployees){
         try {
-            if(!$allEmployees){
-                $data = json_decode(self::getEmployeesToRevise());
+            if($dataEmployees == false){
+                if(!$allEmployees){
+                    $data = json_decode(self::getEmployeesToRevise());
+                }else{
+                    $data = json_decode(self::getAllEmployees());
+                }
+        
+                if(!$data->success){
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
+                }
+        
+                $lEmployees = $data->lEmployees;
             }else{
-                $data = json_decode(self::getAllEmployees());
+                $lEmployees = $dataEmployees;
             }
-
-            $lEmployees = $data->lEmployees;
             $lPermissions = [];
             foreach($lEmployees as $emp){
                 $arrPermissions = permissionsUtils::getUserPermissions($emp->id, SysConst::PERMISO_LABORAL);

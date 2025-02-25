@@ -79,7 +79,7 @@ var app = new Vue({
     updated() {
         this.$nextTick(function() {
             if (typeof self.$refs.table_permissions != 'undefined' && self.needRenderTableIncidences) {
-                this.createTable('table_permissions', [0, 2, 3, 4, 6, 17], [1, 5]);
+                this.createTable('table_permissions', [0, 2, 3, 4, 6, 17], [1, 5,18]);
                 let dataTypeFilter = [{ id: '0', text: 'Todos' }];
                 let dataType = [];
                 let dataClass = [];

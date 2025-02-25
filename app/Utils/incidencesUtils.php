@@ -174,7 +174,7 @@ class incidencesUtils {
         foreach ($lIncidences as &$info) {
             // Verificar si el org_chart_job_id está en el array de directEmployeeIds
             
-                $info->is_direct = 0; // Si no está, no es empleado directo
+                $info->is_direct = 1; // Si no está, no es empleado directo
         }
         \Log::info($lIncidences);
         return $lIncidences;

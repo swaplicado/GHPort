@@ -280,6 +280,12 @@ class requestPermissionController extends Controller
                 $lPermissions = permissionsUtils::getUserPermissions($oUser->id);
             }
 
+            foreach ($lPermissions as &$info) {
+                // Verificar si el org_chart_job_id está en el array de directEmployeeIds
+                
+                $info->is_direct = 1; // Si no está, no es empleado directo
+            }
+            
             $lSchedule = \DB::table('schedule_template as st')
                         ->join('schedule_day as sd', 'sd.schedule_template_id', '=', 'st.id')
                         ->where('st.id', $oUser->schedule_template_id)
