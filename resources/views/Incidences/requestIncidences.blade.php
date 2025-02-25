@@ -104,10 +104,10 @@
         </div>
         <div class="card-body">
             <div class="contenedor-elem-ini">
-                <label for="incident_tp_filter">Filtrar por empleados: </label>
+                <label for="incident_tp_filter">Filtrar por colaboradores: </label>
                 <select class="select2-class form-control" name="filterEmployeeType" id="filterEmployeeType" style="width: 25%;">
-                    <option value="0" selected="selected">Mis empleados directos</option>
-                    <option value="1">Todos mis empleados</option>    
+                    <option value="0" selected="selected">Mis colaboradores directos</option>
+                    <option value="1">Todos mis colaboradores</option>    
                 </select>
                 &nbsp;&nbsp;    
                 <label for="incident_cl_filter">Filtrar por clase: </label>

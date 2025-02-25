@@ -177,10 +177,10 @@
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
 
                     &nbsp;&nbsp;
-                    <label for="incident_tp_filter">Filtrar por empleados: </label>
+                    <label for="incident_tp_filter">Filtrar por colaboradores: </label>
                     <select class="select2-class form-control" name="filterEmployeeType" id="filterEmployeeType" style="width: 25%;">
-                        <option value="direct" selected="selected">Empleados directos</option>
-                        <option value="all">Todos los empleados</option>    
+                        <option value="direct" selected="selected">Colaboradores directos</option>
+                        <option value="all">Todos mis colaboradores</option>    
                     </select>
                     &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
