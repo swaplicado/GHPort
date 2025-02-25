@@ -222,7 +222,7 @@ class applicationsUtils {
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
 
-    public static function getPermissionsLaboral($year, $allEmployees = false, $dataEmployees){
+    public static function getPermissionsLaboral($year, $allEmployees = false, $dataEmployees = false){
         try {
             if($dataEmployees == false){
                 if(!$allEmployees){

@@ -493,17 +493,19 @@
                     let employeeFilter = $('#filterEmployeeType').val();
 
                     // Verificar si la fila actual pertenece a un empleado directo
-                    let isDirectEmployee = parseInt(data[oServerData.indexesRequest.is_direct], 10); // Asegúrate de que is_direct esté en el índice correcto
-
-                    // Aplicar el filtro de empleados
-                    if (employeeFilter == 'direct' && !isDirectEmployee) {
-                        return false; // Ocultar si no es empleado directo
-                    }
+                    
 
 
                     let registerVal = parseInt($('#rqStatus').val(), 10);
                     let filter = 0;
                     if (settings.nTable.id == 'table_requestVac'){
+                        let isDirectEmployee = parseInt(data[oServerData.indexesRequest.is_direct], 10); // Asegúrate de que is_direct esté en el índice correcto
+
+                        // Aplicar el filtro de empleados
+                        if (employeeFilter == 'direct' && !isDirectEmployee) {
+                            return false; // Ocultar si no es empleado directo
+                        }
+
                         switch (registerVal) {
                             case 2:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
