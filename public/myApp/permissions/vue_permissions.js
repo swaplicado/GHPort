@@ -802,7 +802,8 @@ var app = new Vue({
                             ''),
                         this.oDateUtils.formatDate(permission.start_date, 'ddd DD-MMM-YYYY'), !this.isRevision ? permission.applications_st_name :
                         (permission.request_status_id == 2 ? 'NUEVO' : permission.applications_st_name),
-                        permission.date_send_n
+                        permission.date_send_n,
+                        permission.is_direct
                     ]
                 );
             }

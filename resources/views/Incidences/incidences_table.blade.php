@@ -21,6 +21,7 @@
             <th>Sub tipo</th>
             <th>Estatus</th>
             <th>fecha env</th>
+            <th>is_direct</th>
         </thead>
         <tbody>
             <tr v-for="incident in lIncidences">
@@ -64,6 +65,9 @@
                 </td>
                 <td>
                     @{{incident.date_send_n}}
+                </td>
+                <td>
+                    @{{incident.is_direct}}
                 </td>
             </tr>
         </tbody>

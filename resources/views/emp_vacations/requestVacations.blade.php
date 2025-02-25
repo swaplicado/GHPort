@@ -84,6 +84,7 @@
                 'applications_st_name': 20,
                 'comments': 21,
                 'fecha_envio': 22,
+                'is_direct': 23,
             };
 
         //data para la vista my_vacations
@@ -138,7 +139,7 @@
             @include('emp_vacations.modal_requests')
             <div class="card-header">
                 <h3>
-                    <b>Solicitudes de vacaciones de mis colaboradores directos</b>
+                    <b>Solicitudes de vacaciones de mis colaboradores </b>
                     @include('layouts.manual_button')
                     <a href="{{route('allApplications')}}" type="button" class="btn btn-info" style="float: right;" 
                         title="Ir a la vista global de incidencias" onclick="SGui.showWaiting();">
@@ -174,6 +175,13 @@
                     <span class="bx bxs-trash"></span>
                 </button>
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
+
+                    &nbsp;&nbsp;
+                    <label for="incident_tp_filter">Filtrar por empleados: </label>
+                    <select class="select2-class form-control" name="filterEmployeeType" id="filterEmployeeType" style="width: 25%;">
+                        <option value="direct" selected="selected">Empleados directos</option>
+                        <option value="all">Todos los empleados</option>    
+                    </select>
                     &nbsp;&nbsp;
                     <label for="rqStatus">Filtrar por estatus: </label>
                     <select class="form-control inline" name="rqStatus" id="rqStatus" v-model="rqStatus" style="width: 30%;">
@@ -231,6 +239,7 @@
                         <th>Estatus</th>
                         <th>coment.</th>
                         <th>fecha env</th>
+                        <th>is_direct</th>
                     </thead>
                     <tbody>
                         <template v-for="emp in lEmployees">
@@ -267,6 +276,7 @@
                                     <td>@{{ rec.request_status_id == 2 ? 'Por aprobar' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name) }}</td>
                                     <td>@{{ rec.emp_comments_n }}</td>
                                     <td>@{{ rec.date_send_n }}</td>
+                                    <td>@{{ emp.is_direct}}</td>
                                 </tr>
                             </template>
                         </template>
@@ -479,6 +489,18 @@
         $(document).ready(function() {
             $.fn.dataTable.ext.search.push(
                 function(settings, data, dataIndex) {
+
+                    let employeeFilter = $('#filterEmployeeType').val();
+
+                    // Verificar si la fila actual pertenece a un empleado directo
+                    let isDirectEmployee = parseInt(data[oServerData.indexesRequest.is_direct], 10); // Asegúrate de que is_direct esté en el índice correcto
+
+                    // Aplicar el filtro de empleados
+                    if (employeeFilter == 'direct' && !isDirectEmployee) {
+                        return false; // Ocultar si no es empleado directo
+                    }
+
+
                     let registerVal = parseInt($('#rqStatus').val(), 10);
                     let filter = 0;
                     if (settings.nTable.id == 'table_requestVac'){
@@ -537,10 +559,11 @@
             );
         });
     </script>
+
     @include('layouts.table_jsControll', [
         'table_id' => 'table_requestVac',
         'colTargets' => [0, 1, 2, 3, 4, 6, 7, 8, 9, 21, 22],
-        'colTargetsSercheable' => [5],
+        'colTargetsSercheable' => [5, 23],
         'colTargetsNoOrder' => [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
         'select' => true,
         // 'noOrdering' => true,
@@ -569,7 +592,9 @@
             $('#rqStatus').change(function() {
                 table['table_requestVac'].draw();
             });
-
+            $('#filterEmployeeType').change(function() {
+                table['table_requestVac'].draw();
+            });
             var search = document.querySelectorAll('input[type=search]');
             // if (app.oApplication != null) {
             //     app.showModal();

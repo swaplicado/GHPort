@@ -75,6 +75,7 @@
                 'subtype': 17,
                 'applications_st_name': 18,
                 'fecha_envio': 19,
+                'is_direct': 20,
             }
         }
         var oServerData = new GlobalData();
@@ -103,6 +104,12 @@
         </div>
         <div class="card-body">
             <div class="contenedor-elem-ini">
+                <label for="incident_tp_filter">Filtrar por empleados: </label>
+                <select class="select2-class form-control" name="filterEmployeeType" id="filterEmployeeType" style="width: 25%;">
+                    <option value="0" selected="selected">Mis empleados directos</option>
+                    <option value="1">Todos mis empleados</option>    
+                </select>
+                &nbsp;&nbsp;    
                 <label for="incident_cl_filter">Filtrar por clase: </label>
                 <select class="select2-class form-control" name="incident_cl_filter" id="incident_cl_filter" style="width: 15%;"></select>
                 &nbsp;&nbsp;
@@ -233,16 +240,27 @@
                 let col_class = null;
                 let col_type = null;
                 let col_status = null;
+                let col_emp = null;
 
                 col_class = parseInt( data[oServerData.indexes_incidences.id_incidence_cl] );
                 col_type = parseInt( data[oServerData.indexes_incidences.id_incidence_tp] );
                 col_status = parseInt( data[oServerData.indexes_incidences.request_status_id] );
+                col_emp = parseInt( data[oServerData.indexes_incidences.is_direct] );
 
                 if(settings.nTable.id == 'table_ReqIncidences'){
+
                     let iClass = parseInt( $('#incident_cl_filter').val(), 10 );
                     let iType = parseInt( $('#incident_tp_filter').val(), 10 );
                     let iStatus = parseInt( $('#status_incidence').val(), 10 );
-                    if(col_type == iType || iType == 0){
+                    let iEmp = parseInt($('#filterEmployeeType').val(), 10);
+
+                    if(iEmp == 0  ){
+                        if(col_emp == 0 ){
+                            return false;
+                        }
+                    }
+
+                    if(col_type == iType || iType == 0 ){
                         return col_status == iStatus;
                     }
                 }
@@ -263,7 +281,7 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_ReqIncidences',
                                         'colTargets' => [0, 2, 3, 4, 16, 17, 19],
-                                        'colTargetsSercheable' => [1,5,6],
+                                        'colTargetsSercheable' => [1,5,6,20],
                                         'colTargetsNoOrder' => [7,8,9,10,11,12,13,14,15,18],
                                         'noDom' => true,
                                         'select' => true,
@@ -285,6 +303,10 @@
         $('#status_incidence').change( function() {
             table[oServerData.table_name].draw();
         });
+
+        $('#filterEmployeeType').change( function() {
+            table[oServerData.table_name].draw();
+        });    
     });
 </script>
 <script src="{{ asset('myApp/Utils/SDateRangePickerClass.js') }}"></script>

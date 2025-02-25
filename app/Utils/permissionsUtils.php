@@ -10,7 +10,8 @@ use GuzzleHttp\Client;
 class permissionsUtils {
     public static function getMyEmployeeslPermissions($cl = 0){
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
-        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
+        $arrOrgJobsAux = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
         $lPermissions = [];
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         foreach($lEmployees as $emp){
@@ -18,7 +19,14 @@ class permissionsUtils {
         }
 
         $lPermissions = Arr::collapse($lPermissions);
-
+        foreach ($lPermissions as &$info) {
+            // Verificar si el org_chart_job_id está en el array de directEmployeeIds
+            if (in_array($info->org_chart_job_id, $arrOrgJobsAux)) {
+                $info->is_direct = 1; // Si está, es empleado directo
+            } else {
+                $info->is_direct = 0; // Si no está, no es empleado directo
+            }
+        }
         return $lPermissions;
     }
 
@@ -85,6 +93,7 @@ class permissionsUtils {
                             'st.applications_st_name',
                             'u.full_name_ui as user_apr_rej_name',
                             'emp.full_name_ui as employee',
+                            'emp.org_chart_job_id as org_chart_job_id',
                         )
                         ->get();
         }else{
@@ -104,6 +113,7 @@ class permissionsUtils {
                             'st.applications_st_name',
                             'u.full_name_ui as user_apr_rej_name',
                             'emp.full_name_ui as employee',
+                            'emp.org_chart_job_id as org_chart_job_id',
                         )
                         ->get();
         }

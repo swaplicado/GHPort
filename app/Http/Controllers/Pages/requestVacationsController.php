@@ -99,9 +99,9 @@ class requestVacationsController extends Controller
             $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
         }
 
-        // $arrOrgJobsAux = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
+        $arrOrgJobsAux = orgChartUtils::getDirectChildsOrgChartJob($org_chart_job_id);
         // $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
-        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
 
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         $config = \App\Utils\Configuration::getConfigurations();
@@ -173,6 +173,14 @@ class requestVacationsController extends Controller
         $holidays = \DB::table('holidays')
                         ->where('is_deleted', 0)
                         ->pluck('fecha');
+        foreach ($merged as &$info) {
+            // Verificar si el org_chart_job_id está en el array de directEmployeeIds
+            if (in_array($info->org_chart_job_id, $arrOrgJobsAux)) {
+                $info->is_direct = 1; // Si está, es empleado directo
+            } else {
+                $info->is_direct = 0; // Si no está, no es empleado directo
+            }
+        }
 
         return [$year, $merged, $holidays, $arrOrgJobs];
     }

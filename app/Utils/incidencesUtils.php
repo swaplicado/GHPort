@@ -122,9 +122,11 @@ class incidencesUtils {
 
     public static function getMyEmployeeslIncidences(){
         $org_chart_job_id = delegationUtils::getOrgChartJobIdUser();
-        // $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
-        $arrOrgJobs = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
+        //$arrOrgJobs = orgChartUtils::getAllChildsOrgChartJobNoBoss($org_chart_job_id);
+        $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
+        $arrOrgJobsAux = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
         $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        
         $config = \App\Utils\Configuration::getConfigurations();
         if($org_chart_job_id == $config->default_node){
             $arrOrgJobsWitoutSuperviser = \DB::table('applications as a')
@@ -149,7 +151,14 @@ class incidencesUtils {
         }
 
         $lIncidences = Arr::collapse($lIncidences);
-
+        foreach ($lIncidences as &$info) {
+            // Verificar si el org_chart_job_id está en el array de directEmployeeIds
+            if (in_array($info->org_chart_job_id, $arrOrgJobsAux)) {
+                $info->is_direct = 1; // Si está, es empleado directo
+            } else {
+                $info->is_direct = 0; // Si no está, no es empleado directo
+            }
+        }
         return $lIncidences;
     }
 
@@ -186,6 +195,7 @@ class incidencesUtils {
                             'st.applications_st_name',
                             'u.full_name_ui as user_apr_rej_name',
                             'emp.full_name_ui as employee',
+                            'emp.org_chart_job_id as org_chart_job_id'
                         )
                         ->get();
 

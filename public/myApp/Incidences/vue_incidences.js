@@ -799,6 +799,7 @@ var app = new Vue({
                         'SUBTIPO',
                         incident.applications_st_name,
                         incident.date_send_n,
+                        incident.is_direct,
                     ]
                 );
             }

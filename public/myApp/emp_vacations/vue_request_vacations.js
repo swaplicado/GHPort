@@ -491,6 +491,7 @@ var appRequestVacation = new Vue({
                             rec.request_status_id == 2 ? 'Por aprobar' : (rec.applications_st_name == 'CONSUMIDO' ? 'APROBADO' : rec.applications_st_name),
                             rec.emp_comments_n,
                             rec.start_date,
+                            emp.is_direct
                         ]
                     );
 

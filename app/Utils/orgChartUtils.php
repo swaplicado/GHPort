@@ -186,8 +186,8 @@ class OrgChartUtils {
         // $arrOrgJobs = orgChartUtils::getDirectChildsOrgChartJob($id);
         $arrOrgJobs = orgChartUtils::getAllChildsOrgChartJob($id);
 
-        $lOrgCharts = OrgChartJob::where('is_boss', 1)
-                                ->where('is_deleted', 0)
+        $lOrgCharts = OrgChartJob::where('is_deleted', 0)
+                                ->where('is_boss', 1)                      
                                 ->whereIn('id_org_chart_job', $arrOrgJobs)
                                 ->pluck('id_org_chart_job');
 

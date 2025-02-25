@@ -67,6 +67,7 @@
                 'Fecha': 15,
                 'Estatus': 16,
                 'fecha_env': 17,
+                'is_direct': 18,
             }
         }
         var oServerData = new GlobalData();
@@ -101,6 +102,12 @@
         </div>
         <div class="card-body">
             <div class="contenedor-elem-ini">
+                <label for="incident_tp_filter">Filtrar por empleados: </label>
+                <select class="select2-class form-control" name="filterEmployeeType" id="filterEmployeeType" style="width: 25%;">
+                    <option value="0" selected="selected">Mis empleados directos</option>
+                    <option value="1">Todos mis empleados</option>    
+                </select>
+                &nbsp;&nbsp;
                 <label for="permission_tp_filter">Filtrar por tipo: </label>
                 <select class="select2-class form-control" name="permission_tp_filter" id="permission_tp_filter" style="width: 15%;"></select>
                 &nbsp;&nbsp;
@@ -225,6 +232,13 @@
                 if(settings.nTable.id == 'table_ReqPermissions'){
                     let iType = parseInt( $('#permission_tp_filter').val(), 10 );
                     let iStatus = parseInt( $('#status_ReqPermission').val(), 10 );
+                    let iEmp = parseInt($('#filterEmployeeType').val(), 10);
+                    col_emp = parseInt( data[oServerData.indexes_permission.is_direct] );
+                    if(iEmp == 0  ){
+                        if(col_emp == 0 ){
+                            return false;
+                        }
+                    }
 
                     col_type = parseInt( data[oServerData.indexes_permission.type_incident_id] );
                     col_status = parseInt( data[oServerData.indexes_permission.request_status_id] );
@@ -255,7 +269,7 @@
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_ReqPermissions',
                                         'colTargets' => [0,2,3,4,6,17],
-                                        'colTargetsSercheable' => [1,5],
+                                        'colTargetsSercheable' => [1,5,18],
                                         'colTargetsNoOrder' => [6,7,8,9,10,11,12,13,14],
                                         'noDom' => true,
                                         'select' => true,
@@ -271,6 +285,10 @@
         });
 
         $('#status_ReqPermission').change( function() {
+            table['table_ReqPermissions'].draw();
+        });
+
+        $('#filterEmployeeType').change( function() {
             table['table_ReqPermissions'].draw();
         });
     });

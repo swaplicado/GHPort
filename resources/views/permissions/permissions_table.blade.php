@@ -19,6 +19,7 @@
             <th>Fecha aplicación</th>
             <th>Estatus</th>
             <th>Fecha envío</th>
+            <th>is_direct</th>
         </thead>
         <tbody>
             <tr v-for="permission in lPermissions">
@@ -60,6 +61,9 @@
                 </td>
                 <td>
                     @{{permission.date_send_n}}
+                </td>
+                <td>
+                    @{{permission.is_direct}}
                 </td>
             </tr>
         </tbody>

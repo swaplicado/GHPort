@@ -72,6 +72,7 @@ class requestIncidencesController extends Controller
 
         // $lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
         $lChildAreas = orgChartUtils::getAllChildsToRevice($org_chart_job_id);
+        //$lChildAreas = orgChartUtils::getAllChildsOrgChartJob($org_chart_job_id);
 
         $lEmployees = EmployeeVacationUtils::getlEmployees($lChildAreas);
 
