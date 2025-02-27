@@ -63,7 +63,7 @@
                     @{{permission.date_send_n}}
                 </td>
                 <td>
-                    @{{permission.is_direct}}
+                    @{{permission.is_direct || 0}}
                 </td>
             </tr>
         </tbody>

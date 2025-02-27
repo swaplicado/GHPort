@@ -67,7 +67,7 @@
                     @{{incident.date_send_n}}
                 </td>
                 <td>
-                    @{{incident.is_direct}}
+                    @{{incident.is_direct || 0 }}
                 </td>
             </tr>
         </tbody>

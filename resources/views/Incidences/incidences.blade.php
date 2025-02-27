@@ -65,6 +65,7 @@
                 'total_days': 16,
                 'subtype': 17,
                 'applications_st_name': 18,
+                'is_direct': 19,
             }
         }
         var oServerData = new GlobalData();
@@ -135,7 +136,7 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_Incidences',
-                                        'colTargets' => [0,2,3,4,7,16,17],
+                                        'colTargets' => [0,2,3,4,7,16,17,20],
                                         'colTargetsSercheable' => [1,5,6],
                                         'noDom' => true,
                                         'select' => true,

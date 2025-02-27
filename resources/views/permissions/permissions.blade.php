@@ -125,7 +125,7 @@
 </script>
 @include('layouts.table_jsControll', [
                                         'table_id' => 'table_permissions',
-                                        'colTargets' => [0,2,3,4,6],
+                                        'colTargets' => [0,2,3,4,6,18],
                                         'colTargetsSercheable' => [1,5],
                                         'noDom' => true,
                                         'select' => true,
