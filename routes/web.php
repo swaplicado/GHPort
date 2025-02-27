@@ -323,6 +323,9 @@ Route::middleware(['auth', 'menu'])->group( function () {
 
     /**Rutas de curriculumLogs */
     Route::get('curriculumLogs', 'Pages\curriculumLogsController@index')->name('curriculumLogs_index');
+
+    /**Rutas de configuración de reportes */
+    Route::get('configReportIncs', 'Pages\configReportIncsController@index')->name('configReportIncs_index');
 });
 /**
  * Rutas permisos 

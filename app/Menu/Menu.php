@@ -193,6 +193,9 @@ class Menu {
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($administracion,['route' => route('bitacoras'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Bitacoras sistema']);    
         }
+        if($oUser->rol_id == 3 || $oUser->rol_id == 4){
+            array_push($administracion,['route' => route('configReportIncs_index'), 'icon' => 'bx bxs-archive bx-xs', 'name' => 'Reporte incidencias']);    
+        }
 
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($lMenus,(object) ['type' => $list, 'list' =>$administracion, 'icon' => 'bx bxs-user-pin bx-sm', 'name' => 'Administración', 'id' => 'Administracion']);    
