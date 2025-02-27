@@ -146,6 +146,9 @@
             $('#filterActive').change(function() {
                 table['table_user'].draw();
             });
+            $('#filterConfig').change(function() {
+                table['table_user'].draw();
+            });
         });
     </script>
     <script type="text/javascript" src="{{ asset('myApp/configReportsIncs/vue_config.js') }}"></script>
