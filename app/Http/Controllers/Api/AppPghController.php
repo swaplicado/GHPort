@@ -649,8 +649,8 @@ class AppPghController extends Controller
                         "org_chart_job_name" => $oUser->org_chart_job_name,
                         "job_name" => $oUser->job_name,
                         "department_name" => $oUser->department_name,
-                        "updated_at" => $oUser->updated_at,
-                        "created_at" => $oUser->created_at,
+                        "updated_at" => $oUser->updated_at instanceof Carbon ? $oUser->updated_at->toDateTimeString() : $oUser->updated_at,
+                        "created_at" => $oUser->created_at instanceof Carbon ? $oUser->created_at->toDateTimeString() : $oUser->created_at,
                         "tot_vacation_remaining" => $oUser->tot_vacation_remaining,
                         "mySelf" => 1,
                         "rol_id" => $oUser->rol_id

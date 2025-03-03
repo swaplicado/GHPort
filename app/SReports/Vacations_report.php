@@ -573,7 +573,7 @@ class Vacations_report
             'applications_sended' => json_encode($incidencesSended),
             'hours_leave_sended' => json_encode($permissionsSended),
             'to_users' => json_encode($lUsersids),
-            'next_execution' => Carbon::now()->addWeek()->toDateTimeString()
+            'next_execution' => Carbon::now()->addDay()->toDateTimeString()
         ]);
 
         $sDate = dateUtils::formatDate($actual_date, 'ddd D-m-Y');
