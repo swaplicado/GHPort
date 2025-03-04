@@ -60,8 +60,7 @@ class dailyIncidencesReportMail extends Mailable
      */
     public function build()
     {
-        // $email = "Portalgh@aeth.mx";
-        $email = "adrian.aviles.swaplicado@gmail.com";
+        $email = "Portalgh@aeth.mx";
         return $this->from($email)
                         ->subject('[Portal GH] Reporte incidencias del '.$this->sDate)
                         ->view('mails.dailyIncidencesReportMail')
