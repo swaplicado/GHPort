@@ -327,7 +327,6 @@ class Vacations_report
         $lApplicationToExclude = [];
         $lHoursLeaveToExclude = [];
         foreach ($listLogsExecutions as $log) {
-            // Convertir el string "['3694']" a un JSON válido "[\"3694\"]"
             $appsSended = str_replace("'", '"', $log->applications_sended);
             $hoursSended = str_replace("'", '"', $log->hours_leave_sended);
 
@@ -343,6 +342,8 @@ class Vacations_report
             }
         }
 
+        $incidencesSended = [];
+        $permissionsSended = [];
         foreach ($lConfigReports as $conf) {
             if ($conf->rol_id == SysConst::ADMINISTRADOR) {
                 $conf->org_chart_job_id = 2;
@@ -360,227 +361,213 @@ class Vacations_report
             });
 
             $lEmployees = $lEmployees->sortBy('full_name');
-        }
 
-        $lEmployeesToLast = clone $lEmployees;
-        $lEmployeesLastWeek = [];
-        foreach ($lEmployeesToLast as $emp) {
-            $lastWeekEmp = clone $emp;
-            $lIncidencesLastWeek = [];
-            foreach ($lastWeekEmp->lIncidences as $incidence) {
-                if (
-                    (Carbon::parse($incidence->start_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString()) ||
-                        Carbon::parse($incidence->end_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString())) &&
-                    (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at))
-                ) {
-                    switch ($incidence->application_type) {
-                        case 'incidence':
-                            if (!in_array($incidence->id, $lApplicationToExclude)) {
-                                $lIncidencesLastWeek[] = $incidence;
-                            }
+            $lEmployeesToLast = clone $lEmployees;
+            $lEmployeesLastWeek = [];
+            foreach ($lEmployeesToLast as $emp) {
+                $lastWeekEmp = clone $emp;
+                $lIncidencesLastWeek = [];
+                foreach ($lastWeekEmp->lIncidences as $incidence) {
+                    if (
+                        (Carbon::parse($incidence->start_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString()) ||
+                            Carbon::parse($incidence->end_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString())) &&
+                        (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at))
+                    ) {
+                        switch ($incidence->application_type) {
+                            case 'incidence':
+                                if (!in_array($incidence->id, $lApplicationToExclude)) {
+                                    $lIncidencesLastWeek[] = $incidence;
+                                }
 
-                            break;
+                                break;
 
-                        case 'permission':
-                            if (!in_array($incidence->id, $lHoursLeaveToExclude)) {
-                                $lIncidencesLastWeek[] = $incidence;
-                            }
-                        default:
-                            # code...
-                            break;
+                            case 'permission':
+                                if (!in_array($incidence->id, $lHoursLeaveToExclude)) {
+                                    $lIncidencesLastWeek[] = $incidence;
+                                }
+                            default:
+                                # code...
+                                break;
+                        }
+                    }
+                }
+                if (sizeof($lIncidencesLastWeek) > 0) {
+                    $lastWeekEmp->lIncidences = $lIncidencesLastWeek;
+                    $lEmployeesLastWeek[] = $lastWeekEmp;
+                }
+            }
+
+            $lEmployeesToweek = clone $lEmployees;
+            $lEmployeesWeek = [];
+            foreach ($lEmployeesToweek as $emp) {
+                $WeekEmp = clone $emp;
+                $lIncidencesWeek = [];
+                foreach ($WeekEmp->lIncidences as $incidence) {
+                    if (
+                        (Carbon::parse($incidence->start_date)->between($start_actual_week, $end_actual_week) ||
+                            Carbon::parse($incidence->end_date)->between($start_actual_week, $end_actual_week)) &&
+                        (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at))
+
+                    ) {
+                        switch ($incidence->application_type) {
+                            case 'incidence':
+                                if (!in_array($incidence->id, $lApplicationToExclude)) {
+                                    $lIncidencesWeek[] = $incidence;
+                                }
+
+                                break;
+
+                            case 'permission':
+                                if (!in_array($incidence->id, $lHoursLeaveToExclude)) {
+                                    $lIncidencesWeek[] = $incidence;
+                                }
+                            default:
+                                # code...
+                                break;
+                        }
+                    }
+                }
+                if (sizeof($lIncidencesWeek) > 0) {
+                    $WeekEmp->lIncidences = $lIncidencesWeek;
+                    $lEmployeesWeek[] = $WeekEmp;
+                }
+            }
+
+            $nextWeekExecutionForWeekReport = Carbon::parse($oLogWeekExecution->next_execution)->addWeek()->startOfWeek()->toDateTimeString();
+
+            $lEmployeesToNextweek = clone $lEmployees;
+            $lEmployeesNextWeek = [];
+            foreach ($lEmployeesToNextweek as $emp) {
+                $NextWeekEmp = clone $emp;
+                $lIncidencesNextWeek = [];
+                foreach ($NextWeekEmp->lIncidences as $incidence) {
+                    if (
+                        (Carbon::parse($incidence->start_date)->between($start_next_week, $end_next_week) ||
+                            Carbon::parse($incidence->end_date)->between($start_next_week, $end_next_week)) &&
+                        (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at)) &&
+                        (Carbon::parse($incidence->start_date)->lessThan($nextWeekExecutionForWeekReport))
+                    ) {
+                        switch ($incidence->application_type) {
+                            case 'incidence':
+                                if (!in_array($incidence->id, $lApplicationToExclude)) {
+                                    $lIncidencesNextWeek[] = $incidence;
+                                }
+
+                                break;
+
+                            case 'permission':
+                                if (!in_array($incidence->id, $lHoursLeaveToExclude)) {
+                                    $lIncidencesNextWeek[] = $incidence;
+                                }
+                            default:
+                                # code...
+                                break;
+                        }
+                    }
+                }
+                if (sizeof($lIncidencesNextWeek) > 0) {
+                    $NextWeekEmp->lIncidences = $lIncidencesNextWeek;
+                    $lEmployeesNextWeek[] = $NextWeekEmp;
+                }
+            }
+
+            $holidays = \DB::table('holidays')
+                ->where('fecha', '>=', $start_last_week)
+                ->where('fecha', '<=', $end_last_week)
+                ->where('is_deleted', 0)
+                ->select(
+                    'fecha',
+                    'name'
+                )
+                ->get()
+                ->toArray();
+
+            $diff = $end_last_week->diffInDays($start_last_week);
+            $lastWeek = [];
+            for ($i = 0; $i <= $diff; $i++) {
+                // $day = Carbon::now()->next(Carbon::MONDAY);
+                $day = clone $start_last_week;
+                $lastWeek[] = [
+                    'date' => $day->addDays($i)->format('Y-m-d'),
+                    'day_name' => $day->isoFormat('dddd'),
+                    'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
+                    'num_week' => $day->dayOfWeek,
+                    'incidences' => [],
+                    'comments' => [],
+                    'id' => 0,
+                    'span' => 0,
+                    'holiday' => null,
+                ];
+            }
+
+            $diff = $end_actual_week->diffInDays($start_actual_week);
+            $actualWeek = [];
+            for ($i = 0; $i <= $diff; $i++) {
+                // $day = Carbon::now()->next(Carbon::MONDAY);
+                $day = clone $start_actual_week;
+                $actualWeek[] = [
+                    'date' => $day->addDays($i)->format('Y-m-d'),
+                    'day_name' => $day->isoFormat('dddd'),
+                    'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
+                    'num_week' => $day->dayOfWeek,
+                    'incidences' => [],
+                    'comments' => [],
+                    'id' => 0,
+                    'span' => 0,
+                    'holiday' => null,
+                ];
+            }
+
+            $diff = $end_next_week->diffInDays($start_next_week);
+            $nextWeek = [];
+            for ($i = 0; $i <= $diff; $i++) {
+                // $day = Carbon::now()->next(Carbon::MONDAY);
+                $day = clone $start_next_week;
+                $nextWeek[] = [
+                    'date' => $day->addDays($i)->format('Y-m-d'),
+                    'day_name' => $day->isoFormat('dddd'),
+                    'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
+                    'num_week' => $day->dayOfWeek,
+                    'incidences' => [],
+                    'comments' => [],
+                    'id' => 0,
+                    'span' => 0,
+                    'holiday' => null,
+                ];
+            }
+
+            $lastWeeklOrgCharts = Vacations_report::setWeekToEmployee($lEmployeesLastWeek, $holidays, $lastWeek);
+            $actualWeeklOrgCharts = Vacations_report::setWeekToEmployee($lEmployeesWeek, $holidays, $actualWeek);
+            $nextWeeklOrgCharts = Vacations_report::setWeekToEmployee($lEmployeesNextWeek, $holidays, $nextWeek);
+
+            $lastSDate = dateUtils::datesToString($start_last_week, $end_last_week);
+            $actualSDate = dateUtils::datesToString($start_actual_week, $end_actual_week);
+            $nextSDate = dateUtils::datesToString($start_next_week, $end_next_week);
+
+            $lOrgCharts = $lastWeeklOrgCharts->merge($actualWeeklOrgCharts)->merge($nextWeeklOrgCharts);
+            foreach ($lOrgCharts as $org) {
+                foreach ($org->lEmployees as $emp) {
+                    foreach ($emp->lIncidences as $inc) {
+                        switch ($inc->application_type) {
+                            case 'incidence':
+                                $incidencesSended[] = $inc->id;
+                                break;
+                            case 'permission':
+                                $permissionsSended[] = $inc->id;
+                                break;
+                            default:
+                                # code...
+                                break;
+                        }
                     }
                 }
             }
-            if (sizeof($lIncidencesLastWeek) > 0) {
-                $lastWeekEmp->lIncidences = $lIncidencesLastWeek;
-                $lEmployeesLastWeek[] = $lastWeekEmp;
-            }
-        }
 
-        $lEmployeesToweek = clone $lEmployees;
-        $lEmployeesWeek = [];
-        foreach ($lEmployeesToweek as $emp) {
-            $WeekEmp = clone $emp;
-            $lIncidencesWeek = [];
-            foreach ($WeekEmp->lIncidences as $incidence) {
-                if (
-                    (Carbon::parse($incidence->start_date)->between($start_actual_week, $end_actual_week) ||
-                        Carbon::parse($incidence->end_date)->between($start_actual_week, $end_actual_week)) &&
-                    (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at))
+            $lUsersids = $lConfigReports->pluck('user_id')->toArray();
+            $sDate = dateUtils::formatDate($actual_date, 'ddd D-m-Y');
 
-                ) {
-                    switch ($incidence->application_type) {
-                        case 'incidence':
-                            if (!in_array($incidence->id, $lApplicationToExclude)) {
-                                $lIncidencesWeek[] = $incidence;
-                            }
-
-                            break;
-
-                        case 'permission':
-                            if (!in_array($incidence->id, $lHoursLeaveToExclude)) {
-                                $lIncidencesWeek[] = $incidence;
-                            }
-                        default:
-                            # code...
-                            break;
-                    }
-                }
-            }
-            if (sizeof($lIncidencesWeek) > 0) {
-                $WeekEmp->lIncidences = $lIncidencesWeek;
-                $lEmployeesWeek[] = $WeekEmp;
-            }
-        }
-
-        $nextWeekExecutionForWeekReport = Carbon::parse($oLogWeekExecution->next_execution)->addWeek()->startOfWeek()->toDateTimeString();
-
-        $lEmployeesToNextweek = clone $lEmployees;
-        $lEmployeesNextWeek = [];
-        foreach ($lEmployeesToNextweek as $emp) {
-            $NextWeekEmp = clone $emp;
-            $lIncidencesNextWeek = [];
-            foreach ($NextWeekEmp->lIncidences as $incidence) {
-                if (
-                    (Carbon::parse($incidence->start_date)->between($start_next_week, $end_next_week) ||
-                        Carbon::parse($incidence->end_date)->between($start_next_week, $end_next_week)) &&
-                    (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at)) &&
-                    (Carbon::parse($incidence->start_date)->lessThan($nextWeekExecutionForWeekReport))
-                ) {
-                    switch ($incidence->application_type) {
-                        case 'incidence':
-                            if (!in_array($incidence->id, $lApplicationToExclude)) {
-                                $lIncidencesNextWeek[] = $incidence;
-                            }
-
-                            break;
-
-                        case 'permission':
-                            if (!in_array($incidence->id, $lHoursLeaveToExclude)) {
-                                $lIncidencesNextWeek[] = $incidence;
-                            }
-                        default:
-                            # code...
-                            break;
-                    }
-                }
-            }
-            if (sizeof($lIncidencesNextWeek) > 0) {
-                $NextWeekEmp->lIncidences = $lIncidencesNextWeek;
-                $lEmployeesNextWeek[] = $NextWeekEmp;
-            }
-        }
-
-        $holidays = \DB::table('holidays')
-            ->where('fecha', '>=', $start_last_week)
-            ->where('fecha', '<=', $end_last_week)
-            ->where('is_deleted', 0)
-            ->select(
-                'fecha',
-                'name'
-            )
-            ->get()
-            ->toArray();
-
-        $diff = $end_last_week->diffInDays($start_last_week);
-        $lastWeek = [];
-        for ($i = 0; $i <= $diff; $i++) {
-            // $day = Carbon::now()->next(Carbon::MONDAY);
-            $day = clone $start_last_week;
-            $lastWeek[] = [
-                'date' => $day->addDays($i)->format('Y-m-d'),
-                'day_name' => $day->isoFormat('dddd'),
-                'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
-                'num_week' => $day->dayOfWeek,
-                'incidences' => [],
-                'comments' => [],
-                'id' => 0,
-                'span' => 0,
-                'holiday' => null,
-            ];
-        }
-
-        $diff = $end_actual_week->diffInDays($start_actual_week);
-        $actualWeek = [];
-        for ($i = 0; $i <= $diff; $i++) {
-            // $day = Carbon::now()->next(Carbon::MONDAY);
-            $day = clone $start_actual_week;
-            $actualWeek[] = [
-                'date' => $day->addDays($i)->format('Y-m-d'),
-                'day_name' => $day->isoFormat('dddd'),
-                'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
-                'num_week' => $day->dayOfWeek,
-                'incidences' => [],
-                'comments' => [],
-                'id' => 0,
-                'span' => 0,
-                'holiday' => null,
-            ];
-        }
-
-        $diff = $end_next_week->diffInDays($start_next_week);
-        $nextWeek = [];
-        for ($i = 0; $i <= $diff; $i++) {
-            // $day = Carbon::now()->next(Carbon::MONDAY);
-            $day = clone $start_next_week;
-            $nextWeek[] = [
-                'date' => $day->addDays($i)->format('Y-m-d'),
-                'day_name' => $day->isoFormat('dddd'),
-                'day_num' => dateUtils::formatDate($day->format('d-m-Y'), 'D-M-Y'),
-                'num_week' => $day->dayOfWeek,
-                'incidences' => [],
-                'comments' => [],
-                'id' => 0,
-                'span' => 0,
-                'holiday' => null,
-            ];
-        }
-
-        $lastWeeklOrgCharts = Vacations_report::setWeekToEmployee($lEmployeesLastWeek, $holidays, $lastWeek);
-        $actualWeeklOrgCharts = Vacations_report::setWeekToEmployee($lEmployeesWeek, $holidays, $actualWeek);
-        $nextWeeklOrgCharts = Vacations_report::setWeekToEmployee($lEmployeesNextWeek, $holidays, $nextWeek);
-
-        $lastSDate = dateUtils::datesToString($start_last_week, $end_last_week);
-        $actualSDate = dateUtils::datesToString($start_actual_week, $end_actual_week);
-        $nextSDate = dateUtils::datesToString($start_next_week, $end_next_week);
-
-        $incidencesSended = [];
-        $permissionsSended = [];
-        $lOrgCharts = $lastWeeklOrgCharts->merge($actualWeeklOrgCharts)->merge($nextWeeklOrgCharts);
-        foreach ($lOrgCharts as $org) {
-            foreach ($org->lEmployees as $emp) {
-                foreach ($emp->lIncidences as $inc) {
-                    switch ($inc->application_type) {
-                        case 'incidence':
-                            $incidencesSended[] = $inc->id;
-                            break;
-                        case 'permission':
-                            $permissionsSended[] = $inc->id;
-                            break;
-                        default:
-                            # code...
-                            break;
-                    }
-                }
-            }
-        }
-
-        $lUsersids = $lConfigReports->pluck('user_id')->toArray();
-
-        LogsExecutionIncidencesReport::create([
-            'type_report' => 'daily',
-            'executed_at' => Carbon::now()->toDateTimeString(),
-            'applications_sended' => json_encode($incidencesSended),
-            'hours_leave_sended' => json_encode($permissionsSended),
-            'to_users' => json_encode($lUsersids),
-            'next_execution' => Carbon::now()->addDay()->toDateTimeString()
-        ]);
-
-        $sDate = dateUtils::formatDate($actual_date, 'ddd D-m-Y');
-
-        foreach ($lConfigReports as $conf) {
             try {
-                
+
                 if ($lastWeeklOrgCharts->count() > 0 || $actualWeeklOrgCharts->count() > 0 || $nextWeeklOrgCharts->count() > 0) {
                     Mail::to($conf->institutional_mail)->send(new dailyIncidencesReportMail(
                         $lastWeeklOrgCharts,
@@ -610,6 +597,15 @@ class Vacations_report
                 $output->writeln($th->getMessage());
             }
         }
+
+        LogsExecutionIncidencesReport::create([
+            'type_report' => 'daily',
+            'executed_at' => Carbon::now()->toDateTimeString(),
+            'applications_sended' => json_encode($incidencesSended),
+            'hours_leave_sended' => json_encode($permissionsSended),
+            'to_users' => json_encode($lUsersids),
+            'next_execution' => Carbon::now()->addDay()->toDateTimeString()
+        ]);
     }
 
     public static function setWeekToEmployee($lEmployees, $holidays, $week)
