@@ -113,6 +113,10 @@ class permissionController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $requested_client = $config->requested_client_web;
 
+        foreach ($lPermissions as $oPer) {
+            $oPer->is_direct = 1;
+        }
+
         return view('permissions.permissions')->with('lPermissions', $lPermissions)
                                             ->with('constants', $constants)
                                             ->with('lTypes', $lTypes)
@@ -181,6 +185,10 @@ class permissionController extends Controller
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
 
+            foreach ($lPermissions as $oPer) {
+                $oPer->is_direct = 1;
+            }
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -234,6 +242,10 @@ class permissionController extends Controller
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
 
+            foreach ($lPermissions as $oPer) {
+                $oPer->is_direct = 1;
+            }
+
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
@@ -255,6 +267,10 @@ class permissionController extends Controller
             $permission->update();
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
+
+            foreach ($lPermissions as $oPer) {
+                $oPer->is_direct = 1;
+            }
             
             \DB::commit();
         } catch (\Throwable $th) {
@@ -380,6 +396,10 @@ class permissionController extends Controller
             $mailLog->save();
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
+
+            foreach ($lPermissions as $oPer) {
+                $oPer->is_direct = 1;
+            }
 
             $data = new \stdClass;
             $data->user_id = null;
@@ -523,6 +543,10 @@ class permissionController extends Controller
 
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$permission->cl_permission_id);
+
+            foreach ($lPermissions as $oPer) {
+                $oPer->is_direct = 1;
+            }
 
             $employee = \DB::table('users')
                             ->where('id', $permission->user_id)
