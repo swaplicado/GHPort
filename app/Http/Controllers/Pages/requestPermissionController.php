@@ -346,7 +346,7 @@ class requestPermissionController extends Controller
                 $data = permissionsUtils::sendPermissionToCAP($permission);
                 if($data->status != 'Success'){
                     \DB::rollBack();
-                    return json_encode(['sucess' => false, 'message' => $data->message, 'icon' => 'error']);
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
                 }
             }
 
@@ -388,7 +388,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -477,7 +477,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
