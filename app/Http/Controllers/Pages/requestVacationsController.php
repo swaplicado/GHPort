@@ -830,7 +830,7 @@ class requestVacationsController extends Controller
             }
         }
 
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
+        return json_encode(['success' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
     }
 
     public function sendRequestVacation($oApplication, $lDays){

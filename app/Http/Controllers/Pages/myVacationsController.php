@@ -519,6 +519,7 @@ class myVacationsController extends Controller
 
                     $client = new Client([
                         'base_uri' => $config->urlNotificationAppMobile,
+                        'connect_timeout' => 10,
                         'timeout' => 30.0,
                         'headers' => $headers,
                         'verify' => false
@@ -589,7 +590,7 @@ class myVacationsController extends Controller
             }
         }
 
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
+        return json_encode(['success' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
     }
 
     public function getEmpApplicationsEA(Request $request){

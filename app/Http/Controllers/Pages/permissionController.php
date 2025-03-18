@@ -466,6 +466,7 @@ class permissionController extends Controller
 
                 $client = new Client([
                     'base_uri' => $config->urlNotificationAppMobile,
+                    'connect_timeout' => 10,
                     'timeout' => 30.0,
                     'headers' => $headers,
                     'verify' => false
@@ -537,7 +538,7 @@ class permissionController extends Controller
                 $data = permissionsUtils::sendPermissionToCAP($permission);
                 if($data->status != 'Success'){
                     \DB::rollBack();
-                    return json_encode(['sucess' => false, 'message' => $data->message, 'icon' => 'error']);
+                    return json_encode(['success' => false, 'message' => $data->message, 'icon' => 'error']);
                 }
             }
 
@@ -613,6 +614,6 @@ class permissionController extends Controller
             }
         }
         
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
+        return json_encode(['success' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
     }
 }

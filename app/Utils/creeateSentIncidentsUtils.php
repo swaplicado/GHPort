@@ -400,6 +400,7 @@ class creeateSentIncidentsUtils
     
                 $client = new Client([
                     'base_uri' => $config->urlNotificationAppMobile,
+                    'connect_timeout' => 10,
                     'timeout' => 30.0,
                     'headers' => $headers,
                     'verify' => false

@@ -190,7 +190,7 @@ class requestIncidencesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => 'En este momento, no es posible obtener los datos del colaborador debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener los datos del colaborador debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lIncidences' => $lIncidences, 'lEvents' => $lEvents]);
@@ -435,7 +435,7 @@ class requestIncidencesController extends Controller
             }
         }
 
-        return json_encode(['sucess' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
+        return json_encode(['success' => true, 'status' => $mailLog->sys_mails_st_id, 'message' => $message]);
     }
 
     public function getAllEmployees(){

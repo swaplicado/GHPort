@@ -314,7 +314,7 @@ class ExportUtils {
             $result = $oController->acceptRequest($newRequest);
         } catch (\Throwable $th) {
             \Log::error($th);
-            $result = json_encode(['sucess' => false, 'error' => $th->getMessage()]);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
 
         $oResult = json_decode($result);
@@ -333,7 +333,7 @@ class ExportUtils {
             $result = $oController->approbeIncidence($newRequest);
         } catch (\Throwable $th) {
             \Log::error($th);
-            $result = json_encode(['sucess' => false, 'error' => $th->getMessage()]);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
 
         $oResult = json_decode($result);
@@ -352,7 +352,7 @@ class ExportUtils {
             $result = $oController->approbePermission($newRequest);
         } catch (\Throwable $th) {
             \Log::error($th);
-            $result = json_encode(['sucess' => false, 'error' => $th->getMessage()]);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
 
         $oResult = json_decode($result);
@@ -371,7 +371,7 @@ class ExportUtils {
             $result = $oController->rejectRequest($newRequest);
         } catch (\Throwable $th) {
             \Log::error($th);
-            $result = json_encode(['sucess' => false, 'error' => $th->getMessage()]);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
         $oResult = json_decode($result);
         return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
@@ -389,7 +389,7 @@ class ExportUtils {
             $result = $oController->rejectIncidence($newRequest);
         } catch (\Throwable $th) {
             \Log::error($th);
-            $result = json_encode(['sucess' => false, 'error' => $th->getMessage()]);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
         $oResult = json_decode($result);
         return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
@@ -407,7 +407,7 @@ class ExportUtils {
             $result = $oController->rejectPermission($newRequest);
         } catch (\Throwable $th) {
             \Log::error($th);
-            $result = json_encode(['sucess' => false, 'error' => $th->getMessage()]);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
         $oResult = json_decode($result);
         return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
