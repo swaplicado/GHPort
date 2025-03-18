@@ -110,13 +110,19 @@ class myVacationsController extends Controller
         try {
 
             $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
-
-            foreach($arrApplicationsEA as $arr){
+            $arrDaysBetween = [];
+            foreach ($arrApplicationsEA as $arr) {
                 $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
-                if($isBetWeen){
-                    // return json_encode(['success' => false, 'message' => 'Ya existe una solicitud de vacaciones para la fecha: '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' , ingrese una fecha diferente para poder continuar', 'icon' => 'warning']);
-                    return json_encode(['success' => false, 'message' => 'En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'icon' => 'warning']);
+                if ($isBetWeen) {
+                    $arrDaysBetween[] = Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY');
                 }
+            }
+            
+            if (count($arrDaysBetween) > 0) {
+                $message = 'En ' . (count($arrDaysBetween) > 1 ? 'las fechas ' : 'la fecha ') . 
+                        implode(', ', $arrDaysBetween) .
+                        ' ya hay una incidencia registrada. Por favor, ingrese una fecha o periodo distinto para crear una nueva incidencia';
+                return json_encode(['success' => false, 'message' => $message, 'icon' => 'warning']);
             }
 
             // $user = $this->getUserVacationsData();

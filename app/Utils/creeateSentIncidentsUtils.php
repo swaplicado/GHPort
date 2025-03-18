@@ -41,15 +41,21 @@ class creeateSentIncidentsUtils
         $requested_client = $requestVacation->requested_client;
 
         $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($employee_id);
+        $arrDaysBetween = [];
         foreach ($arrApplicationsEA as $arr) {
             $isBetWeen = Carbon::parse($arr)->between($startDate, $endDate);
             if ($isBetWeen) {
-                // crear expecion
-                throw new \Exception('En la fecha ' . 
-                        Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY') . 
-                        ' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 1);
+                $arrDaysBetween[] = Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY');
             }
         }
+        
+        if (count($arrDaysBetween) > 0) {
+            $message = 'En ' . (count($arrDaysBetween) > 1 ? 'las fechas ' : 'la fecha ') . 
+                    implode(', ', $arrDaysBetween) .
+                    ' ya hay una incidencia registrada. Por favor, ingrese una fecha o periodo distinto para crear una nueva incidencia';
+                    throw new \Exception($message, 1);
+        }
+
         foreach ($user->applications as $ap) {
             if ($ap->request_status_id == 1) {
                 throw new \Exception('No es posible generar una nueva solicitud de vacaciones si existen solicitudes pendientes de envío. Por favor, envíe o elimine las solicitudes pendientes antes de continuar', 1);
@@ -446,12 +452,19 @@ class creeateSentIncidentsUtils
         }
 
         $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($oUser->id);
-
-        foreach($arrApplicationsEA as $arr){
+        $arrDaysBetween = [];
+        foreach ($arrApplicationsEA as $arr) {
             $isBetWeen = Carbon::parse($arr)->between($start_date, $end_date);
-            if($isBetWeen){
-                throw new \Exception('En la fecha '.Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY').' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 1);
+            if ($isBetWeen) {
+                $arrDaysBetween[] = Carbon::parse($arr)->locale('es-ES')->isoFormat('ddd D-MMM-YYYY');
             }
+        }
+        
+        if (count($arrDaysBetween) > 0) {
+            $message = 'En ' . (count($arrDaysBetween) > 1 ? 'las fechas ' : 'la fecha ') . 
+                    implode(', ', $arrDaysBetween) .
+                    ' ya hay una incidencia registrada. Por favor, ingrese una fecha o periodo distinto para crear una nueva incidencia';
+                    throw new \Exception($message, 1);
         }
 
         $lTemp = EmployeeVacationUtils::getEmployeeTempSpecial($oUser->org_chart_job_id, $oUser->id, $oUser->job_id);
