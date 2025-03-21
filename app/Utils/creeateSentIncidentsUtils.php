@@ -761,6 +761,9 @@ class creeateSentIncidentsUtils
             if ($is_week && $return_day->dayOfWeek == 0) {
                 continue;
             }
+            if (!$is_week && ($return_day->dayOfWeek == 0 || $return_day->dayOfWeek == 6)) {
+                continue;
+            }
             if (!in_array($return_day->format('Y-m-d'), $holidayDates)) {
                 break;
             }
