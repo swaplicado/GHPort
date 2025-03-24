@@ -30,10 +30,17 @@ class OrgChartController extends Controller
             if($area->positions == 1){
                 $area->users = User::leftJoin('users_vs_photos as up', 'up.user_id', '=', 'users.id')
                                     ->where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])
-                                    ->select('full_name', 'up.photo_base64_n as photo64')->get()->toArray();
+                                    ->select('full_name', 'up.photo_base64_n as photo64')
+                                    ->orderBy('full_name', 'asc')
+                                    ->get()
+                                    ->toArray();
                 $area->is_head = true;
             }else{
-                $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])->select('full_name')->get()->toArray();
+                $area->users = User::where([['is_active', 1], ['is_delete', 0], ['org_chart_job_id', $area->id_org_chart_job]])
+                                    ->select('full_name')
+                                    ->orderBy('full_name', 'asc')
+                                    ->get()
+                                    ->toArray();
                 $area->is_head = false;
             }
         }
@@ -80,6 +87,7 @@ class OrgChartController extends Controller
                     ->where('ocj.is_deleted', 0)
                     ->where('ocj.positions', '>', 0)
                     ->where('ocj.id_org_chart_job', '!=', 1)
+                    ->orderBy('ocj.job_name', 'asc')
                     ->get();
 
         foreach($areas as $area){
@@ -176,6 +184,7 @@ class OrgChartController extends Controller
                         ->where('is_active', 1)
                         ->where('is_delete', 0)
                         ->select('users.*', 'up.photo_base64_n')
+                        ->orderBy('full_name_ui', 'asc')
                         ->get();
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);

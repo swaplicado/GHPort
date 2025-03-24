@@ -174,6 +174,7 @@ class OrgChartUtils {
                     ->whereNotIn('id', $arrExcept)
                     ->where('is_active', 1)
                     ->where('is_delete', 0)
+                    ->orderBy('full_name_ui', 'asc')
                     ->get();
 
         return $lUsers;
@@ -195,6 +196,7 @@ class OrgChartUtils {
                     ->whereIn('org_chart_job_id', $lOrgCharts)
                     ->where('is_active', 1)
                     ->where('is_delete', 0)
+                    ->orderBy('full_name_ui', 'asc')
                     ->get();
 
         return $lUsers;

@@ -107,7 +107,8 @@
                                             'colTargets' => [0,1,2],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
-                                            'edit_modal' => true
+                                            'edit_modal' => true,
+                                            'order' => [3,'asc'],
                                         ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_empVsOrgChartJob.js') }}"></script>
     @include('layouts.manual_jsControll')

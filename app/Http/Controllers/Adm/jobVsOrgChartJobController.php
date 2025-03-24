@@ -22,10 +22,11 @@ class jobVsOrgChartJobController extends Controller
                                     'oj.positions',
                                 )
                                 ->where('j.id_job', '!=', 1)
+                                ->orderBy('oj.job_name', 'asc')
                                 ->get();
 
-        $lJobs = \DB::table('ext_jobs')->where('is_deleted', 0)->get();
-        $lOrgChartJobs = \DB::table('org_chart_jobs')->where('is_deleted', 0)->get();
+        $lJobs = \DB::table('ext_jobs')->where('is_deleted', 0)->orderBy('job_name', 'asc')->get();
+        $lOrgChartJobs = \DB::table('org_chart_jobs')->where('is_deleted', 0)->orderBy('job_name', 'asc')->get();
 
         return view('Adm.jobVsOrgChartJob')->with('lJobVsOrgChartJob', $lJobVsOrgChartJob)
                                         ->with('lJobs', $lJobs)

@@ -393,6 +393,7 @@ class UsersController extends Controller
 
         $orgChart = \DB::table('org_chart_jobs')
                         ->where('is_deleted', 0)
+                        ->orderBy('job_name', 'asc')
                         ->get();
 
         $planVacations = \DB::table('cat_vacation_plans')

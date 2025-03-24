@@ -186,6 +186,7 @@ class delegationController extends Controller
         $lUsers = \DB::table('users')
                     ->where('id','!=', 1)
                     ->where('is_delete', 0)
+                    ->orderBy('full_name_ui', 'asc')
                     ->get();
 
         $lDelegations_created = \DB::table('delegations as d')
@@ -203,6 +204,7 @@ class delegationController extends Controller
         $lMyManagers = \DB::table('users')
                         ->where('id','!=', 1)
                         ->where('is_delete', 0)
+                        ->orderBy('full_name_ui', 'asc')
                         ->get();
 
         return [$lUsers, $lDelegations_created, $lMyManagers];

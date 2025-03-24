@@ -26,6 +26,7 @@ class empVSOrgChartController extends Controller
                             'orTop.id_org_chart_job as id_org_chart_job_top',
                             'orTop.job_name_ui as job_name_ui_top',
                         )
+                        ->orderBy('users.full_name_ui', 'asc')
                         ->get();
 
         return $lUsers;
@@ -33,7 +34,7 @@ class empVSOrgChartController extends Controller
 
     public function index(){
         $lUsers = $this->getlUsers();
-        $lOrgChart = OrgChartJob::where('is_deleted', 0)->get();
+        $lOrgChart = OrgChartJob::where('is_deleted', 0)->orderBy('job_name', 'asc')->get();
 
         $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
         return view('Adm.empVSOrgChart')->with('lUsers', $lUsers)
