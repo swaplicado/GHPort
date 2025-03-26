@@ -341,6 +341,109 @@ class permissionController extends Controller
         return json_encode(['success' => true, 'oPermission' => $oPermission, 'schedule' => $schedule, 'permission' => $permission]);
     }
 
+    // sacar del empleado recibido, cuantos permisos y cuantas horas a pedido en cierto numero de meses a partir una fecha
+    public function checkPermissions(Request $request){
+        $totalHours = 0;
+        $totalMinutes = 0;
+        $totalPermissions = 0;
+        $periodo = '';
+        //$employeeId = $request->employeeId;
+        $employeeId = 2;
+        $startDate = $request->startDate;
+        $config = \App\Utils\Configuration::getConfigurations();
+        $numMonthsCheck = $config->numMonthCheck;// 1 mes , 2 bimestre, 3 trimestre, 4 cuatrimestre, 5 no usar y 6 semestre 
+        $startDateQuery = '';
+        $endDateQuery = '';
+
+        $startDateQuery = Carbon::parse($startDate)->startOfMonth();
+        $endDateQuery = Carbon::parse($startDate)->endOfMonth();
+
+        switch ($numMonthsCheck) {
+            case 1: // Mes
+                $periodo = 'en el mes';
+                break;
+            case 2: // Bimestre
+                $periodo = 'en el bimestre';
+                $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 2);
+                $endDateQuery = $startDateQuery->copy()->addMonths(1)->endOfMonth();
+                break;
+            case 3: // Trimestre
+                $periodo = 'en el trimestre';
+                $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 3);
+                $endDateQuery = $startDateQuery->copy()->addMonths(2)->endOfMonth();
+                break;
+            case 4: // Cuatrimestre
+                $periodo = 'en el cuatrimestre';
+                $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 4);
+                $endDateQuery = $startDateQuery->copy()->addMonths(3)->endOfMonth();
+                break;
+            case 5: // No usar
+                $startDateQuery = null;
+                $endDateQuery = null;
+                break;
+            case 6: // Semestre
+                $periodo = 'en el semestre';
+                $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 6);
+                $endDateQuery = $startDateQuery->copy()->addMonths(5)->endOfMonth();
+                break;
+            default:
+                throw new Exception("Valor de numMonthsCheck no válido");
+        }
+            
+        $lPermissions = \DB::table('hours_leave as hr')
+            ->leftJoin('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
+            ->leftJoin('permission_cl as cl', 'cl.id_permission_cl', '=', 'hr.cl_permission_id')
+            ->leftJoin('sys_applications_sts as st', 'st.id_applications_st', '=', 'hr.request_status_id')
+            ->leftJoin('users as u', 'u.id', '=', 'hr.user_apr_rej_id')
+            ->leftJoin('users as emp', 'emp.id', '=', 'hr.user_id')
+            ->where('hr.is_deleted', 0)
+            ->where('hr.user_id', $employeeId)
+            ->where('cl.id_permission_cl', 1)
+            ->where('hr.request_status_id', 3)
+            ->where(function($query) use ($startDateQuery, $endDateQuery) {
+                $query->whereBetween('hr.start_date', [$startDateQuery, $endDateQuery])
+                      ->orWhereBetween('hr.end_date', [$startDateQuery, $endDateQuery])
+                      ->orWhere(function($q) use ($startDateQuery, $endDateQuery) {
+                          // Para permisos que inicien antes y terminen después del rango
+                          $q->where('hr.start_date', '<=', $startDateQuery)
+                            ->where('hr.end_date', '>=', $endDateQuery);
+                      });
+            })
+            ->select(
+                'hr.*',
+                'tp.id_permission_tp',
+                'tp.permission_tp_name',
+                'cl.permission_cl_name',
+                'st.applications_st_name',
+                'u.full_name_ui as user_apr_rej_name',
+                'emp.full_name_ui as employee',
+                'emp.org_chart_job_id as org_chart_job_id',
+            )
+        ->get();
+        
+        $totalPermissions = $lPermissions->count();
+        // Sumamos los minutos de permisos normales
+        $totalMinutes = $lPermissions->sum('minutes');
+
+        // Sumamos minutos de permisos intermedios
+        foreach ($lPermissions as $permission) {
+            if ($permission->type_permission_id == SysConst::PERMISO_INTERMEDIO) {
+                $interOut = Carbon::parse($permission->intermediate_out);
+                $interReturn = Carbon::parse($permission->intermediate_return);
+                $totalMinutes += $interOut->diffInMinutes($interReturn);
+            }
+        }
+
+        // Retornar respuesta con los cálculos
+        return response()->json([
+            'success' => true,
+            'total_permissions' => $totalPermissions,
+            'total_hours' => $totalHours,
+            'total_minutes' => $totalMinutes,
+            'periodo' => $periodo
+        ]);
+    } 
+
     public function gestionSendIncidence(Request $request){
         try {
             $oPermission = Permission::findOrFail($request->permission_id);

@@ -211,6 +211,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('permission/delete', 'Pages\permissionController@deletePermission')->name('permission_delete');
     Route::post('permission/gestionSendIncidence', 'Pages\permissionController@gestionSendIncidence')->name('permission_gestionSendIncidence');
     Route::post('permission/checkMail', 'Pages\permissionController@checkMail')->name('permission_checkMail');
+    Route::get('permission/permission/checkPermission', 'Pages\permissionController@checkPermissions')->name('permission_checkPermission');
 
     Route::get('requestPermission/{id?}', 'Pages\requestPermissionController@index')->name('requestPermission_index');
     Route::get('reqPer/personal/{id?}', 'Pages\requestPermissionController@PersonalTheme')->name('requestPersonalPermission');
