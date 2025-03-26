@@ -347,8 +347,7 @@ class permissionController extends Controller
         $totalMinutes = 0;
         $totalPermissions = 0;
         $periodo = '';
-        //$employeeId = $request->employeeId;
-        $employeeId = 2;
+        $employeeId = $request->employeeId;
         $startDate = $request->startDate;
         $config = \App\Utils\Configuration::getConfigurations();
         $numMonthsCheck = $config->numMonthCheck;// 1 mes , 2 bimestre, 3 trimestre, 4 cuatrimestre, 5 no usar y 6 semestre 

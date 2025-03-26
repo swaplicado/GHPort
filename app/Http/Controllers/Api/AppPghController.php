@@ -6,11 +6,14 @@ use App\Constants\SysConst;
 use App\Http\Controllers\Controller;
 use App\Utils\delegationUtils;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Utils\ExportUtils;
 use App\Http\Controllers\Pages\incidencesController;
 use Log;
 use App\Utils\EmployeeVacationUtils;
+use App\Http\Controllers\Pages\permissionController;
+use stdClass;
 
 class AppPghController extends Controller
 {
@@ -630,17 +633,50 @@ class AppPghController extends Controller
             $last_sync_date = $request->last_sync_date;
             $employees = ExportUtils::getEmployees($id_user_boss, $last_sync_date);
 
+            $oRequest = new stdClass();
+            $oRequest->startDate = Carbon::now()->toDateString();
             foreach ($employees as $key => $employee) {
                 $oUser = EmployeeVacationUtils::getEmployeeDataForMyVacation($employee->id);
                 $employee->tot_vacation_remaining = $oUser->tot_vacation_remaining;
                 $employee->mySelf = 0;
                 $employee->rol_id = 0;
+
+                $oRequest->employeeId = $employee->id;
+                $newRequest = new Request((array)$oRequest);
+                $oController = app(permissionController::class);
+                $result = $oController->checkPermissions($newRequest);
+                if ($result) {
+                    $result = json_decode($result->getContent());
+                    if ($result->success) {
+                        $employee->permissions = $result;
+                    } else {
+                        $employee->permissions = null;
+                    }
+                } else {
+                    $employee->permissions = null;
+                }
             }
 
             if ($config->appMobileWithMySelf) {
                 $oUser = delegationUtils::getUser();
                 $vacation_data = EmployeeVacationUtils::getEmployeeDataForMyVacation($oUser->id);
                 $oUser->tot_vacation_remaining = $vacation_data->tot_vacation_remaining;
+
+                $oRequest->employeeId = $oUser->id;
+                $newRequest = new Request((array)$oRequest);
+                $oController = app(permissionController::class);
+                $result = $oController->checkPermissions($newRequest);
+                if ($result) {
+                    $result = json_decode($result->getContent());
+                    if ($result->success) {
+                        $oUser->permissions = $result;
+                    } else {
+                        $oUser->permissions = null;
+                    }
+                } else {
+                    $oUser->permissions = null;
+                }
+
                 array_push($employees, [ 
                         "id" => $oUser->id,
                         "first_name" => $oUser->first_name,
@@ -653,7 +689,8 @@ class AppPghController extends Controller
                         "created_at" => $oUser->created_at instanceof Carbon ? $oUser->created_at->toDateTimeString() : $oUser->created_at,
                         "tot_vacation_remaining" => $oUser->tot_vacation_remaining,
                         "mySelf" => 1,
-                        "rol_id" => $oUser->rol_id
+                        "rol_id" => $oUser->rol_id,
+                        "permissions" => $oUser->permissions
                     ]
                 );
             }
