@@ -363,17 +363,17 @@ class permissionController extends Controller
                 $periodo = 'en el mes';
                 break;
             case 2: // Bimestre
-                $periodo = 'en el bimestre';
+                $periodo = 'bimestre';
                 $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 2);
                 $endDateQuery = $startDateQuery->copy()->addMonths(1)->endOfMonth();
                 break;
             case 3: // Trimestre
-                $periodo = 'en el trimestre';
+                $periodo = 'trimestre';
                 $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 3);
                 $endDateQuery = $startDateQuery->copy()->addMonths(2)->endOfMonth();
                 break;
             case 4: // Cuatrimestre
-                $periodo = 'en el cuatrimestre';
+                $periodo = 'cuatrimestre';
                 $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 4);
                 $endDateQuery = $startDateQuery->copy()->addMonths(3)->endOfMonth();
                 break;
@@ -382,7 +382,7 @@ class permissionController extends Controller
                 $endDateQuery = null;
                 break;
             case 6: // Semestre
-                $periodo = 'en el semestre';
+                $periodo = 'semestre';
                 $startDateQuery = $startDateQuery->subMonths(($startDateQuery->month - 1) % 6);
                 $endDateQuery = $startDateQuery->copy()->addMonths(5)->endOfMonth();
                 break;
@@ -440,6 +440,7 @@ class permissionController extends Controller
             'total_permissions' => $totalPermissions,
             'total_hours' => $totalHours,
             'total_minutes' => $totalMinutes,
+            'timeString' => Carbon::createFromTime(0, 0)->addMinutes($totalMinutes)->format('H:i'),
             'periodo' => $periodo
         ]);
     } 
