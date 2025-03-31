@@ -324,6 +324,11 @@ class requestPermissionController extends Controller
             \DB::beginTransaction();
             $permission = Permission::findOrFail($request->permission_id);
 
+            $result = incidencesUtils::checkVoboIsOpen($permission->user_id, $permission->start_date, $permission->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
+
             if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
                 return json_encode(['success' => false, 'message' => 'La solicitud que deseas aprobar no tiene el estatus de "Por aprobar". Solo se pueden aprobar solicitudes con dicho estatus', 'icon' => 'warning']);
             }

@@ -19,6 +19,7 @@ use App\Mail\requestPermissionMail;
 use App\Mail\authorizePermissionMail;
 use App\Utils\notificationsUtils;
 use GuzzleHttp\Client;
+use \App\Utils\incidencesUtils;
 
 class permissionController extends Controller
 {
@@ -475,6 +476,11 @@ class permissionController extends Controller
             \DB::beginTransaction();
             $permission = Permission::findOrFail($permission_id);
 
+            $result = incidencesUtils::checkVoboIsOpen($permission->user_id, $permission->start_date, $permission->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
+
             $date = Carbon::now();
             $permission->request_status_id = SysConst::APPLICATION_ENVIADO;
             $permission->date_send_n = $date->toDateString();
@@ -624,6 +630,11 @@ class permissionController extends Controller
             \DB::beginTransaction();
 
             $permission = Permission::findOrFail($permission_id);
+
+            $result = incidencesUtils::checkVoboIsOpen($permission->user_id, $permission->start_date, $permission->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
 
             $date = Carbon::now();
             $permission->request_status_id = SysConst::APPLICATION_APROBADO;

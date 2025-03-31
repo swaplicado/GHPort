@@ -495,4 +495,37 @@ class incidencesUtils {
 
         return $data;
     }
+
+    public static function checkVoboIsOpen($user_id, $start_date, $end_date) {
+        $data = incidencesUtils::loginToCAP();
+        $config = \App\Utils\Configuration::getConfigurations();
+        $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => $data->token_type.' '.$data->access_token
+        ];
+        
+        $client = new Client([
+            'base_uri' => $config->urlSyncCAP,
+            'timeout' => 30.0,
+            'headers' => $headers
+        ]);
+
+        $external_employee_id = \DB::table('users')
+                                    ->where('id', $user_id)
+                                    ->value('external_id_n');
+
+        $body = '{
+            "employee_external_id": '.$external_employee_id.',
+            "ini_date": "'.$start_date.'",
+            "end_date": "'.$end_date.'"
+        }';
+        
+        $request = new \GuzzleHttp\Psr7\Request('POST', 'checkVoboIsOpen', $headers, $body);
+        $response = $client->sendAsync($request)->wait();
+        $jsonString = $response->getBody()->getContents();
+        $data = json_decode($jsonString);
+
+        return $data;
+    }
 }

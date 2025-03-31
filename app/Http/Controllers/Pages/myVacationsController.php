@@ -23,6 +23,7 @@ use \App\Utils\delegationUtils;
 use \App\Utils\folioUtils;
 use App\Utils\recoveredVacationsUtils;
 use App\Utils\notificationsUtils;
+use App\Utils\incidencesUtils;
 
 class myVacationsController extends Controller
 {
@@ -401,6 +402,11 @@ class myVacationsController extends Controller
             }
 
             $application = Application::findOrFail($request->id_application);
+
+            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
 
             $data = $this->checkExternalIncident($application, json_decode($application->ldays));
 

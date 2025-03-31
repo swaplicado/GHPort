@@ -358,6 +358,11 @@ class requestVacationsController extends Controller
         // }
         try {
 
+            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
+
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);
             }
@@ -480,6 +485,11 @@ class requestVacationsController extends Controller
     public function acceptAutorizeRequest(Request $request){
         $application = Application::findOrFail($request->id_application);
         try {
+
+            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);

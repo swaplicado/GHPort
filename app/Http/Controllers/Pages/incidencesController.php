@@ -404,6 +404,11 @@ class incidencesController extends Controller
             \DB::beginTransaction();
             $application = Application::findOrFail($application_id);
 
+            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
+
             $user = \DB::table('users')
                         ->where('id', $application->user_id)
                         ->first();
@@ -569,6 +574,11 @@ class incidencesController extends Controller
             \DB::beginTransaction();
 
             $application = Application::findOrFail($application_id);
+
+            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            if($result->result == false){
+                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            }
 
             $date = Carbon::now();
             $application->request_status_id = SysConst::APPLICATION_APROBADO;
