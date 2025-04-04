@@ -34,6 +34,7 @@
             this.routeCreate = <?php echo json_encode(route('permission_create')) ?>;
             this.routeUpdate = <?php echo json_encode(route('permission_update')) ?>;
             this.routeGetPermission = <?php echo json_encode(route('permission_getPermission')) ?>;
+            this.routeCheckPermission = <?php echo json_encode(route('permission_checkPermission')) ?>; 
             this.routeDelete = <?php echo json_encode(route('permission_delete')) ?>;
             this.routeGestionSendIncidence = <?php echo json_encode(route('permission_gestionSendIncidence')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
@@ -166,7 +167,7 @@
             let oCalendar = $('#two-inputs-calendar').data('dateRangePicker');
             oCalendar.destroy();
         }
-        oDateRangePicker = new SDateRangePicker();
+        oDateRangePicker = new SDateRangePicker(); 
         oDateRangePicker.setDateRangePicker(
             'two-inputs-calendar',
             'date-range-001',

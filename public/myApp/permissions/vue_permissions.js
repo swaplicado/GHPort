@@ -736,11 +736,52 @@ var app = new Vue({
             }
 
             SGui.showWaiting(15000);
+            if( this.class_id == 1 ){
+                axios.get(this.oData.routeCheckPermission, {
+                    params: {
+                        employeeId: this.oUser.id,
+                        startDate: moment(this.startDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                    }
+                })
+                .then(result => {
+                    let data = result.data;
+                    if (data.success && data.total_permissions > 0) {
+                        let permisoTexto = data.total_permissions === 1 ? "permiso" : "permisos";
+                        let mensaje = `Hasta el momento, has solicitado ${data.total_permissions} ${permisoTexto}, acumulando un total de ${data.timeString}, en el ${data.periodo} actual. ¿Deseas continuar?`;
+                        Swal.fire({
+                            title: 'Permisos existentes',
+                            text: mensaje,
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (this.isEdit) {
+                                    this.setApplication(this.oData.routeUpdate);
+                                } else {
+                                    this.setApplication(this.oData.routeCreate);
+                                }    
+                            }
+                        })
+                    }else {
+                        if (this.isEdit) {
+                            this.setApplication(this.oData.routeUpdate);
+                        } else {
+                            this.setApplication(this.oData.routeCreate);
+                        }
+                    }
+                })
+                .catch(function(error) {
 
-            if (this.isEdit) {
-                this.setApplication(this.oData.routeUpdate);
-            } else {
-                this.setApplication(this.oData.routeCreate);
+                });
+            }else{
+                if (this.isEdit) {
+                    this.setApplication(this.oData.routeUpdate);
+                } else {
+                    this.setApplication(this.oData.routeCreate);
+                }
             }
         },
 
@@ -1121,6 +1162,41 @@ var app = new Vue({
                     icon: 'info',
                 });
             } else{
+                if (this.class_id == 1) {
+                    let formattedStartDate = this.oPermission.start_date
+                        ? moment(this.oPermission.start_date).format("YYYY-MM-DD")
+                        : null;
+                    if (!formattedStartDate) {
+                        SGui.showMessage('', 'La fecha de inicio del permiso es inválida.', 'error');
+                        return;
+                    }
+        
+                    try {
+                        const result = await axios.get(this.oData.routeCheckPermission, {
+                            params: {
+                                employeeId: this.oPermission.user_id,
+                                startDate: formattedStartDate,
+                            }
+                        });
+                    
+                        let data = result.data;
+                    
+                        if (data.success && data.total_permissions > 0) {
+                            let permisoTexto = data.total_permissions === 1 ? "permiso" : "permisos";
+                            let mensaje = `El colaborador ya ha pedido ${data.total_permissions} ${permisoTexto}, acumulando un total de ${data.timeString}, en el ${data.periodo} actual.`;
+                    
+                            await Swal.fire({
+                                title: 'Permisos existentes',
+                                text: mensaje,
+                                icon: 'warning', // Cambiar a 'info' para indicar que es solo informativo
+                                showConfirmButton: true // No muestra botón de aceptar
+                            });
+                        }
+                    } catch (error) {
+                        console.error("Error en la verificación de permisos:", error);
+                        SGui.showMessage('', 'Error al verificar permisos. Intente de nuevo.', 'error');
+                    }
+                }
                 let lMessages = [];
                 for(let oEvent of this.lEvents) {
                     for (let day of oEvent.lDates) {

@@ -39,6 +39,7 @@
             this.routeGetAllEmployees = <?php echo json_encode(route('requestPermission_getAllEmployees')) ?>;
             this.routeGetDirectEmployees = <?php echo json_encode(route('requestPermission_getDirectEmployees')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
+            this.routeCheckPermission = <?php echo json_encode(route('permission_checkPermission')) ?>; 
             this.routeSeeLikeManager = <?php echo json_encode(route('requestPermission_seeLikeManager')) ?>;
             this.routePermission_cancel = <?php echo json_encode(route('requestPermission_cancel')) ?>;
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
