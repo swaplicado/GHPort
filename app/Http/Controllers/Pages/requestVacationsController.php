@@ -486,10 +486,10 @@ class requestVacationsController extends Controller
         $application = Application::findOrFail($request->id_application);
         try {
 
-            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
-            if($result->result == false){
-                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
-            }
+            // $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            // if($result->result == false){
+            //     return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            // }
 
             if($application->request_status_id != SysConst::APPLICATION_CREADO){
                 return json_encode(['success' => false, 'message' => 'Solo se pueden aprobar solicitudes nuevas', 'icon' => 'warning']);

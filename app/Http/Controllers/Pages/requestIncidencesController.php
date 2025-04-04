@@ -201,10 +201,10 @@ class requestIncidencesController extends Controller
             \DB::beginTransaction();
             $application = Application::findOrFail($request->application_id);
 
-            $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
-            if($result->result == false){
-                return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
-            }
+            // $result = incidencesUtils::checkVoboIsOpen($application->user_id, $application->start_date, $application->end_date);
+            // if($result->result == false){
+            //     return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
+            // }
 
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
                 return json_encode(['success' => false, 'message' => 'La solicitud que deseas aprobar no tiene el estatus de "Por aprobar". Solo se pueden aprobar solicitudes con dicho estatus', 'icon' => 'warning']);
