@@ -736,7 +736,7 @@ var appRequestVacation = new Vue({
             if(data.is_season_special){
                 is_special = true;
                 this.lTypes.push('Con días en temporada especial');
-                lMessages.push('Estas tomando días en temporada especial ' + oSeason.name);
+                lMessages.push('Estas tomando días en temporada especial ');
             }
 
             if(data.is_event){
