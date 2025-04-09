@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
+use App\Utils\OrgChartUtils;
 use Illuminate\Http\Request;
 use App\Models\Adm\jobVsOrgChartJob;
 use App\Models\Adm\OrgChartJob;
@@ -13,6 +14,7 @@ class jobVsOrgChartJobController extends Controller
         $lJobVsOrgChartJob = \DB::table('ext_jobs_vs_org_chart_job as jj')
                                 ->rightJoin('ext_jobs as j', 'j.id_job', '=', 'jj.ext_job_id')
                                 ->leftJoin('org_chart_jobs as oj', 'oj.id_org_chart_job', '=', 'jj.org_chart_job_id_n')
+                                ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id')
                                 ->select(
                                     'jj.*',
                                     'j.id_job',
@@ -20,9 +22,10 @@ class jobVsOrgChartJobController extends Controller
                                     'oj.id_org_chart_job',
                                     'oj.job_name_ui as orgChart',
                                     'oj.positions',
+                                    'd.department_name_ui as department'
                                 )
                                 ->where('j.id_job', '!=', 1)
-                                ->orderBy('oj.job_name', 'asc')
+                                ->orderBy('j.job_name_ui', 'asc')
                                 ->get();
 
         $lJobs = \DB::table('ext_jobs')->where('is_deleted', 0)->orderBy('job_name', 'asc')->get();
@@ -45,6 +48,8 @@ class jobVsOrgChartJobController extends Controller
             }else{
                 $ojobVsOrgChartJob->org_chart_job_id_n = $request->orgChart_id;
                 $ojobVsOrgChartJob->update();
+
+                OrgChartUtils::updateUserOrgChartJobByJob($ojobVsOrgChartJob->ext_job_id);
             }
 
             $oOrgChartJob = OrgChartJob::find($request->orgChart_id);
@@ -54,6 +59,7 @@ class jobVsOrgChartJobController extends Controller
             $lJobVsOrgChartJob = \DB::table('ext_jobs_vs_org_chart_job as jj')
                                 ->rightJoin('ext_jobs as j', 'j.id_job', '=', 'jj.ext_job_id')
                                 ->leftJoin('org_chart_jobs as oj', 'oj.id_org_chart_job', '=', 'jj.org_chart_job_id_n')
+                                ->leftJoin('ext_departments as d', 'd.id_department', '=', 'j.department_id')
                                 ->select(
                                     'jj.*',
                                     'j.id_job',
@@ -61,7 +67,10 @@ class jobVsOrgChartJobController extends Controller
                                     'oj.id_org_chart_job',
                                     'oj.job_name_ui as orgChart',
                                     'oj.positions',
+                                    'd.department_name_ui as department'
                                 )
+                                ->where('j.id_job', '!=', 1)
+                                ->orderBy('j.job_name_ui', 'asc')
                                 ->get();
             \DB::commit();
         } catch (\Throwable $th) {

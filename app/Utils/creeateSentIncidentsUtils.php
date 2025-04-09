@@ -221,7 +221,7 @@ class creeateSentIncidentsUtils
         $application = Application::where('id_application', $application_id)->first();
 
         if($user->org_chart_job_id == 1){
-            throw new \Exception('No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 1);
+            throw new \Exception('No estás asignado a un nodo org., por favor contacta con el área de gestión humana', 1);
         }
 
         $oController = app(myVacationsController::class);
@@ -541,7 +541,7 @@ class creeateSentIncidentsUtils
 
     public static function sendIncidence($oUser, $application_id) {
         if(delegationUtils::getOrgChartJobIdUser() == 1){
-            throw new \Exception('No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 1);
+            throw new \Exception('No estás asignado a un nodo org., por favor contacta con el área de gestión humana', 1);
         }
 
         $application = Application::findOrFail($application_id);
@@ -660,7 +660,7 @@ class creeateSentIncidentsUtils
 
     public static function sendPermission($oUser, $permission_id) {
         if(delegationUtils::getOrgChartJobIdUser() == 1){
-            throw new \Exception('No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 1);
+            throw new \Exception('No estás asignado a un nodo org., por favor contacta con el área de gestión humana', 1);
         }
         $permission = Permission::findOrFail($permission_id);
 

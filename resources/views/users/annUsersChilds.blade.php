@@ -72,7 +72,7 @@
             <table class="table table-bordered" id="table_annUsers" width="100%" cellspacing="0">
                 <thead class="thead-light">
                     <th>Empleado</th>
-                    <th>Área funcional</th>
+                    <th>Nodo org.</th>
                     <th>Aniversario</th>
                     <th>Cumpleaños</th>
                     <th>Aniversario</th>

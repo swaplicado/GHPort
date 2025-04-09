@@ -20,7 +20,7 @@
                                 <thead class="thead-light">
                                     <th>id</th>
                                     <th>Colaboradores sin asignar</th>
-                                    <th>Área</th>
+                                    <th>Nodo org.</th>
                                 </thead>
                             </table>
                         </div>
@@ -55,7 +55,7 @@
                                 <thead class="thead-light">
                                     <th>id</th>
                                     <th>Colaboradores asignados</th>
-                                    <th>Área</th>
+                                    <th>Nodo org.</th>
                                 </thead>
                             </table>
                         </div>

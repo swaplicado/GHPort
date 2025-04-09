@@ -87,7 +87,7 @@
                         <th>scheduleId</th>
                         <th>Horario</th>
                         <th>Inicio beneficios</th>
-                        <th>Organigrama</th>
+                        <th>Nodo org.</th>
                         <th>id_org</th>
                         <th>Plan de vacaciones</th>
                         <th>id_plan</th>

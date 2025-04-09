@@ -230,4 +230,55 @@ class OrgChartUtils {
         $arrayAreas = $group->getArrayChilds();
         return $arrayAreas;
     }
+
+    public static function getOrgChartJobByJob($job_id){
+        $orgChartJob = \DB::table('ext_jobs_vs_org_chart_job as jj')
+                                ->join('ext_jobs as j', 'j.id_job', '=', 'jj.ext_job_id')
+                                ->join('org_chart_jobs as oj', 'oj.id_org_chart_job', '=', 'jj.org_chart_job_id_n')
+                                ->select(
+                                    'oj.id_org_chart_job',
+                                    'oj.top_org_chart_job_id_n',
+                                    'oj.positions',
+                                    'oj.is_boss',
+                                    'oj.is_leader_area',
+                                    'oj.is_leader_config',
+                                    'oj.org_level_id',
+                                    'oj.is_deleted',
+                                    'oj.job_name'
+                                )
+                                ->where('j.id_job', $job_id)
+                                ->where('oj.is_deleted', 0)
+                                ->first();
+
+        if (is_null($orgChartJob)) {
+            $orgChartJob = OrgChartJob::find(1);
+        }
+
+        return $orgChartJob;
+    }
+
+    public static function updateUserOrgChartJobByJob($job_id){
+        $lUsers = \DB::table('users')
+                        ->where('job_id', $job_id)
+                        ->where('is_active', 1)
+                        ->where('is_delete', 0)
+                        ->where('org_chart_job_modified', 0)
+                        ->select(
+                            'id',
+                            'full_name_ui',
+                            'institutional_mail',
+                            )
+                        ->get();
+
+        foreach ($lUsers as $user) {
+            $orgChartJob = orgChartUtils::getOrgChartJobByJob($job_id);
+            if(!is_null($orgChartJob)){
+                \DB::table('users')
+                    ->where('id', $user->id)
+                    ->update([
+                        'org_chart_job_id' => $orgChartJob->id_org_chart_job
+                    ]);
+            }
+        }
+    }
 }

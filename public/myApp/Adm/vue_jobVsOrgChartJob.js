@@ -22,7 +22,7 @@ var app = new Vue({
 
         $('#selArea')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreas,
             })
             .on('select2:select', function (e){
@@ -90,6 +90,7 @@ var app = new Vue({
                         oJobOrg.id_org_chart_job,
                         oJobOrg.id_job,
                         oJobOrg.job,
+                        oJobOrg.department,
                         oJobOrg.orgChart,
                         oJobOrg.positions,
                     ]

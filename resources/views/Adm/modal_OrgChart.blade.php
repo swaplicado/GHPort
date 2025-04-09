@@ -26,7 +26,7 @@
                                 <td>@{{name}}</td>
                             </tr>
                             <tr>
-                                <td><b>Area:</b></td>
+                                <td><b>Nodo org.:</b></td>
                                 <td>@{{area}}</td>
                             </tr>
                             <tr>

@@ -63,7 +63,7 @@
                     <th>show_in_system</th>
                     <th>is_active</th>
                     <th>Colaborador</th>
-                    <th>Area</th>
+                    <th>Nodo org.</th>
                     <th>Estatus</th>
                     <th>Mostrar en sistema</th>
                     <tbody>

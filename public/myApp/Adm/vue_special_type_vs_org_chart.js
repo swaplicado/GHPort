@@ -17,7 +17,7 @@ var app = new Vue({
         assign_by: 0,
         specialName: null,
         option: null,
-        lOptions: ['Área', 'Usuario', 'Empresa'],
+        lOptions: ['Nodo org.', 'Usuario', 'Empresa'],
         revisor_id: null,
     },
     mounted(){
@@ -25,7 +25,7 @@ var app = new Vue({
         self.revisor_id = 2;
         this.option = this.lOptions[0];
         var datalOptions = [];
-        datalOptions.push({id: 0, text: 'Área'});
+        datalOptions.push({id: 0, text: 'Nodo org.'});
         datalOptions.push({id: 1, text: 'Usuario'});
         datalOptions.push({id: 2, text: 'Empresa'});
 

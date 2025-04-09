@@ -213,16 +213,16 @@ class Menu {
             array_push($configuracion,['route' => route('showUsers'), 'icon' => 'bx bxs-user-voice bx-xs', 'name' => 'Mostrar usuarios']);
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($configuracion,['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-xs', 'name' => 'Áreas func.']);    
+            array_push($configuracion,['route' => route('assignArea'), 'icon' => 'bx bxs-grid bx-xs', 'name' => 'Nodos org.']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($configuracion,['route' => route('officeOrgChartJob'), 'icon' => 'bx bx-buildings bx-xs', 'name' => 'Mostrar áreas']);
+            array_push($configuracion,['route' => route('officeOrgChartJob'), 'icon' => 'bx bx-buildings bx-xs', 'name' => 'Mostrar nodos org.']);
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($configuracion,['route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-xs', 'name' => 'Colabs. vs áreas func.']);    
+            array_push($configuracion,['route' => route('empVSArea_index'), 'icon' => 'bx bx-shape-square bx-xs', 'name' => 'Colabs. vs nodos org.']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
-            array_push($configuracion,['route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-xs', 'name' => 'Puestos vs áreas func.']);    
+            array_push($configuracion,['route' => route('jobVsOrgChartJob'), 'icon' => 'bx bxs-vector bx-xs', 'name' => 'Puestos vs nodos org.']);    
         }
         if($oUser->rol_id == 3 || $oUser->rol_id == 4){
             array_push($configuracion,['route' => route('vacationPlans'), 'icon' => 'bx bxs-notepad bx-xs', 'name' => 'Plan vacaciones']);    

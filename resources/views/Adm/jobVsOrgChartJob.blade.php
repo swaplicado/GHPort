@@ -50,7 +50,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea">Área asignada:</label>
+                        <label for="selArea">Nodo org. asignado:</label>
                     </div>
                     <div class="col-md-10">
                         <select class="select2-class" class="form-control" id="selArea" name="selArea" style="width: 90%;"></select>
@@ -91,7 +91,8 @@
                         <th>OrgChartJob_id</th>
                         <th>Job_id</th>
                         <th>Puesto</th>
-                        <th>Área</th>
+                        <th>Departamento</th>
+                        <th>Nodo org.</th>
                         <th>Núm. Colab.</th>
                     </tr>
                 </thead>
@@ -101,6 +102,7 @@
                         <td>@{{oJobOrg.id_org_chart_job}}</td>
                         <td>@{{oJobOrg.id_job}}</td>
                         <td>@{{oJobOrg.job}}</td>
+                        <td>@{{oJobOrg.department}}</td>
                         <td>@{{oJobOrg.orgChart}}</td>
                         <td>@{{oJobOrg.positions}}</td>
                     </tr>
@@ -117,7 +119,8 @@
                                             'colTargets' => [0,1,2],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
-                                            'edit_modal' => true
+                                            'edit_modal' => true,
+                                            'order' => [[3, 'asc']],
                                         ] )
     @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_jobVsOrgChartJob.js') }}"></script>

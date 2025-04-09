@@ -153,7 +153,7 @@
                         <th>id_employee</th>
                         <th>Colaborador</th>
                         <th>Número colab.</th>
-                        <th>Área</th>
+                        <th>Nodo org.</th>
                         <th>Departamento</th>
                         <th>Puesto</th>
                         <tbody>

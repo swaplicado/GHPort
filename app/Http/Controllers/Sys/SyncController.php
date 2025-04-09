@@ -78,7 +78,7 @@ class SyncController extends Controller
             if(!$resJob){
                 return false;
             }
-            $jobCont->insertJobVsOrgJob();
+            // $jobCont->insertJobVsOrgJob();
 
             $holidaysCont = new holidaysController();
             $resHol = $holidaysCont->saveHolidaysFromJSON($data->holidays);

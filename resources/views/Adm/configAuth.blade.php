@@ -59,7 +59,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <p>Seleccione al menos una de las opciones(Empresa, Área funcional o Usuario)</p>
+                    <p>Seleccione al menos una de las opciones(Empresa, nodo org. o usuario)</p>
                 </div>
                 <div class="row">
                     <div class="col-md-2">
@@ -71,7 +71,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selIns">Área funcional:</label>
+                        <label for="selIns">Nodo org.:</label>
                     </div>
                     <div class="col-md-10">
                         <select class="select2-class-create" id="area" name="area" style="width: 90%;"></select>
@@ -115,7 +115,7 @@
                 <label for="selIns">Empresa:</label>
                 <select class="select2-class-update" id="compU" name="compU" style="width: 90%;"></select>
                 <br>
-                <label for="selIns">Área funcional:</label>
+                <label for="selIns">Nodo org.:</label>
                 <br>
                 <select class="select2-class-update" id="areaU" name="areaU" style="width: 90%;"></select>
                 <label for="selIns">Usuario:</label>
@@ -154,7 +154,7 @@
                     <th>Tipo incidencia</th>
                     <th>Autorización</th>
                     <th>Usuario</th>
-                    <th>Área funcional</th>
+                    <th>Nodo org.</th>
                     <th>Empresa</th>
                 </thead>
                 <tbody>

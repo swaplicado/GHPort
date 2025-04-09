@@ -24,7 +24,7 @@ var app = new Vue({
 
         $('#selArea')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreas,
             })
             .on('select2:select', function (e){
@@ -33,7 +33,7 @@ var app = new Vue({
 
         $('#selAreaFilter')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreasFilter,
             })
             .on('select2:select', function (e){

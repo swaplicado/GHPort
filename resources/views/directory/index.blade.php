@@ -47,7 +47,7 @@
                     <tr>
                         <th>user_id</th>
                         <th>Colaborador</th>
-                        <th>Área funcional</th>
+                        <th>Nodo org.</th>
                         <th>Correo institucional</th>
                         <th>Teléfono institucional</th>
                         <th>Extensión telefónica</th>

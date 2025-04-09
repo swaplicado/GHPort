@@ -54,7 +54,7 @@
     <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Crear área funcional</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Crear nodo org. funcional</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -62,7 +62,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea">Nombre del área:*</label>
+                        <label for="selArea">Nombre del nodo org.:*</label>
                     </div>
                     <div class="col-md-10">
                         <input type="text" id="nomAreaC" name="nomAreaC" style="width: 90%; margin-bottom: 5px;" v-model="area">
@@ -70,7 +70,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Puestos área:*</label>
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Puestos nodo org.:*</label>
                     </div>
                     <div class="col-md-10">
                         <input type="number" id="numAreaC" min="1" name="numAreaC" style="width: 90%;" v-model="job_num">
@@ -78,7 +78,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Área superior:</label>
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Nodo org. superior:</label>
                     </div>
                     <div class="col-md-10">
                         <select class="select2-class-create" id="selAreaC" name="selAreaC" style="width: 90%;"></select>
@@ -95,7 +95,7 @@
                 <br><br>
 
                 <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
-                <label for="selArea">Es líder de área</label>
+                <label for="selArea">Es líder de nodo org.</label>
                 
                 <br>
                 
@@ -116,7 +116,7 @@
     <div class="modal-dialog modal-lg" role="document" style="max-width: 1140px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Editar área funcional: @{{area}}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Editar nodo org. funcional: @{{area}}</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -124,7 +124,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea" style="margin-bottom: 0px;">Nombre del área:*</label>
+                        <label for="selArea" style="margin-bottom: 0px;">Nombre del nodo org.:*</label>
                     </div>
                     <div class="col-md-10">
                         <input type="text" id="nomArea" name="nomArea" style="width: 90%; margin-bottom: 5px;" v-model="area">
@@ -132,7 +132,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Puestos del área:*</label>
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Puestos del nodo org.:*</label>
                     </div>
                     <div class="col-md-10">
                         <input type="number" id="numArea" min="1" name="numArea" style="width: 90%;" v-model="job_num">
@@ -140,7 +140,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Área superior:</label>
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Nodo org. superior:</label>
                     </div>
                     <div class="col-md-10">
                         <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
@@ -157,7 +157,7 @@
                 <br><br>
 
                 <input type="checkbox" id="leaderC" name="leaderC" value="leader" v-model="leader">
-                <label for="selArea">Es líder de área</label>
+                <label for="selArea">Es líder de nodo org.</label>
                 
                 <br>
                 
@@ -173,7 +173,7 @@
 </div>
     <div class="card-header">
         <h3>
-            <b>Áreas funcionales</b>
+            <b>Nodos organizacionales</b>
             @include('layouts.manual_button')
         </h3>
     </div>
@@ -188,15 +188,15 @@
                         <th>Area_id</th>
                         <th>father_area_id</th>
                         <th>user_id</th>
-                        <th>Área</th>
-                        <th>Responsable area</th>
-                        <th>Área superior</th>
+                        <th>Nodo org.</th>
+                        <th>Responsable nodo org.</th>
+                        <th>Nodo org. superior</th>
                         <th>Nivel jerárquico</th>
                         <th>Posiciones</th>
                         <th>is_leader_area</th>
                         <th>is_leader_config</th>
-                        <th>Nodos hijos</th>
-                        <th>es líder de area</th>
+                        <th>Nodos org. hijos</th>
+                        <th>Es líder de nodo org.</th>
                         <th>Hace configuraciones</th>
 
                     </tr>
@@ -236,6 +236,7 @@
                                             'crear_modal' => true,
                                             'edit_modal' => true,
                                             'delete' => true,
+                                            'order' => [[3, 'asc']],
                                         ] )
     @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vueAssignArea.js') }}"></script>

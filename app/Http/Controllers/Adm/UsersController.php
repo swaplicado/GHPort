@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Adm;
 
 use App\Http\Controllers\Controller;
 use App\Models\Adm\ScheduleTemplate;
+use App\Utils\OrgChartUtils;
 use Exception;
 use Illuminate\Http\Request;
 use \App\Utils\delegationUtils;
@@ -83,7 +84,7 @@ class UsersController extends Controller
         $config = \App\Utils\Configuration::getConfigurations();
         $tokName = ['firstname' => $jUser->firstname, 'lastname1' => $jUser->lastname1, 'lastname2' => $jUser->lastname2, 'num_employee' => $jUser->num_employee];
         $currectDate = Carbon::now()->toDateString();
-        $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
+        // $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
         $comp = !is_null($this->lCompanies->where('external_id', $jUser->company_id)->first()) ? $this->lCompanies->where('external_id', $jUser->company_id)->first()->id_company : 6;
         $full_name_ui = '';
         $ui = $config->name_ui;
@@ -93,34 +94,76 @@ class UsersController extends Controller
                 $full_name_ui = $full_name_ui.' - ';
             }
         }
-        User::where('id', $id)
-                    ->update(
-                            [
-                                'employee_num' => $jUser->num_employee,
-                                'first_name' => $jUser->lastname1,
-                                'last_name' => $jUser->lastname2,
-                                'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
-                                'full_name_ui' => $full_name_ui,
-                                'short_name' => $jUser->firstname,
-                                'email' => $jUser->email,
-                                'institutional_mail' => $jUser->emailEmp == null ? $jUser->email : $jUser->emailEmp,
-                                'email_directory' => $jUser->emailEmp,
-                                'tel_area' => $jUser->telArea,
-                                'tel_num' => $jUser->telNum,
-                                'tel_ext' => $jUser->ext,
-                                'benefits_date' => $jUser->benefit_date,
-                                'vacation_date' => $jUser->admission_date,
-                                'payment_frec_id' => $jUser->way_pay,
-                                'last_admission_date' => $jUser->admission_date,
-                                'last_dismiss_date_n' => $jUser->leave_date,
-                                'birthday_n' => $jUser->dt_bir,
-                                'job_id' => $this->lJobs[$jUser->siie_job_id],
-                                'vacation_plan_id' => 7,
-                                'is_active' => $jUser->is_active,
-                                'is_delete' => $jUser->is_deleted,
-                                'company_id' => $comp
-                            ]
-                        );
+
+        $oUser = User::find($id);
+
+        $oJob = Job::where('external_id_n', $jUser->siie_job_id)->first();
+        if (is_null($oJob)) {
+            $oJob = Job::find(1);
+        }
+
+        if ($oUser->show_in_system && ($oJob->id_job != $oUser->job_id)) {
+            $orgChartJob = OrgChartUtils::getOrgChartJobByJob($oJob->id_job);
+    
+            User::where('id', $id)
+                        ->update(
+                                [
+                                    'employee_num' => $jUser->num_employee,
+                                    'first_name' => $jUser->lastname1,
+                                    'last_name' => $jUser->lastname2,
+                                    'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
+                                    'full_name_ui' => $full_name_ui,
+                                    'short_name' => $jUser->firstname,
+                                    'email' => $jUser->email,
+                                    'institutional_mail' => $jUser->emailEmp == null ? $jUser->email : $jUser->emailEmp,
+                                    'email_directory' => $jUser->emailEmp,
+                                    'tel_area' => $jUser->telArea,
+                                    'tel_num' => $jUser->telNum,
+                                    'tel_ext' => $jUser->ext,
+                                    'benefits_date' => $jUser->benefit_date,
+                                    'vacation_date' => $jUser->admission_date,
+                                    'payment_frec_id' => $jUser->way_pay,
+                                    'last_admission_date' => $jUser->admission_date,
+                                    'last_dismiss_date_n' => $jUser->leave_date,
+                                    'birthday_n' => $jUser->dt_bir,
+                                    'job_id' => $oJob->id_job,
+                                    'org_chart_job_id' => $orgChartJob->id_org_chart_job,
+                                    'vacation_plan_id' => 7,
+                                    'is_active' => $jUser->is_active,
+                                    'is_delete' => $jUser->is_deleted,
+                                    'company_id' => $comp
+                                ]
+                            );
+        } else {
+            User::where('id', $id)
+                        ->update(
+                                [
+                                    'employee_num' => $jUser->num_employee,
+                                    'first_name' => $jUser->lastname1,
+                                    'last_name' => $jUser->lastname2,
+                                    'full_name' => $jUser->lastname1.' '.$jUser->lastname2.', '.$jUser->firstname,
+                                    'full_name_ui' => $full_name_ui,
+                                    'short_name' => $jUser->firstname,
+                                    'email' => $jUser->email,
+                                    'institutional_mail' => $jUser->emailEmp == null ? $jUser->email : $jUser->emailEmp,
+                                    'email_directory' => $jUser->emailEmp,
+                                    'tel_area' => $jUser->telArea,
+                                    'tel_num' => $jUser->telNum,
+                                    'tel_ext' => $jUser->ext,
+                                    'benefits_date' => $jUser->benefit_date,
+                                    'vacation_date' => $jUser->admission_date,
+                                    'payment_frec_id' => $jUser->way_pay,
+                                    'last_admission_date' => $jUser->admission_date,
+                                    'last_dismiss_date_n' => $jUser->leave_date,
+                                    'birthday_n' => $jUser->dt_bir,
+                                    'job_id' => $oJob->id_job,
+                                    'vacation_plan_id' => 7,
+                                    'is_active' => $jUser->is_active,
+                                    'is_delete' => $jUser->is_deleted,
+                                    'company_id' => $comp
+                                ]
+                            );
+        }
 
         $oUser = User::find($id);
         if(!is_null($oUser)){
@@ -223,7 +266,12 @@ class UsersController extends Controller
             }
         }
 
-        $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
+        // $orgChartJob = $this->lOrgChartJobs->where('ext_job_id', $this->lJobs[$jUser->siie_job_id])->first();
+        $oJob = Job::where('external_id_n', $jUser->siie_job_id)->first();
+        if (is_null($oJob)) {
+            $oJob = Job::find(1);
+        }   
+        $orgChartJob = OrgChartUtils::getOrgChartJobByJob($oJob->id_job);
         $comp = !is_null($this->lCompanies->where('external_id', $jUser->company_id)->first()) ? $this->lCompanies->where('external_id', $jUser->company_id)->first()->id_company : 6;
         $oUser = new User();
 
@@ -249,9 +297,9 @@ class UsersController extends Controller
         $oUser->current_hire_log_id = 1;
         $oUser->is_unionized = 0;
         $oUser->company_id = $comp;
-        $oUser->job_id = $this->lJobs[$jUser->siie_job_id];
+        $oUser->job_id = $oJob->id_job;
         // $oUser->org_chart_job_id = !is_null($orgChartJob) ? $orgChartJob->org_chart_job_id_n : 1;
-        $oUser->org_chart_job_id = 1;
+        $oUser->org_chart_job_id = $orgChartJob->id_org_chart_job;
         $oUser->vacation_plan_id = 7;
         $oUser->payment_frec_id = $jUser->way_pay;
         $oUser->is_active = $jUser->is_active;

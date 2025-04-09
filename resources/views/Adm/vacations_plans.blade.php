@@ -93,9 +93,10 @@
                                         'colTargets' => [0,1,2],
                                         'colTargetsSercheable' => [],
                                         'select' => true,
-                                        'noSort' => true,
+                                        // 'noSort' => true,
                                         'show' => true,
                                         'crear_modal' => true,
+                                        'order' => [[3, 'asc']],
                                         // 'delete' => true,
                                         // 'edit_modal' => true,
                                     ])

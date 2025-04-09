@@ -471,7 +471,7 @@ class permissionController extends Controller
         $employee_id = $request->employee_id;
         try {
             if(delegationUtils::getOrgChartJobIdUser() == 1){
-                return json_encode(['success' => false, 'message' => 'No estás asignado a un área funcional, por favor contacta con el área de gestión humana', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'No estás asignado a un nodo org., por favor contacta con el área de gestión humana', 'icon' => 'warning']);
             }
             \DB::beginTransaction();
             $permission = Permission::findOrFail($permission_id);

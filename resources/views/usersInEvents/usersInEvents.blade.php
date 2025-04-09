@@ -60,7 +60,7 @@
                     <th>end_date</th>
                     <th>Evento</th>
                     <th>Colaborador</th>
-                    <th>Área funcional</th>
+                    <th>Nodo org.</th>
                     <tbody>
                         <tr v-for="ev in lEvents">
                             <td>@{{ev.id_event}}</td>

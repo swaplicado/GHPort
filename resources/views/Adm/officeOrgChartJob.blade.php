@@ -30,7 +30,7 @@
     <div class="card shadow mb-4">
         <div class="card-header">
             <h3>
-                <b>Áreas mostradas en directorio</b>
+                <b>Nodos org. mostrados en directorio</b>
                 @include('layouts.manual_button')
             </h3>
         </div>
@@ -39,7 +39,7 @@
                 <thead class="thead-light">
                     <th>id</th>
                     <th>is_office</th>
-                    <th>Área</th>
+                    <th>Nodo org.</th>
                     <th>Mostrar en directorio</th>
                     <tbody>
                         <tr v-for="org in lOrgChartJob">

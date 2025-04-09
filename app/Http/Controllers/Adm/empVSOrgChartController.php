@@ -16,6 +16,7 @@ class empVSOrgChartController extends Controller
                         ->where('is_active', 1)
                         ->where('is_delete', 0)
                         ->where('id', '!=', 1)
+                        ->where('show_in_system', 1)
                         ->select(
                             'users.id',
                             'users.full_name_ui',
@@ -46,6 +47,7 @@ class empVSOrgChartController extends Controller
             \DB::beginTransaction();
             $oUser = User::findOrFail($request->user_id);
             $oUser->org_chart_job_id = $request->selOrgChart_id;
+            $oUser->org_chart_job_modified = 1;
             $oUser->update();
 
             $lUsers = $this->getlUsers();

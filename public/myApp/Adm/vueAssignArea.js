@@ -39,7 +39,7 @@ var app = new Vue({
 
         $('#selArea')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreas,
             })
             .on('select2:select', function(e) {
@@ -48,7 +48,7 @@ var app = new Vue({
 
         $('#selAreaC')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreas,
             })
             .on('select2:select', function(e) {
@@ -97,7 +97,7 @@ var app = new Vue({
                 this.config_leader = parseInt(data[9]);
 
                 if (data[10] != 0) {
-                    SGui.showMessage("Información", "Si modificas el área superior, se modificará toda la piramide inferior al nodo");
+                    SGui.showMessage("Información", "Si modificas el nodo org. superior, se modificará toda la piramide inferior al nodo");
                 }
 
                 // $('#selUser').val(this.superviser_id).trigger('change');
@@ -112,11 +112,11 @@ var app = new Vue({
 
         save() {
             if (this.area == null) {
-                SGui.showError("El nombre del area no puede estar vacia");
+                SGui.showError("El nombre del nodo org. no puede estar vacío");
                 return false;
             }
             if (this.job_num == 0) {
-                SGui.showError("No se pueden tener 0 puestos en un area");
+                SGui.showError("No se pueden tener 0 puestos en un nodo org.");
                 return false;
             }
             if (this.org_level_id == null) {

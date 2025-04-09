@@ -49,7 +49,7 @@
             </div>
             <div class="modal-body">
                 <div>
-                    <label for="selArea">Área:*</label>
+                    <label for="selArea">Nodo org.:*</label>
                     <select class="select2-class" id="selArea" name="selArea" style="width: 90%;"></select>
                 </div>
             </div>
@@ -63,14 +63,14 @@
 
     <div class="card-header">
         <h3>
-            <b>Colaboradores vs áreas</b>
+            <b>Colaboradores vs nodos org.</b>
             @include('layouts.manual_button')
         </h3>
     </div>
     <div class="card-body">
         <div class="inline">
         @include('layouts.table_buttons', ['editar' => true])
-            <label for="selAreaFilter">Ver por área:</label>
+            <label for="selAreaFilter">Ver por nodo org.:</label>
             <select class="select2-class-filter" id="selAreaFilter" name="selAreaFilter" style="width: 40%;"></select>
         </div>
         <br>
@@ -82,8 +82,8 @@
                     <th>orgChart_id</th>
                     <th>orgChartTop_id</th>
                     <th>Colaborador</th>
-                    <th>Área</th>
-                    <th>Área padre</th>
+                    <th>Nodo org.</th>
+                    <th>Nodo org. padre</th>
                 </thead>
                 <tbody>
                     <tr v-for="user in lUsers">
@@ -107,7 +107,8 @@
                                             'colTargets' => [0,1,2],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
-                                            'edit_modal' => true
+                                            'edit_modal' => true,
+                                            'order' => [[3, 'asc']],
                                         ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_empVsOrgChartJob.js') }}"></script>
     @include('layouts.manual_jsControll')

@@ -63,7 +63,7 @@ var app = new Vue({
 
         $('#area')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreas,
             })
             .on('select2:select', function(e) {
@@ -72,7 +72,7 @@ var app = new Vue({
         
         $('#areaU')
             .select2({
-                placeholder: 'selecciona área',
+                placeholder: 'selecciona nodo org.',
                 data: datalAreas,
             })
             .on('select2:select', function(e) {

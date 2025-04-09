@@ -35,7 +35,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-2">
-                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Área funcional:* <span title="Puesto en el organigrama" class="bx bx-info-circle"></span></label>
+                        <label for="selArea" style="margin-top: 10px; margin-bottom: 0px;">Nodo org.:* <span title="Puesto en el organigrama" class="bx bx-info-circle"></span></label>
                     </div>
                     <div class="col-md-10">
                         <select class="select2-class" id="selArea" name="selArea" v-model="selArea" style="width: 90%;"></select>
