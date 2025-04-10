@@ -43,7 +43,7 @@
                                     <tbody>
                                         <tr v-for="user in users">
                                             <td><b>Colaborador:</b></td>
-                                            <td>@{{user.full_name_ui}}</td>
+                                            <td>@{{user.full_name}}</td>
                                             <td>
                                                 <template v-if="user.photo_base64_n">
                                                     <img class="rounded-circle" :src="'data:image/jpg;base64,'+user.photo_base64_n" style="width:3vmax;height:3vmax;">

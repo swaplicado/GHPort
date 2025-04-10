@@ -184,7 +184,7 @@ class OrgChartController extends Controller
                         ->where('is_active', 1)
                         ->where('is_delete', 0)
                         ->select('users.*', 'up.photo_base64_n')
-                        ->orderBy('full_name_ui', 'asc')
+                        ->orderBy('full_name', 'asc')
                         ->get();
         } catch (\Throwable $th) {
             return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
