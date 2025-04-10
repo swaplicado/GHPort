@@ -23,9 +23,10 @@
                 'id': 0,
                 'org_chart_id': 1,
                 'job_id': 2,
-                'job': 3,
-                'orgChart': 4,
-                'positions': 5,
+                'department': 3,
+                'job': 4,
+                'orgChart': 5,
+                'positions': 6,
             };
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:puestovsarea" ); ?>;
@@ -90,8 +91,8 @@
                         <th>JobVsArea_id</th>
                         <th>OrgChartJob_id</th>
                         <th>Job_id</th>
-                        <th>Puesto</th>
                         <th>Departamento</th>
+                        <th>Puesto</th>
                         <th>Nodo org.</th>
                         <th>Núm. Colab.</th>
                     </tr>
@@ -101,8 +102,8 @@
                         <td>@{{oJobOrg.id}}</td>
                         <td>@{{oJobOrg.id_org_chart_job}}</td>
                         <td>@{{oJobOrg.id_job}}</td>
-                        <td>@{{oJobOrg.job}}</td>
                         <td>@{{oJobOrg.department}}</td>
+                        <td>@{{oJobOrg.job}}</td>
                         <td>@{{oJobOrg.orgChart}}</td>
                         <td>@{{oJobOrg.positions}}</td>
                     </tr>
@@ -121,6 +122,7 @@
                                             'select' => true,
                                             'edit_modal' => true,
                                             'order' => [[3, 'asc']],
+                                            'colToExport' => [3,4,5,6]
                                         ] )
     @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_jobVsOrgChartJob.js') }}"></script>

@@ -89,8 +89,8 @@ var app = new Vue({
                         oJobOrg.id,
                         oJobOrg.id_org_chart_job,
                         oJobOrg.id_job,
-                        oJobOrg.job,
                         oJobOrg.department,
+                        oJobOrg.job,
                         oJobOrg.orgChart,
                         oJobOrg.positions,
                     ]
