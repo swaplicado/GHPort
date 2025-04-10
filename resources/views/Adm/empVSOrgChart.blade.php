@@ -23,9 +23,11 @@
                 'user_id': 0,
                 'org_chart_job_id': 1,
                 'top_org_chart_job_id_n': 2,
-                'full_name_ui': 3,
-                'job_name_ui': 4,
-                'job_name_ui_top': 5,
+                'department': 3,
+                'job': 4,
+                'full_name_ui': 5,
+                'job_name_ui': 6,
+                'job_name_ui_top': 7,
             };
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:colabvsarea" ); ?>;
@@ -81,6 +83,8 @@
                     <th>user_id</th>
                     <th>orgChart_id</th>
                     <th>orgChartTop_id</th>
+                    <th>Departamento</th>
+                    <th>Puesto</th>
                     <th>Colaborador</th>
                     <th>Nodo org.</th>
                     <th>Nodo org. padre</th>
@@ -90,6 +94,8 @@
                         <td>@{{user.id}}</td>
                         <td>@{{user.org_chart_job_id}}</td>
                         <td>@{{user.top_org_chart_job_id_n}}</td>
+                        <td>@{{user.department}}</td>
+                        <td>@{{user.job}}</td>
                         <td>@{{user.full_name_ui}}</td>
                         <td>@{{user.job_name_ui}}</td>
                         <td>@{{user.job_name_ui_top}}</td>
@@ -108,7 +114,8 @@
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'edit_modal' => true,
-                                            'order' => [[3, 'asc']],
+                                            'order' => [[3, 'asc'], [4, 'asc'], [5, 'asc']],
+                                            'colToExport' => [3,4,5,6,7]
                                         ] )
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_empVsOrgChartJob.js') }}"></script>
     @include('layouts.manual_jsControll')

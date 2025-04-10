@@ -20,7 +20,7 @@ var app = new Vue({
 
         var datalAreasFilter = structuredClone(datalAreas);
         datalAreasFilter[0] = {id: '', text: 'Todos'};
-        datalAreasFilter.push({id: '0', text: 'DEF'});
+        datalAreasFilter.push({id: '0', text: '(Por asignar)'});
 
         $('#selArea')
             .select2({
@@ -90,6 +90,8 @@ var app = new Vue({
                         user.id,
                         user.org_chart_job_id,
                         user.top_org_chart_job_id_n,
+                        user.department,
+                        user.job,
                         user.full_name_ui,
                         user.job_name_ui,
                         user.job_name_ui_top,
