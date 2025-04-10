@@ -75,7 +75,7 @@
 
     <div class="card-header">
         <h3>
-            <b>Puestos vs Areas</b>
+            <b>Puestos vs nodos organizacionales</b>
             @include('layouts.manual_button')
         </h3>
     </div>
