@@ -29,6 +29,8 @@
             this.lDates = <?php echo json_encode($lDates); ?>;
             this.createRoute = <?php echo json_encode( route('create_closingDates') ); ?>;
             this.deleteRoute = <?php echo json_encode( route('delete_closingDates') ); ?>;
+            this.getlUsersRoute = <?php echo json_encode( route('closingDates_getlUsers') ); ?>;
+            this.createClosingDatesUsersRoute = <?php echo json_encode( route('createClosingDatesUsers') ); ?>;
             this.initialCalendarDate = <?php echo json_encode( $initial); ?>;
             this.constants = <?php echo json_encode( $constants); ?>;
             this.lTypes = <?php echo json_encode( $lTypes ); ?>;
@@ -36,9 +38,20 @@
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:datespersonaldata" ); ?>;
             this.indexes_closeDates = {
                 'id_closing_dates': 0,
-                'date_ini': 1,
-                'date_end': 2,
-            }
+                'is_global': 1,
+                'date_ini': 2,
+                'date_end': 3,
+                'type': 4,
+                'string_is_global': 5,
+            };
+            this.indexesUsers = {
+                'id': 0,
+                'full_name_ui': 1,
+            };
+            this.indexesUsersAssign = {
+                'id': 0,
+                'full_name_ui': 1,
+            };
         }
         var oServerData = new GlobalData();
     </script>
@@ -97,6 +110,69 @@
                         </div>
                     </div>
                 </div>
+                <br>
+                <div class="row" v-show="!is_global">
+                    <div class="col-md-5 pre-scrollable">
+                        <table class="table table-bordered" id="table_users" style="width: 100%;">
+                            <thead>
+                                <th>id</th>
+                                <th>Colaboradores</th>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-2" style="text-align: center">
+                        <table class="table">
+                            <thead>
+                                <th style="border: none">&nbsp;</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="border: none">
+                                        <button class="btn btn-secondary" v-on:click="passTolUsersAssign();" title="Pasar uno a la derecha">
+                                            <span class='bx bxs-chevron-right'></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none">
+                                        <button class="btn btn-secondary" v-on:click="passTolUsers();" title="Pasar uno a la izquierda">
+                                            <span class='bx bxs-chevron-left'></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none">
+                                        <button class="btn" style="background-color: #81D4FA;" v-on:click="passAllTolUsersAssign();" title="Pasar todos a la derecha">
+                                            <span class='bx bxs-chevrons-right'></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: none">
+                                        <button class="btn" style="background-color: #81D4FA;" v-on:click="passAllTolUsers();" title="Pasar todos a la derecha">
+                                            <span class='bx bxs-chevrons-left'></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-5 pre-scrollable">
+                        <table class="table table-bordered" id="table_users_assigned" style="width: 100%;">
+                            <thead>
+                                <th>id</th>
+                                <th>Colab. Asign.</th>
+                            </thead>
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
@@ -115,6 +191,10 @@
     </div>
     <div class="card-body">
         @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true ])
+        <button id="btn_asign" type="button" class="btn3d bg-gradient-light" 
+            style="display: inline-block; margin-right: 20px" title="Asignaciones" >
+            <span class="bx bx-user-plus"></span>
+        </button>
         <br>
         <br>
         <div class="table-responsive">
@@ -122,17 +202,21 @@
                 <thead class="thead-light">
                     <tr>
                         <th>closing_dates_id</th>
+                        <th>is_global</th>
                         <th>Fecha inicio</th>
                         <th>Fecha fin</th>
                         <th>Tipo</th>
+                        <th>Todos los colaboradores</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="date in lDates">
                         <td>@{{ date.id_closing_dates }}</td>
+                        <td>@{{ date.is_global }}</td>
                         <td>@{{ oDateUtils.formatDate(date.start_date) }}</td>
                         <td>@{{ oDateUtils.formatDate(date.end_date) }}</td>
                         <td>@{{ date.name }}</td>
+                        <td>@{{ date.is_global ? 'Sí' : 'No' }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -147,13 +231,40 @@
 </script>
     @include('layouts.table_jsControll', [
                                             'table_id' => 'table_dates',
-                                            'colTargets' => [0],
+                                            'colTargets' => [0,1],
                                             'colTargetsSercheable' => [],
                                             'select' => true,
                                             'crear_modal' => true,
                                             'edit_modal' => true,
                                             'delete' => true,
                                         ] )
+
+    @include('layouts.table_jsControll',[
+                                        'table_id' => 'table_users',
+                                        'colTargets' => [0],
+                                        'colTargetsSercheable' => [],
+                                        'select' => true,
+                                        // 'noSearch' => true,
+                                        'noDom' => true,
+                                        'noPaging' => true,
+                                        'noInfo' => true,
+                                        'noColReorder' => true,
+                                        'noSort' => true
+                                    ])
+
+    @include('layouts.table_jsControll',[
+                                        'table_id' => 'table_users_assigned',
+                                        'colTargets' => [0],
+                                        'colTargetsSercheable' => [],
+                                        'select' => true,
+                                        // 'noSearch' => true,
+                                        'noDom' => true,
+                                        'noPaging' => true,
+                                        'noInfo' => true,
+                                        'noColReorder' => true,
+                                        'noSort' => true
+                                    ])
+
     @include('layouts.manual_jsControll')
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/Adm/vue_closing_dates.js') }}"></script>
@@ -219,6 +330,11 @@
         function dateRangePickerClearValue(){
             app.returnDate = null;
         }
+    </script>
+    <script>
+        $('#btn_asign').click(function () {
+            app.showAssignModal(null);
+        });
     </script>
 
 @endsection

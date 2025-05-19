@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use \App\Constants\SysConst;
 use App\Models\Adm\ClosingDates;
+use App\Models\Adm\ClosingDatesUser;
+use App\Utils\usersInSystemUtils;
 
 class ClosingDatesController extends Controller
 {
@@ -130,6 +132,15 @@ class ClosingDatesController extends Controller
 
         $closing->save();
 
+        $lClosingDatesUsers = ClosingDatesUser::where('closing_date_id', $request->application_id)
+                                        ->where('is_deleted', 0)
+                                        ->get();
+
+        foreach ($lClosingDatesUsers as $closingDatesUser) {
+            $closingDatesUser->is_deleted = 1;
+            $closingDatesUser->save();
+        }
+
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -156,5 +167,98 @@ class ClosingDatesController extends Controller
         $initial = '2024-01-30';   
         
         return json_encode(['success' => true, 'lDates' => $dates]);    
+    }
+
+    public function getlUsers(Request $request) {
+        $closingDates_id = $request->closingDates_id;
+
+        if (!is_null($closingDates_id)) {
+            $lUsersAssigned = \DB::table('closing_dates_users as clo')
+                        ->join('users as u', 'u.id', '=', 'clo.user_id')
+                        ->where('u.is_delete', 0)
+                        ->where('clo.is_deleted', 0)
+                        ->where('closing_date_id', $closingDates_id)
+                        ->select('u.id', 'u.full_name_ui')
+                        ->orderBy('u.full_name_ui')
+                        ->get();
+
+            $arraylUsersAssigned = $lUsersAssigned->pluck('id')->toArray();
+
+            $lUsers = \DB::table('users')
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->whereNotIn('id', $arraylUsersAssigned)
+                        ->select('id', 'full_name_ui')
+                        ->orderBy('full_name_ui')
+                        ->get();
+        } else {
+            $lUsersAssigned = [];
+            $lUsers = \DB::table('users')
+                        ->where('is_delete', 0)
+                        ->where('is_active', 1)
+                        ->where('id', '!=', 1)
+                        ->select('id', 'full_name_ui')
+                        ->orderBy('full_name_ui')
+                        ->get();
+        }
+
+        $lUsersAssigned = usersInSystemUtils::FilterUsersInSystem($lUsersAssigned, 'id');
+        $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
+
+        return json_encode(['success' => true, 'lUsers' => $lUsers, 'lUsersAssigned' => $lUsersAssigned]);
+    }
+
+    public function createClosingDatesUser(Request $request) {
+        $closingDates_id = $request->closingDates_id;
+        $lUsersAssigned = $request->lUsersAssigned;
+
+        try {
+            \DB::beginTransaction();
+
+            if(is_null($closingDates_id)){
+                $closing = new ClosingDates();
+            }else{
+                $closing = ClosingDates::find($closingDates_id);
+
+                $lClosingDatesUsers = ClosingDatesUser::where('closing_date_id', $closingDates_id)
+                                        ->where('is_deleted', 0)
+                                        ->get();
+
+                foreach ($lClosingDatesUsers as $closingDatesUser) {
+                    $closingDatesUser->is_deleted = 1;
+                    $closingDatesUser->save();
+                }
+            }
+            $closing->start_date = $request->startDate;
+            $closing->end_date = $request->endDate;
+            $closing->is_delete = 0;
+            $closing->type_id = $request->type_id;
+            $closing->is_global = 0;
+            $closing->save();
+
+            foreach ($lUsersAssigned as $user) {
+                $closingUser = new ClosingDatesUser();
+                $closingUser->closing_date_id = $closing->id_closing_dates;
+                $closingUser->user_id = $user['id'];
+                $closingUser->is_closed = 0;
+                $closingUser->is_deleted = 0;
+                $closingUser->save();
+            }
+
+            $dates = \DB::table('closing_dates as clo')
+                        ->join('closing_dates_type as t', 't.id', '=', 'clo.type_id')
+                        ->where('is_delete',0)
+                        ->orderBy('start_date')
+                        ->get();
+
+
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \Log::error($th->getMessage());
+            \DB::rollBack();
+            return json_encode(['success' => false]);
+        }
+
+        return json_encode(['success' => true, 'lDates' => $dates]);
     }
 }

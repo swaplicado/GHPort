@@ -43,9 +43,20 @@ class curriculumController extends Controller
                                 ->where('is_delete', 0)
                                 ->first();
 
+        $curriculumDatesUser = \DB::table('closing_dates_users as cu')
+                                ->join('closing_dates as c', 'c.id_closing_dates', 'cu.closing_date_id')
+                                ->where('c.start_date','<=',$today)
+                                ->where('c.end_date','>=',$today)
+                                ->where('cu.user_id', delegationUtils::getIdUser())
+                                ->where('c.is_delete', 0)
+                                ->where('cu.is_deleted', 0)
+                                ->where('cu.is_closed', 0)
+                                ->where('c.type_id', $type)
+                                ->first();
+
         $can_change_cv = delegationUtils::getUser()->can_change_cv;
 
-        $enabledEdition = $can_change_cv || (isset($curriculumDates) && $curriculumDates != null);
+        $enabledEdition = $can_change_cv || (isset($curriculumDates) && $curriculumDates != null) || (isset($curriculumDatesUser) && $curriculumDatesUser != null);
 
         $o_curriculum = curriculum::with([
             'workExperience' => function ($query) {

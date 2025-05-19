@@ -275,8 +275,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('univCertificates/getMyEmployees', 'Pages\univCertificatesController@getMyEmployees')->name('univCertificates_getMyEmployees');
     Route::get('univCertificates/getAllMyEmployees', 'Pages\univCertificatesController@getAllMyEmployees')->name('univCertificates_getAllMyEmployees');
 
-    Route::get('personalData', 'Pages\personalDataController@index')->name('personalData');
-    Route::post('personalData/update', 'Pages\personalDataController@updatePersonalData')->name('personalData_updatePersonalData');
+    Route::get('personalData', 'Pages\employeesPersonalInfoController@index')->name('personalData');
+    Route::post('personalData/update', 'Pages\employeesPersonalInfoController@updatePersonalData')->name('personalData_updatePersonalData');
     
     Route::get('administrativeMinutes', 'Pages\sanctionsController@indexAdministrativeMinutes')->name('admMinutes');
     Route::get('sanctions', 'Pages\sanctionsController@indexSanctions')->name('sanctions');
@@ -296,6 +296,8 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::get('closeDates', 'Pages\ClosingDatesController@index')->name('closing_dates_index');
     Route::post('closeDates/guardar', 'Pages\ClosingDatesController@createClosing')->name('create_closingDates');
     Route::post('close/borrar', 'Pages\ClosingDatesController@deleteClosing')->name('delete_closingDates');
+    Route::post('closeDates/getlUsers', 'Pages\ClosingDatesController@getlUsers')->name('closingDates_getlUsers');
+    Route::post('closeDates/createClosingDatesUsers', 'Pages\ClosingDatesController@createClosingDatesUser')->name('createClosingDatesUsers');
 
     //carga inicial de empleados
     Route::get('SyncIni', 'Adm\SyncController@initialSync')->name('initial_sync');
