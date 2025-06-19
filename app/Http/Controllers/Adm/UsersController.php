@@ -312,6 +312,17 @@ class UsersController extends Controller
 
         $oUser->save();
 
+        try {
+            $vacController = new VacationPlansController();
+                    
+            $us = User::findOrFail($oUser->id);
+    
+            $vacController->saveVacationUserLog($us);
+            $vacController->generateVacationUser($us->id, 7);
+        } catch (\Throwable $th) {
+            \Log::error($th);
+        }
+
         $this->setUserAdmissionLog($oUser);
 
         $oUsersPhotos = new UsersPhotos();

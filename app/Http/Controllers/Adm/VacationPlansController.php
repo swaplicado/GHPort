@@ -222,29 +222,45 @@ class VacationPlansController extends Controller
         try {
             $lUserAssigned_id = collect($request->lUsersAssigned)->pluck('id');
     
-            $lUsersUnsigned = User::where('vacation_plan_id', $request->vacation_plan_id)
-                                    ->where('is_delete', 0)
-                                    ->where('is_active', 1)
-                                    ->whereNotIn('id', $lUserAssigned_id)
-                                    ->get();
+            // $lUsersUnsigned = User::where('vacation_plan_id', $request->vacation_plan_id)
+            //                         ->where('is_delete', 0)
+            //                         ->where('is_active', 1)
+            //                         ->whereNotIn('id', $lUserAssigned_id)
+            //                         ->get();
 
-            foreach($lUsersUnsigned as $userUns){
-                try {
-                    \DB::beginTransaction();
-                    $this->saveVacationUserLog($userUns);
-                    $userUns->vacation_plan_id = 1;
-                    $userUns->update();
-                    $this->generateVacationUser($userUns->id, 1);
-                    \DB::commit();
-                } catch (\Throwable $th) {
-                    \DB::rollback();
-                }
-            }
+            // foreach($lUsersUnsigned as $userUns){
+            //     try {
+            //         \DB::beginTransaction();
+            //         $this->saveVacationUserLog($userUns);
+            //         $userUns->vacation_plan_id = 1;
+            //         $userUns->update();
+            //         $this->generateVacationUser($userUns->id, 1);
+            //         \DB::commit();
+            //     } catch (\Throwable $th) {
+            //         \DB::rollback();
+            //     }
+            // }
     
             $lUsers = User::whereIn('id', $lUserAssigned_id)->get();
+            // $lUsers = User::where('vacation_plan_id', '!=', $request->vacation_plan_id)
+            //                         ->where('is_delete', 0)
+            //                         ->where('is_active', 1)
+            //                         ->whereIn('id', $lUserAssigned_id)
+            //                         ->get();
     
             foreach($lUsers as $user){
                 try {
+                    if ($user->vacation_plan_id == $request->vacation_plan_id) {
+                        $planVacation = \DB::table('vacation_users')
+                                            ->where('user_id', $user->id)
+                                            ->where('is_deleted', 0)
+                                            ->get();
+    
+                        if (count($planVacation) > 0) {
+                            continue;
+                        }
+                    }
+
                     \DB::beginTransaction();
                     $this->saveVacationUserLog($user);
                     $user->vacation_plan_id = $request->vacation_plan_id;
