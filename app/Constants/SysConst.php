@@ -104,7 +104,9 @@ class SysConst {
     public const MAIL_CANCELACION_VACACIONES = 7;
     public const MAIL_CANCELACION_INCIDENCIA = 8;
     public const MAIL_CANCELACION_PERMISO = 9;
-
+    public const MAIL_INVITACION_EVENTO = 10;
+    public const MAIL_MODIFICACION_EVENTO = 11;
+    
     /**
      * Constantes de la tabla cat_notifications_type
      */

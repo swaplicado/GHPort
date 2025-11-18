@@ -295,6 +295,19 @@ class VacationPlansController extends Controller
                     ->where('id', $user_id)
                     ->first();
 
+        if ($oUser->last_dismiss_date_n != null) {
+            if ( Carbon::parse($oUser->last_admission_date)->greaterThan(Carbon::parse($oUser->last_dismiss_date_n)) ) {
+                foreach($vacationUser as $vac){
+                    $vac->is_deleted = true;
+                    $vac->update();
+                }
+
+                $vacationUser = VacationUser::where('user_id', $user_id)
+                                    ->where('is_deleted', 0)
+                                    ->get();
+            }
+        }
+
         $date = Carbon::parse($oUser->benefits_date);
         if(sizeof($vacationUser) > 0){
             $vacationUser = $vacationUser->where('date_end', '>', $vacation_plan->start_date_n);

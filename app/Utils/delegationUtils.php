@@ -121,9 +121,13 @@ class delegationUtils {
      */
     public static function getAutorizeRolUser($rol){
         if(!Session::get('is_delegation')){
+            //\Log::error('Auth: ');
+            //\Log::error(\Auth::user());
             \Auth::user()->authorizedRole($rol);
         }else{
             $oUser = User::find(Session::get('user_delegated_id'));
+            //\Log::error('oUser: ');
+            //\Log::error($oUser);
             $oUser->authorizedRole($rol);
         }
     }

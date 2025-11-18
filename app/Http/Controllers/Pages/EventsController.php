@@ -9,6 +9,7 @@ use App\Models\Adm\EventAssign;
 use App\Models\Adm\Group;
 use App\Models\Adm\GroupAssign;
 use App\User;
+use App\Utils\emailUtils;
 use App\Utils\EmployeeVacationUtils;
 use Carbon\Carbon;
 use App\Models\Adm\Event;
@@ -170,6 +171,11 @@ class EventsController extends Controller
             $event->update();
 
             \DB::commit();
+            $userEmail = $this->assignOfEvent($idEvent);
+            if ($userEmail->count() > 0) {
+                emailUtils::sendMail($userEmail, $idEvent, 0);
+            }
+            
         } catch (\Throwable $th) {
             \DB::rollBack();
             return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
@@ -318,7 +324,7 @@ class EventsController extends Controller
             foreach($lNoAssigned as $noAssigned){
                 $noAssigned->delete();
             }
-
+            $createdAssigns = []; // arreglo para almacenar los nuevos registros
             foreach($lGroupsAssigned_id as $groupAssigned){ 
                 $eventAssign = EventAssign::where('event_id',$request->idEvent)
                                             ->where('group_id_n',$groupAssigned)
@@ -330,9 +336,21 @@ class EventsController extends Controller
                     $eventAssign->event_id = $request->idEvent;
                     $eventAssign->group_id_n = $groupAssigned;
                     $eventAssign->save();
+
+                    // Puedes guardar el ID del grupo o el objeto completo
+                    $createdAssigns[] = $groupAssigned; // o $eventAssign si prefieres
                 }
             }
             \DB::commit();
+            $users = \DB::table('groups_assigns as iga')
+                            ->join('users as u', 'iga.user_id_n', '=', 'u.id')
+                            ->whereIn('iga.group_id_n', $createdAssigns)
+                            ->select('u.id', 'u.username', 'u.institutional_mail') // ajusta campos según tu estructura
+                            ->distinct()
+                            ->get();
+            if ($users->count() > 0) {
+                emailUtils::sendMail($users, $request->idEvent, 1);
+            }
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
@@ -356,10 +374,12 @@ class EventsController extends Controller
                 $noAssigned->delete();
             }
 
+            $createdEmployees = []; // arreglo para almacenar los nuevos registros
+
             foreach($lEmployeesAssigned_id as $employeeAssigned){
-                $eventAssign = EventAssign::where('event_id',$request->idEvent)
-                                            ->where('user_id_n',$employeeAssigned)
-                                            ->where('group_id_n',null)
+                $eventAssign = EventAssign::where('event_id', $request->idEvent)
+                                            ->where('user_id_n', $employeeAssigned)
+                                            ->whereNull('group_id_n')
                                             ->first();
 
                 if(!$eventAssign){
@@ -367,10 +387,19 @@ class EventsController extends Controller
                     $eventAssign->event_id = $request->idEvent;
                     $eventAssign->user_id_n = $employeeAssigned;
                     $eventAssign->save();
+
+                    // Guarda el ID o el objeto, según lo que necesites
+                    $createdEmployees[] = $employeeAssigned;
                 }
             }
 
             \DB::commit();
+
+            // Solo enviamos correo a los que sí se insertaron nuevos
+            $users = \DB::table('users')->whereIn('id', $createdEmployees)->get();
+            if ($users->count() > 0) {
+                emailUtils::sendMail($users, $request->idEvent, 1);
+            }
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
@@ -448,4 +477,54 @@ class EventsController extends Controller
             'lGroupsNoAssigned' => $lGroupsNoAssigned
         ]);
     }
+
+    public function assignOfEvent($idEvent){
+        $directUsers = \DB::table('events_assigns as ea')
+            ->join('users as u', 'u.id', '=', 'ea.user_id_n')
+            ->where('ea.event_id', $idEvent)
+            ->where('ea.is_deleted', 0)
+            ->whereNotNull('ea.user_id_n')
+            ->select('u.id', 'u.username', 'u.institutional_mail');
+
+        // 2. Usuarios asignados por grupo
+        $groupUsers = \DB::table('events_assigns as ea')
+            ->join('groups_assigns as iga', 'iga.group_id_n', '=', 'ea.group_id_n')
+            ->join('users as u', 'u.id', '=', 'iga.user_id_n')
+            ->where('ea.event_id', $idEvent)
+            ->where('ea.is_deleted', 0)
+            ->whereNotNull('ea.group_id_n')
+            ->select('u.id', 'u.username', 'u.institutional_mail');
+
+        // 3. Unimos ambos y eliminamos duplicados por ID
+        $lUsersAssigned = $directUsers
+            ->union($groupUsers)
+            ->get()
+            ->unique('id')
+            ->values();
+        
+        return $lUsersAssigned;
+    }
+
+    public function resendEvent(Request $request)
+{
+    try {
+        $userEmail = $this->assignOfEvent($request->idEvent);
+
+        if ($userEmail->count() > 0) {
+            emailUtils::sendMail($userEmail, $request->idEvent, 1);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'E-mail enviado con éxito',
+            'icon' => 'success'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Ocurrió un error al enviar el correo: ' . $e->getMessage(),
+            'icon' => 'error'
+        ], 500); // 500 = error interno del servidor
+    }
+}
 }

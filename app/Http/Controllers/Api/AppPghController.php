@@ -78,7 +78,8 @@ class AppPghController extends Controller
             // Recibe los posibles parámetros del request validados
             $startDate = $validatedData['start_date'] ?? null; // Ej: '2024-01-01'
             $endDate = $validatedData['end_date'] ?? null; // Ej: '2024-12-31'
-            $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            // $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            $last_sync_date = null;
             $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
             $userIds = null;
 
@@ -181,7 +182,8 @@ class AppPghController extends Controller
             // Recibe los posibles parámetros del request validados
             $startDate = $validatedData['start_date'] ?? null; // Ej: '2024-01-01'
             $endDate = $validatedData['end_date'] ?? null; // Ej: '2024-12-31'
-            $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            // $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            $last_sync_date = null;
             $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
             $userIds = null;
             $status_creado = $validatedData['status_creado'] ?? null;
@@ -315,7 +317,8 @@ class AppPghController extends Controller
             // Recibe los posibles parámetros del request validados
             $startDate = $validatedData['start_date'] ?? null; // Ej: '2024-01-01'
             $endDate = $validatedData['end_date'] ?? null; // Ej: '2024-12-31'
-            $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            // $last_sync_date = $validatedData['last_sync_date'] ?? null; // Ej: '2024-12-31'
+            $last_sync_date = null;
             $id_user_boss = $validatedData['id_user_boss'] ?? null; // Array de IDs de usuarios
             $userIds = null;
             $status_creado = $validatedData['status_creado'] ?? null;
@@ -470,6 +473,8 @@ class AppPghController extends Controller
      */
     public function authorizeIncidents(Request $request) {
         try {
+            // Log::error('xxxxxxxxxxxxxxxxx');
+            // Log::error($request);
             $lIncidents = json_decode($request->getContent())->incidents;
             $lEventsType = collect(ExportUtils::getEventsType());
 
@@ -503,6 +508,9 @@ class AppPghController extends Controller
             ], 400);
         }
 
+        // Log::error('Respuesta: ');
+        // Log::error($lIncidents);
+
         return response()->json([
             'status' => 'success',
             'data' => $lIncidents
@@ -534,6 +542,8 @@ class AppPghController extends Controller
      */
     public function rejectIncidents(Request $request) {
         try {
+            Log::error('xxxxxxxxxxxxxxxxx');
+            Log::error($request);
             $lIncidents = json_decode($request->getContent())->incidents;
             $lEventsType = collect(ExportUtils::getEventsType());
             foreach ($lIncidents as $key => $incident) {
@@ -626,11 +636,12 @@ class AppPghController extends Controller
 
     public function employees(Request $request) {
         try {
-            // Log::error('el request: ');
-            // Log::error($request);
+            //  Log::error('el request: ');
+            //  Log::error($request);
             $config = \App\Utils\Configuration::getConfigurations();
             $id_user_boss = $request->id_user_boss;
-            $last_sync_date = $request->last_sync_date;
+            // $last_sync_date = $request->last_sync_date;
+            $last_sync_date = null;
             $employees = ExportUtils::getEmployees($id_user_boss, $last_sync_date);
 
             $oRequest = new stdClass();
@@ -695,7 +706,12 @@ class AppPghController extends Controller
                 );
             }
 
-            // Log::error($employees);
+            // if($id_user_boss == 2){
+            //     $employees = [];
+            // }
+
+            //   Log::error('el employees:');
+            //   Log::error($employees);
 
             return response()->json([
                 'status' => 'success',

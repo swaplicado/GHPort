@@ -70,6 +70,7 @@ class User extends Authenticatable
     ];
 
     public function authorizedRole($rol){
+        \Log::error($this->rol_id);
         if(!is_array($rol)){
             abort_unless($this->rol_id == $rol, 401);
         }else{

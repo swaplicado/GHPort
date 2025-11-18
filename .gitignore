@@ -13,3 +13,5 @@ yarn-error.log
 composer.json
 composer.lock
 package-lock.json
+app/Http/Controllers/Pages/PersonalDataController.php
+app/Http/Controllers/Pages/PersonalDataController.php

@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2025-02-11 10:08:02",
+    "lastSyncDateTime": "2025-11-18 08:57:04",
     "syncExecution": false,
     "pastSyncDays": 1,
     "expiration_vacations": {
@@ -675,5 +675,6 @@
     "authorized_client_app": 2,
     "requested_client_web": 1,
     "requested_client_app": 2,
-    "appMobileWithMySelf": 1
+    "appMobileWithMySelf": 1,
+    "numMonthCheck": 6
 }

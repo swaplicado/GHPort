@@ -508,10 +508,11 @@ class creeateSentIncidentsUtils
         $application->save();
 
         if($type_incident_id == SysConst::TYPE_CUMPLEAÑOS){
+            $year = Carbon::now()->format('Y');
             $appBreakdown = new ApplicationsBreakdown();
             $appBreakdown->application_id = $application->id_application;
             $appBreakdown->days_effective = 1;
-            $appBreakdown->application_year = $requestIncidence->birthDayYear;
+            $appBreakdown->application_year = $year;
             $appBreakdown->admition_count = 1;
             $appBreakdown->save();
         }

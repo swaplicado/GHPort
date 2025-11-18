@@ -88,7 +88,7 @@
             </div>
             <div class="card-body">
                 <div v-if="cardType == 'events'">
-                    @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'asign' => true, 'asignVueMethod' => 'showModalEventAssign()'])
+                    @include('layouts.table_buttons', ['crear' => true, 'editar' => true, 'delete' => true, 'asign' => true, 'send' => true, 'asignVueMethod' => 'showModalEventAssign()'])
                 </div>
                 <br>
                 <br>
@@ -111,6 +111,29 @@
 <script>
     var self;
     moment.locale('es');
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('btn_send')?.addEventListener('click', function () {
+            var row = table['events_table'].row('.selected').data();
+            SGui.showWaiting(15000);
+            axios.post('events/resend', {
+                'idEvent': row[0],
+            })
+            .then(response => {
+                var data = response.data;
+                if(data.success){
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error) {
+                console.log(error);
+                SGui.showError(error);
+            });
+        });
+    });
 </script>
 {{-- Tabla de eventps --}}
 @include('layouts.table_jsControll', [

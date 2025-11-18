@@ -25,6 +25,8 @@ class jobVsOrgChartJobController extends Controller
                                     'd.department_name_ui as department'
                                 )
                                 ->where('j.id_job', '!=', 1)
+                                ->where('j.is_deleted', 0)
+                                ->where('d.is_deleted', 0)
                                 ->orderBy('j.job_name_ui', 'asc')
                                 ->get();
 
@@ -70,6 +72,8 @@ class jobVsOrgChartJobController extends Controller
                                     'd.department_name_ui as department'
                                 )
                                 ->where('j.id_job', '!=', 1)
+                                ->where('j.is_deleted', 0)
+                                ->where('d.is_deleted', 0)
                                 ->orderBy('j.job_name_ui', 'asc')
                                 ->get();
             \DB::commit();
