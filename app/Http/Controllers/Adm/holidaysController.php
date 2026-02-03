@@ -10,27 +10,28 @@ class holidaysController extends Controller
 {
     public function saveHolidaysFromJSON($lSiieHolidays)
     {
-        $lHolidays = Holiday::pluck('id', 'external_key');
+        $lHolidays = Holiday::all()->keyBy(function ($holiday) {
+            return $holiday->id_holiday . '_' . $holiday->year;
+        });
 
         try {
             foreach ($lSiieHolidays as $jSiieHoliday) {
-                if (isset($lHolidays[$jSiieHoliday->id_holiday])) {
-                        $idHoliday = $lHolidays[$jSiieHoliday->id_holiday];
-                        $this->updHoliday($jSiieHoliday, $idHoliday);
-                    }
-                    else {
-                        $this->insertHoliday($jSiieHoliday);
-                    }
+
+                $key = $jSiieHoliday->id_holiday . '_' . $jSiieHoliday->year;
+
+                if (isset($lHolidays[$key])) {
+                    $this->updHoliday($jSiieHoliday, $lHolidays[$key]);
+                } else {
+                    $this->insertHoliday($jSiieHoliday);
+                }
             }
-        }
-        catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             \Log::error($th);
             return false;
         }
 
         return true;
     }
-
     private function updHoliday($jSiieHoliday, $idHoliday)
     {
         Holiday::where('id', $idHoliday)

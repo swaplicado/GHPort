@@ -768,6 +768,7 @@ var app = new Vue({
         },
 
         reDrawTableIncidences(table_name, lIncidences){
+            console.log("entra a redraw");
             var dataIncidences = [];
             for(let incident of lIncidences){
                 dataIncidences.push(
@@ -799,7 +800,7 @@ var app = new Vue({
                         'SUBTIPO',
                         incident.applications_st_name,
                         incident.date_send_n,
-                        incident.is_direct,
+                        incident.is_direct ? incident.is_direct : 0,
                     ]
                 );
             }

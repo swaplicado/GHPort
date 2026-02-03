@@ -61,6 +61,9 @@
             this.getMyVacationHistoryRoute = <?php echo json_encode(route('myVacations_getMyVacationHistory')); ?>;
             this.hiddeHistoryRoute = <?php echo json_encode(route('myVacations_hiddeHistory')); ?>;
             this.calcReturnDate = <?php echo json_encode(route('myVacations_calcReturnDate')); ?>;
+            this.toExpiredVacations = <?php echo json_encode($toExpiredVacations); ?>;
+            this.messageVacationsExpired = <?php echo json_encode($messageVacationsExpired); ?>;
+            this.lExpiredVacations = <?php echo json_encode($lExpiredVacations); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" ); ?>;
@@ -143,6 +146,24 @@
                             </tbody>
                         </table>
                     </div>
+                    <br>
+                    <div class="col-md-6 card border-left-primary">
+                        <ul>
+                            <li v-for="message in messageVacationsExpired">
+                                @{{ message }}
+                            </li>
+                        </ul>
+                    </div>
+                    <br>
+                    @if (sizeof($lExpiredVacations) > 0)
+                        <div class="col-md-6 card border-left-primary">
+                            <ul>
+                                <li v-for="message in lExpiredVacations">
+                                    <b>@{{ message }}</b>
+                                </li>
+                            </ul>
+                        </div>
+                    @endif
                     <br>
                     <div class="row">
                         <div class="col-md-12">
@@ -372,6 +393,7 @@
         });
     });
 </script>
+<script type="text/javascript" src="{{ asset('myApp/Utils/RuleApplicabilityResolver.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_vacations.js') }}"></script>

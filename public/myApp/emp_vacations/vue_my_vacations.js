@@ -4,6 +4,7 @@ var appMyVacations = new Vue({
         oData: oServerData,
         oDateUtils: new SDateUtils(),
         vacationUtils: new vacationUtils(),
+        //ruleUtils: new RuleApplicabilityResolver(),
         indexes: oServerData.indexesMyRequestTable,
         oUser: null,  //No modificar, mejor modificar oCopyUser
         lSuperviser: oServerData.lSuperviser,
@@ -54,7 +55,11 @@ var appMyVacations = new Vue({
         loadReturnDate: false,
         lEvents: oServerData.lEvents,
         requested_client: oServerData.requested_client,
-        authorized_client: oServerData.authorized_client
+        authorized_client: oServerData.authorized_client,
+        toExpiredVacations: oServerData.toExpiredVacations,
+        messageVacationsExpired: oServerData.messageVacationsExpired,
+        lExpiredVacations: oServerData.lExpiredVacations,
+        canRequest: true
     },
     computed: {
         propertyAAndPropertyB() {
@@ -1303,6 +1308,13 @@ var appMyVacations = new Vue({
                     });
                 }
             })
+        },
+        changeCanRequest(flag){
+            if (flag == true){
+                canRequest = true;
+            }else{
+                canRequest = false;
+            }
         }
     },
 })

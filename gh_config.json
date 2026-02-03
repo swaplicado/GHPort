@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2025-11-18 08:57:04",
+    "lastSyncDateTime": "2026-02-03 09:28:14",
     "syncExecution": false,
     "pastSyncDays": 1,
     "expiration_vacations": {
@@ -62,10 +62,11 @@
         "days": 1
     },
     "notifyVacationToExpireRange": {
-        "years": 0,
-        "months": 1,
+        "years": 1,
+        "months": 6,
         "days": 0
     },
+    "daysToShowVacationExpiredMessage": 5000,
     "permission_time_work": 720,
     "permission_time": 120,
     "format_php": "ddd D-m-Y",
@@ -676,5 +677,6 @@
     "requested_client_web": 1,
     "requested_client_app": 2,
     "appMobileWithMySelf": 1,
-    "numMonthCheck": 6
+    "numMonthCheck": 6,
+    "maxRetroactiveDays": 1
 }

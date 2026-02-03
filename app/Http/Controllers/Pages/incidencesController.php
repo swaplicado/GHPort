@@ -228,7 +228,7 @@ class incidencesController extends Controller
             $application_log->updated_by = delegationUtils::getIdUser();
             $application_log->save();
 
-            $lIncidences = $this->getIncidences($application->user_id);
+            $lIncidences = incidencesUtils::getUserIncidences(delegationUtils::getIdUser());
 
             \DB::commit();
         } catch (\Throwable $th) {

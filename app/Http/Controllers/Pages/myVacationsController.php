@@ -24,6 +24,7 @@ use \App\Utils\folioUtils;
 use App\Utils\recoveredVacationsUtils;
 use App\Utils\notificationsUtils;
 use App\Utils\incidencesUtils;
+use App\Http\Controllers\Sys\CheckVacationsToExpireController;
 
 class myVacationsController extends Controller
 {
@@ -70,6 +71,14 @@ class myVacationsController extends Controller
 
         $requested_client = $config->requested_client_web;
         $authorized_client = $config->authorized_client_web;
+        $toExpiredVacations = json_decode(CheckVacationsToExpireController::checkVacationToExpire($user->id));
+        $messageVacationsExpired = $toExpiredVacations[0];
+        $lExpiredVacations = [];
+        if (sizeof($toExpiredVacations) > 1) {
+            for ($i=1; $i < sizeof($toExpiredVacations); $i++) { 
+                $lExpiredVacations[] = $toExpiredVacations[$i]->message;
+            }
+        }
 
         return view('emp_vacations.my_vacations')->with('user', $user)
                                                 ->with('initialCalendarDate', $initialCalendarDate)
@@ -83,7 +92,10 @@ class myVacationsController extends Controller
                                                 ->with('lStatus', $lStatus)
                                                 ->with('lEvents', $lEvents)
                                                 ->with('requested_client', $requested_client)
-                                                ->with('authorized_client', $authorized_client);
+                                                ->with('authorized_client', $authorized_client)
+                                                ->with('toExpiredVacations', $toExpiredVacations)
+                                                ->with('messageVacationsExpired', $messageVacationsExpired)
+                                                ->with('lExpiredVacations', $lExpiredVacations);
     }
 
     public function getlDays(Request $request){

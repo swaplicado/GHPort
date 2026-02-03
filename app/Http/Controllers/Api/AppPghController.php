@@ -14,6 +14,7 @@ use Log;
 use App\Utils\EmployeeVacationUtils;
 use App\Http\Controllers\Pages\permissionController;
 use stdClass;
+use App\Http\Controllers\Sys\CheckVacationsToExpireController;
 
 class AppPghController extends Controller
 {
@@ -651,6 +652,22 @@ class AppPghController extends Controller
                 $employee->tot_vacation_remaining = $oUser->tot_vacation_remaining;
                 $employee->mySelf = 0;
                 $employee->rol_id = 0;
+                $employee->vacations_expired = CheckVacationsToExpireController::checkVacationToExpire($employee->id);
+
+                $lVac = [];
+                foreach ($oUser->vacation as $oVac) {
+                    $lVac[] = [
+                        "date_start" => $oVac->date_start,
+                        "date_end" => $oVac->date_end,
+                        "id_anniversary" => $oVac->id_anniversary,
+                        "vacation_days" => $oVac->vacation_days,
+                        "num_vac_taken" => $oVac->num_vac_taken,
+                        "expired" => $oVac->expired,
+                        "request" => $oVac->request,
+                        "remaining" => $oVac->remaining
+                    ];
+                }
+                $employee->vacations = json_encode($lVac);
 
                 $oRequest->employeeId = $employee->id;
                 $newRequest = new Request((array)$oRequest);
@@ -672,6 +689,22 @@ class AppPghController extends Controller
                 $oUser = delegationUtils::getUser();
                 $vacation_data = EmployeeVacationUtils::getEmployeeDataForMyVacation($oUser->id);
                 $oUser->tot_vacation_remaining = $vacation_data->tot_vacation_remaining;
+                $oUser->toExpiredVacations = CheckVacationsToExpireController::checkVacationToExpire($oUser->id);
+
+                $lVac = [];
+                foreach ($vacation_data->vacation as $oVac) {
+                    $lVac[] = [
+                        "date_start" => $oVac->date_start,
+                        "date_end" => $oVac->date_end,
+                        "id_anniversary" => $oVac->id_anniversary,
+                        "vacation_days" => $oVac->vacation_days,
+                        "num_vac_taken" => $oVac->num_vac_taken,
+                        "expired" => $oVac->expired,
+                        "request" => $oVac->request,
+                        "remaining" => $oVac->remaining
+                    ];
+                }
+                $oUser->vacations = json_encode($lVac);
 
                 $oRequest->employeeId = $oUser->id;
                 $newRequest = new Request((array)$oRequest);
@@ -701,7 +734,9 @@ class AppPghController extends Controller
                         "tot_vacation_remaining" => $oUser->tot_vacation_remaining,
                         "mySelf" => 1,
                         "rol_id" => $oUser->rol_id,
-                        "permissions" => $oUser->permissions
+                        "permissions" => $oUser->permissions,
+                        "vacations_expired" => $oUser->toExpiredVacations,
+                        "vacations" => $oUser->vacations
                     ]
                 );
             }
