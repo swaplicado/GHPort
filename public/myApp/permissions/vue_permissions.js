@@ -7,6 +7,7 @@ var app = new Vue({
         oCopylPermissions: structuredClone(oServerData.lPermissions),
         oDateUtils: new SDateUtils(),
         vacationUtils: new vacationUtils(),
+        ruleUtils: new RuleApplicabilityResolver(),
         indexes_permission: oServerData.indexes_permission,
         oUser: oServerData.oUser,
         lSuperviser: oServerData.lSuperviser,
@@ -53,9 +54,14 @@ var app = new Vue({
         permission: null,
         lEvents: oServerData.lEvents,
         requested_client: oServerData.requested_client,
-        authorized_client: oServerData.authorized_client
+        authorized_client: oServerData.authorized_client,
+        canRequest: true,
+        maxRetroactiveDays: oServerData.maxRetroactiveDays,
     },
     watch: {
+        startDate(val) {
+            this.onDateRangeChange();
+        },
         type_id:function(val){
             if(typeof self.$refs.entryTime != 'undefined'){
                 self.permissionEntry = null;
@@ -293,6 +299,30 @@ var app = new Vue({
         $('#status_ReqPermission').trigger('change');
     },
     methods: {
+        onDateRangeChange() {
+            const start = moment(this.startDate, 'ddd DD-MMM-YYYY').startOf('day');
+            const today = moment(this.today).startOf('day');
+
+            const retroactiveDays = this.ruleUtils.getBusinessDays(start, today);
+            const applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.PERSONAL_PERMIT, null)
+            this.changeCanRequest(true);
+            if (retroactiveDays > 0) {
+                if (applyRule && retroactiveDays > this.maxRetroactiveDays) {
+                    Swal.fire({
+                        title: "<b>Hay 1 cuestión con esta solicitud que puede afectar su procesamiento, favor de revisarla</b>",
+                        icon: "info",
+                        html: "No puedes solicitar más de 1 día hacia atras",
+                        allowOutsideClick: false,
+                        showCloseButton: true,
+                        focusConfirm: false,
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Aceptar",
+                    });
+                    this.changeCanRequest(false);
+                }
+            }
+        },
+
         initGestionPermissions() {
             this.needRenderTableIncidences = true;
             this.isRevision = false;
@@ -704,6 +734,14 @@ var app = new Vue({
         },
 
         async save() {
+            if(!this.canRequest){
+                SGui.showMessage(
+                    '',
+                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
+                    'warning'
+                );
+                return;
+            }
             if (!(!!this.class_id)) {
                 SGui.showMessage('', 'Debe ingresar la clase de permiso', 'warning');
                 return;
@@ -1599,6 +1637,13 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
+        },
+        changeCanRequest(flag){
+            if (flag == true){
+                this.canRequest = true;
+            }else{
+                this.canRequest = false;
+            }
         }
     }
 });

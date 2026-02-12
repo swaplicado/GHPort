@@ -4,6 +4,7 @@ var appRequestVacation = new Vue({
         oData: oServerData,
         oDateUtils: new SDateUtils(),
         oUsersUtils: new SUsersUtils(),
+        ruleUtils: new RuleApplicabilityResolver(),
         oUser: null,
         indexes: oServerData.indexesRequest,
         myManagers: oServerData.myManagers,
@@ -41,7 +42,9 @@ var appRequestVacation = new Vue({
         lTypes: [],
         tot_vacation_remaining: null,
         lEvents: oServerData.lEvents,
-        authorized_client: oServerData.authorized_client
+        authorized_client: oServerData.authorized_client,
+        canRequest: true,
+        maxRetroactiveDays: oServerData.maxRetroactiveDays,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -55,7 +58,7 @@ var appRequestVacation = new Vue({
             this.lTypes = [];
             if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
                 let res = this.checkSpecial(this.oApplication);
-                if(res[0] && !this.arraysEqual(this.lTypes, oldlTypes)){
+                if(res[0]){
                     // SGui.showMessage('', res[1], 'warning');
 
                     Swal.fire({
@@ -714,6 +717,9 @@ var appRequestVacation = new Vue({
             let message = "";
             let is_special = false;
             let lMessages = [];
+
+            const applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.VACATIONS, null)
+            this.changeCanRequest(true);
 
             if(data.is_proportional){
                 is_special = true;

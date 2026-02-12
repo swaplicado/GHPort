@@ -78,7 +78,7 @@ class incidencesController extends Controller
             'TYPE_CUMPLEAÑOS' => SysConst::TYPE_CUMPLEAÑOS,
             'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
         ];
-
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lClass = \DB::table('cat_incidence_cls')
                         ->where('id_incidence_cl', '!=', SysConst::TYPE_VACACIONES)
                         ->where('is_deleted', 0)
@@ -128,7 +128,8 @@ class incidencesController extends Controller
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('lStatus', $lStatus)
                                             ->with('lEvents', $lEvents)
-                                            ->with('requested_client', $requested_client);
+                                            ->with('requested_client', $requested_client)
+                                            ->with('maxRetroactive', $maxRetroactive);
     }
 
     public function getEmpIncidencesEA(Request $request){

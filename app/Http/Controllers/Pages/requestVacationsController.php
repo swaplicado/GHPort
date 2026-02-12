@@ -232,6 +232,7 @@ class requestVacationsController extends Controller
         $year = Carbon::now()->year;
         $data = $this->getData($year);
         $myManagers = orgChartUtils::getMyManagers(delegationUtils::getOrgChartJobIdUser());
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $constants = [
             'SEMANA' => SysConst::SEMANA,
             'QUINCENA' => SysConst::QUINCENA,
@@ -317,7 +318,8 @@ class requestVacationsController extends Controller
                                                     ->with('lRequestStatus', $lRequestStatus)
                                                     ->with('lGestionStatus', $lGestionStatus)
                                                     ->with('lEvents', $lEvents)
-                                                    ->with('authorized_client', $authorized_client);
+                                                    ->with('authorized_client', $authorized_client)
+                                                    ->with('maxRetroactive', $maxRetroactive);
     }
 
     public function getDataManager(Request $request){

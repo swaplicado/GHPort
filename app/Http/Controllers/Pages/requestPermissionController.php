@@ -40,7 +40,7 @@ class requestPermissionController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
         ];
-
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lTypes = \DB::table('cat_permission_tp')
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
@@ -136,7 +136,8 @@ class requestPermissionController extends Controller
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('lRequestStatus', $lRequestStatus)
                                             ->with('lGestionStatus', $lGestionStatus)
-                                            ->with('authorized_client', $authorized_client);
+                                            ->with('authorized_client', $authorized_client)
+                                            ->with('maxRetroactive', $maxRetroactive);
     }
 
     public function PersonalTheme($permission_id = null){
@@ -154,7 +155,7 @@ class requestPermissionController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
         ];
-
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lTypes = \DB::table('cat_permission_tp')
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
@@ -250,7 +251,8 @@ class requestPermissionController extends Controller
                                             ->with('initialCalendarDate', $initialCalendarDate)
                                             ->with('lRequestStatus', $lRequestStatus)
                                             ->with('lGestionStatus', $lGestionStatus)
-                                            ->with('authorized_client', $authorized_client);
+                                            ->with('authorized_client', $authorized_client)
+                                            ->with('maxRetroactive', $maxRetroactive);
     }
 
 

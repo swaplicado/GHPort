@@ -1,7 +1,58 @@
--------------------------------------------------------------------------------------------------------------------------
+========================================
+RELEASE
+Fecha: DD-MM-YYYY
+Autor: Nombre o equipo
+========================================
+
+Resumen:
+- Descripción breve del release.
+
+Cambios:
+- Cambio 1
+- Cambio 2
+
+Nuevas funcionalidades:
+- Feature nueva A
+- Feature nueva B
+
+Correcciones:
+- Bug corregido X
+- Bug corregido Y
+
+Migraciones:
+- Sí / No
+- Detalle si aplica
+
+Notas:
+- Cualquier cosa importante a considerar
+
+----------------------------------------
+----------------------------------------
 feat: Se agrega el campo de rol a la pantalla de gestión de usuarios
 author: Cesar Orozco
 date: 2024-08-12
 description: No había campo para modificar el rol de los usuarios del sistema, en la vista de gestión de usuarios, 
 se incorpora el campo.
--------------------------------------------------------------------------------------------------------------------------
+----------------------------------------
+
+========================================
+RELEASE
+Fecha: 05-02-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Nuevas reglas para pedir vacaciones, incidencias y permisos
+
+Cambios:
+- En petición de vacaciones si aplica la regla revisa el número maximo hacia atras que puedes pedir de días.
+- En petición de incidencias si aplica la regla revisa el número maximo hacia atras que puedes pedir de días.
+- En petición de permisos si aplica la regla revisa el número maximo hacia atras que puedes pedir de días.
+
+Nuevas funcionalidades:
+- Funcionalidad para decidir si el tipo de incidencia aplica la nueva regla.
+
+Migraciones:
+- No
+
+----------------------------------------

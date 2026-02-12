@@ -180,6 +180,7 @@
                                             ])
     @endforeach
     @include('layouts.manual_jsControll')
+    
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vue_my_emp_vacations.js') }}"></script>
 @endsection

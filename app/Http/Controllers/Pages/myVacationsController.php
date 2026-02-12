@@ -55,7 +55,7 @@ class myVacationsController extends Controller
         ];
 
         $today = Carbon::now()->toDateString();
-
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lSuperviser = orgChartUtils::getSupervisersToSend($user->org_chart_job_id);
 
         $lStatus = \DB::table('sys_applications_sts')
@@ -95,7 +95,8 @@ class myVacationsController extends Controller
                                                 ->with('authorized_client', $authorized_client)
                                                 ->with('toExpiredVacations', $toExpiredVacations)
                                                 ->with('messageVacationsExpired', $messageVacationsExpired)
-                                                ->with('lExpiredVacations', $lExpiredVacations);
+                                                ->with('lExpiredVacations', $lExpiredVacations)
+                                                ->with('maxRetroactive', $maxRetroactive);
     }
 
     public function getlDays(Request $request){

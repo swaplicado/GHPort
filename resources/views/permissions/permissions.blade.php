@@ -39,6 +39,7 @@
             this.routeGestionSendIncidence = <?php echo json_encode(route('permission_gestionSendIncidence')) ?>;
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
+            this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:mispermisos" ); ?>;
             this.indexes_permission = {
@@ -215,7 +216,7 @@
         app.minutes = "00";
     }
 </script>
-
+<script type="text/javascript" src="{{ asset('myApp/Utils/RuleApplicabilityResolver.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script>
     var self;

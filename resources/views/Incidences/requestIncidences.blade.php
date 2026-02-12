@@ -51,6 +51,7 @@
             this.cancelIncidenceRoute = <?php echo json_encode(route('requestIncidences_cancel')); ?>;
             this.deleteSendIncidenceRoute = <?php echo json_encode(route('requestIncidences_delete')); ?>;
             this.authorized_client = <?php echo json_encode($authorized_client); ?>;
+            this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
@@ -372,6 +373,7 @@
         app.returnDate = null;
     }
 </script>
+<script type="text/javascript" src="{{ asset('myApp/Utils/RuleApplicabilityResolver.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script>
     var self;

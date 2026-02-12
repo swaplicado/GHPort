@@ -7,6 +7,7 @@ var app = new Vue({
         oCopylIncidences: structuredClone(oServerData.lIncidences),
         oDateUtils: new SDateUtils(),
         vacationUtils: new vacationUtils(),
+        ruleUtils: new RuleApplicabilityResolver(),
         indexes_incidences: oServerData.indexes_incidences,
         oUser: oServerData.oUser,
         lSuperviser: oServerData.lSuperviser,
@@ -57,7 +58,9 @@ var app = new Vue({
         lIncidencesEA: [],
         isNewApplication: false,
         requested_client: oServerData.requested_client,
-        authorized_client: oServerData.authorized_client
+        authorized_client: oServerData.authorized_client,
+        canRequest: true,
+        maxRetroactiveDays: oServerData.maxRetroactiveDays,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -130,7 +133,7 @@ var app = new Vue({
             this.lSpecialTypes = [];
             if(this.endDate != null && this.endDate != undefined && this.endDate != "" && this.valid){
                 let res = this.checkSpecial();
-                if(res[0] && !this.arraysEqual(this.lSpecialTypes, oldlTypes)){
+                if(res[0]){
                     // SGui.showMessage('', res[1], 'warning');
                     Swal.fire({
                         title: "<b>Hay " + res[2].length + (res[2].length > 1 ? " cuestiones" : " cuestión")
@@ -708,6 +711,15 @@ var app = new Vue({
         },
 
         async save(){
+            if(!this.canRequest){
+                SGui.showMessage(
+                    '',
+                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
+                    'warning'
+                );
+                return;
+            }
+
             if(this.startDate == null || this.startDate == ""){
                 SGui.showMessage('', 'Debe ingresar una fecha de inicio', 'warning');
                 return;
@@ -867,13 +879,64 @@ var app = new Vue({
             this.is_season_special = false;
             this.is_event = false;
             let lMessages = [];
+            let applyRule = 0;
+            switch(this.type_id){
+                case '2':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.INCIDENT)
+                    break;
+                case '3':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.ADMIN_INCIDENT)
+                    break;
+                case '4':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.LEAVE_WITHOUT_PAY)
+                    break;
+                case '5':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.LEAVE_WITH_PAY)
+                    break;
+                case '6':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.PATERNITY_LEAVE)
+                    break;
+                case '7':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.MEDICAL_PRESCRIPTION)
+                    break;
+                case '8':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.WORK_OUTSIDE)
+                    break;
+                case '9':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.HOLIDAY)
+                    break;
+                case '10':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.HOMEOFFICE)
+                    break;
+                case '11':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.HOURS_PERMIT)
+                    break;
+                case '12':
+                    applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.INCIDENCE, RuleApplicabilityResolver.INCIDENT.DEATH_PERMIT)
+                    break;
+            }
+            
+            this.changeCanRequest(true);
 
-            if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
+            const start = moment(this.startDate, 'ddd DD-MMM-YYYY').startOf('day');
+            const today = moment(this.today).startOf('day');
+
+            const retroactiveDays = this.ruleUtils.getBusinessDays(start, today);
+
+            if (retroactiveDays > 0) {
                 is_special = true;
                 this.is_normal = false;
                 this.is_past = true;
-                this.lSpecialTypes.push('Con días pasados');
-                lMessages.push("Se tomarán días pasados.");
+                this.lTypes.push('Con días pasados');
+
+                if (applyRule && retroactiveDays > this.maxRetroactiveDays) {
+                    lMessages.push(
+                        `No puedes solicitar más de ${this.maxRetroactiveDays} día(s) hacia atrás.`
+                    );
+                    this.changeCanRequest(false);
+                } else {
+                    lMessages.push('Se tomarán días pasados.');
+                }
             }
 
             for(let oSeason of this.lTemp){
@@ -1495,6 +1558,13 @@ var app = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
+        },
+        changeCanRequest(flag){
+            if (flag == true){
+                this.canRequest = true;
+            }else{
+                this.canRequest = false;
+            }
         }
     }
 });

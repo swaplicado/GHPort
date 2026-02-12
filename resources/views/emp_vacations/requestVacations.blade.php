@@ -59,6 +59,7 @@
             this.oApplication = <?php echo json_encode($oApplication); ?>;
             this.authorized_client = <?php echo json_encode($authorized_client); ?>;
             this.getApplicationRoute = <?php echo json_encode(route('requestVacations_getApplication')); ?>;
+            this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
             //Al agregar un nuevo index no olvidar agregarlo en la funcion reDraw de vue
             this.indexesRequest = {
                 'id': 0,
@@ -606,6 +607,7 @@
             // }
         });
     </script>
+    <script type="text/javascript" src="{{ asset('myApp/Utils/RuleApplicabilityResolver.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/Utils/SReDrawTables.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/Utils/SUsersUtils.js') }}"></script>
     <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>

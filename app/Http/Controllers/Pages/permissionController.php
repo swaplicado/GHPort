@@ -37,7 +37,7 @@ class permissionController extends Controller
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
         ];
-
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lTypes = \DB::table('cat_permission_tp')
                         ->where('is_deleted', 0)
                         ->where('is_active', 1)
@@ -133,7 +133,8 @@ class permissionController extends Controller
                                             ->with('lSchedule', $lSchedule)
                                             ->with('lStatus', $lStatus)
                                             ->with('lEvents', $lEvents)
-                                            ->with('requested_client', $requested_client);
+                                            ->with('requested_client', $requested_client)
+                                            ->with('maxRetroactive', $maxRetroactive);
     }
 
     public function createPermission(Request $request){

@@ -48,7 +48,7 @@ class requestIncidencesController extends Controller
             'TYPE_CUMPLEAÑOS' => SysConst::TYPE_CUMPLEAÑOS,
             'TYPE_HOMEOFFICE' => SysConst::TYPE_HOMEOFFICE,
         ];
-
+        $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lClass = \DB::table('cat_incidence_cls')
                         ->where('id_incidence_cl', '!=', SysConst::TYPE_VACACIONES)
                         ->where('is_deleted', 0)
@@ -159,7 +159,8 @@ class requestIncidencesController extends Controller
                                                     ->with('lRequestStatus', $lRequestStatus)
                                                     ->with('lGestionStatus', $lGestionStatus)
                                                     ->with('lEvents', $lEvents)
-                                                    ->with('authorized_client', $authorized_client);
+                                                    ->with('authorized_client', $authorized_client)
+                                                    ->with('maxRetroactive', $maxRetroactive);
     }
 
     public function getEmployee(Request $request){

@@ -64,6 +64,7 @@
             this.toExpiredVacations = <?php echo json_encode($toExpiredVacations); ?>;
             this.messageVacationsExpired = <?php echo json_encode($messageVacationsExpired); ?>;
             this.lExpiredVacations = <?php echo json_encode($lExpiredVacations); ?>;
+            this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
             this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misvacaciones#mis_vacaciones" ); ?>;

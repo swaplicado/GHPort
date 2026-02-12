@@ -214,5 +214,11 @@ class SysConst {
     public const TASK_STATUS_REALIZADO = 2;
     public const TASK_STATUS_CANCELADO = 3;
     public const TASK_STATUS_ERROR = 4;
+
+    /**
+     * Constantes de dias maximos para pedir algo hacia atras
+     */
+    public const MAX_RETROACTIVE_DAYS = 1;
+    
 }
 ?>

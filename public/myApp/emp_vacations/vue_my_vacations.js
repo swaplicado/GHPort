@@ -4,7 +4,7 @@ var appMyVacations = new Vue({
         oData: oServerData,
         oDateUtils: new SDateUtils(),
         vacationUtils: new vacationUtils(),
-        //ruleUtils: new RuleApplicabilityResolver(),
+        ruleUtils: new RuleApplicabilityResolver(),
         indexes: oServerData.indexesMyRequestTable,
         oUser: null,  //No modificar, mejor modificar oCopyUser
         lSuperviser: oServerData.lSuperviser,
@@ -59,7 +59,8 @@ var appMyVacations = new Vue({
         toExpiredVacations: oServerData.toExpiredVacations,
         messageVacationsExpired: oServerData.messageVacationsExpired,
         lExpiredVacations: oServerData.lExpiredVacations,
-        canRequest: true
+        canRequest: true,
+        maxRetroactiveDays: oServerData.maxRetroactiveDays,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -76,7 +77,7 @@ var appMyVacations = new Vue({
             this.lTypes = [];
             if(this.endDate != null && this.endDate != undefined && this.endDate != ""){
                 let res = this.checkSpecial();
-                if(res[0] && !this.arraysEqual(this.lTypes, oldlTypes)){
+                if(res[0]){
                     // SGui.showMessage('', res[1], 'warning');
                     Swal.fire({
                         title: "<b>Hay " + res[2].length + (res[2].length > 1 ? " cuestiones" : " cuestión")
@@ -636,8 +637,11 @@ var appMyVacations = new Vue({
             this.is_proportional = false;
             this.is_season_special = false;
             this.is_event = false;
+
             let lMessages = [];
 
+            const applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.VACATIONS, null)
+            this.changeCanRequest(true);
             if(this.takedDays > this.oUser.tot_vacation_remaining && this.takedDays <= (this.oUser.tot_vacation_remaining + Math.floor(parseInt(this.oUser.prop_vac_days)))){
                 is_special = true;
                 this.is_normal = false;
@@ -656,13 +660,26 @@ var appMyVacations = new Vue({
                 lMessages.push("Se utilizarán más días de los proporcionales para la solicitud.");
             }
 
-            if(moment(this.endDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.endDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isBefore(moment(this.today)) || moment(this.startDate, 'ddd DD-MMM-YYYY').isSame(moment(this.today))){
+            const start = moment(this.startDate, 'ddd DD-MMM-YYYY').startOf('day');
+            //const today = moment('2026-02-09').startOf('day');
+            const today = moment(this.today).startOf('day');
+
+            const retroactiveDays = this.ruleUtils.getBusinessDays(start, today);
+
+            if (retroactiveDays > 0) {
                 is_special = true;
                 this.is_normal = false;
                 this.is_past = true;
                 this.lTypes.push('Con días pasados');
 
-                lMessages.push("Se tomarán días pasados.");
+                if (applyRule && retroactiveDays > this.maxRetroactiveDays) {
+                    lMessages.push(
+                        `No puedes solicitar más de ${this.maxRetroactiveDays} día(s) hacia atrás.`
+                    );
+                    this.canRequest = false;
+                } else {
+                    lMessages.push('Se tomarán días pasados.');
+                }
             }
 
             for(let oSeason of this.lTemp){
@@ -756,6 +773,15 @@ var appMyVacations = new Vue({
         },
 
         async requestVac(){
+            if(!this.canRequest){
+                SGui.showMessage(
+                    '',
+                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
+                    'warning'
+                );
+                return;
+            }
+
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
                 SGui.showMessage('', 'Debe ingresar las fecha de inicio y de fin de vacaciones', 'warning');
                 return;
@@ -1311,9 +1337,9 @@ var appMyVacations = new Vue({
         },
         changeCanRequest(flag){
             if (flag == true){
-                canRequest = true;
+                this.canRequest = true;
             }else{
-                canRequest = false;
+                this.canRequest = false;
             }
         }
     },

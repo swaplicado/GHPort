@@ -31,7 +31,27 @@ class creeateSentIncidentsUtils
         // $takedDays = $requestVacation->takedDays;
         // $returnDate = $requestVacation->returnDate;
         // $tot_calendar_days = $requestVacation->tot_calendar_days;
-        
+        $maxRetroactiveDays =SysConst::MAX_RETROACTIVE_DAYS;
+        $appliesRule = RuleApplicabilityResolver::applies(
+            RuleApplicabilityResolver::PERCEPTION['VACATIONS']
+        );
+
+        if ($appliesRule) {
+            $today = Carbon::today();
+            $start = Carbon::parse($startDate);
+
+            if ($start->lt($today)) {
+                $retroactiveDays = $today->diffInDays($start);
+
+                if ($retroactiveDays > $maxRetroactiveDays) {
+                    throw new \Exception(
+                        "No es posible generar la solicitud. 
+                        El máximo permitido es {$maxRetroactiveDays} día(s) hacia atrás.",
+                        1
+                    );
+                }
+            }
+        }
         foreach ($requestVacation->selectedDays as $oDay) {
             $lDays[] = Carbon::parse($oDay)->format('Y-m-d');
         }
@@ -451,6 +471,28 @@ class creeateSentIncidentsUtils
             throw new \Exception('Para proseguir, se requiere incluir un comentario en la solicitud', 1);
         }
 
+        $maxRetroactiveDays =SysConst::MAX_RETROACTIVE_DAYS;
+        $appliesRule = RuleApplicabilityResolver::applies(
+            RuleApplicabilityResolver::PERCEPTION['INCIDENCE']
+        );
+
+        if ($appliesRule) {
+            $today = Carbon::today();
+            $start = Carbon::parse($start_date);
+
+            if ($start->lt($today)) {
+                $retroactiveDays = $today->diffInDays($start);
+
+                if ($retroactiveDays > $maxRetroactiveDays) {
+                    throw new \Exception(
+                        "No es posible generar la solicitud. 
+                        El máximo permitido es {$maxRetroactiveDays} día(s) hacia atrás.",
+                        1
+                    );
+                }
+            }
+        }
+                           
         $arrApplicationsEA = EmployeeVacationUtils::getEmpApplicationsEA($oUser->id);
         $arrDaysBetween = [];
         foreach ($arrApplicationsEA as $arr) {
@@ -634,6 +676,28 @@ class creeateSentIncidentsUtils
             $interOut = Carbon::parse($timeStart)->format('H:i');
             $interReturn = Carbon::parse($timeEnd)->format('H:i');
         }
+
+        $maxRetroactiveDays =SysConst::MAX_RETROACTIVE_DAYS;
+        $appliesRule = RuleApplicabilityResolver::applies(
+            RuleApplicabilityResolver::PERCEPTION['PERMISSION']
+        );
+
+        if ($appliesRule) {
+            $today = Carbon::today();
+            $start = Carbon::parse($start_date);
+
+            if ($start->lt($today)) {
+                $retroactiveDays = $today->diffInDays($start);
+
+                if ($retroactiveDays > $maxRetroactiveDays) {
+                    throw new \Exception(
+                        "No es posible generar la solicitud. 
+                        El máximo permitido es {$maxRetroactiveDays} día(s) hacia atrás.",
+                        1
+                    );
+                }
+            }
+        }  
 
         $permission = new Permission();
         $permission->folio_n = folioUtils::makeFolio(Carbon::now(), $employee_id, SysConst::TYPE_PERMISO_HORAS);

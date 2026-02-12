@@ -43,6 +43,7 @@
             this.routeCheckMail = <?php echo json_encode(route('incidences_checkMail')); ?>;
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
+            this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misincidencias" ); ?>;
             this.indexes_incidences = {
@@ -224,6 +225,7 @@
         app.returnDate = null;
     }
 </script>
+<script type="text/javascript" src="{{ asset('myApp/Utils/RuleApplicabilityResolver.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/emp_vacations/vacations_utils.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/Incidences/vue_incidences.js') }}"></script>
 <script type="text/javascript" src="{{ asset('myApp/Utils/SDatePicker/js/datepicker-full.min.js') }}"></script>
