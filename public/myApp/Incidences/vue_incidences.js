@@ -711,14 +711,6 @@ var app = new Vue({
         },
 
         async save(){
-            if(!this.canRequest){
-                SGui.showMessage(
-                    '',
-                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
-                    'warning'
-                );
-                return;
-            }
 
             if(this.startDate == null || this.startDate == ""){
                 SGui.showMessage('', 'Debe ingresar una fecha de inicio', 'warning');
@@ -745,6 +737,14 @@ var app = new Vue({
                 if(!aux){
                     return;
                 }
+            }
+            if(!this.canRequest){
+                SGui.showMessage(
+                    '',
+                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
+                    'warning'
+                );
+                return;
             }
 
             SGui.showWaiting(15000);

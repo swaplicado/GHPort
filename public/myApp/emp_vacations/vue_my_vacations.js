@@ -773,14 +773,7 @@ var appMyVacations = new Vue({
         },
 
         async requestVac(){
-            if(!this.canRequest){
-                SGui.showMessage(
-                    '',
-                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
-                    'warning'
-                );
-                return;
-            }
+            
 
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
                 SGui.showMessage('', 'Debe ingresar las fecha de inicio y de fin de vacaciones', 'warning');
@@ -803,7 +796,14 @@ var appMyVacations = new Vue({
             //         return;
             //     }
             // }
-
+            if(!this.canRequest){
+                SGui.showMessage(
+                    '',
+                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
+                    'warning'
+                );
+                return;
+            }
             if(this.idRequest == null){
                 var route = this.oData.requestVacRoute;
             }else{

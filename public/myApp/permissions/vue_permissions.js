@@ -734,14 +734,6 @@ var app = new Vue({
         },
 
         async save() {
-            if(!this.canRequest){
-                SGui.showMessage(
-                    '',
-                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
-                    'warning'
-                );
-                return;
-            }
             if (!(!!this.class_id)) {
                 SGui.showMessage('', 'Debe ingresar la clase de permiso', 'warning');
                 return;
@@ -771,6 +763,14 @@ var app = new Vue({
                     SGui.showMessage('', 'Debe ingresar tiempo de permiso', 'warning');
                     return;
                 }
+            }
+            if(!this.canRequest){
+                SGui.showMessage(
+                    '',
+                    `No es posible generar la solicitud. Solo se permiten solicitudes con hasta ${this.maxRetroactiveDays} día(s) hacia atrás a partir de hoy.`,
+                    'warning'
+                );
+                return;
             }
 
             SGui.showWaiting(15000);
