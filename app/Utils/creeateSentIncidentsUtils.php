@@ -39,9 +39,10 @@ class creeateSentIncidentsUtils
         if ($appliesRule) {
             $today = Carbon::today();
             $start = Carbon::parse($startDate);
+            $end = Carbon::parse($endDate);
 
-            if ($start->lt($today)) {
-                $retroactiveDays = $start->diffInWeekdays($today);
+            if ($end->lt($today)) {
+                $retroactiveDays = $end->diffInWeekdays($today);
 
                 if ($retroactiveDays > $maxRetroactiveDays) {
                     throw new \Exception(
@@ -479,9 +480,10 @@ class creeateSentIncidentsUtils
         if ($appliesRule) {
             $today = Carbon::today();
             $start = Carbon::parse($start_date);
+            $end = Carbon::parse($end_date);
 
-            if ($start->lt($today)) {
-                $retroactiveDays = $start->diffInWeekdays($today);
+            if ($end->lt($today)) {
+                $retroactiveDays = $end->diffInWeekdays($today);
 
                 if ($retroactiveDays > $maxRetroactiveDays) {
                     throw new \Exception(

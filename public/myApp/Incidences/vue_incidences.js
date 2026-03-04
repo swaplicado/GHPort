@@ -919,11 +919,13 @@ var app = new Vue({
             this.changeCanRequest(true);
 
             const start = moment(this.startDate, 'ddd DD-MMM-YYYY').startOf('day');
+            const end = moment(this.endDate, 'ddd DD-MMM-YYYY').startOf('day');
             const today = moment(this.today).startOf('day');
 
-            const retroactiveDays = this.ruleUtils.getBusinessDays(start, today);
+            const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
+            const isStartBeforeToday = start.isBefore(today, 'day');
 
-            if (retroactiveDays > 0) {
+            if (retroactiveDays > 0 || isStartBeforeToday) {
                 is_special = true;
                 this.is_normal = false;
                 this.is_past = true;
@@ -998,6 +1000,20 @@ var app = new Vue({
             if(data[this.indexes_incidences.applications_st_name] != 'Nuevas'){
                 SGui.showMessage('','Solo se pueden enviar incidencias con el estatus "Nuevas"', 'warning');
                 return
+            }
+            
+            const end = moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').startOf('day');
+            const today = moment(this.today).startOf('day');
+
+            const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
+
+            if ( retroactiveDays > 0 ) {
+                SGui.showMessage(
+                    '',
+                    `No puedes solicitar más de ${this.maxRetroactiveDays} día(s) hacia atrás.`,
+                    'warning'
+                );
+                return;
             }
 
             let message = '<b>Se enviará a:</b>' +

@@ -301,12 +301,14 @@ var app = new Vue({
     methods: {
         onDateRangeChange() {
             const start = moment(this.startDate, 'ddd DD-MMM-YYYY').startOf('day');
+            const end = moment(this.endDate, 'ddd DD-MMM-YYYY').startOf('day');
             const today = moment(this.today).startOf('day');
 
-            const retroactiveDays = this.ruleUtils.getBusinessDays(start, today);
+            const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
+            const isStartBeforeToday = start.isBefore(today, 'day');
             const applyRule = this.ruleUtils.ruleApply(RuleApplicabilityResolver.PERCEPTION.PERSONAL_PERMIT, null)
             this.changeCanRequest(true);
-            if (retroactiveDays > 0) {
+            if (retroactiveDays > 0 || isStartBeforeToday ) {
                 if (applyRule && retroactiveDays > this.maxRetroactiveDays) {
                     Swal.fire({
                         title: "<b>Hay 1 cuestión con esta solicitud que puede afectar su procesamiento, favor de revisarla</b>",
@@ -1068,6 +1070,20 @@ var app = new Vue({
                 return
             }
 
+            const end = moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').startOf('day');
+            const today = moment(this.today).startOf('day');
+
+            const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
+
+            if ( retroactiveDays > 0 ) {
+                SGui.showMessage(
+                    '',
+                    `No puedes solicitar más de ${this.maxRetroactiveDays} día(s) hacia atrás.`,
+                    'warning'
+                );
+                return;
+            }
+            
             let message = '<b>Se enviará a:</b>' +
                 '<br>' +
                 '<ul>';
