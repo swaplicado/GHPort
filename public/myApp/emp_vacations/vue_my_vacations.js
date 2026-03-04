@@ -1022,7 +1022,7 @@ var appMyVacations = new Vue({
 
             const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
 
-            if ( retroactiveDays > 0 ) {
+            if ( retroactiveDays > this.maxRetroactiveDays) {
                 SGui.showMessage(
                     '',
                     `No puedes solicitar más de ${this.maxRetroactiveDays} día(s) hacia atrás.`,

@@ -1001,13 +1001,13 @@ var app = new Vue({
                 SGui.showMessage('','Solo se pueden enviar incidencias con el estatus "Nuevas"', 'warning');
                 return
             }
-            
+
             const end = moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').startOf('day');
             const today = moment(this.today).startOf('day');
 
             const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
 
-            if ( retroactiveDays > 0 ) {
+            if ( retroactiveDays > this.maxRetroactiveDays ) {
                 SGui.showMessage(
                     '',
                     `No puedes solicitar más de ${this.maxRetroactiveDays} día(s) hacia atrás.`,
