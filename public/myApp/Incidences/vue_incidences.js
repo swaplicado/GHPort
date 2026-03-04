@@ -1002,7 +1002,7 @@ var app = new Vue({
                 return
             }
 
-            const end = moment(data[this.indexes.end_date], 'ddd DD-MMM-YYYY').startOf('day');
+            const end = moment(data[this.indexes_incidences.end_date], 'ddd DD-MMM-YYYY').startOf('day');
             const today = moment(this.today).startOf('day');
 
             const retroactiveDays = this.ruleUtils.getBusinessDays(end, today);
