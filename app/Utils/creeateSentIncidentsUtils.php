@@ -20,6 +20,9 @@ use App\Mail\requestPermissionMail;
 use App\User;
 use App\Models\Adm\Holiday;
 use Carbon\CarbonPeriod;
+use App\Http\Controllers\Pages\permissionController;
+use stdClass;
+use Illuminate\Http\Request;
 
 class creeateSentIncidentsUtils
 {
@@ -669,6 +672,16 @@ class creeateSentIncidentsUtils
         $interReturn = null;
         $requested_client = $requestPermission->requested_client;
 
+        $oController = app(permissionController::class);
+        $oRequest = new stdClass();
+        $oRequest->startDate = Carbon::now()->toDateString();
+        $oRequest->employeeId = $employee_id;
+        $newRequest = new Request((array)$oRequest);
+        $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
+        if ($result->total_permissions >= 2 && $class_id == 1) {
+            throw new \Exception('No puedes pedir mas de 2 permisos cada 6 meses', 1);
+        }
+
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
         if($comments == null || $comments == ""){
             throw new \Exception('Para proseguir, se requiere incluir un comentario en la solicitud', 1);
@@ -677,6 +690,10 @@ class creeateSentIncidentsUtils
         if(!is_null($timeStart) && !is_null($timeEnd)){
             $interOut = Carbon::parse($timeStart)->format('H:i');
             $interReturn = Carbon::parse($timeEnd)->format('H:i');
+        }
+
+        if (creeateSentIncidentsUtils::calcMinutesTime($timeStart, $timeEnd) > 120 && $class_id == 1) {
+            throw new \Exception('No puedes ingresar mas de 2 horas', 1);
         }
 
         $maxRetroactiveDays =SysConst::MAX_RETROACTIVE_DAYS;

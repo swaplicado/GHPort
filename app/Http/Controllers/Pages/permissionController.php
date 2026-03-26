@@ -20,6 +20,7 @@ use App\Mail\authorizePermissionMail;
 use App\Utils\notificationsUtils;
 use GuzzleHttp\Client;
 use \App\Utils\incidencesUtils;
+use stdClass;
 
 class permissionController extends Controller
 {
@@ -148,6 +149,16 @@ class permissionController extends Controller
             $minutes = $request->minutes;
             // $interOut = $request->interOut;
             // $interReturn = $request->interReturn;
+
+            $oController = app(permissionController::class);
+            $oRequest = new stdClass();
+            $oRequest->startDate = Carbon::now()->toDateString();
+            $oRequest->employeeId = $employee_id;
+            $newRequest = new Request((array)$oRequest);
+            $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
+            if ($result->total_permissions >= 2 && $class_id == 1) {
+                return json_encode(['success' => false, 'message' => 'No puedes ingresar mas de 2 permisos cada 6 meses', 'icon' => 'error']);
+            }
 
             $interOut = null;
             $interReturn = null;
@@ -400,7 +411,7 @@ class permissionController extends Controller
             ->where('hr.is_deleted', 0)
             ->where('hr.user_id', $employeeId)
             ->where('cl.id_permission_cl', 1)
-            ->where('hr.request_status_id', 3)
+            ->whereIn('hr.request_status_id', [3,2,1])
             ->where(function($query) use ($startDateQuery, $endDateQuery) {
                 $query->whereBetween('hr.start_date', [$startDateQuery, $endDateQuery])
                       ->orWhereBetween('hr.end_date', [$startDateQuery, $endDateQuery])
