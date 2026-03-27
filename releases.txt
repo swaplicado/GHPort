@@ -87,3 +87,18 @@ Cambios:
 Migraciones:
 - No
 
+========================================
+RELEASE
+Fecha: 27-03-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Cambio de mensaje cuando hay más de dos permisos.
+
+Cambios:
+- Cambio de mensaje cuando hay más de dos permisos.
+
+Migraciones:
+- No
+

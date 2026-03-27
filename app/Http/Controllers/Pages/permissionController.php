@@ -157,7 +157,12 @@ class permissionController extends Controller
             $newRequest = new Request((array)$oRequest);
             $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
             if ($result->total_permissions >= 2 && $class_id == 1) {
-                return json_encode(['success' => false, 'message' => 'No puedes ingresar mas de 2 permisos cada 6 meses', 'icon' => 'error']);
+                return json_encode([
+                    'success' => false,
+                    'message' => 'No puedes ingresar más de 2 permisos en el ' . $result->periodo . 
+                                '. Podrás solicitar nuevamente a partir del ' . $result->next_available_date,
+                    'icon' => 'error'
+                ]);
             }
 
             $interOut = null;
@@ -401,6 +406,12 @@ class permissionController extends Controller
             default:
                 throw new Exception("Valor de numMonthsCheck no válido");
         }
+
+        $nextAvailableDate = null;
+
+        if ($endDateQuery) {
+            $nextAvailableDate = $endDateQuery->copy()->addDay()->format('Y-m-d');
+        }
             
         $lPermissions = \DB::table('hours_leave as hr')
             ->leftJoin('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
@@ -445,7 +456,9 @@ class permissionController extends Controller
                 $totalMinutes += $interOut->diffInMinutes($interReturn);
             }
         }
-
+        $nextDate = strtolower(
+            Carbon::parse($nextAvailableDate)->format('d-M-Y')
+        );
         // Retornar respuesta con los cálculos
         return response()->json([
             'success' => true,
@@ -453,7 +466,8 @@ class permissionController extends Controller
             'total_hours' => $totalHours,
             'total_minutes' => $totalMinutes,
             'timeString' => Carbon::createFromTime(0, 0)->addMinutes($totalMinutes)->format('H:i'),
-            'periodo' => $periodo
+            'periodo' => $periodo,
+            'next_available_date' => $nextDate
         ]);
     } 
 

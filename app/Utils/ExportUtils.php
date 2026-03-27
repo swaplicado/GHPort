@@ -577,9 +577,11 @@ class ExportUtils {
             \Log::error($th);
             \DB::rollBack();
             return json_encode([
-                    'success' => false,
-                    'message' => $th->getMessage()
-                ]);
+                'success' => false,
+                'message' => $th instanceof \RuntimeException 
+                                ? $th->getMessage() 
+                                : 'Ocurrió un error al generar el permiso'
+            ]);
         }
 
         return json_encode([
