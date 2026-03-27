@@ -679,7 +679,10 @@ class creeateSentIncidentsUtils
         $newRequest = new Request((array)$oRequest);
         $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
         if ($result->total_permissions >= 2 && $class_id == 1) {
-            throw new \RuntimeException('No puedes pedir más de 2 permisos cada 6 meses');
+            throw new \RuntimeException(
+                'No puedes pedir más de 2 permisos en el ' . $result->periodo . 
+                '. Podrás solicitar nuevamente a partir del ' . $result->next_available_date
+            );
         }
 
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);
