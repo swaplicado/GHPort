@@ -502,7 +502,7 @@ class incidencesController extends Controller
 
                 $body = '{
                     "title": "' . $full_name . '",
-                    "body": "Envió solicitud de ' . mb_strtolower($type_incident, 'UTF-8') . '",
+                    "body": "Envió solicitud de ' . mb_strtoupper($type_incident, 'UTF-8') . '",
                     "data": {
                         "isNewToBadge": 1,
                         "countBadge": 1
@@ -538,7 +538,8 @@ class incidencesController extends Controller
 
                 foreach($lSuperviser as $sup){
                     Mail::to($sup->institutional_mail)->send(new requestIncidenceMail(
-                                                            $application->id_application
+                                                            $application->id_application,
+                                                            $type_incident
                                                         )
                                                     );
                 }

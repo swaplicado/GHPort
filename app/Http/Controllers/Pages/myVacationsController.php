@@ -530,7 +530,7 @@ class myVacationsController extends Controller
 
                     $body = '{
                         "title": "' . $full_name .  '",
-                        "body": "Envió solicitud de vacaciones",
+                        "body": "Envió solicitud de VACACIONES",
                         "data": {
                             "isNewToBadge": 1,
                             "countBadge": 1
