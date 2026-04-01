@@ -17,9 +17,10 @@ class requestIncidenceMail extends Mailable
      *
      * @return void
      */
-    public function __construct($application_id)
+    public function __construct($application_id, $type_incident = '')
     {
         $this->application_id = $application_id;
+        $this->type_incident = $type_incident;
     }
 
     /**
@@ -52,7 +53,7 @@ class requestIncidenceMail extends Mailable
 
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
-                        ->subject('[Portal GH] Solicitud incidencia '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
+                        ->subject('[Portal GH] Solicitud '.$this->type_incident.' '.$employee->short_name.' '.$employee->first_name.' '.$employee->last_name)
                         ->view('mails.requestIncidenceMail')
                         ->with('application', $application)
                         ->with('employee', $employee)

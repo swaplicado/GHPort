@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use \App\Http\Controllers\Controller;
+use App\Http\Controllers\Utils\applicationsUtils;
 use Illuminate\Http\Request;
 use \App\Constants\SysConst;
 use \App\Utils\EmployeeVacationUtils;
@@ -163,6 +164,13 @@ class incidencesController extends Controller
         $is_season_special  = $request->is_season_special;
         $is_event  = $request->is_event;
         try {
+            if ($type_incident_id == SysConst::TYPE_CUMPLEAÑOS) {
+                $result = json_decode(applicationsUtils::checkBirthdayRules($employee_id, $request));
+                if (!$result->success) {
+                    return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'error']);
+                }
+            }
+
             if($comments == null || $comments == ""){
                 return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'warning']);
             }
@@ -503,7 +511,7 @@ class incidencesController extends Controller
 
                 $body = '{
                     "title": "' . $full_name . '",
-                    "body": "Envió solicitud de ' . mb_strtolower($type_incident, 'UTF-8') . '",
+                    "body": "Envió solicitud de ' . mb_strtoupper($type_incident, 'UTF-8') . '",
                     "data": {
                         "isNewToBadge": 1,
                         "countBadge": 1
@@ -539,7 +547,8 @@ class incidencesController extends Controller
 
                 foreach($lSuperviser as $sup){
                     Mail::to($sup->institutional_mail)->send(new requestIncidenceMail(
-                                                            $application->id_application
+                                                            $application->id_application,
+                                                            $type_incident
                                                         )
                                                     );
                 }

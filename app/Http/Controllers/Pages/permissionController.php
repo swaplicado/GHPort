@@ -585,10 +585,17 @@ class permissionController extends Controller
 
                 $oUser = delegationUtils::getUser();
                 $full_name = $oUser->short_name . ' ' . $oUser->first_name . ' ' . $oUser->last_name;
+
+                $incidentMap = [
+                    1 => [1 => 10, 2 => 11, 3 => 12], // personal
+                    2 => [1 => 15, 2 => 16, 3 => 17], // laboral
+                ];
+                $names = array_column((array) $config->incidentsOrder, 'name', 'id');
+                $body_name = $names[$incidentMap[$permission->cl_permission_id][$permission->type_permission_id] ?? 0] ?? 'permiso por horas';
                 
                 $body = '{
                     "title": "' . $full_name . '",
-                    "body": "Envió solicitud de ' . mb_strtolower($class_permission, 'UTF-8') . '",
+                    "body": "Envió solicitud de ' . mb_strtoupper($body_name, 'UTF-8') . '",
                     "data": {
                         "isNewToBadge": 1,
                         "countBadge": 1
@@ -625,7 +632,8 @@ class permissionController extends Controller
                 $arrUsers = array_unique($arrUsers);
 
                 Mail::to($arrUsers)->send(new requestPermissionMail(
-                                                        $permission->id_hours_leave
+                                                        $permission->id_hours_leave,
+                                                        $body_name
                                                     )
                                                 );
             } catch (\Throwable $th) {
@@ -637,6 +645,7 @@ class permissionController extends Controller
 
             $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
             $mailLog->update();
+
         })->then(function () {
             
         })->catch(function () {

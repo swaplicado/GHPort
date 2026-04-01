@@ -678,5 +678,69 @@
     "requested_client_app": 2,
     "appMobileWithMySelf": 1,
     "numMonthCheck": 6,
-    "maxRetroactiveDays": 1
+    "maxRetroactiveDays": 1,
+    "incidentsOrder": [
+        {
+            "id": 1,
+            "name": "VACACIONES"
+        },
+        {
+            "id": 5,
+            "name": "TRABAJO FUERA DE OFICINA/PLANTA"
+        },
+        {
+            "id": 15,
+            "name": "PERMISO LABORAL ENTRADA"
+        },
+        {
+            "id": 16,
+            "name": "PERMISO LABORAL SALIDA"
+        },
+        {
+            "id": 17,
+            "name": "PERMISO LABORAL INTERMEDIO"
+        },
+        {
+            "id": 10,
+            "name": "PERMISO PERSONAL ENTRADA"
+        },
+        {
+            "id": 11,
+            "name": "PERMISO PERSONAL SALIDA"
+        },
+        {
+            "id": 12,
+            "name": "PERMISO PERSONAL INTERMEDIO"
+        },
+        {
+            "id": 7,
+            "name": "HOME OFFICE"
+        },
+        {
+            "id": 6,
+            "name": "CUMPLEAÑOS"
+        },
+        {
+            "id": 4,
+            "name": "PERMISO PATERNIDAD"
+        },
+        {
+            "id": 8,
+            "name": "PERMISO FALLECIMIENTO"
+        },
+        {
+            "id": 2,
+            "name": "PERMISO SIN GOCE"
+        },
+        {
+            "id": 3,
+            "name": "PERMISO CON GOCE (sindicato)"
+        }
+    ],
+
+    "birthdayRules":{
+        "isActiveRules": true,
+        "dateInitRules": "2026-05-01",
+        "limitDayToTakingPastBirthDay": "2026-05-31"
+    }
 }
