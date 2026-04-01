@@ -736,5 +736,11 @@
             "id": 3,
             "name": "PERMISO CON GOCE (sindicato)"
         }
-    ]
+    ],
+
+    "birthdayRules":{
+        "isActiveRules": true,
+        "dateInitRules": "2026-05-01",
+        "limitDayToTakingPastBirthDay": "2026-05-31"
+    }
 }

@@ -47,7 +47,7 @@ var app = new Vue({
         needRenderTableIncidences: false,
         renderTabletaReqIncidences: false,
         lBirthDay: [],
-        birthDayYear: null,
+        birthDayYear: moment().format('Y'),
         minYear: null,
         emp_comments: null,
         status_incidence: 0,
@@ -121,7 +121,7 @@ var app = new Vue({
                 });
             }
 
-            if(val == this.oData.constants.TYPE_CUMPLEAÑOS){
+            if(val == this.oData.constants.TYPE_CUMPLEAÑOS && (this.isEdit || this.isRevision)){
                 this.getBirdthDayIncidences();
             }
         },
@@ -636,6 +636,7 @@ var app = new Vue({
                     SGui.showMessage('', 'No puede crear otra incidencia si tiene incidencias creadas pendientes de enviar', 'warning');
                     return;
                 }
+                this.birthDayYear = moment().format('Y');
             }
             Swal.close();
             this.isNewApplication = true;
@@ -1285,6 +1286,7 @@ var app = new Vue({
                 let data = result.data;
                 if(data.success){
                     this.lBirthDay = data.lBirthDay;
+
                     this.birthDayYear = data.birthDayYear;
                     this.minYear = data.minYear;
                 }else{

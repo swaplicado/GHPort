@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use \App\Http\Controllers\Controller;
+use App\Http\Controllers\Utils\applicationsUtils;
 use Illuminate\Http\Request;
 use \App\Constants\SysConst;
 use \App\Utils\EmployeeVacationUtils;
@@ -162,6 +163,13 @@ class incidencesController extends Controller
         $is_season_special  = $request->is_season_special;
         $is_event  = $request->is_event;
         try {
+            if ($type_incident_id == SysConst::TYPE_CUMPLEAÑOS) {
+                $result = json_decode(applicationsUtils::checkBirthdayRules($employee_id, $request));
+                if (!$result->success) {
+                    return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'error']);
+                }
+            }
+
             if($comments == null || $comments == ""){
                 return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'warning']);
             }
