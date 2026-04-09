@@ -741,7 +741,7 @@ class creeateSentIncidentsUtils
         $permission->intermediate_return = $interReturn;
         $permission->requested_client = $requested_client;
 
-        $messageNoSchedule = "No se puede mostrar la información porque no tiene horario en el sistema PGH";
+        $messageNoSchedule = "N/A (Sin horario).";
 
         $dayNum = Carbon::parse($start_date)->dayOfWeekIso;
 

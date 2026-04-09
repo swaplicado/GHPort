@@ -117,3 +117,17 @@ Cambios:
 Migraciones:
 - Sí
 
+========================================
+RELEASE
+Fecha: 09-04-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Se cambia el mensaje por petición de Sergio Flores, se habia comentado que se queria que fuera muy explicativo al final pide que se cambie por un mensaje así N/A "(Sin horario)".
+
+Cambios:
+- Se cambia el mensaje por petición de Sergio Flores, se habia comentado que se queria que fuera muy explicativo al final pide que se cambie por un mensaje así N/A "(Sin horario)".
+
+
+

@@ -215,7 +215,7 @@ class permissionController extends Controller
                 ->where('is_deleted', 0)
                 ->first();
 
-            $messageNoSchedule = "No se puede mostrar la información porque no tiene horario en el sistema PGH";
+            $messageNoSchedule = "N/A (Sin horario).";
             if ($scheduleDay && $scheduleDay->is_working) {
 
                 // Entrada tardía
