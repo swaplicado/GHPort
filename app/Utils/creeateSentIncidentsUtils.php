@@ -748,7 +748,7 @@ class creeateSentIncidentsUtils
         $scheduleDay = \DB::table('schedule_day')
             ->where('schedule_template_id', function($query) use ($employee_id){
                 $query->select('schedule_template_id')
-                    ->from('employees')
+                    ->from('users')
                     ->where('id', $employee_id)
                     ->limit(1);
             })
