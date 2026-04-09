@@ -102,3 +102,18 @@ Cambios:
 Migraciones:
 - No
 
+========================================
+RELEASE
+Fecha: 09-04-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Se agregan campos de hora de entrada o salida para hours leave.
+
+Cambios:
+- Se agregan campos de hora de entrada o salida para hours leave.
+
+Migraciones:
+- Sí
+
