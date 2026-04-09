@@ -762,9 +762,9 @@ class creeateSentIncidentsUtils
             if ($type_id == 1 && $scheduleDay->entry) {
                 $entry = Carbon::parse($scheduleDay->entry)
                             ->addMinutes($permission->minutes)
-                            ->format('H:i');
+                            ->format('h:i A');
 
-                $permission->entry_time = "Entrada: " . $entry;
+                $permission->entry_time = "" . $entry;
                 $permission->departure_time = null;
             }
 
@@ -772,9 +772,9 @@ class creeateSentIncidentsUtils
             if ($type_id == 2 && $scheduleDay->departure) {
                 $departure = Carbon::parse($scheduleDay->departure)
                                 ->subMinutes($permission->minutes)
-                                ->format('H:i');
+                                ->format('h:i A');
 
-                $permission->departure_time = "Salida: " . $departure;
+                $permission->departure_time = "". $departure;
                 $permission->entry_time = null;
             }
 
