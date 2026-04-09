@@ -741,7 +741,7 @@ class creeateSentIncidentsUtils
         $permission->intermediate_return = $interReturn;
         $permission->requested_client = $requested_client;
 
-        $messageNoSchedule = "N/A (Sin horario).";
+        $messageNoSchedule = "N/D (Sin horario).";
 
         $dayNum = Carbon::parse($start_date)->dayOfWeekIso;
 

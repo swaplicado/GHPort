@@ -215,7 +215,7 @@ class permissionController extends Controller
                 ->where('is_deleted', 0)
                 ->first();
 
-            $messageNoSchedule = "N/A (Sin horario).";
+            $messageNoSchedule = "N/D (Sin horario).";
             if ($scheduleDay && $scheduleDay->is_working) {
 
                 // Entrada tardía
