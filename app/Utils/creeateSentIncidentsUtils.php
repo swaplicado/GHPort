@@ -740,6 +740,49 @@ class creeateSentIncidentsUtils
         $permission->intermediate_out = $interOut;
         $permission->intermediate_return = $interReturn;
         $permission->requested_client = $requested_client;
+
+        $messageNoSchedule = "No se puede mostrar la información porque no tiene horario en el sistema PGH";
+
+        $dayNum = Carbon::parse($start_date)->dayOfWeekIso;
+
+        $scheduleDay = \DB::table('schedule_day')
+            ->where('schedule_template_id', function($query) use ($employee_id){
+                $query->select('schedule_template_id')
+                    ->from('employees')
+                    ->where('id', $employee_id)
+                    ->limit(1);
+            })
+            ->where('day_num', $dayNum)
+            ->where('is_deleted', 0)
+            ->first();
+
+        if ($scheduleDay && $scheduleDay->is_working) {
+
+            // Entrada tardía
+            if ($type_id == 1 && $scheduleDay->entry) {
+                $entry = Carbon::parse($scheduleDay->entry)
+                            ->addMinutes($permission->minutes)
+                            ->format('H:i');
+
+                $permission->entry_time = "Entrada: " . $entry;
+                $permission->departure_time = null;
+            }
+
+            // Salida anticipada
+            if ($type_id == 2 && $scheduleDay->departure) {
+                $departure = Carbon::parse($scheduleDay->departure)
+                                ->subMinutes($permission->minutes)
+                                ->format('H:i');
+
+                $permission->departure_time = "Salida: " . $departure;
+                $permission->entry_time = null;
+            }
+
+        } else {
+            $permission->entry_time = $messageNoSchedule;
+            $permission->departure_time = $messageNoSchedule;
+        }
+
         $permission->save();
 
         return json_encode(['success' => true, 'permission' => $permission]);

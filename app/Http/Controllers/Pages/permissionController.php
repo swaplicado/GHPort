@@ -156,6 +156,7 @@ class permissionController extends Controller
             $oRequest->employeeId = $employee_id;
             $newRequest = new Request((array)$oRequest);
             $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
+
             if ($result->total_permissions >= 2 && $class_id == 1) {
                 return json_encode([
                     'success' => false,
@@ -165,12 +166,12 @@ class permissionController extends Controller
                 ]);
             }
 
-            $interOut = null;
-            $interReturn = null;
-
             if($comments == null || $comments == ""){
                 return json_encode(['success' => false, 'message' => 'Para proseguir, se requiere incluir un comentario en la solicitud', 'icon' => 'error']);
             }
+
+            $interOut = null;
+            $interReturn = null;
 
             if(!is_null($request->interOut) && !is_null($request->interReturn)){
                 $interOut = Carbon::createFromFormat('g:i A', $request->interOut)->format('H:i');
@@ -188,7 +189,8 @@ class permissionController extends Controller
             $permission->total_days = 1;
             $permission->tot_calendar_days = 1;
             $permission->ldays = json_encode([$startDate]);
-            $permission->minutes = permissionsUtils::getTime($hours, $minutes);
+            $totalMinutes = permissionsUtils::getTime($hours, $minutes);
+            $permission->minutes = $totalMinutes;
             $permission->user_id = $employee_id;
             $permission->request_status_id = SysConst::APPLICATION_CREADO;
             $permission->type_permission_id = $type_id;
@@ -199,6 +201,48 @@ class permissionController extends Controller
             $permission->updated_by = \Auth::user()->id;
             $permission->intermediate_out = $interOut;
             $permission->intermediate_return = $interReturn;
+
+            $dayNum = Carbon::parse($startDate)->dayOfWeekIso;
+
+            $scheduleDay = \DB::table('schedule_day')
+                ->where('schedule_template_id', function($query) use ($employee_id){
+                    $query->select('schedule_template_id')
+                        ->from('users')
+                        ->where('id', $employee_id)
+                        ->limit(1);
+                })
+                ->where('day_num', $dayNum)
+                ->where('is_deleted', 0)
+                ->first();
+
+            $messageNoSchedule = "No se puede mostrar la información porque no tiene horario en el sistema PGH";
+            if ($scheduleDay && $scheduleDay->is_working) {
+
+                // Entrada tardía
+                if ($type_id == 1 && $scheduleDay->entry) {
+                    $entry = Carbon::parse($scheduleDay->entry)
+                    ->addMinutes($totalMinutes)
+                    ->format('H:i');
+
+                    $permission->entry_time = "Entrada: " . $entry;
+                    $permission->departure_time = null;
+                }
+
+                // Salida anticipada
+                if ($type_id == 2 && $scheduleDay->departure) {
+                    $departure = Carbon::parse($scheduleDay->departure)
+                        ->subMinutes($totalMinutes)
+                        ->format('H:i');
+
+                    $permission->departure_time = "Salida: " . $departure;
+                    $permission->entry_time = null;
+                }
+
+            } else {
+                $permission->entry_time = $messageNoSchedule;
+                $permission->departure_time = $messageNoSchedule;
+            }
+                
             $permission->save();
 
             $lPermissions = permissionsUtils::getUserPermissions($employee_id,$class_id);
