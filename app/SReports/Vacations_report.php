@@ -311,8 +311,12 @@ class Vacations_report
             ->get();
 
         $oLogWeekExecution = LogsExecutionIncidencesReport::where('type_report', 'week')->latest()->first();
+
+        $dateLastExecution = Carbon::parse($oLogWeekExecution->executed_at);
+        $checkDate = $dateLastExecution->copy()->subWeeks(2)->startOfWeek();
+
         $actual_date = Carbon::now()->toDateTimeString();
-        $listLogsExecutions = LogsExecutionIncidencesReport::whereBetween('created_at', [$oLogWeekExecution->executed_at, $actual_date])->get();
+        $listLogsExecutions = LogsExecutionIncidencesReport::whereBetween('created_at', [$checkDate->toDateString(), $actual_date])->get();
         $lastLogsExecutions = LogsExecutionIncidencesReport::latest()->first();
 
         $start_last_week = Carbon::parse($actual_date)->subWeek()->startOfWeek();
@@ -370,8 +374,7 @@ class Vacations_report
                 foreach ($lastWeekEmp->lIncidences as $incidence) {
                     if (
                         (Carbon::parse($incidence->start_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString()) ||
-                            Carbon::parse($incidence->end_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString())) &&
-                        (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at))
+                            Carbon::parse($incidence->end_date)->between($start_last_week->toDateTimeString(), $end_last_week->toDateTimeString()))
                     ) {
                         switch ($incidence->application_type) {
                             case 'incidence':
@@ -405,9 +408,7 @@ class Vacations_report
                 foreach ($WeekEmp->lIncidences as $incidence) {
                     if (
                         (Carbon::parse($incidence->start_date)->between($start_actual_week, $end_actual_week) ||
-                            Carbon::parse($incidence->end_date)->between($start_actual_week, $end_actual_week)) &&
-                        (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at))
-
+                            Carbon::parse($incidence->end_date)->between($start_actual_week, $end_actual_week))
                     ) {
                         switch ($incidence->application_type) {
                             case 'incidence':
@@ -444,7 +445,6 @@ class Vacations_report
                     if (
                         (Carbon::parse($incidence->start_date)->between($start_next_week, $end_next_week) ||
                             Carbon::parse($incidence->end_date)->between($start_next_week, $end_next_week)) &&
-                        (Carbon::parse($incidence->updated_at)->greaterThan($lastLogsExecutions->executed_at)) &&
                         (Carbon::parse($incidence->start_date)->lessThan($nextWeekExecutionForWeekReport))
                     ) {
                         switch ($incidence->application_type) {

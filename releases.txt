@@ -141,3 +141,10 @@ Resumen:
 Cambios:
 - Se cambia presentación de hora formato de 12 horas con am o pm porque Sergio Flores dice que se puede confundir.
 
+-------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+feat: Se agrega consulta para añadir los empleados directos en el reporte de incidencias diarias
+author: Adrián Avilés
+date: 2026-04-22
+description: Se filtraba por nivel de organigrama, ahora salen tambien todos los directos sin importar nivel.
+-------------------------------------------------------------------------------------------------------------------------
