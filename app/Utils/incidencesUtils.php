@@ -90,7 +90,9 @@ class incidencesUtils {
 
     public static function getEmployeesByLevel($org_chart_id, $level_id, $date_ini = null, $date_end = null, $lDays = null){
         $arrOrgJobs = orgChartUtils::getOrgChartJobToLevel($org_chart_id, $level_id);
-        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
+        $lChildAreas = orgChartUtils::getAllChildsToRevice($org_chart_id);
+        $arrOrgJobsMerged = array_unique(array_merge($arrOrgJobs, $lChildAreas));
+        $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobsMerged);
         foreach($lEmployees as $emp){
             $emp->lIncidences = incidencesUtils::getUserIncidencesAndPermissions($emp->id, $date_ini, $date_end, $lDays);
         }

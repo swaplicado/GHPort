@@ -5,3 +5,9 @@ date: 2024-08-12
 description: No había campo para modificar el rol de los usuarios del sistema, en la vista de gestión de usuarios, 
 se incorpora el campo.
 -------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
+feat: Se agrega consulta para añadir los empleados directos en el reporte de incidencias diarias
+author: Adrián Avilés
+date: 2026-04-22
+description: Se filtraba por nivel de organigrama, ahora salen tambien todos los directos sin importar nivel.
+-------------------------------------------------------------------------------------------------------------------------
