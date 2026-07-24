@@ -589,4 +589,61 @@ class ExportUtils {
             'message' => 'Permiso generado con éxito'
         ]);
     }
+
+    public static function getPendingAuthorizations(array $userIds)
+    {
+        $statuses = [
+            SysConst::APPLICATION_ENVIADO
+        ];
+
+        $pendingIncidents = Application::whereIn('user_id', $userIds)
+            ->whereIn('request_status_id', $statuses)
+            ->where('is_deleted', 0)
+            ->count();
+        
+        $pendingPermissions = Permission::whereIn('user_id', $userIds)
+            ->whereIn('request_status_id', $statuses)
+            ->where('is_deleted', 0)
+            ->count();
+        
+        return [
+            'incidents' => $pendingIncidents,
+            'permissions' => $pendingPermissions,
+            'total' => ($pendingIncidents + $pendingPermissions)
+        ];
+    }
+
+    public static function getPayrollIncidents(array $userIds, string $startDate, string $endDate)
+    {
+        $statuses = [
+            SysConst::APPLICATION_ENVIADO
+        ];
+
+        $payrollIncidents = Application::query()
+            ->whereIn('user_id', $userIds)
+            ->whereIn('request_status_id', $statuses)
+            ->where('is_deleted', 0)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->where('start_date', '<=', $endDate)
+                    ->where('end_date', '>=', $startDate);
+            })
+            ->count();
+        
+        $payrollPermissions = Permission::query()
+            ->whereIn('user_id', $userIds)
+            ->where('is_deleted', 0)
+            ->whereIn('request_status_id', $statuses)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->where('start_date', '<=', $endDate)
+                    ->where('end_date', '>=', $startDate);
+            })
+            ->count();
+
+        return [
+            'incidents' => $payrollIncidents,
+            'permissions' => $payrollPermissions,
+            'total' => $payrollIncidents + $payrollPermissions,
+        ];
+
+    }
 }

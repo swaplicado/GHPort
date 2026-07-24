@@ -148,3 +148,15 @@ author: Adrián Avilés
 date: 2026-04-22
 description: Se filtraba por nivel de organigrama, ahora salen tambien todos los directos sin importar nivel.
 -------------------------------------------------------------------------------------------------------------------------
+
+========================================
+RELEASE
+Fecha: 24-07-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Se agrega endpoint para desde el exterior consultar de un usuario proporcionado, las incidencias pendientes, se usara para un correo en CAP.
+
+Cambios:
+- Se agrega endpoint para desde el exterior consultar de un usuario proporcionado, las incidencias pendientes, se usara para un correo en CAP.

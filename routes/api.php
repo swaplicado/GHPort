@@ -97,3 +97,12 @@ Route::get('holidays', [
 Route::post('loginBridge', 'api\\AuthController@loginBridge');
 Route::post('logoutBridge', 'api\\AuthController@logoutBridge');
 Route::get('getDirectManager/{id}', 'api\\apiGlobalUsersController@getDirectManager');
+
+/*
+|--------------------------------------------------------------------------
+| Ruta pública (SIN autenticación)
+|--------------------------------------------------------------------------
+*/
+Route::get('dashboard-summary', [
+    'uses' => 'api\\AppPghController@dashboardSummary'
+]);

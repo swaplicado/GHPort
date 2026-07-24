@@ -15,6 +15,7 @@ use App\Utils\EmployeeVacationUtils;
 use App\Http\Controllers\Pages\permissionController;
 use stdClass;
 use App\Http\Controllers\Sys\CheckVacationsToExpireController;
+use App\User;
 
 class AppPghController extends Controller
 {
@@ -844,6 +845,48 @@ class AppPghController extends Controller
                 'status' => 'error',
                 'message' => $result->message
             ], 500); // Aquí cambias el código HTTP
+        }
+    }
+
+    public function dashboardSummary(Request $request) {
+        try {
+            $validatedData = $request->validate([
+                'external_user_boss' => 'required|integer',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+            ]);
+
+            $externalIdBoss = $validatedData['external_user_boss'];
+            $start_date = $validatedData['start_date'];
+            $end_date = $validatedData['end_date'];
+
+            $boss = User::where('external_id_n', $externalIdBoss)->first();
+
+            if (!$boss) {
+                return response()->json(['status' => 'error','message' => 'No existe un usuario con ese external_id_n.'], 404);
+            }
+
+            $employees = collect(ExportUtils::getEmployees($boss->id, null));
+            $userIds = $employees->pluck('id')->toArray();
+            $pending = ExportUtils::getPendingAuthorizations($userIds);
+
+            $payroll = ExportUtils::getPayrollIncidents($userIds, $start_date, $end_date);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'pending_authorization' => $pending,
+                    'payroll_period' => $payroll
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ],400);
+
         }
     }
 }
