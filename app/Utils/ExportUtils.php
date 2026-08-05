@@ -210,7 +210,8 @@ class ExportUtils {
                         SysConst::APPLICATION_APROBADO,
                         SysConst::APPLICATION_RECHAZADO,
                         SysConst::APPLICATION_CANCELADO,
-                        SysConst::APPLICATION_CONSUMIDO
+                        SysConst::APPLICATION_CONSUMIDO,
+                        SysConst::APPLICATION_DESCARTADA,
                     ]);
                 }
 
