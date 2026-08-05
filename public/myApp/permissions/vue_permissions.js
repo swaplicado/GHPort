@@ -57,6 +57,7 @@ var app = new Vue({
         authorized_client: oServerData.authorized_client,
         canRequest: true,
         maxRetroactiveDays: oServerData.maxRetroactiveDays,
+        supComments: null,
     },
     watch: {
         startDate(val) {
@@ -715,6 +716,21 @@ var app = new Vue({
                 this.comments = this.oPermission.emp_comments_n;
                 this.interOut = this.oPermission.intermediate_out;
                 this.interReturn = this.oPermission.intermediate_return;
+                const targetStatuses = [
+                    this.oData.const.APPLICATION_APROBADO,
+                    this.oData.const.APPLICATION_RECHAZADO,
+                    10 // Ajusta a la constante que tengas para descartado
+                ];
+
+                const currentStatus = this.oPermission.request_status_id;
+
+                // Solo si el estatus actual está dentro de los requeridos
+                if (targetStatuses.includes(currentStatus)) {
+                    const rawComment = this.oPermission.sup_comments_n;
+                    this.supComments = (rawComment || '').trim() || 'Sin comentarios';
+                }else{
+                    this.supComments = null;
+                }
             } else {
                 if (this.HasPermissionsCreated()) {
                     SGui.showMessage('', 'No puede crear otra incidencia si tiene incidencias creadas pendientes de enviar', 'warning');
@@ -1189,7 +1205,21 @@ var app = new Vue({
             $('#date-range-001').val(this.oPermission.start_date).trigger('change');
             $('#date-range-002').val(this.oPermission.end_date).trigger('change');
             this.emp_comments = this.oPermission.emp_comments_n;
-            this.comments = this.oPermission.sup_comments_n;
+            const targetStatuses = [
+                this.oData.const.APPLICATION_APROBADO,
+                this.oData.const.APPLICATION_RECHAZADO,
+                10 // Ajusta a la constante que tengas para descartado
+            ];
+
+            const currentStatus = this.oPermission.request_status_id;
+
+            // Solo si el estatus actual está dentro de los requeridos
+            if (targetStatuses.includes(currentStatus)) {
+                const rawComment = this.oPermission.sup_comments_n;
+                this.supComments = (rawComment || '').trim() || 'Sin comentarios';
+            }else{
+                this.supComments = null;
+            }
             Swal.close();
             if (this.oPermission.request_status_id == this.oData.constants.APPLICATION_APROBADO) {
                 Swal.fire({
@@ -1450,6 +1480,56 @@ var app = new Vue({
                     console.log(error);
                     SGui.showError(error);
                 });
+        },
+        discardApplication(){
+            if (table['table_ReqPermissions'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            } 
+            let data = table['table_ReqPermissions'].row('.selected').data();
+            Swal.fire({
+                title: '¿Desea descartar la solicitud?',
+                html: '<b>Colaborador: </b>' +
+                    data[this.indexes_permission.empleado] +
+                    '<br>' +
+                    '<b>permiso:</b> ' +
+                    data[this.indexes_permission.Permiso] +
+                    '<b>Tiempo:</b> ' +
+                    data[this.indexes_permission.tiempo],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.discardRequest(data[this.indexes_permission.id]);
+                }
+            })
+        },
+
+        discardRequest(application_id){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.discardRequestRoute;
+            axios.post(route, {
+                'application_id': application_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylPermissions = data.lPermissions;
+                    this.reDrawTablePermissions('table_ReqPermissions', data.lPermissions);
+                    SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
         },
         cambiarValor() {
             const id_permission_cl = document.getElementById('permission_cl').value;

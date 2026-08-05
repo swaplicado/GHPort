@@ -228,6 +228,7 @@ class EmployeeVacationUtils {
                                                                 SysConst::APPLICATION_APROBADO,
                                                                 SysConst::APPLICATION_CONSUMIDO,
                                                                 SysConst::APPLICATION_CANCELADO,
+                                                                SysConst::APPLICATION_DESCARTADA,
                                                             ]
                                                         ){
         $oRequested = \DB::table('applications as a')

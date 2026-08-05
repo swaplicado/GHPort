@@ -50,8 +50,10 @@
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.cancelIncidenceRoute = <?php echo json_encode(route('requestIncidences_cancel')); ?>;
             this.deleteSendIncidenceRoute = <?php echo json_encode(route('requestIncidences_delete')); ?>;
+            this.discardRequestRoute = <?php echo json_encode(route('requestIncidences_discardRequest')); ?>;
             this.authorized_client = <?php echo json_encode($authorized_client); ?>;
             this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
+            this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudesincidencias" ); ?>;
@@ -148,6 +150,9 @@
 
             <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar" v-show="status_incidence == 2" v-on:click="deleteSendRegistry()">
                 <span class="bx bxs-trash"></span>
+            </button>
+            <button id="btn_discard" v-on:click="discardApplication()" type="button" class="btn3d bg-gray-400" v-show="status_incidence == 2" style="display: inline-block; margin-right: 20px" title="Descartar solicitud">
+                <span class="bx bx-archive-in"></span>
             </button>
             <br>
             <br>

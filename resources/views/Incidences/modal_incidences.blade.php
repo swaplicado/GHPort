@@ -165,13 +165,23 @@
                             <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
                             <p v-else>(Sin comentarios)</p>
                         </div>
-                        <div v-if="isRevision">
+
+                        <!-- 2. SEGUNDO BLOQUE: Campo para ESCRIBIR comentarios en revisión (Solo si supComments está VACÍO) -->
+                        <div v-if="isRevision && (!supComments || supComments.trim() === '')">
                             <label class="form-label" for="comments"><b>Comentarios:</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
                         </div>
-                        <div v-else>
+
+                        <!-- 3. TERCER BLOQUE: Campo para ESCRIBIR comentarios de nueva solicitud (Solo cuando NO es revisión) -->
+                        <div v-if="!isRevision">
                             <label class="form-label" for="comments"><b>Comentarios:*</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
+                        </div>
+
+                        <!-- 4. CUARTO BLOQUE: Comentarios del revisor guardados (Solo si supComments TIENE DATOS) -->
+                        <div v-if="supComments && supComments.trim() !== ''" class="mt-2">
+                            <label class="form-label"><b>Comentarios revisor:</b></label>
+                            <p>@{{supComments}}</p>
                         </div>
                     </div>
                 </div>

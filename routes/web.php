@@ -98,6 +98,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestVacations/vacations/getApplication', 'Pages\requestVacationsController@getApplication')->name('requestVacations_getApplication');
     Route::post('requestVacations/vacations/cancelRequest', 'Pages\requestVacationsController@cancelRequest')->name('requestVacations_cancelRequest');
     Route::post('requestVacations/vacations/deleteRequest', 'Pages\requestVacationsController@deleteRequest')->name('requestVacations_deleteRequest');
+    Route::post('requestVacations/vacations/discardRequest', 'Pages\requestVacationsController@discardRequest')->name('requestVacations_discardRequest');
 
     Route::get('mailLog', 'Pages\MailsLogscontroller@index')->name('mailLog');
     Route::post('mailLog/sendMail', 'Pages\MailsLogscontroller@sendMail')->name('mailLog_sendMail');
@@ -203,6 +204,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestIncidences/incidences/seeLikeManager', 'Pages\requestIncidencesController@seeLikeManager')->name('requestIncidences_seeLikeManager');
     Route::post('requestIncidences/incidences/cancelIncidence', 'Pages\requestIncidencesController@cancelIncidence')->name('requestIncidences_cancel');
     Route::post('requestIncidences/incidences/deleteRequest', 'Pages\requestIncidencesController@deleteRequest')->name('requestIncidences_delete');
+    Route::post('requestIncidences/incidences/discardRequest', 'Pages\requestIncidencesController@discardRequest')->name('requestIncidences_discardRequest');
 
     Route::get('permission/{id?}', 'Pages\permissionController@index')->name('permission_index');
     Route::post('permission/save', 'Pages\permissionController@createPermission')->name('permission_create');
@@ -224,6 +226,7 @@ Route::middleware(['auth', 'menu'])->group( function () {
     Route::post('requestPermission/permission/seeLikeManager', 'Pages\requestPermissionController@seeLikeManager')->name('requestPermission_seeLikeManager');
     Route::post('requestPermission/permission/cancelPermission', 'Pages\requestPermissionController@cancelPermission')->name('requestPermission_cancel');
     Route::post('requestPermission/permission/deletePermission', 'Pages\requestPermissionController@deletePermission')->name('requestPermission_delete');
+    Route::post('requestPermission/permission/discardRequest', 'Pages\requestPermissionController@discardRequest')->name('requestPermission_discardRequest');
     
     Route::get('configAuth', 'Pages\configAuthController@index')->name('configAuth');
     Route::post('updateAuth', 'Pages\configAuthController@updateAuth')->name('update_authConf');

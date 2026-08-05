@@ -61,6 +61,7 @@ var app = new Vue({
         authorized_client: oServerData.authorized_client,
         canRequest: true,
         maxRetroactiveDays: oServerData.maxRetroactiveDays,
+        supComments: null,
     },
     computed: {
         propertyAAndPropertyB() {
@@ -633,6 +634,21 @@ var app = new Vue({
                 this.is_normal = this.oApplication.is_normal;
                 this.is_past = this.oApplication.is_past;
                 this.is_season_special = this.oApplication.is_season_special;
+                const targetStatuses = [
+                    this.oData.const.APPLICATION_APROBADO,
+                    this.oData.const.APPLICATION_RECHAZADO,
+                    10 // Ajusta a la constante que tengas para descartado
+                ];
+
+                const currentStatus = this.oApplication.request_status_id;
+
+                // Solo si el estatus actual está dentro de los requeridos
+                if (targetStatuses.includes(currentStatus)) {
+                    const rawComment = this.oApplication.sup_comments_n;
+                    this.supComments = (rawComment || '').trim() || 'Sin comentarios';
+                }else{
+                    this.supComments = null;
+                }
                 Swal.close();
             }else{
                 if(this.HasIncidencesCreated()){
@@ -1125,33 +1141,6 @@ var app = new Vue({
             });
         },
 
-        rejectIncidence(){
-            SGui.showWaiting(15000)
-            axios.post(this.oData.routeReject, {
-                'application_id': this.oApplication.id_application,
-                'comments': this.comments,
-                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
-                'manager_id': this.selectedmanager,
-                'authorized_client': this.authorized_client
-            })
-            .then( result => {
-                let data = result.data;
-                if(data.success){
-                    this.oCopylIncidences = data.lIncidences;
-                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
-                    $('#modal_incidences').modal('hide');
-                    SGui.showOk();
-                    this.checkMail(data.mailLog_id, this.oData.routeCheckMail);
-                }else{
-                    SGui.showMessage('', data.message, data.icon);
-                }
-            })
-            .catch( function(error){
-                console.log(error);
-                SGui.showError(error);
-            })
-        },
-
         /**
          * Show modal para la vista de revision de incidencias
          * @param {*} data 
@@ -1188,6 +1177,21 @@ var app = new Vue({
             this.is_past = this.oApplication.is_past;
             this.is_season_special = this.oApplication.is_season_special;
             this.valid = this.oApplication.request_status_id == this.oData.constants.APPLICATION_ENVIADO;
+            const targetStatuses = [
+                this.oData.const.APPLICATION_APROBADO,
+                this.oData.const.APPLICATION_RECHAZADO,
+                10 // Ajusta a la constante que tengas para descartado
+            ];
+
+            const currentStatus = this.oApplication.request_status_id;
+
+            // Solo si el estatus actual está dentro de los requeridos
+            if (targetStatuses.includes(currentStatus)) {
+                const rawComment = this.oApplication.sup_comments_n;
+                this.supComments = (rawComment || '').trim() || 'Sin comentarios';
+            }else{
+                this.supComments = null;
+            }
             Swal.close();
             if(this.oApplication.request_status_id == this.oData.constants.APPLICATION_APROBADO){
                 Swal.fire({
@@ -1504,6 +1508,57 @@ var app = new Vue({
                     this.oCopylIncidences = data.lIncidences;
                     this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
                     SGui.showOk();
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
+        discardApplication(){
+            if (table['table_ReqIncidences'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            } 
+            let data = table['table_ReqIncidences'].row('.selected').data();
+            Swal.fire({
+                title: '¿Desea descartar la solicitud?',
+                html:   '<b>Colaborador: </b>' +
+                        data[this.indexes_incidences.employee] +
+                        '<br>' +
+                        '<b>Inicio:</b> ' +
+                        data[this.indexes_incidences.start_date] +
+                        '<br>' +
+                        '<b>Fin:</b> ' +
+                        data[this.indexes_incidences.end_date],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.discardRequest(data[this.indexes_incidences.id_application]);
+                }
+            })
+        },
+
+        discardRequest(application_id){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.discardRequestRoute;
+            axios.post(route, {
+                'application_id': application_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                    SGui.showOk();
+                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
                 }else{
                     SGui.showMessage('', data.message, data.icon);
                 }

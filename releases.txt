@@ -178,3 +178,17 @@ Autor: Cesar Orozco
 
 Resumen:
 - Se agrega el status nuevo para que se envie hacia la aplicación las permisos con este estatus.
+
+========================================
+RELEASE
+Fecha: 05-08-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Se coloca la opción para enviar las solitudes a un nuevo estatus llamado descartado.
+
+Cambios:
+- Se agregan cambios a vacaciones, en los blades, controllers y vue.
+- Se agregan cambios a incidencias, en los blades, controllers y vue.
+- Se agregan cambios a permisos, en los blades, controllers y vue.

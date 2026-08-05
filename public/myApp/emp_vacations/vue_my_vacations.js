@@ -16,6 +16,7 @@ var appMyVacations = new Vue({
         endDate: null,
         returnDate: null,
         comments: null,
+        supComments:null,
         idRequest: null,
         status: null,
         takedDays: 0,
@@ -550,6 +551,23 @@ var appMyVacations = new Vue({
                 $('#two-inputs-myRequest').data('dateRangePicker').redraw();
                 this.isNewApplication = false;
                 this.comments = data[this.indexes.comments];
+                const targetStatuses = [
+                    this.oData.const.APPLICATION_CONSUMIDO,
+                    this.oData.const.APPLICATION_APROBADO,
+                    this.oData.const.APPLICATION_RECHAZADO,
+                    this.oData.const.APPLICATION_DESCARTADO // Ajusta a la constante que tengas para descartado
+                ];
+
+                const currentStatus = parseInt(data[this.indexes.request_status_id], 10);
+
+                // Solo si el estatus actual está dentro de los requeridos
+                if (targetStatuses.includes(currentStatus)) {
+                    const rawComment = data[this.indexes.sup_comments];
+                    this.supComments = (rawComment || '').trim() || 'Sin comentarios';
+                }else{
+                    this.supComments = null;
+                }
+                this.supComments = this.supComments = (data[this.indexes.sup_comments] || '').trim() || 'Sin comentarios';
                 this.idRequest = data[this.indexes.id];
                 this.status = data[this.indexes.status];
                 this.take_holidays = parseInt(data[this.indexes.take_holidays]);

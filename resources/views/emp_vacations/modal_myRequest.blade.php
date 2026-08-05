@@ -123,6 +123,10 @@
                             <label class="form-label" for="comments"><b>Comentarios:*</b></label>
                             <textarea class="form-control" name="comments" id="comments" style="width: 99%;" v-model="comments"></textarea>
                         </div>
+                        <div v-if="supComments" class="mt-2">
+                            <label class="form-label"><b>Comentarios revisor:</b></label>
+                            <textarea class="form-control" style="width: 99%;" v-model="supComments" readonly></textarea>
+                        </div>
                     </div>
                 </div>
             </div>

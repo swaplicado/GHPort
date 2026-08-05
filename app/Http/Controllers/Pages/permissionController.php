@@ -37,6 +37,8 @@ class permissionController extends Controller
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_DESCARTADO' => SysConst::APPLICATION_DESCARTADA,
+            'APPLICATION_CONSUMIDO' => SysConst::APPLICATION_CONSUMIDO,
         ];
         $maxRetroactive = SysConst::MAX_RETROACTIVE_DAYS;
         $lTypes = \DB::table('cat_permission_tp')

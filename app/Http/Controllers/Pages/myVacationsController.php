@@ -51,7 +51,8 @@ class myVacationsController extends Controller
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
             'APPLICATION_CONSUMIDO' => SysConst::APPLICATION_CONSUMIDO,
-            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
+            'APPLICATION_DESCARTADO' => SysConst::APPLICATION_DESCARTADA,
         ];
 
         $today = Carbon::now()->toDateString();

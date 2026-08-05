@@ -15,6 +15,7 @@ var appRequestVacation = new Vue({
         idRequest: null,
         idUser: null,
         comments: null,
+        supComments: null,
         status: null,
         takedDays: 0,
         lDays: [],
@@ -303,6 +304,22 @@ var appRequestVacation = new Vue({
             await this.getlDays(this.oApplication.id_application);
             this.vacationUtils.createClass(this.lTemp);
             this.comments = this.oApplication.sup_comments_n;
+            const targetStatuses = [
+                this.oData.const.APPLICATION_CONSUMIDO,
+                this.oData.const.APPLICATION_APROBADO,
+                this.oData.const.APPLICATION_RECHAZADO,
+                10 // Ajusta a la constante que tengas para descartado
+            ];
+
+            const currentStatus = this.oApplication.request_status_id;
+
+            // Solo si el estatus actual está dentro de los requeridos
+            if (targetStatuses.includes(currentStatus)) {
+                const rawComment = this.oApplication.sup_comments_n;
+                this.supComments = (rawComment || '').trim() || 'Sin comentarios';
+            }else{
+                this.supComments = null;
+            }
             this.idRequest = this.oApplication.id_application;
             this.idUser = this.oApplication.user_id;
             birthday = this.oApplication.birthday_n;
@@ -844,6 +861,57 @@ var appRequestVacation = new Vue({
                 console.log(error);
                 SGui.showError(error);
             });
-        }
+        },
+        discardApplication(){
+            if (table['table_requestVac'].row('.selected').data() == undefined) {
+                SGui.showError("Debe seleccionar un renglón");
+                return;
+            } 
+            let data = table['table_requestVac'].row('.selected').data();
+            Swal.fire({
+                title: '¿Desea descartar la solicitud?',
+                html:   '<b>Colaborador: </b>' +
+                        data[this.indexes.employee] +
+                        '<br>' +
+                        '<b>Inicio:</b> ' +
+                        data[this.indexes.start_date] +
+                        '<br>' +
+                        '<b>Fin:</b> ' +
+                        data[this.indexes.end_date],
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.discardRequest(data[this.indexes.id]);
+                }
+            })
+        },
+
+        discardRequest(application_id){
+            SGui.showWaiting(15000);
+
+            let route = this.oData.discardRequestRoute;
+            axios.post(route, {
+                'application_id': application_id,
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.reDrawRequestTable(data.lEmployees);
+                    SGui.showOk();
+                    this.checkMail(data.mail_log_id, this.oData.checkMailRoute);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch(function(error){
+                console.log(error);
+                SGui.showError(error);
+            });
+        },
     },
 })

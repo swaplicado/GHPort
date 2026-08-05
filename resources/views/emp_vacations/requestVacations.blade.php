@@ -53,6 +53,7 @@
             this.applicationsEARoute = <?php echo json_encode(route('requestVacations_getEmpApplicationsEA')); ?>;
             this.getDataManagerRoute = <?php echo json_encode(route('requestVacations_getDataManager')); ?>;
             this.getRequestlDaysRoute = <?php echo json_encode(route('requestVacations_getlDays')); ?>;
+            this.discardRequestRoute = <?php echo json_encode(route('requestVacations_discardRequest')); ?>;
             this.cancelRequestRoute = <?php echo json_encode(route('requestVacations_cancelRequest')); ?>;
             this.deleteSendRequestRoute = <?php echo json_encode(route('requestVacations_deleteRequest')); ?>;
             this.idApplication = <?php echo json_encode($idApplication); ?>;
@@ -172,8 +173,12 @@
                     <span class="bx bx-x"></span>
                 </button>
 
-                <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar" v-show="rqStatus == 2" v-on:click="deleteRegistry()">
+                <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 20px" title="Eliminar" v-show="rqStatus == 2" v-on:click="deleteRegistry()">
                     <span class="bx bxs-trash"></span>
+                </button>
+
+                <button id="btn_discard" v-on:click="discardApplication()" type="button" class="btn3d bg-gray-400" v-show="rqStatus == 2" style="display: inline-block; margin-right: 20px" title="Descartar solicitud">
+                    <span class="bx bx-archive-in"></span>
                 </button>
                 <div class="col-md-9" style="float: right; text-align: right; padding-right: 0 !important;">
 
@@ -523,7 +528,9 @@
                             case 6:
                                 filter = parseInt(data[oServerData.indexesRequest.request_status_id]);
                                 return filter === 6;
-    
+                            case 10:
+                                filter = parseInt( data[oServerData.indexesRequest.request_status_id] );
+                                return filter === 10;
                             default:
                                 break;
                         }
@@ -552,6 +559,10 @@
                             case 6:
                                 myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                                 return myRqStatusfilter === 6;
+                            
+                            case 10:
+                                myRqStatusfilter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
+                                return myRqStatusfilter === 10;
 
                             default:
                                 break;

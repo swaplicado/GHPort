@@ -34,6 +34,7 @@
             this.routeDelete = <?php echo json_encode(route('permission_delete')) ?>;
             this.routeApprobe = <?php echo json_encode(route('requestPermission_approbe')) ?>;
             this.routeReject = <?php echo json_encode(route('requestPermission_reject')) ?>;
+            this.discardRequestRoute = <?php echo json_encode(route('requestPermission_discardRequest')); ?>;
             this.routeSendAuthorize = <?php echo json_encode(route('requestPermission_sendAndAuthorize')) ?>;
             this.routeGetEmployee = <?php echo json_encode(route('requestPermission_getEmployee')) ?>;
             this.routeGetAllEmployees = <?php echo json_encode(route('requestPermission_getAllEmployees')) ?>;
@@ -46,6 +47,7 @@
             this.routeDeletePermission = <?php echo json_encode(route('requestPermission_delete')); ?>;
             this.authorized_client = <?php echo json_encode($authorized_client); ?>;
             this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
+            this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos" ); ?>;
             this.manualRoute[1] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:solicitudespermisos#gestion" ); ?>;
@@ -144,6 +146,10 @@
 
             <button id="" type="button" class="btn3d btn-danger" style="display: inline-block; margin-right: 5px" title="Eliminar" v-show="status_incidence == 2" v-on:click="deleteSendRegistry()">
                 <span class="bx bxs-trash"></span>
+            </button>
+
+            <button id="btn_discard" v-on:click="discardApplication()" type="button" class="btn3d bg-gray-400" v-show="status_incidence == 2" style="display: inline-block; margin-right: 20px" title="Descartar solicitud">
+                <span class="bx bx-archive-in"></span>
             </button>
             <br>
             <br>

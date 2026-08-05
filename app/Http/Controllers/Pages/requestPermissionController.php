@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Mail\cancelIncidenceMail;
 use App\Mail\cancelPermissionMail;
+use App\Mail\discardIncidentMail;
+use App\User;
 use App\Utils\CapLinkUtils;
 use Illuminate\Http\Request;
 use App\Utils\permissionsUtils;
@@ -726,5 +728,79 @@ class requestPermissionController extends Controller
 
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
+    }
+
+    public function discardRequest(Request $request){
+        $manager_id = null;
+        try {
+            delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
+            
+            \DB::beginTransaction();
+
+            $incidence_id = $request->application_id;
+            $oIncidence = Permission::findOrFail($incidence_id);
+
+            //delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
+
+            \DB::table('hours_leave')
+                ->where('id_hours_leave', $oIncidence->id_hours_leave)
+                ->update(['request_status_id' => SysConst::APPLICATION_DESCARTADA, 'user_apr_rej_id' => \Auth::user()->id ]);
+
+            $employee = User::find($oIncidence->user_id);
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $oIncidence->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA;
+            $mailLog->is_deleted = 0;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+    
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+        
+        $org_chart_job_id = null;
+
+        if(is_null($org_chart_job_id)){
+            $lPermissions = permissionsUtils::getMyEmployeeslPermissions($oIncidence->cl_permission_id);
+        }else{
+        }
+
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
+            try {
+                Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
+                                                        $oIncidence->id_application,
+                                                        $oIncidence->user_id,
+                                                        \Auth::user()->id
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                \Log::error($th);
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+        $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
+        return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }
 }

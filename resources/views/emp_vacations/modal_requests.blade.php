@@ -142,6 +142,10 @@
                             <p v-if="emp_comments != null && emp_comments != ''">@{{emp_comments}}</p>
                             <p v-else>(Sin comentarios)</p>
                         </div>
+                        <div v-if="supComments" class="mt-2">
+                            <label class="form-label"><b>Comentarios revisor:</b></label>
+                            <p>@{{supComments}}</p>
+                        </div>
                         <template v-if="isFromMail">
                             <div v-if="oApplication.request_status_id == 2">
                                 <label class="form-label" for="comments"><b>Comentarios:</b></label>

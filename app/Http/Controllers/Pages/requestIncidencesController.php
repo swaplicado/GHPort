@@ -4,6 +4,8 @@ namespace App\Http\Controllers\pages;
 
 use App\Http\Controllers\Controller;
 use App\Mail\cancelIncidenceMail;
+use App\Mail\discardIncidentMail;
+use App\User;
 use Illuminate\Http\Request;
 use \App\Utils\incidencesUtils;
 use \App\Utils\delegationUtils;
@@ -37,6 +39,7 @@ class requestIncidencesController extends Controller
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
+            'APPLICATION_DESCARTADO' => SysConst::APPLICATION_DESCARTADA,
             'TYPE_VACACIONES' => SysConst::TYPE_VACACIONES,
             'TYPE_INASISTENCIA' => SysConst::TYPE_INASISTENCIA,
             'TYPE_INASISTENCIA_ADMINISTRATIVA' => SysConst::TYPE_INASISTENCIA_ADMINISTRATIVA,
@@ -659,4 +662,82 @@ class requestIncidencesController extends Controller
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
     }
+
+    public function discardRequest(Request $request){
+        $manager_id = null;
+        try {
+            delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
+            
+            \DB::beginTransaction();
+
+            $year = $request->year;
+
+            $incidence_id = $request->application_id;
+            $oIncidence = Application::findOrFail($incidence_id);
+
+            //delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
+
+            $oIncidence->request_status_id = SysConst::APPLICATION_DESCARTADA;
+            $oIncidence->user_apr_rej_id = \Auth::user()->id;
+            $oIncidence->update();
+
+            $employee = User::find($oIncidence->user_id);
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $oIncidence->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA;
+            $mailLog->is_deleted = 0;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+    
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+        
+        $org_chart_job_id = null;
+
+        if(is_null($org_chart_job_id)){
+            $lIncidences = incidencesUtils::getMyEmployeeslIncidences();
+        }else{
+            
+        }
+
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
+            try {
+                Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
+                                                        $oIncidence->id_application,
+                                                        $oIncidence->user_id,
+                                                        \Auth::user()->id
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                \Log::error($th);
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+        $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
+        return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
+    }
+
 }

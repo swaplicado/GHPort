@@ -350,6 +350,10 @@
                     case 6:
                         filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
                         return filter === 6;
+                    
+                    case 10:
+                        filter = parseInt( data[oServerData.indexesMyRequestTable.request_status_id] );
+                        return filter === 10;
 
                     default:
                         break;

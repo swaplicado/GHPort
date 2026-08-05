@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
 use App\Mail\cancelIncidenceMail;
+use App\Mail\discardIncidentMail;
 use App\User;
 use App\Utils\CapLinkUtils;
 use Error;
@@ -137,6 +138,7 @@ class requestVacationsController extends Controller
                                                               SysConst::APPLICATION_CONSUMIDO,
                                                               SysConst::APPLICATION_RECHAZADO,
                                                               SysConst::APPLICATION_CANCELADO,
+                                                              SysConst::APPLICATION_DESCARTADA,
                                                             ]
                                                         );
 
@@ -240,7 +242,8 @@ class requestVacationsController extends Controller
             'APPLICATION_ENVIADO' => SysConst::APPLICATION_ENVIADO,
             'APPLICATION_APROBADO' => SysConst::APPLICATION_APROBADO,
             'APPLICATION_CONSUMIDO' => SysConst::APPLICATION_CONSUMIDO,
-            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO
+            'APPLICATION_RECHAZADO' => SysConst::APPLICATION_RECHAZADO,
+            'APPLICATION_DESECHADO' => SysConst::APPLICATION_DESCARTADA,
         ];
 
         if(!is_null($idApplication)){
@@ -1092,15 +1095,6 @@ class requestVacationsController extends Controller
         }
         
         $org_chart_job_id = null;
-        if(!is_null($manager_id)){
-            $oManager = \DB::table('users')
-                            ->where('id', $manager_id)
-                            ->where('is_delete', 0)
-                            ->where('is_active', 1)
-                            ->first();
-
-            $org_chart_job_id = !is_null($oManager) ? $oManager->org_chart_job_id : null;
-        }
         $data = $this->getData($year, $org_chart_job_id);
 
         $mypool = Pool::create();
@@ -1142,7 +1136,7 @@ class requestVacationsController extends Controller
         try {
             \DB::beginTransaction();
             if($application->request_status_id != SysConst::APPLICATION_ENVIADO){
-                return json_encode(['success' => false, 'message' => 'Solo se pueden rechazar solicitudes nuevas', 'icon' => 'warning']);
+                return json_encode(['success' => false, 'message' => 'Solo se pueden borrar solicitudes nuevas', 'icon' => 'warning']);
             }
 
             $result = json_decode(incidencesUtils::checkExternalIncident($application));
@@ -1174,5 +1168,77 @@ class requestVacationsController extends Controller
 
         $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
         return json_encode(['success' => true, 'lEmployees' => $data[1]]);
+    }
+
+    public function discardRequest(Request $request){
+        $manager_id = null;
+        try {
+            delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
+            
+            \DB::beginTransaction();
+
+            $application_id = $request->application_id;
+            $year = $request->year;
+
+            $oIncidence = Application::findOrFail($application_id);
+
+            //delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
+
+            $oIncidence->request_status_id = SysConst::APPLICATION_DESCARTADA;
+            $oIncidence->user_apr_rej_id = \Auth::user()->id;
+            $oIncidence->update();
+
+            $employee = User::find($oIncidence->user_id);
+
+            $mailLog = new MailLog();
+            $mailLog->date_log = Carbon::now()->toDateString();
+            $mailLog->to_user_id = $employee->id;
+            $mailLog->application_id_n = $oIncidence->id_application;
+            $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+            $mailLog->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA;
+            $mailLog->is_deleted = 0;
+            // $mailLog->created_by = \Auth::user()->id;
+            // $mailLog->updated_by = \Auth::user()->id;
+            $mailLog->created_by = delegationUtils::getIdUser();
+            $mailLog->updated_by = delegationUtils::getIdUser();
+            $mailLog->save();
+    
+            \DB::commit();
+        } catch (\Throwable $th) {
+            \DB::rollBack();
+            \Log::error($th);
+            return json_encode(['success' => false, 'message' => $th->getMessage(), 'icon' => 'error']);
+        }
+        
+        $org_chart_job_id = null;
+        $data = $this->getData($year, $org_chart_job_id);
+
+        $mypool = Pool::create();
+        $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
+            try {
+                Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
+                                                        $oIncidence->id_application,
+                                                        $oIncidence->user_id,
+                                                        \Auth::user()->id
+                                                    )
+                                                );
+            } catch (\Throwable $th) {
+                $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                $mailLog->update();   
+                \Log::error($th);
+                return null; 
+            }
+
+            $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+            $mailLog->update();
+        })->then(function ($mailLog) {
+            
+        })->catch(function ($mailLog) {
+            
+        })->timeout(function ($mailLog) {
+            
+        });
+        $data[1] = usersInSystemUtils::FilterUsersInSystem($data[1], 'id');
+        return json_encode(['success' => true, 'lEmployees' => $data[1], 'mail_log_id' => $mailLog->id_mail_log]);
     }
 }

@@ -44,6 +44,7 @@
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.applicationsEARoute = <?php echo json_encode(route('myVacations_getEmpApplicationsEA')); ?>;
             this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
+            this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:misincidencias" ); ?>;
             this.indexes_incidences = {
@@ -127,6 +128,7 @@
                 col_type = parseInt( data[oServerData.indexes_incidences.id_incidence_tp] );
                 col_status = parseInt( data[oServerData.indexes_incidences.request_status_id] );
                 if(col_type == iType || iType == 0){
+                    console.log(col_status);
                     return col_status == iStatus;
                 }else{
                     return false;

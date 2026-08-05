@@ -40,6 +40,7 @@
             this.routeCheckMail = <?php echo json_encode(route('permission_checkMail')) ?>;
             this.routeGetEmpIncidencesEA = <?php echo json_encode(route('incidences_getEmpIncidencesEA')); ?>;
             this.maxRetroactiveDays = <?php echo json_encode($maxRetroactive); ?>;
+            this.const = <?php echo json_encode($constants); ?>;
             this.manualRoute = [];
             this.manualRoute[0] = <?php echo json_encode( "http://192.168.1.251/dokuwiki/doku.php?id=wiki:mispermisos" ); ?>;
             this.indexes_permission = {
