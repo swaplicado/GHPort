@@ -544,8 +544,6 @@ class AppPghController extends Controller
      */
     public function rejectIncidents(Request $request) {
         try {
-            Log::error('xxxxxxxxxxxxxxxxx');
-            Log::error($request);
             $lIncidents = json_decode($request->getContent())->incidents;
             $lEventsType = collect(ExportUtils::getEventsType());
             foreach ($lIncidents as $key => $incident) {
@@ -580,6 +578,44 @@ class AppPghController extends Controller
             'status' => 'success',
             'data' => $lIncidents
         ], 200);
+    }
+
+    public function discardIncidents(Request $request) {
+        try {
+            $lIncidents = json_decode($request->getContent())->incidents;
+            $lEventsType = collect(ExportUtils::getEventsType());
+            foreach ($lIncidents as $key => $incident) {
+                $event = $lEventsType->firstWhere('type_key', $incident->type_key);
+                switch ($event->type_class) {
+                    case 'VACATION':
+                        $incident->id_application = $incident->id;
+                        $incident->system_result = ExportUtils::discardVacations($incident);
+                        break;
+                    case 'INCIDENT':
+                        $incident->application_id = $incident->id;
+                        $incident->system_result = ExportUtils::discardIncidence($incident);
+                        break;
+                    case 'PERMISSION':
+                        $incident->permission_id = $incident->id;
+                        $incident->system_result = ExportUtils::discardPermission($incident);
+                        break;
+                    
+                    default:
+                        break;
+                }
+            }
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $lIncidents
+        ], 200);                    
     }
 
     /**

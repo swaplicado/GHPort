@@ -416,6 +416,60 @@ class ExportUtils {
     }
 
     /**
+     * Descarta las vacaciones recibidas
+     * @param mixed $oVacation
+     * @return bool|string
+     */
+    public static function discardVacations($oVacation) {
+        try {
+            $newRequest = new Request((array)$oVacation);
+            $oController = app(requestVacationsController::class);
+            $result = $oController->discardRequest($newRequest);
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
+        }
+        $oResult = json_decode($result);
+        return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
+    }
+
+    /**
+     * Descarta la incidencia recibida
+     * @param mixed $oIncidence
+     * @return bool|string
+     */
+    public static function discardIncidence($oIncidence) {
+        try {
+            $newRequest = new Request((array)$oIncidence);
+            $oController = app(requestIncidencesController::class);
+            $result = $oController->discardRequest($newRequest);
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
+        }
+        $oResult = json_decode($result);
+        return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
+    }
+
+    /**
+     * Descarta el permiso recibido
+     * @param mixed $oPermission
+     * @return bool|string
+     */
+    public static function discardPermission($oPermission) {
+        try {
+            $newRequest = new Request((array)$oPermission);
+            $oController = app(requestPermissionController::class);
+            $result = $oController->discardRequest($newRequest);
+        } catch (\Throwable $th) {
+            \Log::error($th);
+            $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
+        }
+        $oResult = json_decode($result);
+        return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
+    }
+
+    /**
      * Indica si la solicitud esta autorizada
      * @param mixed $oApplication
      * @param string $type

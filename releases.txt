@@ -192,3 +192,12 @@ Cambios:
 - Se agregan cambios a vacaciones, en los blades, controllers y vue.
 - Se agregan cambios a incidencias, en los blades, controllers y vue.
 - Se agregan cambios a permisos, en los blades, controllers y vue.
+
+========================================
+RELEASE
+Fecha: 05-08-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Endpoints api para discard de incidencias, permisos y vacaciones.

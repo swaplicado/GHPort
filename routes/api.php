@@ -78,6 +78,9 @@ Route::get('getUsersFromGU', [
     Route::post('incidents/reject', [
         'uses' => 'api\\AppPghController@rejectIncidents'
     ]);
+    Route::post('incidents/discard', [
+        'uses' => 'api\\AppPghController@discardIncidents'
+    ]);
     Route::get('logout', [
         'uses' => 'api\\AuthController@logout'
     ]);
