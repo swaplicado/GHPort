@@ -84,6 +84,7 @@ class SysConst {
     public const APPLICATION_RECHAZADO = 4;
     public const APPLICATION_CONSUMIDO = 5;
     public const APPLICATION_CANCELADO = 6;
+    public const APPLICATION_DESCARTADA = 10;
 
     /**
      * Constantes de la tabla sys_mails_sts
@@ -106,6 +107,7 @@ class SysConst {
     public const MAIL_CANCELACION_PERMISO = 9;
     public const MAIL_INVITACION_EVENTO = 10;
     public const MAIL_MODIFICACION_EVENTO = 11;
+    public const MAIL_DESECHAR_INCIDENCIA = 12;
     
     /**
      * Constantes de la tabla cat_notifications_type

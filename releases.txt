@@ -160,3 +160,12 @@ Resumen:
 
 Cambios:
 - Se agrega endpoint para desde el exterior consultar de un usuario proporcionado, las incidencias pendientes, se usara para un correo en CAP.
+
+========================================
+RELEASE
+Fecha: 05-08-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Se agrega el status nuevo para que se envie hacia la aplicación las incidencias con este estatus.
