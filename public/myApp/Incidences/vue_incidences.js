@@ -1559,7 +1559,7 @@ var app = new Vue({
             })
         },
 
-        discardRequest(application_id){
+        discardRequest(application_id, comments){
             SGui.showWaiting(15000);
 
             let route = this.oData.discardRequestRoute;
