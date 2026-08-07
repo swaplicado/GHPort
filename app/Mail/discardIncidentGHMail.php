@@ -25,18 +25,37 @@ class discardIncidentGHMail extends Mailable
 
     public function build()
     {
+        // Intenta buscar en la tabla 'applications'
         $oApplication = \DB::table('applications as a')
                             ->leftJoin('cat_incidence_tps as i', 'i.id_incidence_tp', '=', 'a.type_incident_id')
                             ->where('a.id_application', $this->idApplication)
                             ->select('a.*', 'i.incidence_tp_name as type_name')
                             ->first();
 
-        if ($oApplication->type_incident_id == SysConst::TYPE_VACACIONES) {
-            $oApplication->type = 'VACACIONES';
-        } else if ($oApplication->type_incident_id == SysConst::TYPE_CUMPLEAÑOS) {
-            $oApplication->type = 'CUMPLEAÑOS';
+        // Si es null, busca en la tabla 'hours_leave' (permisos)
+        if (!$oApplication) {
+            $oApplication = \DB::table('hours_leave as a')
+                                ->leftJoin('cat_permission_cl as i', 'i.id_cl_permission', '=', 'a.cl_permission_id')
+                                ->where('a.id_hours_leave', $this->idApplication)
+                                ->select(
+                                    'a.*',
+                                    'a.start_date',
+                                    'a.start_date as end_date',
+                                    'i.cl_permission_name as type_name'
+                                )
+                                ->first();
+
+            if ($oApplication) {
+                $oApplication->type = 'PERMISO';
+            }
         } else {
-            $oApplication->type = 'INCIDENCIA';
+            if ($oApplication->type_incident_id == SysConst::TYPE_VACACIONES) {
+                $oApplication->type = 'VACACIONES';
+            } else if ($oApplication->type_incident_id == SysConst::TYPE_CUMPLEAÑOS) {
+                $oApplication->type = 'CUMPLEAÑOS';
+            } else {
+                $oApplication->type = 'INCIDENCIA';
+            }
         }
 
         $oApplication->start_date = dateUtils::formatDate($oApplication->start_date, 'D-m-Y');
@@ -46,12 +65,11 @@ class discardIncidentGHMail extends Mailable
         $oEmployee = \DB::table('users')->where('id', $this->idEmployee)->first();
         $oSuperviser = \DB::table('users')->where('id', $this->idSuperviser)->first();
 
-        // Asunto enfocado en atención/revisión de descarte por GH
-        $subject = '[Portal GH] REVISIÓN: Solicitud ' . $oApplication->type_name . ' descartada de ' . $oEmployee->full_name;
+        $subject = '[Portal GH] Solicitud ' . $oApplication->type_name . ' descartada';
 
         return $this->from("Portalgh@aeth.mx")
                     ->subject($subject)
-                    ->view('mails.discardIncidentGHMail')
+                    ->view('mails.cancelMail')
                     ->with('oApplication', $oApplication)
                     ->with('oEmployee', $oEmployee)
                     ->with('oSuperviser', $oSuperviser);

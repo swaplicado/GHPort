@@ -758,7 +758,7 @@ class requestPermissionController extends Controller
             $mailLog = new MailLog();
             $mailLog->date_log = Carbon::now()->toDateString();
             $mailLog->to_user_id = $employee->id;
-            $mailLog->application_id_n = $oIncidence->id_application;
+            $mailLog->application_id_n = $oIncidence->id_hours_leave;
             $mailLog->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
             $mailLog->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA;
             $mailLog->is_deleted = 0;
@@ -772,7 +772,7 @@ class requestPermissionController extends Controller
                 $mailLogGH = new MailLog();
                 $mailLogGH->date_log = Carbon::now()->toDateString();
                 $mailLogGH->to_user_id = $employee->id;
-                $mailLogGH->application_id_n = $oIncidence->id_application;
+                $mailLogGH->application_id_n = $oIncidence->id_hours_leave;
                 $mailLogGH->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
                 $mailLogGH->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA;
                 $mailLogGH->is_deleted = 0;
@@ -799,7 +799,7 @@ class requestPermissionController extends Controller
         $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
             try {
                 Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
-                                                        $oIncidence->id_application,
+                                                        $oIncidence->id_hours_leave,
                                                         $oIncidence->user_id,
                                                         \Auth::user()->id
                                                     )
@@ -813,12 +813,6 @@ class requestPermissionController extends Controller
 
             $mailLog->sys_mails_st_id = SysConst::MAIL_ENVIADO;
             $mailLog->update();
-        })->then(function ($mailLog) {
-            
-        })->catch(function ($mailLog) {
-            
-        })->timeout(function ($mailLog) {
-            
         });
 
         if (SysConst::SEND_MAIL_GH_DISCARD && $mailLogGH) {
@@ -826,7 +820,7 @@ class requestPermissionController extends Controller
                 try {
                     Mail::to(SysConst::MAIL_GESTION_HUMANA)->send(
                         new discardIncidentGHMail(
-                            $oIncidence->id_application,
+                            $oIncidence->id_hours_leave,
                             $oIncidence->user_id,
                             \Auth::user()->id
                         )
@@ -839,13 +833,7 @@ class requestPermissionController extends Controller
                 }
 
                 $mailLogGH->sys_mails_st_id = SysConst::MAIL_ENVIADO;
-                $mailLogGH->update();
-            })->then(function ($mailLogGH) {
-                
-            })->catch(function ($mailLogGH) {
-                
-            })->timeout(function ($mailLogGH) {
-                
+                $mailLogGH->update();   
             });
         }
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');

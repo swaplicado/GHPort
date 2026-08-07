@@ -210,3 +210,12 @@ Autor: Cesar Orozco
 
 Resumen:
 - Se agrega correo a GH cuando una solicitud es descartada.
+
+========================================
+RELEASE
+Fecha: 07-08-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Bug fix envio de correo para el descarte.

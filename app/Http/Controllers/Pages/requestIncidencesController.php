@@ -666,6 +666,7 @@ class requestIncidencesController extends Controller
 
     public function discardRequest(Request $request){
         $manager_id = null;
+        $mailLogGH = null;
         try {
             delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
             
@@ -731,7 +732,7 @@ class requestIncidencesController extends Controller
                 Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
                                                         $oIncidence->id_application,
                                                         $oIncidence->user_id,
-                                                        \Auth::user()->id
+                                                        delegationUtils::getIdUser()
                                                     )
                                                 );
             } catch (\Throwable $th) {
@@ -758,7 +759,7 @@ class requestIncidencesController extends Controller
                         new discardIncidentGHMail(
                             $oIncidence->id_application,
                             $oIncidence->user_id,
-                            \Auth::user()->id
+                            delegationUtils::getIdUser()
                         )
                     );
                 } catch (\Throwable $th) {
