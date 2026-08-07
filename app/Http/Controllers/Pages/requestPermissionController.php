@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\cancelIncidenceMail;
 use App\Mail\cancelPermissionMail;
 use App\Mail\discardIncidentMail;
+use App\Mail\discardIncidentGHMail;
 use App\User;
 use App\Utils\CapLinkUtils;
 use Illuminate\Http\Request;
@@ -732,6 +733,7 @@ class requestPermissionController extends Controller
 
     public function discardRequest(Request $request){
         $manager_id = null;
+        $mailLogGH = null;
         try {
             delegationUtils::getAutorizeRolUser([SysConst::JEFE, SysConst::ADMINISTRADOR, SysConst::GH]);
             
@@ -739,12 +741,17 @@ class requestPermissionController extends Controller
 
             $incidence_id = $request->application_id;
             $oIncidence = Permission::findOrFail($incidence_id);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
 
             //delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
 
             \DB::table('hours_leave')
-                ->where('id_hours_leave', $oIncidence->id_hours_leave)
-                ->update(['request_status_id' => SysConst::APPLICATION_DESCARTADA, 'user_apr_rej_id' => \Auth::user()->id ]);
+            ->where('id_hours_leave', $oIncidence->id_hours_leave)
+            ->update([
+                'request_status_id' => SysConst::APPLICATION_DESCARTADA,
+                'user_apr_rej_id' => \Auth::user()->id,
+                'sup_comments_n' => $comments
+            ]);
 
             $employee = User::find($oIncidence->user_id);
 
@@ -760,6 +767,19 @@ class requestPermissionController extends Controller
             $mailLog->created_by = delegationUtils::getIdUser();
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
+
+            if (SysConst::SEND_MAIL_GH_DISCARD) {
+                $mailLogGH = new MailLog();
+                $mailLogGH->date_log = Carbon::now()->toDateString();
+                $mailLogGH->to_user_id = $employee->id;
+                $mailLogGH->application_id_n = $oIncidence->id_application;
+                $mailLogGH->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+                $mailLogGH->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA;
+                $mailLogGH->is_deleted = 0;
+                $mailLogGH->created_by = delegationUtils::getIdUser();
+                $mailLogGH->updated_by = delegationUtils::getIdUser();
+                $mailLogGH->save();
+            }
     
             \DB::commit();
         } catch (\Throwable $th) {
@@ -800,6 +820,34 @@ class requestPermissionController extends Controller
         })->timeout(function ($mailLog) {
             
         });
+
+        if (SysConst::SEND_MAIL_GH_DISCARD && $mailLogGH) {
+            $mypool[] = async(function () use ($oIncidence, $mailLogGH) {
+                try {
+                    Mail::to(SysConst::MAIL_GESTION_HUMANA)->send(
+                        new discardIncidentGHMail(
+                            $oIncidence->id_application,
+                            $oIncidence->user_id,
+                            \Auth::user()->id
+                        )
+                    );
+                } catch (\Throwable $th) {
+                    $mailLogGH->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                    $mailLogGH->update();   
+                    \Log::error($th);
+                    return null; 
+                }
+
+                $mailLogGH->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+                $mailLogGH->update();
+            })->then(function ($mailLogGH) {
+                
+            })->catch(function ($mailLogGH) {
+                
+            })->timeout(function ($mailLogGH) {
+                
+            });
+        }
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
         return json_encode(['success' => true, 'lPermissions' => $lPermissions, 'mailLog_id' => $mailLog->id_mail_log]);
     }

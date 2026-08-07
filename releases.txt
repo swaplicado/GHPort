@@ -201,3 +201,12 @@ Autor: Cesar Orozco
 
 Resumen:
 - Endpoints api para discard de incidencias, permisos y vacaciones.
+
+========================================
+RELEASE
+Fecha: 07-08-2026
+Autor: Cesar Orozco
+========================================
+
+Resumen:
+- Se agrega correo a GH cuando una solicitud es descartada.

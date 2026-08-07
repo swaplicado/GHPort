@@ -1523,25 +1523,38 @@ var app = new Vue({
                 return;
             } 
             let data = table['table_ReqIncidences'].row('.selected').data();
+            let rawDateStr = data[this.indexes_incidences.start_date];
+            let datePart = rawDateStr.includes(' ') ? rawDateStr.split(' ')[1] : rawDateStr;
+            let startDate = moment(datePart, 'DD-MMM-YYYY', 'es');
+            
+            if (!startDate.isValid() || !startDate.isBefore(moment(), 'day')) {
+                SGui.showError("Solo se pueden descartar solicitudes cuya fecha de inicio sea anterior a la fecha de hoy.");
+                return;
+            }
             Swal.fire({
                 title: '¿Desea descartar la solicitud?',
-                html:   '<b>Colaborador: </b>' +
-                        data[this.indexes_incidences.employee] +
-                        '<br>' +
-                        '<b>Inicio:</b> ' +
-                        data[this.indexes_incidences.start_date] +
-                        '<br>' +
-                        '<b>Fin:</b> ' +
-                        data[this.indexes_incidences.end_date],
+                html:   '<b>Colaborador: </b>' + data[this.indexes_incidences.employee] + '<br>' +
+                        '<b>Inicio:</b> ' + data[this.indexes_incidences.start_date] + '<br>' +
+                        '<b>Fin:</b> ' + data[this.indexes_incidences.end_date] + '<br><br>' +
+                        '<div style="background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; border: 1px solid #ffeeba; text-align: left; font-size: 0.9em;">' +
+                            '<b>⚠️ Advertencia:</b> Esta acción es para una solicitud que puede estar dentro de una nómina que ya fue pagada.' +
+                        '</div>',
+                input: 'textarea',
+                inputPlaceholder: 'Escribe un comentario',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 cancelButtonText: 'No',
-                confirmButtonText: 'Si'
+                confirmButtonText: 'Si',
+                inputValidator: (value) => {
+                    if (!value || !value.trim()) {
+                        return '¡Es necesario ingresar un comentario para descartar!';
+                    }
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.discardRequest(data[this.indexes_incidences.id_application]);
+                    this.discardRequest(data[this.indexes_incidences.id_application], result.value);
                 }
             })
         },
@@ -1552,6 +1565,7 @@ var app = new Vue({
             let route = this.oData.discardRequestRoute;
             axios.post(route, {
                 'application_id': application_id,
+                'comments': comments,
             })
             .then( result => {
                 let data = result.data;

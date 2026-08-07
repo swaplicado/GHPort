@@ -5,6 +5,7 @@ namespace App\Http\Controllers\pages;
 use App\Http\Controllers\Controller;
 use App\Mail\cancelIncidenceMail;
 use App\Mail\discardIncidentMail;
+use App\Mail\discardIncidentGHMail;
 use App\User;
 use Illuminate\Http\Request;
 use \App\Utils\incidencesUtils;
@@ -674,11 +675,11 @@ class requestIncidencesController extends Controller
 
             $incidence_id = $request->application_id;
             $oIncidence = Application::findOrFail($incidence_id);
-
-            //delegationUtils::getIsMyEmployeeUser($oIncidence->user_id);
+            $comments = str_replace(['"', "\\", "\r", "\n"], "", $request->comments);
 
             $oIncidence->request_status_id = SysConst::APPLICATION_DESCARTADA;
             $oIncidence->user_apr_rej_id = \Auth::user()->id;
+            $oIncidence->sup_comments_n = $comments;
             $oIncidence->update();
 
             $employee = User::find($oIncidence->user_id);
@@ -695,6 +696,19 @@ class requestIncidencesController extends Controller
             $mailLog->created_by = delegationUtils::getIdUser();
             $mailLog->updated_by = delegationUtils::getIdUser();
             $mailLog->save();
+
+            if (SysConst::SEND_MAIL_GH_DISCARD) {
+                $mailLogGH = new MailLog();
+                $mailLogGH->date_log = Carbon::now()->toDateString();
+                $mailLogGH->to_user_id = $employee->id; // O el ID que asignes a GH/sistema
+                $mailLogGH->application_id_n = $oIncidence->id_application;
+                $mailLogGH->sys_mails_st_id = SysConst::MAIL_EN_PROCESO;
+                $mailLogGH->type_mail_id = SysConst::MAIL_DESECHAR_INCIDENCIA; // O un tipo específico como SysConst::MAIL_DESECHAR_INCIDENCIA_GH
+                $mailLogGH->is_deleted = 0;
+                $mailLogGH->created_by = delegationUtils::getIdUser();
+                $mailLogGH->updated_by = delegationUtils::getIdUser();
+                $mailLogGH->save();
+            }
     
             \DB::commit();
         } catch (\Throwable $th) {
@@ -736,6 +750,34 @@ class requestIncidencesController extends Controller
         })->timeout(function ($mailLog) {
             
         });
+
+        if (SysConst::SEND_MAIL_GH_DISCARD && $mailLogGH) {
+            $mypool[] = async(function () use ($oIncidence, $mailLogGH) {
+                try {
+                    Mail::to(SysConst::MAIL_GESTION_HUMANA)->send(
+                        new discardIncidentGHMail(
+                            $oIncidence->id_application,
+                            $oIncidence->user_id,
+                            \Auth::user()->id
+                        )
+                    );
+                } catch (\Throwable $th) {
+                    $mailLogGH->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
+                    $mailLogGH->update();   
+                    \Log::error($th);
+                    return null; 
+                }
+
+                $mailLogGH->sys_mails_st_id = SysConst::MAIL_ENVIADO;
+                $mailLogGH->update();
+            })->then(function ($mailLogGH) {
+                
+            })->catch(function ($mailLogGH) {
+                
+            })->timeout(function ($mailLogGH) {
+                
+            });
+        }
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');
         return json_encode(['success' => true, 'lIncidences' => $lIncidences, 'mailLog_id' => $mailLog->id_mail_log]);
     }
