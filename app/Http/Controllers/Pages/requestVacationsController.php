@@ -1260,7 +1260,8 @@ class requestVacationsController extends Controller
                         new discardIncidentGHMail(
                             $oIncidence->id_application,
                             $oIncidence->user_id,
-                            \Auth::user()->id
+                            \Auth::user()->id,
+                            0
                         )
                     );
                 } catch (\Throwable $th) {

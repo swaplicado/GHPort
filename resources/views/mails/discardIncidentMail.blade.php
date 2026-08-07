@@ -51,14 +51,14 @@
                         @if ($oApplication->type == 'VACACIONES' || $oApplication->type == 'INCIDENCIA')
                             <span>
                                 <b>
-                                    Su solicitud {{$oApplication->type_name}} para las fechas {{$oApplication->start_date}} a {{$oApplication->end_date}} ha sido cancelada
+                                    Su solicitud {{$oApplication->type_name}} para las fechas {{$oApplication->start_date}} a {{$oApplication->end_date}} ha sido descartada.
                                 </b>
                             </span>
                         @endif
                         @if ($oApplication->type == 'CUMPLEAÑOS' || $oApplication->type == 'PERMISO')
                             <span>
                                 <b>
-                                    Su solicitud {{$oApplication->type_name}} para la fecha {{$oApplication->start_date}} ha sido descartada
+                                    Su solicitud {{$oApplication->type_name}} para la fecha {{$oApplication->start_date}} ha sido descartada.
                                 </b>
                             </span>
                         @endif

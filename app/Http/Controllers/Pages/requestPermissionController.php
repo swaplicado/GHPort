@@ -795,15 +795,22 @@ class requestPermissionController extends Controller
         }else{
         }
 
+        $employeeMail = $employee->institutional_mail;
+        $ghMail = SysConst::MAIL_GESTION_HUMANA;
+
         $mypool = Pool::create();
-        $mypool[] = async(function () use ($oIncidence, $employee, $mailLog){
+        // -------------------------------------------------------------
+        // ENVÍO 1: Correo al Colaborador
+        // -------------------------------------------------------------
+        $mypool[] = async(function () use ($oIncidence, $employeeMail, $mailLog) {
             try {
-                Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
-                                                        $oIncidence->id_hours_leave,
-                                                        $oIncidence->user_id,
-                                                        \Auth::user()->id
-                                                    )
-                                                );
+                Mail::to($employeeMail)->send(
+                    new discardIncidentMail(
+                        $oIncidence->id_hours_leave,
+                        $oIncidence->user_id,
+                        \Auth::user()->id
+                    )
+                );
             } catch (\Throwable $th) {
                 $mailLog->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                 $mailLog->update();   
@@ -815,14 +822,18 @@ class requestPermissionController extends Controller
             $mailLog->update();
         });
 
+        // -------------------------------------------------------------
+        // ENVÍO 2: Correo a Gestión Humana (Condicionado)
+        // -------------------------------------------------------------
         if (SysConst::SEND_MAIL_GH_DISCARD && $mailLogGH) {
-            $mypool[] = async(function () use ($oIncidence, $mailLogGH) {
+            $mypool[] = async(function () use ($oIncidence, $ghMail, $mailLogGH) {
                 try {
-                    Mail::to(SysConst::MAIL_GESTION_HUMANA)->send(
+                    Mail::to($ghMail)->send(
                         new discardIncidentGHMail(
                             $oIncidence->id_hours_leave,
                             $oIncidence->user_id,
-                            \Auth::user()->id
+                            \Auth::user()->id,
+                            1
                         )
                     );
                 } catch (\Throwable $th) {

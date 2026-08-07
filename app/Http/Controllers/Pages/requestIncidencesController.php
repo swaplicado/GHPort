@@ -759,7 +759,8 @@ class requestIncidencesController extends Controller
                         new discardIncidentGHMail(
                             $oIncidence->id_application,
                             $oIncidence->user_id,
-                            delegationUtils::getIdUser()
+                            delegationUtils::getIdUser(),
+                            0
                         )
                     );
                 } catch (\Throwable $th) {
