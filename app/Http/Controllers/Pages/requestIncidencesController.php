@@ -732,7 +732,8 @@ class requestIncidencesController extends Controller
                 Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
                                                         $oIncidence->id_application,
                                                         $oIncidence->user_id,
-                                                        delegationUtils::getIdUser()
+                                                        delegationUtils::getIdUser(),
+                                                        false
                                                     )
                                                 );
             } catch (\Throwable $th) {
@@ -760,7 +761,7 @@ class requestIncidencesController extends Controller
                             $oIncidence->id_application,
                             $oIncidence->user_id,
                             delegationUtils::getIdUser(),
-                            0
+                            false
                         )
                     );
                 } catch (\Throwable $th) {

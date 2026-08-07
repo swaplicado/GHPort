@@ -1233,7 +1233,8 @@ class requestVacationsController extends Controller
                 Mail::to($employee->institutional_mail)->send(new discardIncidentMail(
                                                         $oIncidence->id_application,
                                                         $oIncidence->user_id,
-                                                        \Auth::user()->id
+                                                        delegationUtils::getIdUser(),
+                                                        false
                                                     )
                                                 );
             } catch (\Throwable $th) {
@@ -1260,8 +1261,8 @@ class requestVacationsController extends Controller
                         new discardIncidentGHMail(
                             $oIncidence->id_application,
                             $oIncidence->user_id,
-                            \Auth::user()->id,
-                            0
+                            delegationUtils::getIdUser(),
+                            false
                         )
                     );
                 } catch (\Throwable $th) {

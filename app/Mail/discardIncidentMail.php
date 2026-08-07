@@ -19,11 +19,12 @@ class discardIncidentMail extends Mailable
      *
      * @return void
      */
-    public function __construct($idApplication, $idEmployee, $idSuperviser)
+    public function __construct($idApplication, $idEmployee, $idSuperviser, $isPermission)
     {
         $this->idApplication = $idApplication;
         $this->idEmployee = $idEmployee;
         $this->idSuperviser = $idSuperviser;
+        $this->isPermission = $isPermission;
     }
 
     /**
@@ -33,21 +34,40 @@ class discardIncidentMail extends Mailable
      */
     public function build()
     {
-        $oApplication = \DB::table('applications as a')
-                            ->leftJoin('cat_incidence_tps as i', 'i.id_incidence_tp', '=', 'a.type_incident_id')
-                            ->where('a.id_application', $this->idApplication)
-                            ->select(
-                                'a.*',
-                                'i.incidence_tp_name as type_name'
-                            )
-                            ->first();
+        if ($this->isPermission) {
+            $oApplication = \DB::table('hours_leave as a')
+                                ->leftJoin('cat_permission_cl as i', 'i.id_cl_permission', '=', 'a.cl_permission_id')
+                                ->where('a.id_hours_leave', $this->idApplication)
+                                ->select(
+                                    'a.*',
+                                    'a.start_date',
+                                    'a.start_date as end_date',
+                                    'i.cl_permission_name as type_name'
+                                )
+                                ->first();
 
-        if($oApplication->type_incident_id == SysConst::TYPE_VACACIONES){
-            $oApplication->type = 'VACACIONES';
-        }else if($oApplication->type_incident_id == SysConst::TYPE_CUMPLEAÑOS){
-            $oApplication->type = 'CUMPLEAÑOS';
-        }else{
-            $oApplication->type = 'INCIDENCIA';
+            if ($oApplication) {
+                $oApplication->type = 'PERMISO';
+            }
+        } else {
+            $oApplication = \DB::table('applications as a')
+                                ->leftJoin('cat_incidence_tps as i', 'i.id_incidence_tp', '=', 'a.type_incident_id')
+                                ->where('a.id_application', $this->idApplication)
+                                ->select(
+                                    'a.*',
+                                    'i.incidence_tp_name as type_name'
+                                )
+                                ->first();
+
+            if ($oApplication) {
+                if ($oApplication->type_incident_id == SysConst::TYPE_VACACIONES) {
+                    $oApplication->type = 'VACACIONES';
+                } else if ($oApplication->type_incident_id == SysConst::TYPE_CUMPLEAÑOS) {
+                    $oApplication->type = 'CUMPLEAÑOS';
+                } else {
+                    $oApplication->type = 'INCIDENCIA';
+                }
+            }
         }
 
         $oApplication->start_date = dateUtils::formatDate($oApplication->start_date, 'D-m-Y');
@@ -62,12 +82,12 @@ class discardIncidentMail extends Mailable
                         ->where('id', $this->idSuperviser)
                         ->first();
 
-        $subject = '[Portal GH] Solicitud ' . $oApplication->type_name . ' cancelada';
+        $subject = '[Portal GH] Solicitud ' . $oApplication->type_name . ' descartada';
 
         $email = "Portalgh@aeth.mx";
         return $this->from($email)
                     ->subject($subject)
-                    ->view('mails.discardIncidentMail')
+                    ->view('mails.cancelMail')
                     ->with('oApplication', $oApplication)
                     ->with('oEmployee', $oEmployee)
                     ->with('oSuperviser', $oSuperviser);

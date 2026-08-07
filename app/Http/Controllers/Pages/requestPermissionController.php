@@ -808,7 +808,8 @@ class requestPermissionController extends Controller
                     new discardIncidentMail(
                         $oIncidence->id_hours_leave,
                         $oIncidence->user_id,
-                        \Auth::user()->id
+                        delegationUtils::getIdUser(),
+                        true
                     )
                 );
             } catch (\Throwable $th) {
@@ -832,14 +833,14 @@ class requestPermissionController extends Controller
                         new discardIncidentGHMail(
                             $oIncidence->id_hours_leave,
                             $oIncidence->user_id,
-                            \Auth::user()->id,
-                            1
+                            delegationUtils::getIdUser(),
+                            true
                         )
                     );
                 } catch (\Throwable $th) {
                     $mailLogGH->sys_mails_st_id = SysConst::MAIL_NO_ENVIADO;
                     $mailLogGH->update();   
-                    \Log::error($th);
+                    \Log::error("ERROR ENVIANDO CORREO GH: " . $th->getMessage() . " en " . $th->getFile() . ":" . $th->getLine());
                     return null; 
                 }
 
