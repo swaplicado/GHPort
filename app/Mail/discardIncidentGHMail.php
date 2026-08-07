@@ -30,13 +30,13 @@ class discardIncidentGHMail extends Mailable
         // Evaluación directa según la bandera enviada
         if ($this->isPermission) {
             $oApplication = \DB::table('hours_leave as a')
-                                ->leftJoin('cat_permission_cl as i', 'i.id_cl_permission', '=', 'a.cl_permission_id')
+                                ->leftJoin('permission_cl as i', 'i.id_permission_cl', '=', 'a.cl_permission_id')
                                 ->where('a.id_hours_leave', $this->idApplication)
                                 ->select(
                                     'a.*',
                                     'a.start_date',
                                     'a.start_date as end_date',
-                                    'i.cl_permission_name as type_name'
+                                    'i.permission_cl_name as type_name'
                                 )
                                 ->first();
 
