@@ -1108,6 +1108,33 @@ var app = new Vue({
             );
         },
 
+        rejectIncidence(){
+            SGui.showWaiting(15000)
+            axios.post(this.oData.routeReject, {
+                'application_id': this.oApplication.id_application,
+                'comments': this.comments,
+                'returnDate': moment(this.returnDate, 'ddd DD-MMM-YYYY').format("YYYY-MM-DD"),
+                'manager_id': this.selectedmanager,
+                'authorized_client': this.authorized_client
+            })
+            .then( result => {
+                let data = result.data;
+                if(data.success){
+                    this.oCopylIncidences = data.lIncidences;
+                    this.reDrawTableIncidences('table_ReqIncidences', data.lIncidences);
+                    $('#modal_incidences').modal('hide');
+                    SGui.showOk();
+                    this.checkMail(data.mailLog_id, this.oData.routeCheckMail);
+                }else{
+                    SGui.showMessage('', data.message, data.icon);
+                }
+            })
+            .catch( function(error){
+                console.log(error);
+                SGui.showError(error);
+            })
+        },
+
         async approbeIncidence(){
             if(this.type_id == this.oData.constants.TYPE_CUMPLEAÑOS){
                 let aux = await this.checkBirthDaysTaked();
