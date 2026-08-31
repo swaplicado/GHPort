@@ -168,6 +168,18 @@ class UsersController extends Controller
         $oUser = User::find($id);
         if(!is_null($oUser)){
             $this->updateUserAdmissionLog($oUser);
+
+            try {
+                if ($oUser->last_dismiss_date_n != null) {
+                    if ( Carbon::parse($oUser->last_admission_date)->greaterThan(Carbon::parse($oUser->last_dismiss_date_n)) ) {
+                        $vacController = new VacationPlansController();
+                        $vacController->generateVacationUser($oUser->id, 7);
+                        $vacController->saveVacationUserLog($oUser);
+                    }
+                }
+            } catch (\Throwable $th) {
+                \Log::error($th);
+            }
         }
 
         $oUsersPhotos = UsersPhotos::where('user_id', $oUser->id)->first();
