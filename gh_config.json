@@ -671,7 +671,7 @@
         }
     ],
     "apiKeyPghMobile": "AIzaSyB4ey3GXz5aErUAZEFSzmKJxwoUbveqSDw",
-    "urlNotificationAppMobile": "https://api-pgh-uscentral1-c6h8v2v3.uc.gateway.dev/v1/notification",
+    "urlNotificationAppMobile": "https://gateway-pgh-backend-c6h8v2v3.uc.gateway.dev/notification",
     "authorized_client_web": 1,
     "authorized_client_app": 2,
     "requested_client_web": 1,
