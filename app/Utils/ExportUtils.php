@@ -430,7 +430,7 @@ class ExportUtils {
             $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
         $oResult = json_decode($result);
-        return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
+        return json_encode(['success' => $oResult->success, 'message' => $oResult->message ?? 'Incidencia descartada correctamente']);
     }
 
     /**
@@ -448,7 +448,7 @@ class ExportUtils {
             $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
         $oResult = json_decode($result);
-        return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
+        return json_encode(['success' => $oResult->success, 'message' => $oResult->message ?? 'Incidencia descartada correctamente']);
     }
 
     /**
@@ -466,7 +466,7 @@ class ExportUtils {
             $result = json_encode(['success' => false, 'error' => $th->getMessage()]);
         }
         $oResult = json_decode($result);
-        return json_encode(['success' => $oResult->success, 'message' => $oResult->message]);
+        return json_encode(['success' => $oResult->success, 'message' => $oResult->message ?? 'Incidencia descartada correctamente']);
     }
 
     /**
