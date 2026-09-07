@@ -588,7 +588,7 @@ class AppPghController extends Controller
                 $event = $lEventsType->firstWhere('type_key', $incident->type_key);
                 switch ($event->type_class) {
                     case 'VACATION':
-                        $incident->id_application = $incident->id;
+                        $incident->application_id = $incident->id;
                         $incident->system_result = ExportUtils::discardVacations($incident);
                         break;
                     case 'INCIDENT':
@@ -596,7 +596,7 @@ class AppPghController extends Controller
                         $incident->system_result = ExportUtils::discardIncidence($incident);
                         break;
                     case 'PERMISSION':
-                        $incident->permission_id = $incident->id;
+                        $incident->application_id = $incident->id;
                         $incident->system_result = ExportUtils::discardPermission($incident);
                         break;
                     
