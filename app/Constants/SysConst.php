@@ -227,8 +227,8 @@ class SysConst {
      */
 
     public const SEND_MAIL_GH_DISCARD = true;
-    //public const MAIL_GESTION_HUMANA = 'nominas@aeth.mx';
-    public const MAIL_GESTION_HUMANA = 'cesar.orozco.swaplicado@gmail.com';
+    public const MAIL_GESTION_HUMANA = 'nominas@aeth.mx';
+    //public const MAIL_GESTION_HUMANA = 'cesar.orozco.swaplicado@gmail.com';
     
 }
 ?>
