@@ -25,6 +25,7 @@ use App\Models\Vacations\MailLog;
 use \App\Utils\incidencesUtils;
 use App\Utils\notificationsUtils;
 use App\Utils\usersInSystemUtils;
+use stdClass;
 
 class requestPermissionController extends Controller
 {
@@ -333,7 +334,21 @@ class requestPermissionController extends Controller
             // if($result->result == false){
             //     return json_encode(['success' => false, 'message' => $result->message, 'icon' => 'warning']);
             // }
+            $oController = app(permissionController::class);
+            $oRequest = new stdClass();
+            $oRequest->startDate = Carbon::now()->toDateString();
+            $oRequest->employeeId = $permission->user_id;
+            $newRequest = new Request((array)$oRequest);
+            $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
 
+            if ($result->total_permissions >= 2 && $permission->cl_permission_id == 1) {
+                return json_encode([
+                    'success' => false,
+                    'message' => 'No puedes aprobar más de 2 permisos en el ' . $result->periodo . 
+                                '. Podrás aprobar nuevamente a partir del ' . $result->next_available_date,
+                    'icon' => 'error'
+                ]);
+            }
             if($permission->request_status_id != SysConst::APPLICATION_ENVIADO){
                 return json_encode(['success' => false, 'message' => 'La solicitud que deseas aprobar no tiene el estatus de "Por aprobar". Solo se pueden aprobar solicitudes con dicho estatus', 'icon' => 'warning']);
             }

@@ -676,13 +676,32 @@ class creeateSentIncidentsUtils
         $oRequest = new stdClass();
         $oRequest->startDate = Carbon::now()->toDateString();
         $oRequest->employeeId = $employee_id;
+        $oRequest->isRequest = 1;
         $newRequest = new Request((array)$oRequest);
         $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
         if ($result->total_permissions >= 2 && $class_id == 1) {
-            throw new \RuntimeException(
-                'No puedes pedir más de 2 permisos en el ' . $result->periodo . 
-                '. Podrás solicitar nuevamente a partir del ' . $result->next_available_date
-            );
+            $message = 'No puedes ingresar más de 2 permisos en el ' . $result->periodo . '.';
+
+            // Si vienen conteos por estatus
+            if (
+                isset($result->new_permissions) ||
+                isset($result->sent_permissions) ||
+                isset($result->approved_permissions)
+            ) {
+                $message .= ' Actualmente tienes: '
+                    . ($result->new_permissions ?? 0) . ' nuevo(s), '
+                    . ($result->sent_permissions ?? 0) . ' enviado(s), '
+                    . ($result->approved_permissions ?? 0) . ' aprobado(s).';
+            }
+
+            $message .= ' Podrás solicitar nuevamente a partir del '
+                . $result->next_available_date;
+
+            return json_encode([
+                'success' => false,
+                'message' => $message,
+                'icon' => 'error'
+            ]);
         }
 
         $comments = str_replace(['"', "\\", "\r", "\n"], "", $comments);

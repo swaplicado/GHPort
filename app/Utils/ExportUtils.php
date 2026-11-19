@@ -254,7 +254,9 @@ class ExportUtils {
                         'j.job_name',
                         'd.department_name',
                         'u.updated_at',
-                        'u.created_at'
+                        'u.created_at',
+                        'u.benefits_date',
+                        'u.payment_frec_id'
                     )
                     ->get();
                         

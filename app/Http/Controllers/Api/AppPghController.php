@@ -771,9 +771,11 @@ class AppPghController extends Controller
                         "tot_vacation_remaining" => $oUser->tot_vacation_remaining,
                         "mySelf" => 1,
                         "rol_id" => $oUser->rol_id,
+                        "benefits_date" => $oUser->benefits_date,
                         "permissions" => $oUser->permissions,
                         "vacations_expired" => $oUser->toExpiredVacations,
-                        "vacations" => $oUser->vacations
+                        "vacations" => $oUser->vacations,
+                        "payment_frec_id" => $oUser->payment_frec_id
                     ]
                 );
             }

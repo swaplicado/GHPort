@@ -34,12 +34,12 @@ class applicationsUtils {
                                 ->value('birthday_n');
                     
                     $oBirthday = Carbon::parse($birthday);
-                    $actualBirthDay = Carbon::parse($oToday->year.'-'.$oBirthday->month.'-'.$oBirthday->month);
+                    $actualBirthDay = Carbon::parse($oToday->year.'-'.$oBirthday->month.'-'.$oBirthday->day);
                     $oDateApplication = Carbon::parse($oApplication->startDate);
                     //se saca el cumpleaños correspondiente a la solicitud
                     $oApplicationBirthDay = Carbon::parse($oApplication->birthDayYear.'-'.$oBirthday->month.'-'.$oBirthday->day);
                     
-                    if ($oDateApplication->isSameMonth($actualBirthDay) && $oApplication->year == $actualBirthDay->year) {
+                    if ($oDateApplication->isSameMonth($actualBirthDay) && $oApplicationBirthDay->year == $actualBirthDay->year) {
                         return json_encode(['success' => true, 'message' => '', 'icon' => 'success']);
                     }
 

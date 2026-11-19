@@ -156,14 +156,31 @@ class permissionController extends Controller
             $oRequest = new stdClass();
             $oRequest->startDate = Carbon::now()->toDateString();
             $oRequest->employeeId = $employee_id;
+            $oRequest->isRequest = 1;
             $newRequest = new Request((array)$oRequest);
             $result = $result = json_decode($oController->checkPermissions($newRequest)->getContent());
 
             if ($result->total_permissions >= 2 && $class_id == 1) {
+                $message = 'No puedes ingresar más de 2 permisos en el ' . $result->periodo . '.';
+
+                // Si vienen conteos por estatus
+                if (
+                    isset($result->new_permissions) ||
+                    isset($result->sent_permissions) ||
+                    isset($result->approved_permissions)
+                ) {
+                    $message .= ' Actualmente tienes: '
+                        . ($result->new_permissions ?? 0) . ' nuevo(s), '
+                        . ($result->sent_permissions ?? 0) . ' enviado(s), '
+                        . ($result->approved_permissions ?? 0) . ' aprobado(s).';
+                }
+
+                $message .= ' Podrás solicitar nuevamente a partir del '
+                    . $result->next_available_date;
+
                 return json_encode([
                     'success' => false,
-                    'message' => 'No puedes ingresar más de 2 permisos en el ' . $result->periodo . 
-                                '. Podrás solicitar nuevamente a partir del ' . $result->next_available_date,
+                    'message' => $message,
                     'icon' => 'error'
                 ]);
             }
@@ -411,12 +428,13 @@ class permissionController extends Controller
         $totalMinutes = 0;
         $totalPermissions = 0;
         $periodo = '';
+
         $employeeId = $request->employeeId;
         $startDate = $request->startDate;
+        $is_request = $request->isRequest ?? 0;
+
         $config = \App\Utils\Configuration::getConfigurations();
         $numMonthsCheck = $config->numMonthCheck;// 1 mes , 2 bimestre, 3 trimestre, 4 cuatrimestre, 5 no usar y 6 semestre 
-        $startDateQuery = '';
-        $endDateQuery = '';
 
         $startDateQuery = Carbon::parse($startDate)->startOfMonth();
         $endDateQuery = Carbon::parse($startDate)->endOfMonth();
@@ -458,7 +476,9 @@ class permissionController extends Controller
         if ($endDateQuery) {
             $nextAvailableDate = $endDateQuery->copy()->addDay()->format('Y-m-d');
         }
-            
+        
+        $statusIds = $is_request == 0 ? [3] : [3,2,1];
+
         $lPermissions = \DB::table('hours_leave as hr')
             ->leftJoin('cat_permission_tp as tp', 'tp.id_permission_tp', '=', 'hr.type_permission_id')
             ->leftJoin('permission_cl as cl', 'cl.id_permission_cl', '=', 'hr.cl_permission_id')
@@ -468,7 +488,7 @@ class permissionController extends Controller
             ->where('hr.is_deleted', 0)
             ->where('hr.user_id', $employeeId)
             ->where('cl.id_permission_cl', 1)
-            ->whereIn('hr.request_status_id', [3,2,1])
+            ->whereIn('hr.request_status_id', $statusIds)
             ->where(function($query) use ($startDateQuery, $endDateQuery) {
                 $query->whereBetween('hr.start_date', [$startDateQuery, $endDateQuery])
                       ->orWhereBetween('hr.end_date', [$startDateQuery, $endDateQuery])
@@ -506,7 +526,7 @@ class permissionController extends Controller
             Carbon::parse($nextAvailableDate)->format('d-M-Y')
         );
         // Retornar respuesta con los cálculos
-        return response()->json([
+        $response = [
             'success' => true,
             'total_permissions' => $totalPermissions,
             'total_hours' => $totalHours,
@@ -514,7 +534,15 @@ class permissionController extends Controller
             'timeString' => Carbon::createFromTime(0, 0)->addMinutes($totalMinutes)->format('H:i'),
             'periodo' => $periodo,
             'next_available_date' => $nextDate
-        ]);
+        ];
+
+        if ($is_request == 1) {
+            $response['new_permissions'] = $lPermissions->where('request_status_id', 1)->count();
+            $response['sent_permissions'] = $lPermissions->where('request_status_id', 2)->count();
+            $response['approved_permissions'] = $lPermissions->where('request_status_id', 3)->count();
+        }
+
+        return response()->json($response);
     } 
 
     public function gestionSendIncidence(Request $request){

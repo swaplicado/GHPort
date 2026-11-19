@@ -1,5 +1,5 @@
 {
-    "lastSyncDateTime": "2026-02-03 09:28:14",
+    "lastSyncDateTime": "2026-11-19 10:43:12",
     "syncExecution": false,
     "pastSyncDays": 1,
     "expiration_vacations": {
@@ -517,7 +517,7 @@
             "id_incidence": 5,
             "app_id": 3,
             "type_key": "GOC",
-            "type_name": "PERMISO CON GOCE (sindicato)",
+            "type_name": "PERMISO CON GOCE ()",
             "type_class": "INCIDENT",
             "single_date": false,
             "has_time": false,
@@ -737,8 +737,7 @@
             "name": "PERMISO CON GOCE (sindicato)"
         }
     ],
-
-    "birthdayRules":{
+    "birthdayRules": {
         "isActiveRules": true,
         "dateInitRules": "2026-05-01",
         "limitDayToTakingPastBirthDay": "2026-05-31"
