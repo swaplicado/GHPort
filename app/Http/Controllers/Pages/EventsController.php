@@ -114,7 +114,7 @@ class EventsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')
@@ -178,7 +178,7 @@ class EventsController extends Controller
             
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')
@@ -217,7 +217,7 @@ class EventsController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollBack();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lEvents = \DB::table('cat_events')
@@ -274,7 +274,7 @@ class EventsController extends Controller
     
                              
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lUsers = usersInSystemUtils::FilterUsersInSystem($lUsers, 'id');
@@ -305,7 +305,7 @@ class EventsController extends Controller
                         ->get();
                      
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lGroups' => $lGroups, 'lGroupsAssigned' => $lGroupsAssigned]);
@@ -354,7 +354,7 @@ class EventsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true]);
@@ -403,7 +403,7 @@ class EventsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true]);
@@ -522,7 +522,7 @@ class EventsController extends Controller
     } catch (\Exception $e) {
         return response()->json([
             'success' => false,
-            'message' => 'Ocurrió un error al enviar el correo: ' . $e->getMessage(),
+            'message' => 'Error al enviar el correo: ' . $e->getMessage(),
             'icon' => 'error'
         ], 500); // 500 = error interno del servidor
     }

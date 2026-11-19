@@ -102,7 +102,7 @@ class configAuthController extends Controller
         } catch (\Throwable $th) {
             \DB::rollback();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         //misma consulta que la principal para redibujar la tabla
@@ -135,7 +135,7 @@ class configAuthController extends Controller
         } catch (\Throwable $th) {
             \DB::rolback();
             \Log::error($th);
-            return json_encode(['sucess' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         $lconfigAuth = \DB::table('config_authorization as ca')
@@ -161,7 +161,7 @@ class configAuthController extends Controller
         } catch (\Throwable $th) {
             \DB::rollback();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         $lconfigAuth = \DB::table('config_authorization as ca')

@@ -176,7 +176,7 @@ class AuthController extends Controller
                 // Maneja el caso donde no hay respuesta del servidor
                 return response()->json([
                     'status' => 'error',
-                    'error' => 'Ocurrio un error inesperado en el servidor',
+                    'error' => 'Ocurrió un error inesperado en el servidor',
                     'data' => $e
                 ], 500);
             }

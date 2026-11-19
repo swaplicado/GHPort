@@ -313,7 +313,7 @@ class requestPermissionController extends Controller
             
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 
@@ -413,7 +413,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -502,7 +502,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -544,7 +544,7 @@ class requestPermissionController extends Controller
             $lEmployees = EmployeeVacationUtils::getlEmployees($arrOrgJobs);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -565,7 +565,7 @@ class requestPermissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -592,7 +592,7 @@ class requestPermissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $lPermissions = usersInSystemUtils::FilterUsersInSystem($lPermissions, 'user_id');
@@ -642,7 +642,7 @@ class requestPermissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         $org_chart_job_id = null;

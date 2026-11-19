@@ -105,7 +105,7 @@ class myVacationsController extends Controller
             $oApp = Application::find($request->id_application);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no se ha podido obtener la lista de días laborables. Por favor, cierre la solicitud e intente nuevamente', 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener la lista de días laborables. Cierre la solicitud e inténtelo de nuevo.', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lDays' => $oApp->ldays]);
     }
@@ -238,7 +238,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible guardar la solicitud. Verifique su conexión, cierre la solicitud e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         // $user = $this->getUserVacationsData();
@@ -362,7 +362,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar los cambios en la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible guardar los cambios de la solicitud. Verifique su conexión, cierre la solicitud e inténtelo de nuevo.', 'icon' => 'error']);
         }
         // $user = $this->getUserVacationsData();
         $user = EmployeeVacationUtils::getEmployeeVacationsData($employee_id);
@@ -375,7 +375,7 @@ class myVacationsController extends Controller
             $applications = EmployeeVacationUtils::getApplications($request->employee_id, $request->year);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no es posible obtener los registros. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);    
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener los registros. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);    
         }
 
         return json_encode(['success' => true, 'applications' => $applications]);
@@ -403,7 +403,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible eliminar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible eliminar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registro eliminado con éxito', 'icon' => 'success', 'oUser' => $user]);
@@ -508,7 +508,7 @@ class myVacationsController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
             $mypool = Pool::create();
@@ -625,7 +625,7 @@ class myVacationsController extends Controller
             $lSpecialSeason = EmployeeVacationUtils::getEmpSpecialSeason($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no fue posible obtener los registros de vacaciones solicitadas anteriormente. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'warning']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener los registros de vacaciones solicitadas anteriormente. Verifique su conexión, cierre la solicitud e inténtelo de nuevo.', 'icon' => 'warning']);
         }
 
         return json_encode(['success' => true, 'arrAplications' => $lApplicationsEA, 'arrSpecialSeasons' => $lSpecialSeason]);
@@ -637,7 +637,7 @@ class myVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id, true);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => true, 'message' => 'En este momento no fue posible obtener los registros de vacaciones pasadas. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => true, 'message' => 'No fue posible obtener los registros de vacaciones pasadas. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);
@@ -649,7 +649,7 @@ class myVacationsController extends Controller
             $user = EmployeeVacationUtils::getEmployeeVacationsData($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => true, 'message' => 'En este momento no fue posible obtener los registros de vacaciones. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => true, 'message' => 'No fue posible obtener los registros de vacaciones. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $user]);
@@ -755,7 +755,7 @@ class myVacationsController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no se ha podido obtener la fecha de regreso. Por favor, cierre la solicitud e intente nuevamente', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener la fecha de regreso. Cierre la solicitud e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'returnDate' => $oReturnDate->toDateString()]);

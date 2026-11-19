@@ -515,7 +515,7 @@ class UsersController extends Controller
                 GlobalUsersUtils::globalUpdateFromSystem($us, SysConst::SYSTEM_PGH);
             } catch (\Throwable $th) {
                 \DB::rollback();
-                return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+                return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
             }    
         }else{
             try {

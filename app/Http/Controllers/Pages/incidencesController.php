@@ -141,7 +141,7 @@ class incidencesController extends Controller
             $lIncidencesEA = incidencesUtils::getEmpIncidencesEA($request->user_id);
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no fue posible obtener los registros de incidencias solicitadas anteriormente. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'warning']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener los registros de incidencias solicitadas anteriormente. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'warning']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidencesEA, 'lVacations' => $lVacationsEA]);
@@ -244,7 +244,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible guardar la solicitud. Verifique su conexión, cierre la solicitud e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
@@ -301,7 +301,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible actualizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet, cierre la solicitud e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible actualizar la solicitud. Verifique su conexión, cierre la solicitud e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
@@ -331,7 +331,7 @@ class incidencesController extends Controller
         $lEvents = EmployeeVacationUtils::getEmployeeEvents(delegationUtils::getIdUser());
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no es posible obtene el registro. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener el registro. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oApplication' => $oApplication, 'lEvents' => $lEvents]);
@@ -353,7 +353,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no es posible eliminar el registro. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible eliminar el registro. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lIncidences' => $lIncidences]);
@@ -393,7 +393,7 @@ class incidencesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento no es posible enviar el registro. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar el registro. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         if( is_null($needAuth) || $needAuth == 1){
@@ -487,7 +487,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
 			\Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -646,7 +646,7 @@ class incidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar y autorizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar y autorizar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -726,7 +726,7 @@ class incidencesController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener el año de aplicación debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener el año de aplicación. Verifique su conexión e inténtelo de nuevo.']);
         }
 
         return json_encode(['success' => true, 'lBirthDay' => $lBirthDay, 'birthDayYear' => $year, 'minYear' => $minYear]);

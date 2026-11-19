@@ -195,7 +195,7 @@ class requestIncidencesController extends Controller
             }
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener los datos del colaborador debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener los datos del colaborador. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'oUser' => $oUser, 'lTemp' => $lTemp_special, 'lIncidences' => $lIncidences, 'lEvents' => $lEvents]);
@@ -301,7 +301,7 @@ class requestIncidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible aprobar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible aprobar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -398,7 +398,7 @@ class requestIncidencesController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible rechazar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible rechazar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();
@@ -470,7 +470,7 @@ class requestIncidencesController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener los datos de los colaboradores debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener los datos de los colaboradores. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $lEmployees = usersInSystemUtils::FilterUsersInSystem($lEmployees, 'id');
@@ -497,7 +497,7 @@ class requestIncidencesController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener las solicitudes debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener las solicitudes. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $lIncidences = usersInSystemUtils::FilterUsersInSystem($lIncidences, 'user_id');

@@ -91,7 +91,7 @@ class profileController extends Controller
             GlobalUsersUtils::globalUpdateFromSystem($user, SysConst::SYSTEM_PGH);
         } catch (\Throwable $th) {
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'message' => 'Registro actualizado', 'icon' => 'success']);
@@ -120,7 +120,7 @@ class profileController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error', 'checked' => !$is_active]);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error', 'checked' => !$is_active]);
         }
 
         return json_encode(['success' => true, 'checked' => $is_active]);

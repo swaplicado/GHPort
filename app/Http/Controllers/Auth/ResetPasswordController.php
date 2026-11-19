@@ -140,7 +140,7 @@ class ResetPasswordController extends Controller
         } catch (\Throwable $th) {
             \Log::error($th);
             \DB::rollBack();
-            throw new \Exception($th->getMessage().' por favor contacte con el administrador del sistema');
+            throw new \Exception($th->getMessage().'. Contacte al administrador del sistema.');
         }
 
         event(new PasswordReset($user));

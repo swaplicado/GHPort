@@ -204,7 +204,7 @@ class curriculumController extends Controller
             \Log::error($th);
 
             return response()->json([
-                'message' => 'Error al guardar el curriculum',
+                'message' => 'Error al guardar el currículum',
                 'icon' => 'error',
                 'success' => false,
                 'error' => $th->getMessage()

@@ -274,7 +274,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible almacenar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible guardar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
@@ -331,7 +331,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible actualizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible actualizar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
@@ -357,7 +357,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible eliminar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible eliminar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'lPermissions' => $lPermissions]);
     }
@@ -417,7 +417,7 @@ class permissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible obtener la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible obtener la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
         return json_encode(['success' => true, 'oPermission' => $oPermission, 'schedule' => $schedule, 'permission' => $permission]);
     }
@@ -554,7 +554,7 @@ class permissionController extends Controller
 
         } catch (\Throwable $th) {
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         if($needAuth == null || $needAuth == 1){
@@ -628,7 +628,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar la solicitud. Verifique su conexión e inténtelo de nuevo.']);
         }
 
         $mypool = Pool::create();
@@ -791,7 +791,7 @@ class permissionController extends Controller
         } catch (\Throwable $th) {
             \DB::rollBack();
             \Log::error($th);
-            return json_encode(['success' => false, 'message' => 'En este momento, no es posible enviar y autorizar la solicitud debido a un error inesperado. Por favor, verifique su conexión a internet e inténtelo de nuevo', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => 'No fue posible enviar y autorizar la solicitud. Verifique su conexión e inténtelo de nuevo.', 'icon' => 'error']);
         }
 
         $mypool = Pool::create();

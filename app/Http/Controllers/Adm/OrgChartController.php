@@ -146,7 +146,7 @@ class OrgChartController extends Controller
             \DB::commit();
         } catch (\Throwable $th) {
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
@@ -187,7 +187,7 @@ class OrgChartController extends Controller
                         ->orderBy('full_name', 'asc')
                         ->get();
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema', 'icon' => 'error']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.', 'icon' => 'error']);
         }
 
         return json_encode(['success' => true, 'lUser' => $lUser]);
@@ -216,7 +216,7 @@ class OrgChartController extends Controller
         } catch (\Throwable $th) {
             //Log::emergency($th->getMessage());
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')
@@ -259,7 +259,7 @@ class OrgChartController extends Controller
         } catch (\Throwable $th) {
             //Log::emergency($th->getMessage());
             \DB::rollback();
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         $areas = \DB::table('org_chart_jobs as ocj')

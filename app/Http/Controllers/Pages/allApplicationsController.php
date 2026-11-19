@@ -234,7 +234,7 @@ class allApplicationsController extends Controller
 
             $Employee = applicationsUtils::getEmployee($request->employee_id);
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'message' => $th->getMessage().' por favor contacte con el administrador del sistema']);
+            return json_encode(['success' => false, 'message' => $th->getMessage().'. Contacte al administrador del sistema.']);
         }
 
         return json_encode(['success' => true, 'data' => $data, 'employee' => $Employee]);
