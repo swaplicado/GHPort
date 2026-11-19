@@ -496,7 +496,7 @@ var app = new Vue({
 
                     let horas = Math.floor(this.permission_time / 60);
                     let minutosRestantes = this.permission_time % 60;
-                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
+                    SGui.showMessage('', 'No puede ingresar más de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
 
                     this.interOut = null;
                     this.interReturn = null;
@@ -514,7 +514,7 @@ var app = new Vue({
                 if (time > this.permission_time) {
                     let horas = Math.floor(this.permission_time / 60);
                     let minutosRestantes = this.permission_time % 60;
-                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
+                    SGui.showMessage('', 'No puede ingresar más de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
     
                     this.hours = horas;
                     this.minutes = minutosRestantes;
@@ -538,7 +538,7 @@ var app = new Vue({
 
             if (this.minutes < 0) {
                 this.minutes = "00";
-                SGui.showMessage('', 'Los minutos deben ser mayor o igual a 0', 'info');
+                SGui.showMessage('', 'Los minutos deben ser mayores o iguales a 0', 'info');
             }
 
             if (this.minutes.length > 2) {
@@ -549,12 +549,12 @@ var app = new Vue({
 
             if (this.minutes > 59) {
                 this.minutes = 59;
-                SGui.showMessage('', 'Los minutos deben ser menor a 60', 'info');
+                SGui.showMessage('', 'Los minutos deben ser menores a 60', 'info');
             }
 
             // if(this.hours > 2){
             //     this.minutes = "00";
-            //     SGui.showMessage('', 'No puede ingresar mas de 3 horas');
+            //     SGui.showMessage('', 'No puede ingresar más de 3 horas');
             // }
 
             this.minutes = Math.floor(this.minutes);
@@ -573,14 +573,14 @@ var app = new Vue({
 
             if (this.hours < 0) {
                 this.hours = 0;
-                SGui.showMessage('', 'Las horas deben ser mayor o igual a 0', 'info');
+                SGui.showMessage('', 'Las horas deben ser mayores o iguales a 0', 'info');
             }
 
             let res = this.checkMaxPermissionTime();
 
             // if(this.hours > 3){
             //     this.hours = 3;
-            //     SGui.showMessage('', 'No puede ingresar mas de 3 horas');
+            //     SGui.showMessage('', 'No puede ingresar más de 3 horas');
             // }
 
             // if(this.hours > 2){
@@ -910,7 +910,7 @@ var app = new Vue({
 
         deleteRegistry(data) {
             if (data[this.indexes_permission.Estatus] != 'Nuevas') {
-                SGui.showMessage('', 'La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden elimianr solicitudes con dicho estatus', 'warning');
+                SGui.showMessage('', 'La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 
@@ -1617,7 +1617,7 @@ var app = new Vue({
                     this.totalTime = '';
                     let horas = Math.floor(this.permission_time / 60);
                     let minutosRestantes = this.permission_time % 60;
-                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
+                    SGui.showMessage('', 'No puede ingresar más de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
                     return;
                 }
 
@@ -1648,7 +1648,7 @@ var app = new Vue({
                     this.totalTime = '';
                     let horas = Math.floor(this.permission_time / 60);
                     let minutosRestantes = this.permission_time % 60;
-                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
+                    SGui.showMessage('', 'No puede ingresar más de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
                     return;
                 }
 
@@ -1694,7 +1694,7 @@ var app = new Vue({
                     this.totalTime = '';
                     let horas = Math.floor(this.permission_time / 60);
                     let minutosRestantes = this.permission_time % 60;
-                    SGui.showMessage('', 'No puede ingresar mas de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
+                    SGui.showMessage('', 'No puede ingresar más de ' + horas + ' horas y ' + minutosRestantes + ' minutos.', 'warning');
                     return;
                 }
 

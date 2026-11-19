@@ -328,40 +328,40 @@ var app = new Vue({
 
             if(this.personalPhone){
                 if(!this.validarSoloNumeros(this.personalPhone)){
-                    SGui.showMessage('', 'El campo de Teléfono personal no es un número valido', 'info');
+                    SGui.showMessage('', 'El campo de Teléfono personal no es un número válido', 'info');
                     return false;
                 }
             }
 
             if(this.companyPhone){
                 if(!this.validarSoloNumeros(this.companyPhone)){
-                    SGui.showMessage('', 'El campo de Teléfono empresa no es un número valido', 'info');
+                    SGui.showMessage('', 'El campo de Teléfono empresa no es un número válido', 'info');
                     return false;
                 }
             }
 
             if(this.ext){
                 if(!this.validarSoloNumeros(this.ext)){
-                    SGui.showMessage('', 'El campo de Ext. conmutador no es un número valido', 'info');
+                    SGui.showMessage('', 'El campo de Ext. conmutador no es un número válido', 'info');
                     return false;
                 }
             }
 
             if(this.emergencyPhone){
                 if(!this.validarSoloNumeros(this.emergencyPhone)){
-                    SGui.showMessage('', 'El campo de Teléfono contacto no es un número valido', 'info');
+                    SGui.showMessage('', 'El campo de Teléfono contacto no es un número válido', 'info');
                     return false;
                 }
             }
 
             if (this.withConyuge) {
                 if (!this.sexSpouce) {
-                    SGui.showMessage('', 'El campo de Sexo en el conyuge es obligatorio', 'info');
+                    SGui.showMessage('', 'El campo de Sexo en el cónyuge es obligatorio', 'info');
                     return false;
                 }
 
                 if (!this.birthdaySpouce) {
-                    SGui.showMessage('', 'El campo de Sexo en el conyuge es obligatorio', 'info');
+                    SGui.showMessage('', 'El campo de Sexo en el cónyuge es obligatorio', 'info');
                     return false;
                 }
             }else{

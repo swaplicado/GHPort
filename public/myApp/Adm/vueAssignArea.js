@@ -97,7 +97,7 @@ var app = new Vue({
                 this.config_leader = parseInt(data[9]);
 
                 if (data[10] != 0) {
-                    SGui.showMessage("Información", "Si modificas el nodo org. superior, se modificará toda la piramide inferior al nodo");
+                    SGui.showMessage("Información", "Si modificas el nodo org. superior, se modificará toda la pirámide inferior al nodo");
                 }
 
                 // $('#selUser').val(this.superviser_id).trigger('change');

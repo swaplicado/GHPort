@@ -38,7 +38,7 @@ var app =  new Vue({
                     this.reDrawTablePermissions('table_permissions', data.lPermissions);
                     SGui.showOk();
                 }else{
-                    SGui.showMessage('', 'No se cargaron los permisos, intente mas tarde');
+                    SGui.showMessage('', 'No se cargaron los permisos, intente más tarde');
                 }
             })
             .catch( function(error){

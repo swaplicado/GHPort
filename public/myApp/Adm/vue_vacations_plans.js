@@ -153,7 +153,7 @@ var app = new Vue({
                     if(parseInt(this.copyYears[index - 1].days) <= parseInt(this.years[index].days)){
                         return true;
                     }else{
-                        SGui.showMessage('','No se puede insertar un numero de dias menor a los días inserados en el año anterior','info');
+                        SGui.showMessage('','No se puede insertar un número de días menor a los días insertados en el año anterior','info');
                         return false;
                     }
                 }else{
@@ -175,7 +175,7 @@ var app = new Vue({
                     if(parseInt(this.copyYears[index + 1].days) >= parseInt(this.years[index].days)){
                         return true;
                     }else{
-                        SGui.showMessage('','No se puede insertar numero de dias mayor que los insertados en el año siguiente','info');
+                        SGui.showMessage('','No se puede insertar un número de días mayor que los insertados en el año siguiente','info');
                         return false;
                     }
                 }else{

@@ -53,7 +53,7 @@ var app = new Vue({
             if(this.viewMode == 'empCert'){
                 let arrData = table['employees_table'].rows({ selected: true }).data().toArray();
                 if(arrData.length == 0){
-                    SGui.showMessage('', 'Debe seleccionar un renglon', 'warning');
+                    SGui.showMessage('', 'Debe seleccionar un renglón', 'warning');
                     return;
                 }
                 SGui.showWaiting();
@@ -252,7 +252,7 @@ var app = new Vue({
         getCertificates(){
             let arrData = table['cuadrants_table'].rows({ selected: true }).data().toArray();
             if(arrData.length == 0 && lRowsCuadrants.length == 0 && lRowsModules.length == 0){
-                SGui.showMessage('', 'Debe seleccionar un renglon', 'warning');
+                SGui.showMessage('', 'Debe seleccionar un renglón', 'warning');
                 return;
             }
             SGui.showWaiting();

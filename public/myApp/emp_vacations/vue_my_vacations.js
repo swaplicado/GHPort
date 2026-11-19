@@ -796,7 +796,7 @@ var appMyVacations = new Vue({
             
 
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
-                SGui.showMessage('', 'Debe ingresar las fecha de inicio y de fin de vacaciones', 'warning');
+                SGui.showMessage('', 'Debe ingresar las fechas de inicio y de fin de vacaciones', 'warning');
                 return;
             }
 
@@ -1010,7 +1010,7 @@ var appMyVacations = new Vue({
 
         deleteRegistry(data){
             if(data[this.indexes.status] != 'Nuevas'){
-                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden elimianr solicitudes con dicho estatus', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 
@@ -1245,7 +1245,7 @@ var appMyVacations = new Vue({
                 for(let appEA of this.applicationsEA){
                     if(moment(appEA, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
                         $('#clear').trigger('click');
-                        // SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el dia: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
+                        // SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el día: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
                         SGui.showMessage('', 'En la fecha \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY') +' ya hay una solicitud de vacaciones registrada. Por favor, ingrese una fecha distinta para poder proseguir', 'warning');
                         break;
                     }

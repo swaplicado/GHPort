@@ -823,7 +823,7 @@ var appRequestVacation = new Vue({
         deleteRegistry(){
             let data = table['table_requestVac'].row('.selected').data()
             if(data[this.indexes.request_status_id] != 2){
-                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "Por aprobar". Solo se pueden enviar solicitudes con dicho estatus', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "Por aprobar". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 

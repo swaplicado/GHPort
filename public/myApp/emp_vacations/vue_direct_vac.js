@@ -386,7 +386,7 @@ var app = new Vue({
 
         async requestVac(){
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
-                SGui.showMessage('', 'Debe ingresar las fecha de inicio y fin de vacaciones', 'warning');
+                SGui.showMessage('', 'Debe ingresar las fechas de inicio y fin de vacaciones', 'warning');
                 return;
             }
 
@@ -726,7 +726,7 @@ var app = new Vue({
 
         deleteRegistry(data){
             if(data[this.indexes.status] != 'Nuevas'){
-                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden elimianr solicitudes con dicho estatus', 'warning');
+                SGui.showMessage('','La solicitud que deseas eliminar no tiene el estatus de "nuevas". Solo se pueden eliminar solicitudes con dicho estatus', 'warning');
                 return;
             }
 

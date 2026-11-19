@@ -111,7 +111,7 @@ var app = new Vue({
 
         requestVac(){
             if(this.startDate == null || this.startDate == '' || this.endDate == null || this.endDate == ''){
-                SGui.showMessage('', 'Debe ingresar las fecha de inicio y fin de vacaciones', 'warning');
+                SGui.showMessage('', 'Debe ingresar las fechas de inicio y fin de vacaciones', 'warning');
                 return;
             }
 
@@ -239,7 +239,7 @@ var app = new Vue({
                 for(let appEA of this.applicationsEA){
                     if(moment(appEA, 'YYYY-MM-DD').isBetween(moment(this.startDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), moment(this.endDate, 'ddd DD-MMM-YYYY').format('YYYY-MM-DD'), undefined, '[]')){
                         $('#clear').trigger('click');
-                        SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el dia: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
+                        SGui.showMessage('', 'Ya existe una solicitud de vacaciones para el día: \n' + this.oDateUtils.formatDate(appEA, 'ddd DD-MMM-YYYY'), 'warning');
                         break;
                     }
                 }

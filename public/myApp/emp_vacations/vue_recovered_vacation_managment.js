@@ -45,7 +45,7 @@ var app = new Vue({
 
         saveRecovered(){
             if(this.daysToRecover > this.maxValue){
-                SGui.showMessage('', 'No se pueden reactivar mas de ' + this.maxValue + ' días');
+                SGui.showMessage('', 'No se pueden reactivar más de ' + this.maxValue + ' días');
                 return;
             }
 
